@@ -116,7 +116,7 @@ WebPageImpl::WebPageImpl(COLORREF bdColor)
     m_state = pageUninited;
     m_platformEventHandler = nullptr;
     m_postMouseLeave = false;
-    m_needsCommit = 0;
+    //m_needsCommit = 0;
     m_commitCount = 0;
     m_needsLayout = 1;
     m_layerDirty = 1;
@@ -642,40 +642,25 @@ public:
             return;
         
         atomicDecrement(&m_client->m_commitCount);
-        if (!doRun())
-            m_client->clearNeedsCommit();
+        m_client->beginMainFrame();
     }
 
 private:
-    bool doRun()
-    {
-        m_client->beginMainFrame();
-        return true;
-    }
-
     WebPageImpl* m_client;
 };
 
 void WebPageImpl::setNeedsCommitAndNotLayout()
 {
-    if (0 != m_needsCommit)
-        return;
-    atomicIncrement(&m_needsCommit);
+//     if (0 != m_needsCommit)
+//         return;
+//     atomicIncrement(&m_needsCommit);
 
-#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (m_browser) {
-        m_browser->SetNeedHeartbeat();
-    } else {
-#endif
-        if (0 == m_commitCount) {
-            atomicIncrement(&m_commitCount);
-            blink::Platform* platfrom = blink::Platform::current();
-            WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
-            threadImpl->postTask(FROM_HERE, new CommitTask(this));
-        }
-#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (0 == m_commitCount) {
+        atomicIncrement(&m_commitCount);
+        blink::Platform* platfrom = blink::Platform::current();
+        WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
+        threadImpl->postTask(FROM_HERE, new CommitTask(this));
     }
-#endif
 }
 
 void WebPageImpl::setNeedsCommit()
@@ -684,30 +669,13 @@ void WebPageImpl::setNeedsCommit()
     setNeedsCommitAndNotLayout();
 }
 
-void WebPageImpl::clearNeedsCommit()
-{
-    atomicDecrement(&m_needsCommit);
-}
-
-void WebPageImpl::onLayerTreeDirty()
-{
-    InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 1);
-    setNeedsCommitAndNotLayout();
-}
-
-void WebPageImpl::didUpdateLayout()
-{
-    //onLayerTreeDirty();
-    setNeedsCommit();
-}
-
 void WebPageImpl::beginMainFrame()
 {
-    bool needsCommit = m_needsCommit;
+    //bool needsCommit = m_needsCommit;
     if (pageInited != m_state)
         return;
 
-    if (needsCommit) {
+    if (/*needsCommit*/true) {
         executeMainFrame();
         m_layerTreeHost->requestDrawFrameToRunIntoCompositeThread();
     }
@@ -716,7 +684,7 @@ void WebPageImpl::beginMainFrame()
 void WebPageImpl::executeMainFrame()
 {
     freeV8TempObejctOnOneFrameBefore();
-    clearNeedsCommit();
+    //atomicDecrement(&m_needsCommit);
 
     if (0 != m_executeMainFrameCount || m_isEnterDebugLoop)
         return;
@@ -745,6 +713,17 @@ void WebPageImpl::executeMainFrame()
     }
 #endif
     atomicDecrement(&m_executeMainFrameCount);
+}
+
+void WebPageImpl::onLayerTreeDirty()
+{
+    InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 1);
+    setNeedsCommitAndNotLayout();
+}
+
+void WebPageImpl::didUpdateLayout()
+{
+    setNeedsCommit();
 }
 
 bool WebPageImpl::fireTimerEvent()

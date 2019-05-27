@@ -192,11 +192,11 @@ void BlinkPlatformImpl::initialize()
     scrt_initialize_thread_safe_statics();
 #endif
     x86_check_features();
-    _control87(0x133f, 0xffff);
+    //_control87(0x133f, 0xffff);
 
-    ULONG stackSizeInBytes = 894 * 1024;
-    PFN_SetThreadStackGuarantee pSetThreadStackGuarantee = (PFN_SetThreadStackGuarantee)::GetProcAddress(::GetModuleHandleW(L"Kernel32.dll"), "SetThreadStackGuarantee");
-    pSetThreadStackGuarantee(&stackSizeInBytes);
+//     ULONG stackSizeInBytes = 894 * 1024;
+//     PFN_SetThreadStackGuarantee pSetThreadStackGuarantee = (PFN_SetThreadStackGuarantee)::GetProcAddress(::GetModuleHandleW(L"Kernel32.dll"), "SetThreadStackGuarantee");
+//     pSetThreadStackGuarantee(&stackSizeInBytes);
     
     ::CoInitializeEx(nullptr, 0); // COINIT_MULTITHREADED
     ::OleInitialize(nullptr);

@@ -378,18 +378,29 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
         if (0 == sizeOfHtml)
             return blink::WebString();
 
-        for (int i = 0; i < sizeOfHtml; ++i) {
-            if ('\0' == *((const char*)data + i)) {
-                sizeOfHtml = i;
-                break;
+        if (sizeOfHtml > 5 && '\0' == cfHtml[1]) {
+            for (int i = 0; i < sizeOfHtml / 2; ++i) {
+                if ('\0' == *((const wchar_t*)cfHtml + i)) {
+                    sizeOfHtml = i;
+                    break;
+                }
             }
-        }
 
-        if (!WTF::isTextUTF8(cfHtml, sizeOfHtml))
-            WTF::MByteToUtf8(cfHtml, sizeOfHtml, &utf8CfHtml, CP_ACP);
-        else {
-            utf8CfHtml.resize(sizeOfHtml);
-            memcpy(&utf8CfHtml[0], cfHtml, sizeOfHtml);
+            WTF::WCharToMByte((const wchar_t*)cfHtml, sizeOfHtml, &utf8CfHtml, CP_UTF8);
+        } else {
+            for (int i = 0; i < sizeOfHtml; ++i) {
+                if ('\0' == *((const char*)cfHtml + i)) {
+                    sizeOfHtml = i;
+                    break;
+                }
+            }
+
+            if (!WTF::isTextUTF8(cfHtml, sizeOfHtml))
+                WTF::MByteToUtf8(cfHtml, sizeOfHtml, &utf8CfHtml, CP_ACP);
+            else {
+                utf8CfHtml.resize(sizeOfHtml);
+                memcpy(&utf8CfHtml[0], cfHtml, sizeOfHtml);
+            }
         }
 
         ::GlobalUnlock(data);
@@ -659,7 +670,7 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
 
     std::string htmlFragment = ClipboardUtil::htmlToCFHtml(markup, url);
     HGLOBAL glob = ClipboardUtil::createGlobalData(htmlFragment);
-    // writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
+    writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
     writeText(plainText);
 
     if (writeSmartPaste) {

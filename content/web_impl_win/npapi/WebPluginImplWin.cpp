@@ -310,10 +310,13 @@ LRESULT WebPluginImpl::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     return result;
 }
 
+#define TOO_FAR_POS_FORCE_INIT 1
+
 void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect& clipRect)
 {
     CheckReEnter enterContent(nullptr);
 
+#ifndef TOO_FAR_POS_FORCE_INIT
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container->parent())
         return;
@@ -321,6 +324,7 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
     FrameView* frameView = toFrameView(container->parent());
     if (!frameView)
         return;
+#endif
 
     IntRect oldWindowRect = m_windowRect;
     IntRect oldClipRect = m_clipRect;
@@ -730,6 +734,11 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
     r.setX(documentScrollOffsetRelativeToViewOrigin.x());
     r.setY(documentScrollOffsetRelativeToViewOrigin.y());
 
+#ifdef TOO_FAR_POS_FORCE_INIT
+    if (r.isEmpty())
+        r = blink::IntRect(0, 0, 1, 1);
+#endif
+
     windowpos.x = r.x();
     windowpos.y = r.y();
     
@@ -804,8 +813,14 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
 
     // Ensure that we have called SetWindow before we try to paint.
-    if (!m_haveCalledSetWindow)
-        setNPWindowRect(container->frameRect());
+    if (!m_haveCalledSetWindow) {
+        blink::IntRect r = container->frameRect();
+#ifdef TOO_FAR_POS_FORCE_INIT
+        if (r.isEmpty())
+            r = rect;
+#endif
+        setNPWindowRect(r);
+    }
 
     if (m_isWindowed) {
 // #if !USE(WINGDI)
@@ -1054,10 +1069,18 @@ void WebPluginImpl::platformStartImpl(bool isSync)
         m_npWindow.window = 0;
     }
     
-    updatePluginWidget(m_windowRect, m_clipRect);
+
+    blink::IntRect r(0, 0, 1, 1);
+#ifdef TOO_FAR_POS_FORCE_INIT
+    if (m_windowRect.isEmpty() && m_clipRect.isEmpty()) {
+        updatePluginWidget(r, r);
+        paint(m_memoryCanvas, r);
+    } else    
+#endif
+        updatePluginWidget(m_windowRect, m_clipRect);
 
     if (!isSync && !m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall)) {
-        IntRect r = container->frameRect();
+        r = container->frameRect();
         paint(m_memoryCanvas, r);
     }
 }

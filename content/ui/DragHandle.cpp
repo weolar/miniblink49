@@ -53,22 +53,43 @@ DWORD DragHandle::draggingSourceOperationMaskToDragCursors(blink::WebDragOperati
     return result;
 }
 
-blink::WebDragOperation DragHandle::keyStateToDragOperation(DWORD grfKeyState) const
+// blink::WebDragOperation DragHandle::keyStateToDragOperation(DWORD grfKeyState) const
+// {
+//     // Conforms to Microsoft's key combinations as documented for 
+//     // IDropTarget::DragOver. Note, grfKeyState is the current 
+//     // state of the keyboard modifier keys on the keyboard. See:
+//     // <http://msdn.microsoft.com/en-us/library/ms680129(VS.85).aspx>.
+//     blink::WebDragOperation operation = blink::WebDragOperationNone; // m_page->dragController().sourceDragOperation();
+// 
+//     if ((grfKeyState & (MK_CONTROL | MK_SHIFT)) == (MK_CONTROL | MK_SHIFT))
+//         operation = blink::WebDragOperationLink;
+//     else if ((grfKeyState & MK_CONTROL) == MK_CONTROL)
+//         operation = blink::WebDragOperationCopy;
+//     else if ((grfKeyState & MK_SHIFT) == MK_SHIFT)
+//         operation = blink::WebDragOperationGeneric;
+// 
+//     return operation;
+// }
+
+// int ConvertKeyStateToAuraEventFlags(DWORD key_state)
+// int ConvertAuraEventFlagsToWebInputEventModifiers(int aura_event_flags)
+static int keyStateToWebInputEventModifiers(DWORD keyState)
 {
-    // Conforms to Microsoft's key combinations as documented for 
-    // IDropTarget::DragOver. Note, grfKeyState is the current 
-    // state of the keyboard modifier keys on the keyboard. See:
-    // <http://msdn.microsoft.com/en-us/library/ms680129(VS.85).aspx>.
-    blink::WebDragOperation operation = blink::WebDragOperationNone; // m_page->dragController().sourceDragOperation();
+    int flags = 0;
 
-    if ((grfKeyState & (MK_CONTROL | MK_SHIFT)) == (MK_CONTROL | MK_SHIFT))
-        operation = blink::WebDragOperationLink;
-    else if ((grfKeyState & MK_CONTROL) == MK_CONTROL)
-        operation = blink::WebDragOperationCopy;
-    else if ((grfKeyState & MK_SHIFT) == MK_SHIFT)
-        operation = blink::WebDragOperationGeneric;
-
-    return operation;
+    if (keyState & MK_CONTROL)
+        flags |= blink::WebInputEvent::ControlKey;
+    if (keyState & MK_ALT)
+        flags |= blink::WebInputEvent::AltKey;
+    if (keyState & MK_SHIFT)
+        flags |= blink::WebInputEvent::ShiftKey;
+    if (keyState & MK_LBUTTON)
+        flags |= blink::WebInputEvent::LeftButtonDown;
+    if (keyState & MK_MBUTTON)
+        flags |= blink::WebInputEvent::MiddleButtonDown;
+    if (keyState & MK_RBUTTON)
+        flags |= blink::WebInputEvent::RightButtonDown;
+    return flags;
 }
 
 bool DragHandle::containsPlainText(IDataObject* pDataObject)
@@ -79,12 +100,46 @@ bool DragHandle::containsPlainText(IDataObject* pDataObject)
     return false;
 }
 
+static void dropFilesToWebDragData(std::vector<blink::WebDragData::Item>* itemList, IDataObject* pDataObject)
+{
+    FORMATETC iFormat = { 0 };
+    STGMEDIUM iMedium = { 0 };
+
+    iFormat.cfFormat = CF_HDROP;
+    iFormat.dwAspect = DVASPECT_CONTENT;
+    iFormat.lindex = -1;
+    iFormat.tymed = TYMED_HGLOBAL;
+
+    HRESULT hRes = pDataObject->GetData(&iFormat, &iMedium);
+    if (FAILED(hRes))
+        return;
+
+    HDROP hDrop = (HDROP)::GlobalLock(iMedium.hGlobal);
+    DWORD iLen = ::GlobalSize(iMedium.hGlobal);
+
+    Vector<WCHAR> filenames;
+    filenames.resize(MAX_PATH);
+
+    int count = ::DragQueryFile(hDrop, 0xFFFFFFFF, filenames.data(), MAX_PATH * sizeof(WCHAR));
+
+    for (int i = 0; i < count; i++) {
+        ::DragQueryFile(hDrop, i, filenames.data(), MAX_PATH * sizeof(WCHAR));
+       
+        blink::WebDragData::Item item;
+        item.storageType = blink::WebDragData::Item::StorageTypeFilename;
+        item.filenameData = blink::WebString(filenames.data(), wcslen(filenames.data()));
+        itemList->push_back(item);
+    }
+}
+
 blink::WebDragData DragHandle::dropDataToWebDragData(IDataObject* pDataObject)
 {
     blink::WebDragData result;
     result.initialize();
 
     std::vector<blink::WebDragData::Item> itemList;
+
+    dropFilesToWebDragData(&itemList, pDataObject);
 
     if (containsPlainText(pDataObject)) {
         blink::WebDragData::Item item;
@@ -366,11 +421,33 @@ void DragHandle::simulateDrag()
     m_notifOnLeaveDrag();
 }
 
-static void dragTargetDragEnter(blink::WebViewImpl* m_webViewImpl, int* taskCount, const blink::WebDragData& data, const blink::WebPoint& clientPoint, const blink::WebPoint& screenPoint, blink::WebDragOperationsMask operationsAllowed)
+struct DragEnterInfo {
+    blink::WebViewImpl* webViewImpl;
+    int* taskCount;
+    blink::WebDragData data;
+    blink::WebPoint clientPoint;
+    blink::WebPoint screenPoint;
+    blink::WebDragOperationsMask opAllowed;
+    int modifiers;
+};
+
+static void dragTargetDragEnter(DragEnterInfo* info)
 {
-    int modifiers = (int)operationsAllowed;
-    m_webViewImpl->dragTargetDragEnter(data, clientPoint, screenPoint, operationsAllowed, modifiers);
-    *taskCount -= 1;
+    info->webViewImpl->dragTargetDragEnter(info->data, info->clientPoint, info->screenPoint, info->opAllowed, info->modifiers);
+    *(info->taskCount) -= 1;
+    delete info;
+}
+
+static blink::WebDragOperationsMask dropEffectToDragOperation(DWORD effect)
+{
+    int op = blink::WebDragOperationNone;
+    if (effect & DROPEFFECT_LINK)
+        op |= blink::WebDragOperationLink;
+    if (effect & DROPEFFECT_COPY)
+        op |= blink::WebDragOperationCopy;
+    if (effect & DROPEFFECT_MOVE)
+        op |= blink::WebDragOperationMove;
+    return (blink::WebDragOperationsMask)op;
 }
 
 // IDropTarget impl
@@ -391,21 +468,32 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
     POINT clientPoint = screenPoint;
     ::ScreenToClient(m_viewWindow, &clientPoint);
 
+    DWORD effect = 0;
+    if (pdwEffect)
+        effect = *pdwEffect;
+
+    m_mask = dropEffectToDragOperation(effect);
+    int modifiers = keyStateToWebInputEventModifiers(grfKeyState);
+
     if (WTF::isMainThread()) {
         blink::WebDragOperation op = m_webViewImpl->dragTargetDragEnter(dropDataToWebDragData(pDataObject),
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y),
-            keyStateToDragOperation(grfKeyState), keyStateToDragOperation(grfKeyState));
+            m_mask, modifiers);
 
         *pdwEffect = dragOperationToDragCursor(op);
     } else {
         m_taskCount++;
-        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragEnter, m_webViewImpl, &m_taskCount
-             , dropDataToWebDragData(pDataObject)
-             , blink::WebPoint(clientPoint.x, clientPoint.y)
-             , blink::WebPoint(screenPoint.x, screenPoint.y)
-             , keyStateToDragOperation(grfKeyState)
-            ));
+
+        DragEnterInfo* info = new DragEnterInfo();
+        info->webViewImpl = m_webViewImpl;
+        info->taskCount = &m_taskCount;
+        info->data = dropDataToWebDragData(pDataObject);
+        info->clientPoint = blink::WebPoint(clientPoint.x, clientPoint.y);
+        info->screenPoint = blink::WebPoint(screenPoint.x, screenPoint.y);
+        info->opAllowed = m_mask;
+        info->modifiers = modifiers;
+        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragEnter, info));
         *pdwEffect = DROPEFFECT_MOVE;
     }
 
@@ -436,21 +524,25 @@ HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwE
     ::ScreenToClient(m_viewWindow, &clientPoint);
 
     blink::WebDragOperation op = blink::WebDragOperationNone;
+    int modifiers = keyStateToWebInputEventModifiers(grfKeyState);
+
     if (WTF::isMainThread()) {
         op = m_webViewImpl->dragTargetDragOver(
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y),
-            m_mask, keyStateToDragOperation(grfKeyState));
+            m_mask, modifiers);
 
         *pdwEffect = DROPEFFECT_NONE;
         if (m_dragData)
             *pdwEffect = dragOperationToDragCursor(op);
+        else
+            *pdwEffect = DROPEFFECT_MOVE;
     } else {
         m_taskCount++;
         blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragOver, m_webViewImpl, &m_taskCount,
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y),
-            m_mask, keyStateToDragOperation(grfKeyState)
+            m_mask, modifiers
             ));
         *pdwEffect = DROPEFFECT_MOVE;
     }
@@ -469,13 +561,12 @@ HRESULT __stdcall DragHandle::DragLeave()
     if (m_dropTargetHelper)
         m_dropTargetHelper->DragLeave();
 
-    if (m_dragData) {
-        if (m_webViewImpl) {
-            if (WTF::isMainThread()) {
-                m_webViewImpl->dragTargetDragLeave();
-            } else {
-                m_taskCount++;
-                blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragLeave, m_webViewImpl, &m_taskCount));
+    if (m_webViewImpl) {
+        if (WTF::isMainThread()) {
+            m_webViewImpl->dragTargetDragLeave();
+        } else {
+            m_taskCount++;
+            blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragLeave, m_webViewImpl, &m_taskCount));
             }
         }
         m_dragData = nullptr;
@@ -508,12 +599,12 @@ HRESULT __stdcall DragHandle::Drop(IDataObject* pDataObject, DWORD grfKeyState, 
 
     if (WTF::isMainThread()) {
         m_webViewImpl->dragTargetDrop(blink::WebPoint(clientPoint.x, clientPoint.y),
-            blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToDragOperation(grfKeyState));
+            blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToWebInputEventModifiers(grfKeyState));
     } else {
         m_taskCount++;
         blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDrop, m_webViewImpl, &m_taskCount,
             blink::WebPoint(clientPoint.x, clientPoint.y),
-            blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToDragOperation(grfKeyState)));
+            blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToWebInputEventModifiers(grfKeyState)));
     }
     
     return S_OK;
