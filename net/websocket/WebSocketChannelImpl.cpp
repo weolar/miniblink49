@@ -32,6 +32,10 @@
 
 #include "net/websocket/WebSocketChannelImpl.h"
 
+#include "net/websocket/SocketStreamError.h"
+#include "net/websocket/SocketStreamHandle.h"
+#include "net/websocket/WebSocketHandshake.h"
+#include "net/ActivatingObjCheck.h"
 #include "third_party/WebKit/Source/core/fileapi/Blob.h"
 #include "third_party/WebKit/Source/core/fileapi/FileError.h"
 #include "third_party/WebKit/Source/core/fileapi/FileReaderLoader.h"
@@ -47,9 +51,6 @@
 #include "third_party/WebKit/public/platform/WebSocketHandle.h"
 #include "third_party/WebKit/Source/modules/websockets/WebSocketChannelClient.h"
 #include "core/inspector/InspectorInstrumentation.h"
-#include "net/websocket/SocketStreamError.h"
-#include "net/websocket/SocketStreamHandle.h"
-#include "net/websocket/WebSocketHandshake.h"
 #include "third_party/WebKit/Source/wtf/Deque.h"
 #include "third_party/WebKit/Source/wtf/FastMalloc.h"
 #include "third_party/WebKit/Source/wtf/HashMap.h"
@@ -140,7 +141,8 @@ struct WebsocketHooks {
     void(WKE_CALL_TYPE* m_onError)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
 };
 
-void WSCI_setHook(void* j, void *isHook) {
+void WSCI_setHook(void* j, void *isHook)
+{
     if (!j || !isHook)
         return;
     WebsocketHooks* hookPtr = (WebsocketHooks*)isHook;
@@ -152,14 +154,16 @@ void WSCI_setHook(void* j, void *isHook) {
     job->m_onError = hookPtr->m_onError;
 }
 
-void WSCI_sendtext(void* j, char* buf, size_t len) {
+void WSCI_sendText(void* j, char* buf, size_t len)
+{
     if (j && buf && len) {
         WebSocketChannelImpl* job = (WebSocketChannelImpl*)j;
         job->send(CString(buf, len), true);
     }
 }
 
-void WSCI_sendblob(void* j, char* buf, size_t len) {
+void WSCI_sendBlob(void* j, char* buf, size_t len)
+{
     if (j && buf && len) {
         WebSocketChannelImpl* job = (WebSocketChannelImpl*)j;
         job->send(buf, len, true);
@@ -178,22 +182,25 @@ WebSocketChannelImpl::WebSocketChannelImpl(ExecutionContext* context, WebSocketC
     , m_closed(false)
     , m_shouldDiscardReceivedData(false)
     , m_unhandledBufferedAmount(0)
-    , m_identifier(0)
+    , m_id(0)
     , m_hasContinuousFrame(false)
     , m_closeEventCode(CloseEventCodeAbnormalClosure)
     , m_outgoingFrameQueueStatus(OutgoingFrameQueueOpen)
     , m_blobLoaderStatus(BlobLoaderNotStarted)
     , m_sourceURLAtConstruction(sourceURL)
     , m_lineNumberAtConstruction(lineNumber)
-    , m_beCallclosed(false)
+    , m_isClosing(false)
     , m_hookUserParam(nullptr)
     , m_onConnect(nullptr)
     , m_onReceive(nullptr)
     , m_onSend(nullptr)
     , m_onError(nullptr)
 {
-    m_identifier = createUniqueIdentifier();
-    WTF_LOG(Network, "WebSocketChannelImpl %p ctor, identifier %lu", this, m_identifier);
+    m_id = ActivatingObjCheck::inst()->genId();
+    ActivatingObjCheck::inst()->add((intptr_t)m_id);
+    m_handleId = 0;
+
+    WTF_LOG(Network, "WebSocketChannelImpl %p ctor, identifier %lu", this, m_id);
 }
 
 WebSocketChannelImpl::~WebSocketChannelImpl()
@@ -201,11 +208,12 @@ WebSocketChannelImpl::~WebSocketChannelImpl()
     ASSERT(!m_blobLoader);
     //ASSERT(0 == m_ref);
     WTF_LOG(Network, "WebSocketChannelImpl %p dtor", this);
+    ActivatingObjCheck::inst()->remove((intptr_t)m_id);
 }
 
 Document* WebSocketChannelImpl::document()
 {
-    ASSERT(m_identifier);
+    ASSERT(m_id);
     ExecutionContext* context = executionContext();
     ASSERT(context->isDocument());
     return toDocument(context);
@@ -218,7 +226,7 @@ bool WebSocketChannelImpl::connect(const KURL& url, const String& protocol)
     WTF_LOG(Network, "WebSocketChannelImpl %p connect()", this);
     ASSERT(!m_handle);
     ASSERT(!m_suspended);
-    KURL uu = url;
+    KURL kurl = url;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     WebViewImpl* view = (WebViewImpl*)document()->page()->chromeClient().webView();
     if (view) {
@@ -228,22 +236,23 @@ bool WebSocketChannelImpl::connect(const KURL& url, const String& protocol)
             if (page && page->wkeHandler().wsCallback) {
                 wke::CString u(url.string());
                 if (((wkeWebSocketCallback)(page->wkeHandler().wsCallback))(page->wkeWebView(), page->wkeHandler().wsCallbackParam, this, &u)) {
-                    uu = KURL(blink::ParsedURLString, u.string());
+                    kurl = KURL(blink::ParsedURLString, u.string());
                 }
             }
         }
     }
 #endif
-    m_handshake = adoptPtr(new WebSocketHandshake(uu, protocol, document()));
+    m_handshake = adoptPtr(new WebSocketHandshake(kurl, protocol, document()));
     m_handshake->reset();
     if (m_deflateFramer.canDeflate())
         m_handshake->addExtensionProcessor(m_deflateFramer.createExtensionProcessor());
-    if (m_identifier)
-        InspectorInstrumentation::didCreateWebSocket(document(), m_identifier, uu, protocol);
+    if (m_id)
+        InspectorInstrumentation::didCreateWebSocket(document(), m_id, kurl, protocol);
 
     if (Frame* frame = document()->frame()) {
         ref();
         m_handle = SocketStreamHandle::create(m_handshake->url(), this);
+        m_handleId = m_handle->getId();
     }
     return true;
 }
@@ -301,7 +310,10 @@ unsigned long WebSocketChannelImpl::bufferedAmount() const
     WTF_LOG(Network, "WebSocketChannelImpl %p bufferedAmount()", this);
     ASSERT(m_handle);
     ASSERT(!m_suspended);
-    return m_handle->bufferedAmount();
+
+    if (ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
+        return m_handle->bufferedAmount();
+    return 0;
 }
 
 void WebSocketChannelImpl::close(int code, const String& reason)
@@ -310,11 +322,12 @@ void WebSocketChannelImpl::close(int code, const String& reason)
     ASSERT(!m_suspended);
     if (!m_handle)
         return;
-    m_beCallclosed = true;
+    m_isClosing = true;
     RefPtr<WebSocketChannelImpl> protect(*this); // An attempt to send closing handshake may fail, which will get the channel closed and dereferenced.
     startClosingHandshake(code, reason);
     if (m_closing && !m_closingTimer.isActive())
         m_closingTimer.startOneShot(2 * TCPMaximumSegmentLifetime, FROM_HERE);
+    m_isClosing = false;
 }
 
 void WebSocketChannelImpl::fail(const String& reason, MessageLevel, const String& sourceURL, unsigned lineNumber)
@@ -322,7 +335,7 @@ void WebSocketChannelImpl::fail(const String& reason, MessageLevel, const String
     WTF_LOG(Network, "WebSocketChannelImpl %p fail() reason='%s'", this, reason.utf8().data());
     ASSERT(!m_suspended);
     if (document()) {
-        InspectorInstrumentation::didReceiveWebSocketFrameError(document(), m_identifier, reason);
+        InspectorInstrumentation::didReceiveWebSocketFrameError(document(), m_id, reason);
 
         String consoleMessage;
         if (m_handshake)
@@ -355,7 +368,7 @@ void WebSocketChannelImpl::fail(const String& reason, MessageLevel, const String
     m_continuousFrameData.clear();
     m_client->didError();
 
-    if (m_handle && !m_closed)
+    if (m_handle && !m_closed && ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
         m_handle->disconnect(); // Will call didClose().
 
     // We should be closed by now, but if we never got a handshake then we never even opened.
@@ -365,22 +378,22 @@ void WebSocketChannelImpl::fail(const String& reason, MessageLevel, const String
 void WebSocketChannelImpl::disconnect()
 {
     WTF_LOG(Network, "WebSocketChannelImpl %p disconnect()", this);
-    if (m_identifier && document())
-        InspectorInstrumentation::didCloseWebSocket(document(), m_identifier);
+    if (m_id && document())
+        InspectorInstrumentation::didCloseWebSocket(document(), m_id);
     if (m_handshake)
         m_handshake->clearScriptExecutionContext();
     m_client = nullptr;
-    if (m_handle)
+    if (m_handle && ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
         m_handle->disconnect();
 }
 
 void WebSocketChannelImpl::sendTextAsCharVector(PassOwnPtr<Vector<char>> data)
 {
     WTF_LOG(Network, "DocumentWebSocketChannel %p sendTextAsCharVector(%p, %llu)", this, data.get(), static_cast<unsigned long long>(data->size()));
-    if (m_identifier) {
+    if (m_id) {
         // FIXME: Change the inspector API to show the entire message instead
         // of individual frames.
-        InspectorInstrumentation::didSendWebSocketFrame(document(), m_identifier, WebSocketOneFrame::OpCodeText, true, data->data(), data->size());
+        InspectorInstrumentation::didSendWebSocketFrame(document(), m_id, WebSocketOneFrame::OpCodeText, true, data->data(), data->size());
     }
     send(data->data(), data->size());
 }
@@ -388,10 +401,10 @@ void WebSocketChannelImpl::sendTextAsCharVector(PassOwnPtr<Vector<char>> data)
 void WebSocketChannelImpl::sendBinaryAsCharVector(PassOwnPtr<Vector<char>> data)
 {
     WTF_LOG(Network, "DocumentWebSocketChannel %p sendBinaryAsCharVector(%p, %llu)", this, data.get(), static_cast<unsigned long long>(data->size()));
-    if (m_identifier) {
+    if (m_id) {
         // FIXME: Change the inspector API to show the entire message instead
         // of individual frames.
-        InspectorInstrumentation::didSendWebSocketFrame(document(), m_identifier, WebSocketOneFrame::OpCodeBinary, true, data->data(), data->size());
+        InspectorInstrumentation::didSendWebSocketFrame(document(), m_id, WebSocketOneFrame::OpCodeBinary, true, data->data(), data->size());
     }
     send(data->data(), data->size());
 }
@@ -419,8 +432,8 @@ void WebSocketChannelImpl::didOpenSocketStream(SocketStreamHandle* handle)
     ASSERT(handle == m_handle);
     if (!document())
         return;
-    if (m_identifier)
-        InspectorInstrumentation::willSendWebSocketHandshakeRequest(document(), m_identifier, m_handshake->clientHandshakeRequest().get());
+    if (m_id)
+        InspectorInstrumentation::willSendWebSocketHandshakeRequest(document(), m_id, m_handshake->clientHandshakeRequest().get());
     CString handshakeMessage = m_handshake->clientHandshakeMessage();
     if (!handle->send(handshakeMessage.data(), handshakeMessage.length()))
         fail("Failed to send WebSocket handshake.", ErrorMessageLevel, m_sourceURLAtConstruction, m_lineNumberAtConstruction);
@@ -429,8 +442,8 @@ void WebSocketChannelImpl::didOpenSocketStream(SocketStreamHandle* handle)
 void WebSocketChannelImpl::didCloseSocketStream(SocketStreamHandle* handle)
 {
     WTF_LOG(Network, "WebSocketChannelImpl %p didCloseSocketStream()", this);
-    if (m_identifier && document())
-        InspectorInstrumentation::didCloseWebSocket(document(), m_identifier);
+    if (m_id && document())
+        InspectorInstrumentation::didCloseWebSocket(document(), m_id);
     ASSERT_UNUSED(handle, handle == m_handle || !m_handle);
     m_closed = true;
     if (m_closingTimer.isActive())
@@ -438,13 +451,16 @@ void WebSocketChannelImpl::didCloseSocketStream(SocketStreamHandle* handle)
     if (m_outgoingFrameQueueStatus != OutgoingFrameQueueClosed)
         abortOutgoingFrameQueue();
     if (m_handle) {
-        m_unhandledBufferedAmount = m_handle->bufferedAmount();
+        if (ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
+            m_unhandledBufferedAmount = m_handle->bufferedAmount();
+        
         if (m_suspended)
             return;
         WebSocketChannelClient* client = m_client;
         m_client = nullptr;
         m_handle = nullptr;
-        if (client && !m_beCallclosed)
+        m_handleId = 0;
+        if (client && !m_isClosing)
             client->didClose(m_receivedClosingHandshake ? WebSocketChannelClient::ClosingHandshakeComplete : WebSocketChannelClient::ClosingHandshakeIncomplete, m_closeEventCode, m_closeEventReason);
     }
     deref();
@@ -497,7 +513,7 @@ void WebSocketChannelImpl::didFailSocketStream(SocketStreamHandle* handle, const
             message = "WebSocket network error: error code " + String::number(error.errorCode());
         else
             message = "WebSocket network error: " + error.localizedDescription();
-        InspectorInstrumentation::didReceiveWebSocketFrameError(document(), m_identifier, message);
+        InspectorInstrumentation::didReceiveWebSocketFrameError(document(), m_id, message);
         document()->addConsoleMessage(ConsoleMessage::create(NetworkMessageSource, ErrorMessageLevel, message));
     }
     m_shouldDiscardReceivedData = true;
@@ -597,8 +613,8 @@ bool WebSocketChannelImpl::processBuffer()
             }
 #endif
             if (!isHook) {
-                if (m_identifier)
-                    InspectorInstrumentation::didReceiveWebSocketHandshakeResponse(document(), m_identifier, m_handshake->clientHandshakeRequest().get(), &m_handshake->serverHandshakeResponse());
+                if (m_id)
+                    InspectorInstrumentation::didReceiveWebSocketHandshakeResponse(document(), m_id, m_handshake->clientHandshakeRequest().get(), &m_handshake->serverHandshakeResponse());
                 if (!m_handshake->serverSetCookie().isEmpty()) {
                     if (cookiesEnabled(document())) {
                         // Exception (for sandboxed documents) ignored.
@@ -669,7 +685,7 @@ void WebSocketChannelImpl::startClosingHandshake(int code, const String& reason)
 void WebSocketChannelImpl::closingTimerFired(blink::Timer<WebSocketChannelImpl>*)
 {
     WTF_LOG(Network, "WebSocketChannelImpl %p closingTimerFired()", this);
-    if (m_handle)
+    if (m_handle && ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
         m_handle->disconnect();
 }
 
@@ -753,7 +769,7 @@ bool WebSocketChannelImpl::processFrame()
         payloadLength = new_data.length();
     }
 #endif
-    InspectorInstrumentation::didReceiveWebSocketFrame(document(), m_identifier, frame.opCode, frame.masked, payload, payloadLength);
+    InspectorInstrumentation::didReceiveWebSocketFrame(document(), m_id, frame.opCode, frame.masked, payload, payloadLength);
 
     switch (frame.opCode) {
     case WebSocketOneFrame::OpCodeContinuation:
@@ -967,7 +983,8 @@ void WebSocketChannelImpl::processOutgoingFrameQueue()
     ASSERT(m_outgoingFrameQueue.isEmpty());
     if (m_outgoingFrameQueueStatus == OutgoingFrameQueueClosing) {
         m_outgoingFrameQueueStatus = OutgoingFrameQueueClosed;
-        m_handle->close();
+        if (ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
+            m_handle->close();
     }
 }
 
@@ -1017,7 +1034,7 @@ bool WebSocketChannelImpl::sendFrame(WebSocketOneFrame::OpCode opCode, const cha
     }
 #endif
     WebSocketOneFrame frame(opCode, true, false, true, data, dataLength);
-    InspectorInstrumentation::didSendWebSocketFrame(document(), m_identifier, frame.opCode, frame.masked, frame.payload, frame.payloadLength);
+    InspectorInstrumentation::didSendWebSocketFrame(document(), m_id, frame.opCode, frame.masked, frame.payload, frame.payloadLength);
 
     auto deflateResult = m_deflateFramer.deflate(frame);
     if (!deflateResult->succeeded()) {
@@ -1028,7 +1045,9 @@ bool WebSocketChannelImpl::sendFrame(WebSocketOneFrame::OpCode opCode, const cha
     Vector<char> frameData;
     frame.makeFrameData(frameData);
 
-    return m_handle->send(frameData.data(), frameData.size());
+    if (ActivatingObjCheck::inst()->isActivating((intptr_t)m_handleId))
+        return m_handle->send(frameData.data(), frameData.size());
+    return false;
 }
 
 void WebSocketChannelImpl::ref()
@@ -1040,7 +1059,6 @@ void WebSocketChannelImpl::deref()
 {
     m_ref--;
 }
-
 
 DEFINE_TRACE(WebSocketChannelImpl)
 {

@@ -540,13 +540,17 @@ static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& co
 
 #if ENABLE_WKE == 1
 
-static bool dispatchDownloadToWke(WebPage* page, WebURLLoaderInternal* job, const utf8* url , const AtomicString& contentType)
+static bool dispatchDownloadToWke(WebPage* page, WebURLLoaderInternal* job, const utf8* url , const AtomicString& contentType, const String& downloadName)
 {
     job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadYes;
 
     Vector<char> mimeBuf = WTF::ensureStringToUTF8((String)contentType, true);
     
-    String contentDisposition = job->m_response.httpHeaderField("Content-Disposition");
+    String contentDisposition;
+    if (!downloadName.isNull() && !downloadName.isEmpty())
+        contentDisposition = WTF::ensureStringToUTF8String(downloadName);
+    else
+        job->m_response.httpHeaderField("Content-Disposition");
     Vector<char> contentDispositionBuf = WTF::ensureStringToUTF8(contentDisposition, true);
     
     wkeNetJobDataBind dataBind = { 0 };
@@ -603,8 +607,8 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
             }
         }
 
-        if (isDownloadResponse(job, contentType)) {
-            if (dispatchDownloadToWke(page, job, urlBuf.data(), contentType)) {
+        if (requestExtraData->isDownload() || isDownloadResponse(job, contentType)) {
+            if (dispatchDownloadToWke(page, job, urlBuf.data(), contentType, requestExtraData->getDownloadName())) {
                 result = true;
                 break;
             }

@@ -57,6 +57,8 @@ public:
     // No authentication for streams per se, but proxy may ask for credentials.
     virtual void didReceiveAuthenticationChallenge(SocketStreamHandle*, const blink::AuthenticationChallenge&) { }
     virtual void didCancelAuthenticationChallenge(SocketStreamHandle*, const blink::AuthenticationChallenge&) { }
+
+    virtual unsigned long getId() const { return 0; }
 };
 
 }  // namespace net

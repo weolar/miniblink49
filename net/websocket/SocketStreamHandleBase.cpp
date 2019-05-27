@@ -33,6 +33,7 @@
 
 #include "net/websocket/SocketStreamHandle.h"
 #include "net/websocket/SocketStreamHandleClient.h"
+#include "net/ActivatingObjCheck.h"
 
 using namespace blink;
 
@@ -43,6 +44,7 @@ const unsigned int bufferSize = 100 * 1024 * 1024;
 SocketStreamHandleBase::SocketStreamHandleBase(const KURL& url, SocketStreamHandleClient* client)
     : m_url(url)
     , m_client(client)
+    , m_clientId(client->getId())
     , m_state(Connecting)
 {
 }
@@ -62,7 +64,7 @@ bool SocketStreamHandleBase::send(const char* data, int length)
             return false;
         }
         m_buffer.append(data, length);
-        if (m_client)
+        if (m_client && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
             m_client->didUpdateBufferedAmount(static_cast<SocketStreamHandle*>(this), bufferedAmount());
         return true;
     }
@@ -77,7 +79,7 @@ bool SocketStreamHandleBase::send(const char* data, int length)
     }
     if (bytesWritten < length) {
         m_buffer.append(data + bytesWritten, length - bytesWritten);
-        if (m_client)
+        if (m_client && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
             m_client->didUpdateBufferedAmount(static_cast<SocketStreamHandle*>(this), bufferedAmount());
     }
     return true;
@@ -105,6 +107,7 @@ void SocketStreamHandleBase::setClient(SocketStreamHandleClient* client)
 {
     ASSERT(!client || (!m_client && m_state == Connecting));
     m_client = client;
+    m_clientId = client->getId();
 }
 
 bool SocketStreamHandleBase::sendPendingData()
@@ -128,7 +131,7 @@ bool SocketStreamHandleBase::sendPendingData()
         ASSERT(m_buffer.size() - bytesWritten <= bufferSize);
         m_buffer.consume(bytesWritten);
     } while (!pending && !m_buffer.isEmpty());
-    if (m_client)
+    if (m_client && ActivatingObjCheck::inst()->isActivating(m_clientId))
         m_client->didUpdateBufferedAmount(static_cast<SocketStreamHandle*>(this), bufferedAmount());
     return true;
 }
