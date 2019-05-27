@@ -92,8 +92,7 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     //, m_scrollChildren(nullptr)
     //, m_clipChildren(nullptr)
     , m_tileGrid(nullptr)
-    , m_drawProperties(new cc::DrawProperties())
-    , m_drawToCanvasProperties(new cc::DrawToCanvasProperties())
+    , m_drawProperties(new cc::DrawProps())
     , m_isMaskLayer(false)
     , m_isReplicaLayer(false)
     , m_hasMaskLayerChild(false)
@@ -160,7 +159,7 @@ WebLayerImpl::~WebLayerImpl()
     m_replicaLayer = nullptr;
 
     delete m_drawProperties;
-    delete m_drawToCanvasProperties;
+    //delete m_drawToCanvasProperties;
 #ifndef NDEBUG
     webLayerImplCounter.decrement();
 #endif
@@ -268,12 +267,12 @@ void WebLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink:
     m_updateRectInRootLayerCoordinate.setEmpty();
 }
 
-cc::DrawProperties* WebLayerImpl::drawProperties()
+cc::DrawProps* WebLayerImpl::drawProperties()
 {
     return m_drawProperties;
 }
 
-void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop)
+void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawProps* prop)
 {
     prop->copyDrawProperties(*drawProperties(), opacity());
     prop->bounds = bounds();

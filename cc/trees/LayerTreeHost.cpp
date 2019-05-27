@@ -576,15 +576,30 @@ bool LayerTreeHost::drawToCanvas(SkCanvas* canvas, const SkRect& dirtyRect)
     return b;
 }
 
+static bool isIdentityOrIntegerTranslation(const SkMatrix44& transform)
+{
+    if (!transform.isTranslate())
+        return false;
+
+    bool noFractionalTranslation =
+        static_cast<int>(transform.get(0, 3)) == transform.get(0, 3) &&
+        static_cast<int>(transform.get(1, 3)) == transform.get(1, 3) &&
+        static_cast<int>(transform.get(2, 3)) == transform.get(2, 3);
+
+    return noFractionalTranslation;
+}
+
 struct DrawPropertiesFromAncestor {
     DrawPropertiesFromAncestor()
     {
         transform = SkMatrix44(SkMatrix44::kIdentity_Constructor);
         opacity = 1.0;
+        subtreeCanUseLcdText = true;
     }
 
     SkMatrix44 transform;
     float opacity;
+    bool subtreeCanUseLcdText;
 };
 
 static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter, const DrawPropertiesFromAncestor& propFromAncestor, int deep)
@@ -593,7 +608,7 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
     
     for (size_t i = 0; i < children.size(); ++i) {
         cc_blink::WebLayerImpl* child = children[i];
-        DrawProperties* drawProperties = child->drawProperties();
+        DrawProps* drawProperties = child->drawProperties();
 
         blink::WebFloatPoint currentLayerPosition = child->position();
         blink::WebDoublePoint effectiveTotalScrollOffset = getEffectiveTotalScrollOffset(child);
@@ -623,9 +638,20 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
         drawProperties->targetSpaceTransform = combinedTransform;
         drawProperties->currentTransform = currentTransform;
 
+        bool layerCanUseLcdText = true;
+        bool subtreeCanUseLcdText = true;
+
         DrawPropertiesFromAncestor prop;
         prop.transform = transformToAncestorIfFlatten;
         prop.opacity *= child->opacity();
+
+        // To avoid color fringing, LCD text should only be used on opaque layers with just integral translation.
+        subtreeCanUseLcdText = /*propFromAncestor.subtreeCanUseLcdText &&*/ prop.opacity == 1.f && isIdentityOrIntegerTranslation(propFromAncestor.transform);
+        // Also disable LCD text locally for non-opaque content.
+        layerCanUseLcdText = subtreeCanUseLcdText && child->opaque();
+        drawProperties->layerCanUseLcdText = layerCanUseLcdText;
+
+        prop.subtreeCanUseLcdText = subtreeCanUseLcdText;
         updateChildLayersDrawProperties(child, layerSorter, prop, deep + 1);
     }
 
@@ -1129,6 +1155,11 @@ void LayerTreeHost::WrapSelfForUiThread::didProcessTask()
 
 void LayerTreeHost::requestPaintToMemoryCanvasToUiThread(const SkRect& r)
 {
+//     char* output = (char*)malloc(0x100);
+//     sprintf(output, "LayerTreeHost::requestPaintToMemoryCanvasToUiThread: %f %f\n", r.x(), r.y());
+//     OutputDebugStringA(output);
+//     free(output);
+
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
 
     if (r.isEmpty() && m_paintToMemoryCanvasInUiThreadTaskCount > 1)

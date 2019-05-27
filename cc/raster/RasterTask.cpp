@@ -195,11 +195,12 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, rasterTaskCounter, ("ccRast
 class RasterTask : public blink::WebThread::Task {
 public:
     explicit RasterTask(
-        RasterTaskWorkerThreadPool* pool, 
+        RasterTaskWorkerThreadPool* pool,
         SkPicture* picture,
-        const SkRect& dirtyRect, 
+        const SkRect& dirtyRect,
         int threadIndex,
         bool isOpaque,
+        bool canUseLcdText,
         const cc_blink::WebFilterOperationsImpl* filterOperations,
         LayerChangeActionBlend* blendAction,
         RasterTaskGroup* group,
@@ -210,6 +211,7 @@ public:
         , m_dirtyRect(dirtyRect)
         , m_threadIndex(threadIndex)
         , m_isOpaque(isOpaque)
+        , m_canUseLcdText(canUseLcdText)
         , m_blendAction(blendAction)
         , m_group(group)
         , m_filterOperations(filterOperations ? new cc_blink::WebFilterOperationsImpl(*filterOperations) : nullptr)
@@ -257,16 +259,14 @@ public:
 
     virtual void run() override
     {
+//         String output = String::format("RasterTask: %f %f\n", m_dirtyRect.width(), m_dirtyRect.height());
+//         OutputDebugStringA(output.utf8().data());
 
         //DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
         raster();
         releaseRource();
         g_rasterTaskCount++;
-
         //DWORD nowTime2 = (DWORD)(WTF::currentTimeMS() * 100);
-        
-//         String output = String::format("RasterTask.run: %d\n", nowTime2 - nowTime);
-//         OutputDebugStringA(output.utf8().data());
     }
 
     bool performSolidColorAnalysis(const SkRect& tilePos, SkColor* color)
@@ -340,8 +340,11 @@ public:
         bitmap->allocN32Pixels(dirtyRect.width(), dirtyRect.height());
 
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
-        SkImageInfo info = SkImageInfo::MakeN32(dirtyRect.width(), dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
-        SkSurfaceProps surfaceProps(0, wke::g_smootTextEnable ? kRGB_H_SkPixelGeometry : kUnknown_SkPixelGeometry);
+        SkImageInfo info = SkImageInfo::MakeN32(dirtyRect.width(), dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType);
+
+        bool canUseLcdText = m_canUseLcdText && wke::g_smootTextEnable;
+        SkSurfaceProps surfaceProps(0, canUseLcdText ? kRGB_H_SkPixelGeometry : kUnknown_SkPixelGeometry);
+        
         size_t stride = info.minRowBytes();
         skia::RefPtr<SkSurface> surface = skia::AdoptRef(SkSurface::NewRasterDirect(info, bitmap->getPixels(), stride, &surfaceProps));
         skia::RefPtr<SkCanvas> canvas = skia::SharePtr(surface->getCanvas());
@@ -403,6 +406,7 @@ private:
     int m_threadIndex;
     LayerChangeActionBlend* m_blendAction;
     bool m_isOpaque;
+    bool m_canUseLcdText;
     RasterTaskGroup* m_group;
     const cc_blink::WebFilterOperationsImpl* m_filterOperations;
     SkColor m_backgroudColor;
@@ -468,7 +472,7 @@ int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* 
 
     int threadIndex = m_pool->selectOneIdleThread();
 
-    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, layer->opaque(), layer->getFilters(), blendAction, this, m_host->getBackgroundColor());
+    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, layer->opaque(), layer->drawProperties()->layerCanUseLcdText, layer->getFilters(), blendAction, this, m_host->getBackgroundColor());
     m_pool->increasePendingRasterTaskNum();
     m_pool->increaseBusyCountByIndex(task->threadIndex());
     m_pool->m_threads[task->threadIndex()]->postTask(FROM_HERE, task);
@@ -573,7 +577,7 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, dirtyLayerInfoCount, ("ccDi
 DirtyLayerInfo::DirtyLayerInfo(cc_blink::WebLayerImpl* layer)
 {
     m_layerId = layer->id();
-    m_drawToCanvasProperties = new DrawToCanvasProperties();
+    m_drawToCanvasProperties = new DrawProps();
     m_drawToCanvasProperties->screenSpaceTransform = layer->drawProperties()->screenSpaceTransform;
     m_drawToCanvasProperties->targetSpaceTransform = layer->drawProperties()->targetSpaceTransform;
     m_drawToCanvasProperties->currentTransform = layer->drawProperties()->currentTransform;
@@ -598,7 +602,7 @@ int DirtyLayerInfo::layerId() const
     return m_layerId;
 }
 
-DrawToCanvasProperties* DirtyLayerInfo::properties()
+DrawProps* DirtyLayerInfo::properties()
 {
     return m_drawToCanvasProperties;
 }
