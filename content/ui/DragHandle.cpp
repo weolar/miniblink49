@@ -567,7 +567,6 @@ HRESULT __stdcall DragHandle::DragLeave()
         } else {
             m_taskCount++;
             blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragLeave, m_webViewImpl, &m_taskCount));
-            }
         }
         m_dragData = nullptr;
     }
