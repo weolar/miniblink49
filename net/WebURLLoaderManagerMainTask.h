@@ -550,7 +550,7 @@ static bool dispatchDownloadToWke(WebPage* page, WebURLLoaderInternal* job, cons
     if (!downloadName.isNull() && !downloadName.isEmpty())
         contentDisposition = WTF::ensureStringToUTF8String(downloadName);
     else
-        job->m_response.httpHeaderField("Content-Disposition");
+        contentDisposition = job->m_response.httpHeaderField("Content-Disposition");
     Vector<char> contentDispositionBuf = WTF::ensureStringToUTF8(contentDisposition, true);
     
     wkeNetJobDataBind dataBind = { 0 };
