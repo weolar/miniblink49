@@ -61,12 +61,13 @@ public:
     void mainThreadRun();
     void mainThreadReadData();
 
+    int getId() const { return m_id;}
+
 private:
     SocketStreamHandle(const blink::KURL&, SocketStreamHandleClient*);
 
     int platformSend(const char* data, int length) override;
     void platformClose() override;
-
     
     bool readData(CURL*);
     bool sendData(CURL*);
@@ -119,6 +120,7 @@ private:
     Deque<OwnPtr<SocketData>> m_sendData;
     Deque<OwnPtr<SocketData>> m_receiveData;
     int m_readDataTaskCount;
+    int m_id;
 };
 
 } // namespace net

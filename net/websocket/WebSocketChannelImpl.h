@@ -105,6 +105,8 @@ public:
     virtual void didReceiveAuthenticationChallenge(SocketStreamHandle*, const blink::AuthenticationChallenge&) override;
     virtual void didCancelAuthenticationChallenge(SocketStreamHandle*, const blink::AuthenticationChallenge&) override;
 
+    virtual unsigned long getId() const override { return m_id; }
+
     enum CloseEventCode {
         CloseEventCodeNotSpecified = -1,
         CloseEventCodeNormalClosure = 1000,
@@ -215,6 +217,8 @@ private:
     blink::Member<blink::WebSocketChannelClient> m_client;
     OwnPtr<WebSocketHandshake> m_handshake;
     RefPtr<SocketStreamHandle> m_handle;
+    int m_handleId;
+
     Vector<char> m_buffer;
 
     blink::Timer<WebSocketChannelImpl> m_resumeTimer;
@@ -226,7 +230,7 @@ private:
     bool m_shouldDiscardReceivedData;
     unsigned long m_unhandledBufferedAmount;
 
-    unsigned long m_identifier; // m_identifier == 0 means that we could not obtain a valid identifier.
+    unsigned long m_id; // m_identifier == 0 means that we could not obtain a valid identifier.
 
     // Private members only for hybi-10 protocol.
     bool m_hasContinuousFrame;
@@ -247,7 +251,7 @@ private:
     String m_sourceURLAtConstruction;
     unsigned m_lineNumberAtConstruction;
 
-    bool m_beCallclosed;
+    bool m_isClosing;
 };
 
 } // namespace net

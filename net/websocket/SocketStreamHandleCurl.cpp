@@ -32,9 +32,10 @@
 #include "config.h"
 #include "net/websocket/SocketStreamHandle.h"
 
+#include "net/websocket/SocketStreamHandleClient.h"
+#include "net/ActivatingObjCheck.h"
 #include "third_party/WebKit/Source/platform/Logging.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
-#include "net/websocket/SocketStreamHandleClient.h"
 #include "third_party/WebKit/Source/wtf/MainThread.h"
 #include "base/thread.h"
 #include <process.h>
@@ -49,6 +50,8 @@ SocketStreamHandle::SocketStreamHandle(const KURL& url, SocketStreamHandleClient
     , m_stopThread(0)
     , m_readDataTaskCount(0)
 {
+    m_id = ActivatingObjCheck::inst()->genId();
+    ActivatingObjCheck::inst()->add((intptr_t)m_id);
     WTF_LOG(Network, "SocketStreamHandle %p new client %p", this, m_client);
     ASSERT(isMainThread());
     startThread();
@@ -58,6 +61,7 @@ SocketStreamHandle::~SocketStreamHandle()
 {
     WTF_LOG(Network, "SocketStreamHandle %p delete", this);
     ASSERT(!m_workerThread);
+    ActivatingObjCheck::inst()->remove((intptr_t)m_id);
 }
 
 int SocketStreamHandle::platformSend(const char* data, int length)
@@ -84,7 +88,7 @@ void SocketStreamHandle::platformClose()
 
     stopThread();
 
-    if (m_client)
+    if (m_client && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
         m_client->didCloseSocketStream(this);
 }
 
@@ -340,7 +344,7 @@ void SocketStreamHandle::didReceiveData()
 
     for (auto& socketData : receiveData) {
         if (socketData->size > 0) {
-            if (m_client && state() == Open)
+            if (m_client && state() == Open && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
                 m_client->didReceiveSocketStreamData(this, socketData->data, socketData->size);
         } else
             platformClose();
@@ -353,7 +357,7 @@ void SocketStreamHandle::didOpenSocket()
 
     m_state = Open;
 
-    if (m_client)
+    if (m_client && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
         m_client->didOpenSocketStream(this);
 }
 
