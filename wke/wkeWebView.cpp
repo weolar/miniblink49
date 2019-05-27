@@ -1258,8 +1258,8 @@ void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
 
 void CWebView::onLoadUrlFail(wkeLoadUrlFailCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().loadUrlFailCallback = callback;
-	m_webPage->wkeHandler().loadUrlFailCallbackParam = callbackParam;
+    m_webPage->wkeHandler().loadUrlFailCallback = callback;
+    m_webPage->wkeHandler().loadUrlFailCallbackParam = callbackParam;
 }
 
 void CWebView::onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam)
@@ -1378,7 +1378,7 @@ void CWebView::setNetInterface(const char* netInterface)
     m_netInterface = netInterface;
 }
 
-void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::ProxyType type, const String& username, const String& password)
+void CWebView::setProxyInfo(const String& host, unsigned long port, net::ProxyType type, const String& username, const String& password)
 {
     m_proxyType = type;
 

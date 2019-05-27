@@ -32,7 +32,7 @@ public:
     void setString(const wchar_t* str, size_t len = 0);
     void setString(const WTF::String& str);
 
-	size_t length();
+    size_t length();
 protected:
     void _free();
 

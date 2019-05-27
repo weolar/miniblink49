@@ -38,6 +38,8 @@ extern wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 extern std::set<wkeWebView> g_liveWebViews;
 
+extern DWORD g_contextMenuItemMask;
+
 }
 
 extern WKE_FILE_OPEN g_pfnOpen;

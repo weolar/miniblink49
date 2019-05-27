@@ -22,7 +22,7 @@
 #include "net/HeaderVisitor.h"
 #include "net/DiskCache.h"
 
-void wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, wchar_t* key, wchar_t* value, bool response)
+void wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, const wchar_t* key, const wchar_t* value, bool response)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -74,6 +74,11 @@ void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
     job->m_response.setMIMEType(WebString::fromUTF8(type));
 }
 
+// void wkeNetSetMIMETypeToRequest(wkeNetJob jobPtr, const char* type)
+// {
+// 
+// }
+
 const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -86,6 +91,16 @@ const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 
     return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
 }
+
+// const char* wkeNetGetMIMETypeFromRequest(wkeNetJob jobPtr)
+// {
+//     wke::checkThreadCallIsValid(__FUNCTION__);
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     AtomicString contentType = job->firstRequest()->httpHeaderField(WebString::fromUTF8("Content-Type"));
+//     WTF::CString contentTypeUtf8 = contentType.utf8();
+// 
+//     return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
+// }
 
 void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
 {
@@ -154,6 +169,16 @@ void wkeNetContinueJob(wkeNetJob jobPtr)
     net::WebURLLoaderManager::sharedInstance()->continueJob(job);
 }
 
+// void wkeNetSetURL(wkeNetJob jobPtr, const char* url)
+// {
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     KURL kurl(ParsedURLString, url);
+//     job->m_response.setURL(kurl);
+//     job->firstRequest()->setURL(kurl);
+//     job->m_initializeHandleInfo->url = url;
+//     ASSERT(!job->m_url);
+// }
+
 void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -161,8 +186,8 @@ void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
     blink::KURL newUrl(blink::ParsedURLString, url);
     job->m_response.setURL(newUrl);
     job->firstRequest()->setURL(newUrl);
-	if (job->m_initializeHandleInfo)
-		job->m_initializeHandleInfo->url = url;
+    job->m_initializeHandleInfo->url = url;
+    job->m_url = fastStrDup(url);
     //ASSERT(!job->m_url);
 }
 
