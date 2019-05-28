@@ -361,10 +361,12 @@ void PlatformEventHandler::checkMouseLeave(blink::Timer<PlatformEventHandler>*)
     ::GetClientRect(m_hWnd, &rc);
     ::ScreenToClient(m_hWnd, &pt);
 
-    if (!::PtInRect(&rc, pt) || !::IsWindowVisible(m_hWnd)) {
-        MouseEvtInfo info = { true, false, nullptr };
-        LPARAM lParam = MAKELONG(pt.x, pt.y);
-        fireMouseEvent(m_hWnd, WM_MOUSELEAVE, 0, lParam, info, nullptr);
+    if ((!::PtInRect(&rc, pt) || !::IsWindowVisible(m_hWnd))) {
+        if (!m_isLeftMousedown) {
+            MouseEvtInfo info = { true, false, nullptr };
+            LPARAM lParam = MAKELONG(pt.x, pt.y);
+            fireMouseEvent(m_hWnd, WM_MOUSELEAVE, 0, lParam, info, nullptr);
+        }
         m_checkMouseLeaveTimer.stop();
     }
 }
@@ -392,7 +394,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
     buildMousePosInfo(hWnd, message, wParam, lParam, &handle, &pos, &globalPos);
 
     if (!m_checkMouseLeaveTimer.isActive())
-        m_checkMouseLeaveTimer.startRepeating(0.4, FROM_HERE);
+        m_checkMouseLeaveTimer.startRepeating(0.2, FROM_HERE);
     if (WM_MOUSELEAVE == message)
         m_checkMouseLeaveTimer.stop();
 
