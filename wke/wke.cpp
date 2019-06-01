@@ -1734,7 +1734,12 @@ void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* p
         blink::WebScreenInfo info = webView->webPage()->screenInfo();
         info.depth = paramInt;
         webView->webPage()->setScreenInfo(info);
-    } else if (0 == strcmp(device, "window.devicePixelRatio")) {
+    } else if (0 == strcmp(device, "navigator.vendor")) {        
+        webView->webPage()->webViewImpl()->page()->settings().setVendor(paramStr);
+    } else if (0 == strcmp(device, "navigator.javaEnabled")) {
+        webView->webPage()->webViewImpl()->page()->settings().setJavaEnabled(paramInt);
+    }
+    else if (0 == strcmp(device, "window.devicePixelRatio")) {
         wkeSetZoomFactor(webView, paramFloat);
     }
 }
