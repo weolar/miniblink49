@@ -1,3 +1,17 @@
+# 闭源声明
+
+鉴于目前国内的开源形势,深思熟虑后决定对本项目做闭源处理,自2019-6-17后将不再对此仓库做任何更新.
+
+开源是一种精神，一种态度。无论我们身处哪个行业，无论是开源产品的开发者还是使用者，我们每个人都应该尊重开源！
+
+**且用且珍惜**
+
+如需获得后续支持,请使用一下联系方式
+Q群:94093808
+weolar:93527630
+email:weolar@qq.com
+zero:22249030
+
 # 简介 Abstract
 
 miniblink is a open source, one file, small browser widget base on chromium.
