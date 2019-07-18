@@ -36,7 +36,7 @@ struct MainTaskArgs {
         delete resourceError;
     }
 
-    static MainTaskArgs* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle, bool isProxy)
+    static MainTaskArgs* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle, bool isProxyConnect)
     {
         MainTaskArgs* args = new MainTaskArgs();
         args->size = size;
@@ -46,9 +46,7 @@ struct MainTaskArgs {
         args->ref = 0;
         memcpy(args->ptr, ptr, totalSize);
 
-        curl_easy_getinfo(handle, !isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode);
-        if (isProxy && 0 == args->httpCode)
-            args->httpCode = 200;
+        curl_easy_getinfo(handle, !isProxyConnect ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode); // 只有使用了代理的Connect请求才需要特殊处理
 
         double contentLength = 0;
         curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &args->contentLength);
@@ -232,7 +230,7 @@ public:
         if (!job)
             return nullptr;
 
-        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
+        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxyConnect);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
 
         if (job->m_isSynchronous)
@@ -250,7 +248,7 @@ public:
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return nullptr;
-        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
+        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxyConnect);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
         return task;
     }
@@ -912,8 +910,6 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(MainTaskArg
             // curl will follow the redirections internally. Thus this header callback
             // will be called more than one time with the line starting "HTTP" for one job.
             String httpCodeString = String::number(args->httpCode);
-            if (job->m_isProxy && 0 == args->httpCode)
-                httpCodeString = "200";
             int statusCodePos = header.find(httpCodeString);
 
             if (statusCodePos != -1) {

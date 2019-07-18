@@ -190,6 +190,7 @@ public:
     bool m_isBlackList;
     bool m_isDataUrl;
     bool m_isProxy;
+    bool m_isProxyConnect; // 是否使用代理的Connect请求
     bool m_isProxyHeadRequest;
     bool m_needParseMime; // 如果response为空的时候，是否需要在recv data的时候分析
 
