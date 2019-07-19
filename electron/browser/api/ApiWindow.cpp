@@ -16,6 +16,10 @@
 #include "common/DragAction.h"
 #include "common/asar/AsarUtil.h"
 #include "renderer/WebviewPlugin.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
@@ -91,16 +95,16 @@ public:
     }
 
     static const int WM_COPYGLOBALDATA = 0x0049;
-    static const int MSGFLT_ADD = 1;
+    static const int MSG_FLT_ADD = 1;
     typedef WINUSERAPI BOOL WINAPI CHANGEWINDOWMESSAGEFILTER(UINT message, DWORD dwFlag);
     static void changeMessageProi() {
         HINSTANCE hDllInst = LoadLibraryW(L"user32.dll");
         if (hDllInst) {
             CHANGEWINDOWMESSAGEFILTER *pAddMessageFilterFunc = (CHANGEWINDOWMESSAGEFILTER *)GetProcAddress(hDllInst, "ChangeWindowMessageFilter");
             if (pAddMessageFilterFunc) {
-                pAddMessageFilterFunc(WM_DROPFILES, MSGFLT_ADD);
-                pAddMessageFilterFunc(WM_COPYDATA, MSGFLT_ADD);
-                pAddMessageFilterFunc(WM_COPYGLOBALDATA, MSGFLT_ADD);
+                pAddMessageFilterFunc(WM_DROPFILES, MSG_FLT_ADD);
+                pAddMessageFilterFunc(WM_COPYDATA, MSG_FLT_ADD);
+                pAddMessageFilterFunc(WM_COPYGLOBALDATA, MSG_FLT_ADD);
             }
             FreeLibrary(hDllInst);
         }
@@ -301,6 +305,19 @@ public:
 
     }
 
+    typedef struct _UPDATELAYEREDWINDOWINFO {
+        DWORD cbSize;
+        HDC hdcDst;
+        const POINT* pptDst;
+        const SIZE* psize;
+        HDC hdcSrc;
+        const POINT* pptSrc;
+        COLORREF crKey;
+        const BLENDFUNCTION* pblend;
+        DWORD dwFlags;
+        const RECT* prcDirty;
+    } STR_UPDATELAYEREDWINDOWINFO;
+
     bool drawToNativeLayeredContext(HDC dc, HDC source_dc, const RECT* srcRect, const RECT* clientRect) {
         BOOL b = FALSE;
 
@@ -316,13 +333,13 @@ public:
         SIZE clientSize = { clientWidth, clientHeight };
         POINT zero = { 0 };
 
-        typedef BOOL(WINAPI* PFN_UpdateLayeredWindowIndirect) (HWND hWnd, UPDATELAYEREDWINDOWINFO const* pULWInfo);
+        typedef int(WINAPI* PFN_UpdateLayeredWindowIndirect) (HWND hWnd, STR_UPDATELAYEREDWINDOWINFO const* pULWInfo);
         static PFN_UpdateLayeredWindowIndirect s_pUpdateLayeredWindowIndirect = NULL;
         if (NULL == s_pUpdateLayeredWindowIndirect)
             s_pUpdateLayeredWindowIndirect = reinterpret_cast<PFN_UpdateLayeredWindowIndirect>(GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindowIndirect"));
 
         if (0 && s_pUpdateLayeredWindowIndirect) {
-            UPDATELAYEREDWINDOWINFO info = { sizeof(UPDATELAYEREDWINDOWINFO), dc, nullptr, &clientSize, source_dc, nullptr, RGB(0xFF, 0xFF, 0xFF), &blendFunction, ULW_ALPHA, srcRect };
+            STR_UPDATELAYEREDWINDOWINFO info = { sizeof(STR_UPDATELAYEREDWINDOWINFO), dc, nullptr, &clientSize, source_dc, nullptr, RGB(0xFF, 0xFF, 0xFF), &blendFunction, ULW_ALPHA, srcRect };
             b = s_pUpdateLayeredWindowIndirect(m_hWnd, &info);
         } else {
             b = s_pUpdateLayeredWindow(m_hWnd, dc, nullptr, &clientSize, source_dc, &zero, RGB(0xFF, 0xFF, 0xFF), &blendFunction, ULW_ALPHA);
@@ -675,8 +692,12 @@ public:
             mate::EventEmitter<Window>::emit("closed");
             ::KillTimer(hWnd, (UINT_PTR)this);
             ::RemovePropW(hWnd, kPropW);
+            ::RevokeDragDrop(m_hWnd);
 
-            ThreadCall::callBlinkThreadAsync([webview, self] {
+            ThreadCall::callBlinkThreadAsync([webview, self, hWnd] {
+                while (::IsWindow(hWnd)) {
+                    ::Sleep(100);
+                }
                 wkeDestroyWebView(webview);
                 self->m_webContents = nullptr;
             });

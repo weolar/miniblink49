@@ -5,6 +5,10 @@
 #include "common/SystemTray.h"
 
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/HideWndHelp.h"
 #include "common/api/EventEmitter.h"
@@ -33,7 +37,7 @@ const UINT WM_TRAY_MESSAGE = WM_APP + 100;
 
 class Tray : public mate::EventEmitter<Tray> {
 public:
-    Tray(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::string trayPath, NativeImage* nativeImage)
+    Tray(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, /*std::string trayPath, NativeImage* nativeImage*/v8::Local<v8::Value> arg)
         : m_hideWndHelp(nullptr) {
         gin::Wrappable<Tray>::InitWith(isolate, wrapper);
 
@@ -44,19 +48,20 @@ public:
             return self->windowProc(hWnd, uMsg, wParam, lParam);
         });
 
-        ::LoadCursor(NULL, IDC_ARROW);
-        m_tray.create(nullptr, m_hideWndHelp->getWnd(), WM_TRAY_MESSAGE, L"TrayIcon", NULL, IDR_POPUP_MENU);
+        HCURSOR hCur = ::LoadCursor(NULL, IDC_ARROW);
+        m_tray.create(nullptr, m_hideWndHelp->getWnd(), WM_TRAY_MESSAGE, L"TrayIcon", hCur, IDR_POPUP_MENU);
 
-        if (nativeImage) {
-            HICON hIcon = nativeImage->getIcon();
-            if (hIcon)
-                m_tray.setIcon(hIcon);
-        } else {
-            std::wstring trayPathW = base::UTF8ToWide(trayPath);
-            base::FilePath file = base::FilePath::FromUTF16Unsafe(base::StringPiece16 (trayPathW));
-            file = file.NormalizePathSeparators();
-            m_tray.setIcon(file.AsUTF16Unsafe().c_str());
-        }
+//         if (nativeImage) {
+//             HICON hIcon = nativeImage->getIcon();
+//             if (hIcon)
+//                 m_tray.setIcon(hIcon);
+//         } else {
+//             std::wstring trayPathW = base::UTF8ToWide(trayPath);
+//             base::FilePath file = base::FilePath::FromUTF16Unsafe(base::StringPiece16 (trayPathW));
+//             file = file.NormalizePathSeparators();
+//             m_tray.setIcon(file.AsUTF16Unsafe().c_str());
+//         }
+        setImage(arg);
     }
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
@@ -68,6 +73,7 @@ public:
         builder.SetMethod("_setIsContextMenu", &Tray::_setIsContextMenuApi);
         builder.SetMethod("setToolTip", &Tray::setToolTipApi);
         builder.SetMethod("displayBalloon", &Tray::displayBalloonApi);
+        builder.SetMethod("setImage", &Tray::setImageApi);
         builder.SetMethod("destroy", &Tray::destroyApi);
         
         constructor.Reset(isolate, prototype->GetFunction());
@@ -79,18 +85,18 @@ public:
         if (!args.IsConstructCall())
             return;
 
-        NativeImage* nativeImage = nullptr;
-        std::string trayPathString;
-        v8::Local<v8::Value> trayPath = args[0];
-        if (trayPath->IsString()) {
-            v8::String::Utf8Value v(trayPath);
-            trayPathString = *v;
-        } else if (trayPath->IsObject()) {
-            v8::Local<v8::Object> handle = trayPath->ToObject();
-            nativeImage = NativeImage::GetSelf(handle);
-        }
+//         NativeImage* nativeImage = nullptr;
+//         std::string trayPathString;
+//         v8::Local<v8::Value> trayPath = args[0];
+//         if (trayPath->IsString()) {
+//             v8::String::Utf8Value v(trayPath);
+//             trayPathString = *v;
+//         } else if (trayPath->IsObject()) {
+//             v8::Local<v8::Object> handle = trayPath->ToObject();
+//             nativeImage = NativeImage::GetSelf(handle);
+//         }
 
-        new Tray(isolate, args.This(), trayPathString, nativeImage);
+        new Tray(isolate, args.This(), /*trayPathString, nativeImage*/args[0]);
         args.GetReturnValue().Set(args.This());
         return;
     }
@@ -112,8 +118,34 @@ public:
 
     }
 
-    void setImage(/*image*/) {
-        OutputDebugStringA("tray.setImage not impl\n");
+    void setImage(v8::Local<v8::Value> arg) {
+        NativeImage* nativeImage = nullptr;
+        std::string trayPathString;
+        v8::Local<v8::Value> trayPath = arg;
+        if (trayPath->IsString()) {
+            v8::String::Utf8Value v(trayPath);
+            trayPathString = *v;
+        } else if (trayPath->IsObject()) {
+            v8::Local<v8::Object> handle = trayPath->ToObject();
+            nativeImage = NativeImage::GetSelf(handle);
+        }
+
+        if (nativeImage) {
+            HICON hIcon = nativeImage->getIcon();
+            if (hIcon)
+                m_tray.setIcon(hIcon);
+        } else if (0 != trayPathString.size()) {
+            std::wstring trayPathW = base::UTF8ToWide(trayPathString);
+            base::FilePath file = base::FilePath::FromUTF16Unsafe(base::StringPiece16(trayPathW));
+            file = file.NormalizePathSeparators();
+            m_tray.setIcon(file.AsUTF16Unsafe().c_str());
+        }
+    }
+
+    void setImageApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        if (0 >= args.Length())
+            return;
+        setImage(args[0]);        
     }
 
     void destroyApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -170,49 +202,6 @@ public:
         return ::DefWindowProcW(hWnd, message, wParam, lParam);
     }
 
-//     static LRESULT CALLBACK staicWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-//         Tray* self = (Tray*)::GetPropW(hWnd, kPrppW);
-//         if (!self && message == WM_CREATE) {
-//             LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
-//             self = (Tray*)cs->lpCreateParams;
-// 
-//             ::SetPropW(hWnd, kPrppW, (HANDLE)self);
-//             return 0;
-//         }
-//         if (!self)
-//             return ::DefWindowProcW(hWnd, message, wParam, lParam);
-//         return self->windowProc(hWnd, message, wParam, lParam);
-//     }
-//    
-//     HWND createHideWindow() {
-//         if (m_hideWnd)
-//             return m_hideWnd;
-// 
-//         const wchar_t* szClassName = L"MbTrayHideWindow";
-//         MSG msg = { 0 };
-//         WNDCLASSW wndClass = { 0 };
-//         if (!GetClassInfoW(NULL, szClassName, &wndClass)) {
-//             wndClass.style = CS_HREDRAW | CS_VREDRAW;
-//             wndClass.lpfnWndProc = &staicWindowProc;
-//             wndClass.cbClsExtra = 200;
-//             wndClass.cbWndExtra = 200;
-//             wndClass.hInstance = GetModuleHandleW(NULL);
-//             wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-//             wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-//             wndClass.hbrBackground = NULL;
-//             wndClass.lpszMenuName = NULL;
-//             wndClass.lpszClassName = szClassName;
-//             RegisterClassW(&wndClass);
-//         }
-// 
-//         m_hideWnd = ::CreateWindowExW(0, szClassName,
-//             szClassName, WS_OVERLAPPEDWINDOW,
-//             0, 0, 100, 100, nullptr, NULL, GetModuleHandleW(NULL), this);
-// 
-//         ::ShowWindow(m_hideWnd, SW_SHOW);
-// 
-//         return m_hideWnd;
-//    
 private:
     SystemTray m_tray;
     bool m_isSetContextMenu;

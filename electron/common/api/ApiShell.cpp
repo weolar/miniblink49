@@ -14,6 +14,10 @@
 #include "base/files/file_path.h"
 #include "base/strings/string_util.h"
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "common/NodeRegisterHelp.h"
 
 namespace gin {

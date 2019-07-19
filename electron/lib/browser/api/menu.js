@@ -136,7 +136,7 @@ Menu.setApplicationMenu = function (menu) {
 	// Keep a reference.
 	applicationMenu = menu;
 	
-	menu._setApplicationMenu();
+	//menu._setApplicationMenu(); // weolar
 }
 
 module.exports = Menu;

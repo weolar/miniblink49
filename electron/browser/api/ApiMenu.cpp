@@ -1,5 +1,9 @@
 ﻿
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "browser/api/WindowInterface.h"
 #include "browser/api/WindowList.h"
 #include "browser/api/MenuEventNotif.h"

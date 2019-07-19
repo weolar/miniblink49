@@ -2,7 +2,6 @@
 
 #include "browser/api/WindowInterface.h"
 #include "browser/api/WindowList.h"
-
 #include "wke.h"
 #include "common/ThreadCall.h"
 #include "common/NodeRegisterHelp.h"
@@ -13,6 +12,10 @@
 #include "gin/dictionary.h"
 #include "gin/object_template_builder.h"
 #include "base/values.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 
 namespace atom {
 
@@ -206,6 +209,7 @@ void WebContents::onNewWindowInBlinkThread(int width, int height, const CreateWi
     wkeSettings settings;
     settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
     wkeConfigure(&settings);
+    wkeSetDebugConfig(nullptr, "paintcallbackInOtherThread", nullptr);
     wkeResize(webView, width, height);
     wkeOnDidCreateScriptContext(webView, &WebContents::staticDidCreateScriptContextCallback, this);
     wkeOnWillReleaseScriptContext(webView, &WebContents::staticOnWillReleaseScriptContextCallback, this);
@@ -550,7 +554,7 @@ void WebContents::setUserAgentApi(const std::string userAgent) {
     std::string* str = new std::string(userAgent);
     m_ua = userAgent;
 
-    ThreadCall::callBlinkThreadSync([self, str, id] {
+    ThreadCall::callBlinkThreadAsync([self, str, id] {
         if (IdLiveDetect::get()->isLive(id))
             wkeSetUserAgent(self->m_view, str->c_str());
         delete str;

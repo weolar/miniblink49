@@ -607,9 +607,7 @@ LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam) {
 
     // Clicking with right button brings up a context menu
 
-    if (LOWORD(lParam) == WM_RBUTTONUP)
-
-    {
+    if (LOWORD(lParam) == WM_RBUTTONUP) {
         HMENU hMenu = ::LoadMenu(m_hInstance, MAKEINTRESOURCE(m_tnd.uID));
         if (!hMenu)
             return 0;
@@ -619,7 +617,6 @@ LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam) {
             ::DestroyMenu(hMenu);        //Be sure to Destroy Menu Before Returning
             return 0;
         }
-
 
         // Make chosen menu item the default (bold font)
         ::SetMenuDefaultItem(hSubMenu, m_DefaultMenuItemID, m_DefaultMenuItemByPos);

@@ -3,6 +3,10 @@
 // found in the LICENSE file.
 
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "node/src/node_buffer.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/ApiNativeImage.h"
@@ -165,7 +169,7 @@ void NativeImage::createFromPathApi(const v8::FunctionCallbackInfo<v8::Value> in
         path = *pathString;
     }
 
-    if (0 == path.size() && !asar::ReadFileToString(base::UTF8ToWide(path).c_str(), &fileContents))
+    if (0 == path.size() || !asar::ReadFileToString(base::UTF8ToWide(path).c_str(), &fileContents))
         return;
 
     const unsigned char* data = reinterpret_cast<const unsigned char*>(fileContents.data());

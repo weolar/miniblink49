@@ -1,5 +1,9 @@
 
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "renderer/WebviewPluginImpl.h"
 #include "browser/api/ApiWebContents.h"
 #include "common/NodeRegisterHelp.h"

@@ -14,6 +14,10 @@
 #include "gin/object_template_builder.h"
 #include "wke.h"
 #include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 
 #include "base/strings/string_util.h"
 #include "base/files/file_path.h"

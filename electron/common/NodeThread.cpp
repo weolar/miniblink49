@@ -136,7 +136,6 @@ async_init_failed:
     err = uv_loop_close(nodeArgc->childLoop);
     CHECK_EQ(err, 0);
 
-loop_init_failed:
     free(nodeArgc);
     nodeArgc->initType = false;
     ::SetEvent(nodeArgc->initEvent);

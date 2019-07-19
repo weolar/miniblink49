@@ -76,7 +76,7 @@ bool ReadFileToString(const wchar_t* path, std::string* buffer) {
     buffer->resize(bufferSize);
     BOOL b = ::ReadFile(hFile, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
     ::CloseHandle(hFile);
-    return !!b;
+    return !!b && 0 != numberOfBytesRead;
 }
 
 bool ReadFileToString(const base::FilePath& path, std::string* contents) {

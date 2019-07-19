@@ -3,6 +3,7 @@
 #include "common/WinUserMsg.h"
 #include "wke.h"
 #include "base/thread.h"
+#include "node/nodeblink.h"
 #include "libplatform/libplatform.h"
 
 namespace atom {
@@ -216,8 +217,14 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
     DWORD threadId = ::GetCurrentThreadId();
     
     while (true) {
-        if (loop)
+        if (loop) {
+            BlinkMicrotaskSuppressionHandle handle = nullptr;
+            if (isBlinkThread())
+                handle = nodeBlinkMicrotaskSuppressionEnter(isolate);
             more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+            if (handle)
+                nodeBlinkMicrotaskSuppressionLeave(handle);
+        }
 
         if (platform && isolate)
             v8::platform::PumpMessageLoop(platform, isolate);
