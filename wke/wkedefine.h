@@ -1,6 +1,6 @@
 ﻿/*
 *
-* wolar@qq.com
+* weolar@qq.com
 * http://miniblink.net
 * https://github.com/weolar/miniblink49
 * https://weolar.github.io/miniblink/doc-main.html api文档地址
