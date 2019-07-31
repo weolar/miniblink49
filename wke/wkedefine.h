@@ -451,6 +451,7 @@ typedef void(WKE_CALL_TYPE*wkeNodeOnCreateProcessCallback)(wkeWebView webView, v
 typedef void(WKE_CALL_TYPE*wkeOnPluginFindCallback)(wkeWebView webView, void* param, const utf8* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc);
 
 typedef void(WKE_CALL_TYPE*wkeOnPrintCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* printParams);
+typedef void(WKE_CALL_TYPE*wkeOnScreenshot)(wkeWebView webView, void* param, const char* data, size_t size);
 
 typedef struct _wkeMediaLoadInfo {
     int size;
@@ -1124,6 +1125,7 @@ public:
     ITERATOR3(void, wkeOnWillMediaLoad, wkeWebView webView, wkeWillMediaLoadCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnStartDragging, wkeWebView webView, wkeStartDraggingCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnPrint, wkeWebView webView, wkeOnPrintCallback callback, void* param, "") \
+    ITERATOR4(void, wkeScreenshot, wkeWebView webView, const wkeScreenshotSettings* settings, wkeOnScreenshot callback, void* param, "") \
     \
     ITERATOR3(void, wkeOnOtherLoad, wkeWebView webView, wkeOnOtherLoadCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnContextMenuItemClick, wkeWebView webView, wkeOnContextMenuItemClickCallback callback, void* param, "") \
@@ -1314,9 +1316,9 @@ public:
 
 #if ENABLE_WKE == 1
 
-WKE_EXTERN_C __declspec(dllexport) void wkeInit();
-WKE_EXTERN_C __declspec(dllexport) void wkeInitialize();
-WKE_EXTERN_C __declspec(dllexport) void wkeInitializeEx(const wkeSettings* settings);
+WKE_EXTERN_C __declspec(dllexport) void WKE_CALL_TYPE wkeInit();
+WKE_EXTERN_C __declspec(dllexport) void WKE_CALL_TYPE wkeInitialize();
+WKE_EXTERN_C __declspec(dllexport) void WKE_CALL_TYPE wkeInitializeEx(const wkeSettings* settings);
 
 WKE_FOR_EACH_DEFINE_FUNCTION(WKE_DECLARE_ITERATOR0, WKE_DECLARE_ITERATOR1, WKE_DECLARE_ITERATOR2, \
     WKE_DECLARE_ITERATOR3, WKE_DECLARE_ITERATOR4, WKE_DECLARE_ITERATOR5, WKE_DECLARE_ITERATOR6, WKE_DECLARE_ITERATOR11)

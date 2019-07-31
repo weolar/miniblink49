@@ -22,7 +22,7 @@
 #include "net/HeaderVisitor.h"
 #include "net/DiskCache.h"
 
-void wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, const wchar_t* key, const wchar_t* value, bool response)
+void WKE_CALL_TYPE wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, const wchar_t* key, const wchar_t* value, bool response)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -47,7 +47,7 @@ void wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, const wchar_t* key, const wchar_
     }
 }
 
-const char* wkeNetGetHTTPHeaderField(wkeNetJob jobPtr, const char* key)
+const char* WKE_CALL_TYPE wkeNetGetHTTPHeaderField(wkeNetJob jobPtr, const char* key)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -57,7 +57,7 @@ const char* wkeNetGetHTTPHeaderField(wkeNetJob jobPtr, const char* key)
     return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
 }
 
-const char* wkeNetGetHTTPHeaderFieldFromResponse(wkeNetJob jobPtr, const char* key)
+const char* WKE_CALL_TYPE wkeNetGetHTTPHeaderFieldFromResponse(wkeNetJob jobPtr, const char* key)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -67,7 +67,7 @@ const char* wkeNetGetHTTPHeaderFieldFromResponse(wkeNetJob jobPtr, const char* k
     return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
 }
 
-void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
+void WKE_CALL_TYPE wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -79,7 +79,7 @@ void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
 // 
 // }
 
-const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
+const char* WKE_CALL_TYPE wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -102,7 +102,7 @@ const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 //     return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
 // }
 
-void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
+void WKE_CALL_TYPE wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (0 == len) {
@@ -132,7 +132,7 @@ void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
     job->m_isWkeNetSetDataBeSetted = true;
 }
 
-void wkeNetHookRequest(wkeNetJob jobPtr)
+void WKE_CALL_TYPE wkeNetHookRequest(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -145,14 +145,14 @@ void wkeNetHookRequest(wkeNetJob jobPtr)
     job->m_isHookRequest = true;
 }
 
-void wkeNetCancelRequest(wkeNetJob jobPtr)
+void WKE_CALL_TYPE wkeNetCancelRequest(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_cancelledReason = net::kNormalCancelled;
 }
 
-const char* wkeNetGetUrlByJob(wkeNetJob jobPtr)
+const char* WKE_CALL_TYPE wkeNetGetUrlByJob(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -162,7 +162,7 @@ const char* wkeNetGetUrlByJob(wkeNetJob jobPtr)
     return wke::createTempCharString(urlString.data(), urlString.length());
 }
 
-void wkeNetContinueJob(wkeNetJob jobPtr)
+void WKE_CALL_TYPE wkeNetContinueJob(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -179,7 +179,7 @@ void wkeNetContinueJob(wkeNetJob jobPtr)
 //     ASSERT(!job->m_url);
 // }
 
-void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
+void WKE_CALL_TYPE wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -191,7 +191,7 @@ void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
     //ASSERT(!job->m_url);
 }
 
-BOOL wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
+BOOL WKE_CALL_TYPE wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -214,7 +214,7 @@ BOOL wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
     return TRUE;
 }
 
-wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
+wkeRequestType WKE_CALL_TYPE wkeNetGetRequestMethod(void *jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -233,7 +233,7 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
     return kWkeRequestTypeInvalidation;
 }
 
-wkePostBodyElements* wkeNetGetPostBody(void* jobPtr)
+wkePostBodyElements* WKE_CALL_TYPE wkeNetGetPostBody(void* jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -258,7 +258,7 @@ wkePostBodyElements* wkeNetGetPostBody(void* jobPtr)
     return postBody;
 }
 
-wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
+wkePostBodyElements* WKE_CALL_TYPE wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (0 == length)
@@ -277,7 +277,7 @@ wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t len
     return result;
 }
 
-void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
+void WKE_CALL_TYPE wkeNetFreePostBodyElements(wkePostBodyElements* elements)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     for (size_t i = 0; i < elements->elementSize; ++i) {
@@ -287,7 +287,7 @@ void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
     delete elements;
 }
 
-wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
+wkePostBodyElement* WKE_CALL_TYPE wkeNetCreatePostBodyElement(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     wkePostBodyElement* wkeElement = new wkePostBodyElement();
@@ -295,14 +295,14 @@ wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
     return wkeElement;
 }
 
-void wkeNetFreePostBodyElement(wkePostBodyElement* element)
+void WKE_CALL_TYPE wkeNetFreePostBodyElement(wkePostBodyElement* element)
 {
     wkeFreeMemBuf(element->data);
     wkeDeleteString(element->filePath);
     delete element;
 }
 
-wkeMemBuf* wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
+wkeMemBuf* WKE_CALL_TYPE wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
 {
     if (!buf || 0 == length)
         return nullptr;
@@ -314,7 +314,7 @@ wkeMemBuf* wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
     return result;
 }
 
-void wkeFreeMemBuf(wkeMemBuf* buf)
+void WKE_CALL_TYPE wkeFreeMemBuf(wkeMemBuf* buf)
 {
     if (!buf)
         return;
@@ -323,7 +323,7 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
     free(buf);
 }
 
-int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param)
+int WKE_CALL_TYPE wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return net::getFavicon(webView, callback, param);
@@ -545,7 +545,7 @@ private:
     wkeOnUrlRequestDidFinishLoadingCallback m_didFinishLoadingCallback;
 };
 
-blinkWebURLRequestPtr wkeNetCopyWebUrlRequest(wkeNetJob jobPtr, bool needExtraData)
+blinkWebURLRequestPtr WKE_CALL_TYPE wkeNetCopyWebUrlRequest(wkeNetJob jobPtr, bool needExtraData)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     blink::WebURLRequest* request = job->firstRequest();
@@ -559,22 +559,22 @@ blinkWebURLRequestPtr wkeNetCopyWebUrlRequest(wkeNetJob jobPtr, bool needExtraDa
     return result;
 }
 
-void wkeNetDeleteBlinkWebURLRequestPtr(blinkWebURLRequestPtr ptr)
+void WKE_CALL_TYPE wkeNetDeleteBlinkWebURLRequestPtr(blinkWebURLRequestPtr ptr)
 {
     delete ptr;
 }
 
-wkeWebUrlRequestPtr wkeNetCreateWebUrlRequest2(const blinkWebURLRequestPtr request)
+wkeWebUrlRequestPtr WKE_CALL_TYPE wkeNetCreateWebUrlRequest2(const blinkWebURLRequestPtr request)
 {
     return new wkeWebUrlRequest(nullptr, *request);
 }
 
-wkeWebUrlRequestPtr wkeNetCreateWebUrlRequest(const utf8* url, const utf8* method, const utf8* mime)
+wkeWebUrlRequestPtr WKE_CALL_TYPE wkeNetCreateWebUrlRequest(const utf8* url, const utf8* method, const utf8* mime)
 {
     return new wkeWebUrlRequest(url, method, mime);
 }
 
-void wkeNetAddHTTPHeaderFieldToUrlRequest(wkeWebUrlRequestPtr request, const utf8* name, const utf8* value)
+void WKE_CALL_TYPE wkeNetAddHTTPHeaderFieldToUrlRequest(wkeWebUrlRequestPtr request, const utf8* name, const utf8* value)
 {
     if (WTF::isMainThread())
         return request->addHTTPHeaderField(name, value);
@@ -588,19 +588,19 @@ void wkeNetAddHTTPHeaderFieldToUrlRequest(wkeWebUrlRequestPtr request, const utf
     });
 }
 
-int wkeNetGetHttpStatusCode(wkeWebUrlResponsePtr response)
+int WKE_CALL_TYPE wkeNetGetHttpStatusCode(wkeWebUrlResponsePtr response)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return response->m_response.httpStatusCode();
 }
 
-long long wkeNetGetExpectedContentLength(wkeWebUrlResponsePtr response)
+long long WKE_CALL_TYPE wkeNetGetExpectedContentLength(wkeWebUrlResponsePtr response)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return response->m_response.expectedContentLength();
 }
 
-const utf8* wkeNetGetResponseUrl(wkeWebUrlResponsePtr response)
+const utf8* WKE_CALL_TYPE wkeNetGetResponseUrl(wkeWebUrlResponsePtr response)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     blink::KURL kurl = response->m_response.url();
@@ -608,14 +608,14 @@ const utf8* wkeNetGetResponseUrl(wkeWebUrlResponsePtr response)
     return wke::createTempCharString((const char*)url.characters8(), url.length());
 }
 
-int wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, const wkeUrlRequestCallbacks* callbacks)
+int WKE_CALL_TYPE wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, const wkeUrlRequestCallbacks* callbacks)
 {
     request->setWebView(webView);
     NetUrlRequest* netRequest = new NetUrlRequest(webView, request, param, callbacks);
     return netRequest->start();
 }
 
-void wkeNetCancelWebUrlRequest(int requestId)
+void WKE_CALL_TYPE wkeNetCancelWebUrlRequest(int requestId)
 {
     net::JobHead* jobHead = net::WebURLLoaderManager::sharedInstance()->checkJob(requestId);
     if (!jobHead || net::JobHead::kWkeCustomNetRequest != jobHead->getType())

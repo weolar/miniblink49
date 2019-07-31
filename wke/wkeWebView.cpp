@@ -1081,7 +1081,7 @@ static HWND createHideWnd()
     return s_hWnd;
 }
 
-void defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
+void WKE_CALL_TYPE defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
 {
     HWND hWnd = createHideWnd();
     ::SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
@@ -1108,13 +1108,13 @@ void defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
     ::ShowWindow(hWnd, SW_HIDE);
 }
 
-bool defaultRunConfirmBox(wkeWebView webView, void* param, const wkeString msg)
+bool WKE_CALL_TYPE defaultRunConfirmBox(wkeWebView webView, void* param, const wkeString msg)
 {
     int result = MessageBoxW(NULL, wkeGetStringW(msg), L"wke", MB_OKCANCEL);
     return result == IDOK;
 }
 
-bool defaultRunPromptBox(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result)
+bool WKE_CALL_TYPE defaultRunPromptBox(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result)
 {
     return false;
 }
@@ -1404,7 +1404,7 @@ public:
     }
     virtual ~ShowDevToolsTaskObserver() {}
 
-    static void handleDevToolsWebViewDestroy(wkeWebView webWindow, void* param)
+    static void WKE_CALL_TYPE handleDevToolsWebViewDestroy(wkeWebView webWindow, void* param)
     {
         CWebView* parent = (CWebView*)param;
         parent->m_isCreatedDevTools = false;
@@ -1451,50 +1451,28 @@ void CWebView::showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback,
 
 net::WebCookieJarImpl* CWebView::getCookieJar()
 {
-    if (!m_webPage)
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
         return nullptr;
 
-    return m_webPage->getCookieJar();
+    return manager->getShareCookieJar();
 }
 
 CURLSH* CWebView::getCurlShareHandle()
 {
     CURLSH* curlsh = nullptr;
-    if (m_webPage && m_webPage->getPageNetExtraData()) {
-        curlsh = m_webPage->getPageNetExtraData()->getCurlShareHandle();
-        return curlsh;
-    }
-
     curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
     return curlsh;
 }
 
 std::string CWebView::getCookieJarPath()
 {
-    std::string cookiesData;
-    if (m_webPage && m_webPage->getPageNetExtraData()) {
-        cookiesData = m_webPage->getPageNetExtraData()->getCookieJarFullPath();
-        return cookiesData;
-    }
-
     net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
     if (!manager)
         return "";
 
-    cookiesData = manager->getShareCookieJar()->getCookieJarFullPath();
+    std::string cookiesData = manager->getShareCookieJar()->getCookieJarFullPath();
     return cookiesData;
-}
-
-void CWebView::setCookieJarFullPath(const utf8* path)
-{
-    if (m_webPage)
-        m_webPage->setCookieJarFullPath(path);
-}
-
-void CWebView::setLocalStorageFullPath(const utf8* path)
-{
-    if (m_webPage)
-        m_webPage->setLocalStorageFullPath(path);
 }
 
 } // namespace wke

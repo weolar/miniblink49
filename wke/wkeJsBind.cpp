@@ -222,7 +222,7 @@ static jsValue createEmptyJsValue(WkeJsValue** out)
     return s_handleCount;
 }
 
-int jsArgCount(jsExecState es)
+int WKE_CALL_TYPE jsArgCount(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es))
@@ -236,7 +236,7 @@ int jsArgCount(jsExecState es)
     return es->args->Length();
 }
 
-jsType jsArgType(jsExecState es, int argIdx)
+jsType WKE_CALL_TYPE jsArgType(jsExecState es, int argIdx)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return jsTypeOf(jsArg(es, argIdx));
@@ -253,7 +253,7 @@ static jsValue jsArgImpl(jsExecState es, v8::Local<v8::Value> value)
     return createJsValueByLocalValue(es->isolate, context, value);
 }
 
-jsValue jsArg(jsExecState es, int argIdx)
+jsValue WKE_CALL_TYPE jsArg(jsExecState es, int argIdx)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es))
@@ -273,7 +273,7 @@ jsValue jsArg(jsExecState es, int argIdx)
     return jsArgImpl(es, value);
 }
 
-jsType jsTypeOf(jsValue v)
+jsType WKE_CALL_TYPE jsTypeOf(jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     JsValueMap::iterator it = findJsValueMap(v);
@@ -325,42 +325,42 @@ jsType jsTypeOf(jsValue v)
     return JSTYPE_UNDEFINED;
 }
 
-bool jsIsNumber(jsValue v)
+bool WKE_CALL_TYPE jsIsNumber(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_NUMBER ? true : false;
 }
 
-bool jsIsString(jsValue v)
+bool WKE_CALL_TYPE jsIsString(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_STRING ? true : false;
 }
 
-bool jsIsBoolean(jsValue v)
+bool WKE_CALL_TYPE jsIsBoolean(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_BOOLEAN ? true : false;
 }
 
-bool jsIsObject(jsValue v)
+bool WKE_CALL_TYPE jsIsObject(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_OBJECT ? true : false;
 }
 
-bool jsIsFunction(jsValue v)
+bool WKE_CALL_TYPE jsIsFunction(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_FUNCTION ? true : false;
 }
 
-bool jsIsUndefined(jsValue v)
+bool WKE_CALL_TYPE jsIsUndefined(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_UNDEFINED ? true : false;
 }
 
-bool jsIsArray(jsValue v)
+bool WKE_CALL_TYPE jsIsArray(jsValue v)
 {
     return jsTypeOf(v) == JSTYPE_ARRAY ? true : false;
 }
 
-bool jsIsNull(jsValue v)
+bool WKE_CALL_TYPE jsIsNull(jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     JsValueMap::iterator it = findJsValueMap(v);
@@ -378,7 +378,7 @@ bool jsIsNull(jsValue v)
     return value->IsNull();
 }
 
-bool jsIsTrue(jsValue v)
+bool WKE_CALL_TYPE jsIsTrue(jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     JsValueMap::iterator it = findJsValueMap(v);
@@ -402,12 +402,12 @@ bool jsIsTrue(jsValue v)
     return false;
 }
 
-bool jsIsFalse(jsValue v)
+bool WKE_CALL_TYPE jsIsFalse(jsValue v)
 {
     return !jsIsTrue(v);
 }
 
-int jsToInt(jsExecState es, jsValue v)
+int WKE_CALL_TYPE jsToInt(jsExecState es, jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es)
@@ -430,12 +430,12 @@ int jsToInt(jsExecState es, jsValue v)
     return 0;
 }
 
-float jsToFloat(jsExecState es, jsValue v)
+float WKE_CALL_TYPE jsToFloat(jsExecState es, jsValue v)
 {
     return (float)jsToDouble(es, v);
 }
 
-double jsToDouble(jsExecState es, jsValue v)
+double WKE_CALL_TYPE jsToDouble(jsExecState es, jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es)
@@ -457,7 +457,7 @@ double jsToDouble(jsExecState es, jsValue v)
     return 0.0;
 }
 
-bool jsToBoolean(jsExecState es, jsValue v)
+bool WKE_CALL_TYPE jsToBoolean(jsExecState es, jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es)
@@ -478,7 +478,7 @@ bool jsToBoolean(jsExecState es, jsValue v)
     return false;
 }
 
-const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
+const wchar_t* WKE_CALL_TYPE jsToTempStringW(jsExecState es, jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     const utf8* utf8String = jsToTempString(es, v);
@@ -489,7 +489,7 @@ const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
     return wke::createTempWCharString(utf16.data(), utf16.size());
 }
 
-const utf8* jsToTempString(jsExecState es, jsValue v)
+const utf8* WKE_CALL_TYPE jsToTempString(jsExecState es, jsValue v)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es)
@@ -547,17 +547,17 @@ const utf8* jsToTempString(jsExecState es, jsValue v)
     return wke::createTempCharString(sharedStringBuffer.data(), sharedStringBuffer.size());
 }
 
-const utf8* jsToString(jsExecState es, jsValue v)
+const utf8* WKE_CALL_TYPE jsToString(jsExecState es, jsValue v)
 {
     return jsToTempString(es, v);
 }
 
-const wchar_t* jsToStringW(jsExecState es, jsValue v)
+const wchar_t* WKE_CALL_TYPE jsToStringW(jsExecState es, jsValue v)
 {
     return jsToTempStringW(es, v);
 }
 
-void* jsToV8Value(jsExecState es, jsValue v)
+void* WKE_CALL_TYPE jsToV8Value(jsExecState es, jsValue v)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return nullptr;
@@ -573,7 +573,7 @@ void* jsToV8Value(jsExecState es, jsValue v)
     return &wkeValue->value;
 }
 
-jsValue jsInt(int n)
+jsValue WKE_CALL_TYPE jsInt(int n)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     WkeJsValue* out;
@@ -583,12 +583,12 @@ jsValue jsInt(int n)
     return ret;
 }
 
-jsValue jsFloat(float f)
+jsValue WKE_CALL_TYPE jsFloat(float f)
 {
     return jsDouble(f);
 }
 
-jsValue jsDouble(double d)
+jsValue WKE_CALL_TYPE jsDouble(double d)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     WkeJsValue* out;
@@ -598,7 +598,7 @@ jsValue jsDouble(double d)
     return ret;
 }
 
-jsValue jsBoolean(bool b)
+jsValue WKE_CALL_TYPE jsBoolean(bool b)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     WkeJsValue* out;
@@ -608,7 +608,7 @@ jsValue jsBoolean(bool b)
     return ret;
 }
 
-jsValue jsUndefined()
+jsValue WKE_CALL_TYPE jsUndefined()
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     WkeJsValue* out;
@@ -617,7 +617,7 @@ jsValue jsUndefined()
     return ret;
 }
 
-jsValue jsNull()
+jsValue WKE_CALL_TYPE jsNull()
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     WkeJsValue* out;
@@ -626,17 +626,17 @@ jsValue jsNull()
     return ret;
 }
 
-jsValue jsTrue()
+jsValue WKE_CALL_TYPE jsTrue()
 {
     return jsBoolean(true);
 }
 
-jsValue jsFalse()
+jsValue WKE_CALL_TYPE jsFalse()
 {
     return jsBoolean(false);
 }
 
-jsValue jsString(jsExecState es, const utf8* str)
+jsValue WKE_CALL_TYPE jsString(jsExecState es, const utf8* str)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -655,7 +655,7 @@ jsValue jsString(jsExecState es, const utf8* str)
     return createJsValueByLocalValue(es->isolate, context, value.ToLocalChecked());
 }
 
-jsValue jsStringW(jsExecState es, const wchar_t* str)
+jsValue WKE_CALL_TYPE jsStringW(jsExecState es, const wchar_t* str)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -674,7 +674,7 @@ jsValue jsStringW(jsExecState es, const wchar_t* str)
     return createJsValueByLocalValue(es->isolate, context, value.ToLocalChecked());
 }
 
-jsValue jsArrayBuffer(jsExecState es, char * buffer, size_t size)
+jsValue WKE_CALL_TYPE jsArrayBuffer(jsExecState es, char * buffer, size_t size)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -696,7 +696,7 @@ jsValue jsArrayBuffer(jsExecState es, char * buffer, size_t size)
     return createJsValueByLocalValue(es->isolate, context, value);
 }
 
-wkeMemBuf* jsGetArrayBuffer(jsExecState es, jsValue value)
+wkeMemBuf* WKE_CALL_TYPE jsGetArrayBuffer(jsExecState es, jsValue value)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es)
@@ -722,7 +722,7 @@ wkeMemBuf* jsGetArrayBuffer(jsExecState es, jsValue value)
     return result;
 }
 
-jsValue jsEmptyObject(jsExecState es)
+jsValue WKE_CALL_TYPE jsEmptyObject(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -738,7 +738,7 @@ jsValue jsEmptyObject(jsExecState es)
     return createJsValueByLocalValue(es->isolate, context, v8::Object::New(es->isolate));
 }
 
-jsValue jsEmptyArray(jsExecState es)
+jsValue WKE_CALL_TYPE jsEmptyArray(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -754,7 +754,7 @@ jsValue jsEmptyArray(jsExecState es)
 }
 
 //return the window object
-jsValue jsGlobalObject(jsExecState es)
+jsValue WKE_CALL_TYPE jsGlobalObject(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty())
@@ -778,19 +778,19 @@ jsValue jsGlobalObject(jsExecState es)
     return ret;
 }
 
-jsValue jsEval(jsExecState es, const utf8* str)
+jsValue WKE_CALL_TYPE jsEval(jsExecState es, const utf8* str)
 {
     String s = String::fromUTF8(str);
     Vector<UChar> buf = WTF::ensureUTF16UChar(s, true);
     return jsEvalW(es, buf.data());
 }
 
-jsValue jsEvalW(jsExecState es, const wchar_t* str)
+jsValue WKE_CALL_TYPE jsEvalW(jsExecState es, const wchar_t* str)
 {
     return jsEvalExW(es, str, true);
 }
 
-jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure)
+jsValue WKE_CALL_TYPE jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty() || !str)
@@ -905,7 +905,7 @@ static std::string* saveCallstack(v8::Local<v8::StackTrace> stackTrace)
     return outString;
 }
 
-jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, int argCount)
+jsValue WKE_CALL_TYPE jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, int argCount)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -962,7 +962,7 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
     return createJsValueByLocalValue(isolate, context, v8Ret);
 }
 
-const utf8* jsGetCallstack(jsExecState es)
+const utf8* WKE_CALL_TYPE jsGetCallstack(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     std::string* callstack = saveCallstack(v8::Local<v8::StackTrace>());
@@ -971,17 +971,17 @@ const utf8* jsGetCallstack(jsExecState es)
     return result;
 }
 
-jsValue jsCallGlobal(jsExecState es, jsValue func, jsValue* args, int argCount)
+jsValue WKE_CALL_TYPE jsCallGlobal(jsExecState es, jsValue func, jsValue* args, int argCount)
 {
     return jsCall(es, func, jsUndefined(), args, argCount);
 }
 
-jsExceptionInfo* jsGetLastErrorIfException(jsExecState es)
+jsExceptionInfo* WKE_CALL_TYPE jsGetLastErrorIfException(jsExecState es)
 {
     return g_jsExceptionInfo;
 }
 
-jsValue jsThrowException(jsExecState es, const utf8* exception)
+jsValue WKE_CALL_TYPE jsThrowException(jsExecState es, const utf8* exception)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -993,7 +993,7 @@ jsValue jsThrowException(jsExecState es, const utf8* exception)
     return jsUndefined();
 }
 
-jsValue jsGet(jsExecState es, jsValue object, const char* prop)
+jsValue WKE_CALL_TYPE jsGet(jsExecState es, jsValue object, const char* prop)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1024,7 +1024,7 @@ jsValue jsGet(jsExecState es, jsValue object, const char* prop)
     return jsUndefined();
 }
 
-void jsSet(jsExecState es, jsValue object, const char* prop, jsValue value)
+void WKE_CALL_TYPE jsSet(jsExecState es, jsValue object, const char* prop, jsValue value)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1055,17 +1055,17 @@ void jsSet(jsExecState es, jsValue object, const char* prop, jsValue value)
     obj->Set(propV8Local, valueLocal);
 }
 
-jsValue jsGetGlobal(jsExecState es, const char* prop)
+jsValue WKE_CALL_TYPE jsGetGlobal(jsExecState es, const char* prop)
 {
     return jsGet(es, jsGlobalObject(es), prop);
 }
 
-void jsSetGlobal(jsExecState es, const char* prop, jsValue v)
+void WKE_CALL_TYPE jsSetGlobal(jsExecState es, const char* prop, jsValue v)
 {
     jsSet(es, jsGlobalObject(es), prop, v);
 }
 
-void jsDeleteObjectProp(jsExecState es, jsValue object, const char* prop)
+void WKE_CALL_TYPE jsDeleteObjectProp(jsExecState es, jsValue object, const char* prop)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1088,7 +1088,7 @@ void jsDeleteObjectProp(jsExecState es, jsValue object, const char* prop)
     obj->Delete(context, propV8.ToLocalChecked());
 }
 
-bool jsIsValidExecState(jsExecState es)
+bool WKE_CALL_TYPE jsIsValidExecState(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1096,7 +1096,7 @@ bool jsIsValidExecState(jsExecState es)
     return true;
 }
 
-bool jsIsJsValueValid(jsExecState es, jsValue object)
+bool WKE_CALL_TYPE jsIsJsValueValid(jsExecState es, jsValue object)
 {
     if (!jsIsValidExecState(es))
         return false;
@@ -1108,7 +1108,7 @@ bool jsIsJsValueValid(jsExecState es, jsValue object)
     return true;
 }
 
-jsValue jsGetAt(jsExecState es, jsValue object, int index)
+jsValue WKE_CALL_TYPE jsGetAt(jsExecState es, jsValue object, int index)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1138,7 +1138,7 @@ jsValue jsGetAt(jsExecState es, jsValue object, int index)
     return createJsValueByLocalValue(isolate, context, retValue.ToLocalChecked());
 }
 
-void jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
+void WKE_CALL_TYPE jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1164,7 +1164,7 @@ void jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
     return;
 }
 
-jsKeys* jsGetKeys(jsExecState es, jsValue object)
+jsKeys* WKE_CALL_TYPE jsGetKeys(jsExecState es, jsValue object)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1198,7 +1198,7 @@ jsKeys* jsGetKeys(jsExecState es, jsValue object)
     return result;
 }
 
-int jsGetLength(jsExecState es, jsValue object)
+int WKE_CALL_TYPE jsGetLength(jsExecState es, jsValue object)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1220,7 +1220,7 @@ int jsGetLength(jsExecState es, jsValue object)
     return retValue;
 }
 
-void jsSetLength(jsExecState es, jsValue object, int length)
+void WKE_CALL_TYPE jsSetLength(jsExecState es, jsValue object, int length)
 {
 //     JSC::ExecState* exec = (JSC::ExecState*)es;
 //     JSC::JSValue o = JSC::JSValue::decode(object);
@@ -1229,7 +1229,7 @@ void jsSetLength(jsExecState es, jsValue object, int length)
 //     o.put(exec, JSC::Identifier(exec, "length"), JSC::jsNumber(length), slot);
 }
 
-wkeWebView jsGetWebView(jsExecState es)
+wkeWebView WKE_CALL_TYPE jsGetWebView(jsExecState es)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1254,13 +1254,13 @@ wkeWebView jsGetWebView(jsExecState es)
     return webView;
 }
 
-void jsGC()
+void WKE_CALL_TYPE jsGC()
 {
     //WebCore::gcController().garbageCollectNow();
     wkeGC(nullptr, 1);
 }
 
-bool jsAddRef(jsExecState es, jsValue val)
+bool WKE_CALL_TYPE jsAddRef(jsExecState es, jsValue val)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1292,7 +1292,7 @@ bool jsAddRef(jsExecState es, jsValue val)
 
 static void deletePersistentJsValue(jsValue v);
 
-bool jsReleaseRef(jsExecState es, jsValue val)
+bool WKE_CALL_TYPE jsReleaseRef(jsExecState es, jsValue val)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
@@ -1588,13 +1588,13 @@ struct jsFunctionInfo {
 
 static Vector<jsFunctionInfo>* s_jsFunctionsPtr = nullptr;
 
-static jsValue wkeJsBindFunctionWrap(jsExecState es, void* param)
+static jsValue WKE_CALL_TYPE wkeJsBindFunctionWrap(jsExecState es, void* param)
 {
     jsNativeFunction fn = (jsNativeFunction)param;
     return fn(es);
 }
 
-void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
+void WKE_CALL_TYPE jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
 {
     wkeJsBindFunction(name, wkeJsBindFunctionWrap, fn, argCount);
 }
@@ -1627,19 +1627,19 @@ static void wkeJsBindSetterGetter(const char* name, wkeJsNativeFunction fn, void
     s_jsFunctions.append(funcInfo);
 }
 
-void jsBindGetter(const char* name, jsNativeFunction fn)
+void WKE_CALL_TYPE jsBindGetter(const char* name, jsNativeFunction fn)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     wkeJsBindSetterGetter(name, wkeJsBindFunctionWrap, fn, JS_GETTER);
 }
 
-void jsBindSetter(const char* name, jsNativeFunction fn)
+void WKE_CALL_TYPE jsBindSetter(const char* name, jsNativeFunction fn)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     wkeJsBindSetterGetter(name, wkeJsBindFunctionWrap, fn, JS_SETTER);
 }
 
-void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount)
+void WKE_CALL_TYPE wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!name || strlen(name) > MAX_NAME_LENGTH - 1)
@@ -1669,17 +1669,17 @@ void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, un
     s_jsFunctions.append(funcInfo);
 }
 
-void wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param)
+void WKE_CALL_TYPE wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param)
 {
     wkeJsBindSetterGetter(name, fn, param, JS_GETTER);
 }
 
-void wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param)
+void WKE_CALL_TYPE wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param)
 {
     wkeJsBindSetterGetter(name, fn, param, JS_GETTER);
 }
 
-jsValue js_outputMsg(jsExecState es, void* param)
+jsValue WKE_CALL_TYPE js_outputMsg(jsExecState es, void* param)
 {
     if (jsArgCount(es) != 1 || jsArgType(es, 0) != JSTYPE_STRING)
         return jsUndefined();
@@ -1690,13 +1690,13 @@ jsValue js_outputMsg(jsExecState es, void* param)
     return jsUndefined();
 }
 
-jsValue js_getWebViewName(jsExecState es, void* param)
+jsValue WKE_CALL_TYPE js_getWebViewName(jsExecState es, void* param)
 {
     wkeWebView webView = jsGetWebView(es);
     return jsString(es, webView->name());
 }
 
-jsValue js_setWebViewName(jsExecState es, void* param)
+jsValue WKE_CALL_TYPE js_setWebViewName(jsExecState es, void* param)
 {
     const char* name = jsToTempString(es, jsArg(es, 0));
     wkeWebView webView = jsGetWebView(es);
@@ -1740,7 +1740,7 @@ static void namedPropertySetterCallback(v8::Local<v8::String> property, v8::Loca
 
 void* g_testObject = nullptr;
 
-jsValue jsObject(jsExecState es, jsData* data)
+jsValue WKE_CALL_TYPE jsObject(jsExecState es, jsData* data)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty())
@@ -1800,7 +1800,7 @@ void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args
     args.GetReturnValue().Set(getV8Value(retWkeValue, context));
 }
 
-jsValue jsFunction(jsExecState es, jsData* data)
+jsValue WKE_CALL_TYPE jsFunction(jsExecState es, jsData* data)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty() || !es->isolate)
@@ -1824,7 +1824,7 @@ jsValue jsFunction(jsExecState es, jsData* data)
     return retVal;
 }
 
-jsData* jsGetData(jsExecState es, jsValue value)
+jsData* WKE_CALL_TYPE jsGetData(jsExecState es, jsValue value)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty() || !es->isolate)

@@ -320,10 +320,7 @@ public:
 
     CURLSH* getCurlShareHandle();
     std::string getCookieJarPath();
-    void setCookieJarFullPath(const utf8* path);
     net::WebCookieJarImpl* getCookieJar();
-
-    void setLocalStorageFullPath(const utf8* path);
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
 
