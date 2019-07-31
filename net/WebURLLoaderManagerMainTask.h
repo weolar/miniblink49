@@ -14,7 +14,7 @@
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "wke/wkeWebView.h"
 
-void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info);
+void WKE_CALL_TYPE wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info);
 
 namespace net {
 
@@ -691,6 +691,9 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTa
         job->m_isRedirection = false;
 
         if (job->m_isWkeNetSetDataBeSetted) {
+            if (job->m_customHeaders)
+                curl_slist_free_all(job->m_customHeaders);
+            job->m_customHeaders = nullptr;
             WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
             Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new HookAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id, false));
             return;
