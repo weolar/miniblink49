@@ -393,54 +393,6 @@ void parseCookieKeyValue(const String& cookie, Vector<String>* keys, Vector<Stri
     }
 }
 
-#ifndef MINIBLINK_NOT_IMPLEMENTED
-
-// fix "https://icorepnbs.pingan.com.cn/" swfupload bug, in which flash send http with cookie from IE
-static void fixSwfUpload(LocalFrame* frame)
-{
-    Document* doc = frame->document();
-    const KURL& url = doc->url();
-    if (!url.protocolIsInHTTPFamily())
-        return;
-
-    ChromeClient& chromeClient = frame->chromeClient();
-    WebViewImpl* view = (WebViewImpl*)chromeClient.webView();
-    if (!view)
-        return;
-    content::WebPageImpl* page = (content::WebPageImpl*)view->client();
-    if (!page)
-        return;
-    net::WebCookieJarImpl* cookieJar = page->getCookieJar();
-    if (!cookieJar)
-        return;
-    String cookie = cookieJar->getCookiesForSession(KURL(), doc->cookieURL(), true);
-    String host = url.protocol();
-
-    host.append("://");
-    host.append(url.host());
-
-    // ::InternetSetCookieA(sURL, NULL, "JSESSIONID=null;path=/;expires=Thu, 01-Jan-1970 00:00:01 GMT");
-    // ::InternetSetCookieA(sURL, "JSESSIONID", "1111111111;path=/;expires=Thu, 01-Jan-2022 00:00:01 GMT");
-
-    Vector<String> keys;
-    Vector<String> values;
-    parseCookieKeyValue(cookie.utf8().data(), &keys, &values);
-    for (size_t i = 0; i < keys.size(); ++i) {
-        String key = keys[i];
-        String value = values[i];
-
-        String temp = key;
-        temp.append("=null;path=/;expires=Thu, 01-Jan-1970 00:00:01 GMT");
-        ::InternetSetCookieA(host.utf8().data(), NULL, temp.utf8().data());
-
-        temp = value;
-        temp.append(";path=/;expires=Thu, 01-Jan-2022 00:00:01 GMT");
-        ::InternetSetCookieA(host.utf8().data(), key.utf8().data(), temp.utf8().data());
-    }
-}
-
-#endif
-
 bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPString* npScript, NPVariant* result)
 {
     if (result) {
@@ -481,11 +433,6 @@ bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPStri
     ASSERT(frame);
 
     String script = String::fromUTF8(npScript->UTF8Characters, npScript->UTF8Length);
-
-#ifndef MINIBLINK_NOT_IMPLEMENTED
-    if (WTF::kNotFound != script.find("SWFUpload") && WTF::kNotFound != script.find("uploadStart("))
-        fixSwfUpload(frame);
-#endif
 
     UserGestureIndicator gestureIndicator(popupsAllowed ? DefinitelyProcessingNewUserGesture : PossiblyProcessingUserGesture);
     v8::Local<v8::Value> v8result = frame->script().executeScriptAndReturnValue(scriptState->context(), ScriptSourceCode(script, KURL(ParsedURLString, filename)));
