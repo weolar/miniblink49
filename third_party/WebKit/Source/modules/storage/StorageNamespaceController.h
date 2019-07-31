@@ -20,9 +20,6 @@ class MODULES_EXPORT StorageNamespaceController final : public NoBaseWillBeGarba
     WILL_BE_USING_GARBAGE_COLLECTED_MIXIN(StorageNamespaceController);
 public:
     StorageNamespace* sessionStorage(bool optionalCreate = true);
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    StorageNamespace* localStorage();
-#endif
     StorageClient* storageClient() { return m_client; }
     ~StorageNamespaceController();
 
@@ -37,9 +34,6 @@ private:
     explicit StorageNamespaceController(StorageClient*);
     static const char* supplementName();
     OwnPtr<StorageNamespace> m_sessionStorage;
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    OwnPtr<StorageNamespace> m_localStorage;
-#endif
     StorageClient* m_client;
     RawPtrWillBeMember<InspectorDOMStorageAgent> m_inspectorAgent;
 };
