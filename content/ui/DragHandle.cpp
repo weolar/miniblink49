@@ -332,7 +332,7 @@ public:
         *m_count += 1;
     }
 
-    static void runInUiThread(HWND hWnd, void* param)
+    static void WKE_CALL_TYPE runInUiThread(HWND hWnd, void* param)
     {
         StartDraggingTask* self = (StartDraggingTask*)param;
         self->runInUiThreadImpl();

@@ -485,32 +485,6 @@ blink::WebScreenInfo WebPage::screenInfo()
     return blink::WebScreenInfo();
 }
 
-net::WebCookieJarImpl* WebPage::getCookieJar()
-{
-    if (m_pageImpl)
-        return m_pageImpl->getCookieJar();
-    return nullptr;    
-}
-
-PassRefPtr<net::PageNetExtraData> WebPage::getPageNetExtraData()
-{
-    if (m_pageImpl)
-        return m_pageImpl->m_pageNetExtraData;
-    return nullptr;
-}
-
-void WebPage::setCookieJarFullPath(const char* path)
-{
-    if (m_pageImpl)
-        return m_pageImpl->setCookieJarFullPath(path);
-}
-
-void WebPage::setLocalStorageFullPath(const char* path)
-{
-    if (m_pageImpl)
-        return m_pageImpl->setLocalStorageFullPath(path);
-}
-
 WebPage* WebPage::getSelfForCurrentContext()
 {
     WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();

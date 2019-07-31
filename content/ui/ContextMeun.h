@@ -125,7 +125,7 @@ public:
         std::function<void()> m_func;
 
     public:
-        static void asyncFunc(HWND hWnd, void* param)
+        static void WKE_CALL_TYPE asyncFunc(HWND hWnd, void* param)
         {
             UiTaskCall* self = (UiTaskCall*)param;
 

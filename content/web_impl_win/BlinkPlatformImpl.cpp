@@ -636,7 +636,7 @@ blink::WebString BlinkPlatformImpl::userAgent()
 
 const char* BlinkPlatformImpl::getUserAgent()
 {
-    const char* defaultUA = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3489.1 Safari/537.36";
+    const char* defaultUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
     BlinkPlatformImpl* self = (BlinkPlatformImpl*)blink::Platform::current();
     if (!self)
         return defaultUA;
@@ -836,14 +836,9 @@ blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) c
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createLocalStorageNamespace()
 {
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    RELEASE_ASSERT(false);
-    return nullptr;
-#else
     if (!m_localStorageStorageMap)
         m_localStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl("", blink::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
-#endif
+    return new net::WebStorageNamespaceImpl("", net::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
 }
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()

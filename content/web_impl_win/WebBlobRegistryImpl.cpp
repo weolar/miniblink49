@@ -89,17 +89,23 @@ void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobD
     while (data.itemAt(i++, dataItem)) {
         if (blink::WebBlobData::Item::TypeBlob == dataItem.type) {
             net::BlobDataWrap* blobData = getBlobDataFromUUID(dataItem.blobUUID);
-            blobData->items();
+
+            String out = String::format("WebBlobRegistryImpl::registerBlobData -- : %p, %s\n", blobData, dataItem.blobUUID.utf8().data());
+            OutputDebugStringA(out.utf8().data());
+
+            // 目前只支持1 == blobData->items().size()的情况
             for (size_t i = 0; i < blobData->items().size(); ++i) {
                 blink::WebBlobData::Item* it = blobData->items()[i];
+                it->length = dataItem.length;
+                it->offset = dataItem.offset;
                 dataWrap->appendItem(new WebBlobData::Item(*it));
             }
         } else
             dataWrap->appendItem(new WebBlobData::Item(dataItem));
     }
 
-//     String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
-//     OutputDebugStringA(out.utf8().data());
+    String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
+    OutputDebugStringA(out.utf8().data());
 
     check();
 
@@ -242,8 +248,8 @@ void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebStri
     net::BlobDataWrap* dataWrap = (it->value);
     dataWrap->m_ref++;
 
-//     String out = String::format("WebBlobRegistryImpl::registerPublicBlobURL: %p %s\n", dataWrap, url.string().utf8().data());
-//     OutputDebugStringA(out.utf8().data());
+    String out = String::format("WebBlobRegistryImpl::registerPublicBlobURL: %p %s\n", dataWrap, url.string().utf8().data());
+    OutputDebugStringA(out.utf8().data());
 
     m_datasSet.set(url.string(), dataWrap);
 

@@ -156,12 +156,6 @@ public:
 
     static WebPage* getSelfForCurrentContext();
 
-    net::WebCookieJarImpl* getCookieJar();
-
-    PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
-    void setCookieJarFullPath(const char* path);
-    void setLocalStorageFullPath(const char* path);
-
     WebFrameClientImpl* webFrameClientImpl();
 
     blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);

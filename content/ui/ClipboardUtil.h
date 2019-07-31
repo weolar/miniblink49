@@ -52,7 +52,20 @@ public:
     static base::DictionaryValue* getCustomPlainTexts(IDataObject* dataObject);
 
     static HGLOBAL createGlobalData(const std::string& url, const std::string& title);
-    static HGLOBAL createGlobalData(const std::string& str);
+    template <typename charT> static HGLOBAL createGlobalData(const std::basic_string<charT>& str)
+    {
+        if (str.size() == 0)
+            return nullptr;
+
+        HGLOBAL data = ::GlobalAlloc(GMEM_MOVEABLE, ((str.size() + 1) * sizeof(charT)));
+        if (data) {
+            charT* rawData = static_cast<charT*>(::GlobalLock(data));
+            memcpy(rawData, &str[0], str.size() * sizeof(charT));
+            rawData[str.size()] = '\0';
+            ::GlobalUnlock(data);
+        }
+        return data;
+    }
 
     static std::string htmlToCFHtml(const std::string& html, const std::string& base_url);
 

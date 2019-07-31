@@ -193,10 +193,6 @@ WebExternalPopupMenu* WebFrameClientImpl::createExternalPopupMenu(const WebPopup
 
 WebCookieJar* WebFrameClientImpl::cookieJar(WebLocalFrame* frame)
 {
-    PassRefPtr<net::PageNetExtraData> extra = m_webPage->getPageNetExtraData();
-    if (extra && extra->getCookieJar())
-        return extra->getCookieJar();
-
     net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
     if (!manager)
         return nullptr;
@@ -533,10 +529,13 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 #endif
 
     requestExtraData->setFrame(webFrame); // 两种模式都需要此对象
-
     request.setExtraData(requestExtraData);
 
     request.addHTTPHeaderField("Accept-Language", m_webPage->webPageImpl()->acceptLanguages());
+
+//     request.addHTTPHeaderField("Upgrade-Insecure-Requests", "1");
+//     request.addHTTPHeaderField("Connection", "keep-alive");
+//     request.addHTTPHeaderField("Cache-Control", "max-age=0");
 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)
@@ -565,7 +564,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
         }
     }
 
-    const char kDefaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+    const char kDefaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
     const char kAcceptHeader[] = "Accept";
 
 //     WebDataSource* provisionalDataSource = webFrame->provisionalDataSource();

@@ -91,9 +91,6 @@ public:
     virtual void initializeLayerTreeView() override;
     virtual blink::WebWidget* createPopupMenu(blink::WebPopupType) override;
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    virtual blink::WebStorageNamespace* createLocalStorageNamespace() override;
-#endif
     virtual blink::WebString acceptLanguages() override;
     void setScreenInfo(const blink::WebScreenInfo& info);
     virtual blink::WebScreenInfo screenInfo() override;
@@ -243,13 +240,6 @@ public:
 
     void setHwndRenderOffset(const blink::IntPoint& offset);
     blink::IntPoint getHwndRenderOffset() const;
-
-    void setCookieJarFullPath(const char* path);
-    void setLocalStorageFullPath(const char* path);
-
-    net::WebCookieJarImpl* getCookieJar();
-
-    RefPtr<net::PageNetExtraData> m_pageNetExtraData;
 
     static int64_t m_firstFrameId;
 

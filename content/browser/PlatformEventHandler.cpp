@@ -269,7 +269,7 @@ static bool isNearPos(const blink::IntPoint& a, const blink::IntPoint& b)
     return std::abs(a.x() - b.x()) + std::abs(a.y() - b.y()) < 15;
 }
 
-static void postDragMessageImpl(HWND hWnd, void* param)
+static void WKE_CALL_TYPE postDragMessageImpl(HWND hWnd, void* param)
 {
     ::ReleaseCapture();
     ::PostMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);

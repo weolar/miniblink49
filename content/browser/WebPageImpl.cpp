@@ -135,7 +135,6 @@ WebPageImpl::WebPageImpl(COLORREF bdColor)
     m_devToolsAgent = nullptr;
     m_isEnterDebugLoop = false;
     m_draggableRegion = ::CreateRectRgn(0, 0, 0, 0); // Create a HRGN representing the draggable window area.
-    m_pageNetExtraData = nullptr;
 
     WebPageImpl* self = this;
     m_dragHandle = new DragHandle(
@@ -1641,6 +1640,7 @@ void WebPageImpl::setBackgroundColor(COLORREF c)
 
 void WebPageImpl::setHwndRenderOffset(const blink::IntPoint& offset)
 {
+    m_hwndRenderOffset = offset;
     m_platformEventHandler->setHwndRenderOffset(offset);
 }
 
@@ -1665,7 +1665,7 @@ struct RegisterDragDropTask {
         m_dragHandle = dragHandle;
     }
 
-    static void registerDragDropInUiThread(HWND hWnd, void* param)
+    static void WKE_CALL_TYPE registerDragDropInUiThread(HWND hWnd, void* param)
     {
         ::OleInitialize(nullptr);
 
@@ -1733,7 +1733,7 @@ public:
         }
     }
 
-    static int uiThreadPostTaskCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    static int WKE_CALL_TYPE uiThreadPostTaskCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
     {
         PostTaskWrap* task = new PostTaskWrap(hWnd, callback, param);
 
@@ -1858,15 +1858,6 @@ WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()
 {
     return ((content::BlinkPlatformImpl*)Platform::current())->createSessionStorageNamespace();
 }
-
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-WebStorageNamespace* WebPageImpl::createLocalStorageNamespace()
-{
-    if (!m_pageNetExtraData)
-        m_pageNetExtraData = new net::PageNetExtraData();
-    return m_pageNetExtraData->createWebStorageNamespace();
-}
-#endif
 
 WebString WebPageImpl::acceptLanguages()
 {
@@ -2083,36 +2074,6 @@ void WebPageImpl::didExitDebugLoop()
 
     if (m_devToolsClient)
         m_webViewImpl->setIgnoreInputEvents(true);
-}
-
-void WebPageImpl::setCookieJarFullPath(const char* path)
-{
-    if (!m_pageNetExtraData)
-        m_pageNetExtraData = new net::PageNetExtraData();
-    m_pageNetExtraData->setCookieJarFullPath(path);
-}
-
-void WebPageImpl::setLocalStorageFullPath(const char* path)
-{
-    if (!m_pageNetExtraData)
-        m_pageNetExtraData = new net::PageNetExtraData();
-    m_pageNetExtraData->setLocalStorageFullPath(path);
-}
-
-net::WebCookieJarImpl* WebPageImpl::getCookieJar()
-{
-    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
-    if (!manager)
-        return nullptr;
-
-    net::WebCookieJarImpl* netManagerCookie = manager->getShareCookieJar();
-    if (!m_pageNetExtraData)
-        return netManagerCookie;
-
-    net::WebCookieJarImpl* pageCookie = m_pageNetExtraData->getCookieJar();
-    if (!pageCookie)
-        return netManagerCookie;
-    return pageCookie;
 }
 
 bool WebPageImpl::initSetting()
