@@ -381,15 +381,15 @@ void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::
     if (WebURLLoaderInternal::kCacheForDownloadYes != job->m_cacheForDownloadOpt)
         job->client()->didFail(job->loader(), error);
 
-	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-	WebPage* page = requestExtraData->page;
-	if (page) {
-		wkeLoadUrlFailCallback loadUrlFailCallback = page->wkeHandler().loadUrlFailCallback;
-		void* loadUrlFailCallbackParam = page->wkeHandler().loadUrlFailCallbackParam;
-		Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-		if (loadUrlFailCallback)
-			loadUrlFailCallback(page->wkeWebView(), loadUrlFailCallbackParam, urlBuf.data(), job);
-	}
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    WebPage* page = requestExtraData->page;
+    if (page) {
+        wkeLoadUrlFailCallback loadUrlFailCallback = page->wkeHandler().loadUrlFailCallback;
+        void* loadUrlFailCallbackParam = page->wkeHandler().loadUrlFailCallbackParam;
+        Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+        if (loadUrlFailCallback)
+            loadUrlFailCallback(page->wkeWebView(), loadUrlFailCallbackParam, urlBuf.data(), job);
+    }
 }
 
 static void cancelBodyStreaming(int jobId)
@@ -1442,8 +1442,6 @@ InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebUR
     if (0 != wkeNetInterface.length()) {
         info->wkeNetInterface = wkeNetInterface.utf8().data();
     }
-    RefPtr<net::PageNetExtraData> pageNetExtraData = page->getPageNetExtraData();
-    info->pageNetExtraData = pageNetExtraData;
 #endif
 
     return info;
@@ -1480,12 +1478,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     curl_easy_setopt(job->m_handle, CURLOPT_FOLLOWLOCATION, 1);
     curl_easy_setopt(job->m_handle, CURLOPT_MAXREDIRS, 10);
     curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-
-    if (info->pageNetExtraData && info->pageNetExtraData->getCurlShareHandle()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_SHARE, info->pageNetExtraData->getCurlShareHandle());
-        job->m_pageNetExtraData = info->pageNetExtraData;
-    } else
-        curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
+    curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
     curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
     curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
     curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
@@ -1509,11 +1502,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     WTF::Locker<WTF::Mutex> locker(*mutex);
 
     std::string cookieJarFullPath;
-    if (job->m_pageNetExtraData) {
-        cookieJarFullPath = job->m_pageNetExtraData->getCookieJarFullPath();
-    } else {
-        cookieJarFullPath = m_shareCookieJar->getCookieJarFullPath();
-    }
+    cookieJarFullPath = m_shareCookieJar->getCookieJarFullPath();
     
     if (!cookieJarFullPath.empty()) {
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, cookieJarFullPath.c_str());

@@ -217,8 +217,6 @@ public:
 #endif
 
     DiskCacheItem* m_diskCacheItem;
-
-    RefPtr<PageNetExtraData> m_pageNetExtraData;
 };
 
 } // namespace net
