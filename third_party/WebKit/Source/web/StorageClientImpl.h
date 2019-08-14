@@ -16,9 +16,6 @@ public:
     explicit StorageClientImpl(WebViewImpl*);
 
     PassOwnPtr<StorageNamespace> createSessionStorageNamespace() override;
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    PassOwnPtr<StorageNamespace> createLocalStorageNamespace() override;
-#endif
     bool canAccessStorage(LocalFrame*, StorageType) const override;
 
 private:

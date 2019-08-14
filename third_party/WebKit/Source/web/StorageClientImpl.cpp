@@ -45,15 +45,6 @@ PassOwnPtr<StorageNamespace> StorageClientImpl::createSessionStorageNamespace()
     return adoptPtr(new StorageNamespace(adoptPtr(m_webView->client()->createSessionStorageNamespace())));
 }
 
-#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-
-PassOwnPtr<StorageNamespace> StorageClientImpl::createLocalStorageNamespace()
-{
-    return adoptPtr(new StorageNamespace(adoptPtr(m_webView->client()->createLocalStorageNamespace())));
-}
-
-#endif
-
 bool StorageClientImpl::canAccessStorage(LocalFrame* frame, StorageType type) const
 {
     WebLocalFrameImpl* webFrame = WebLocalFrameImpl::fromFrame(frame);
