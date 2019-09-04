@@ -47,8 +47,8 @@ namespace content {
 
 const double msPerSecond = 1000.0; // weolar
 
-static LARGE_INTEGER qpcFrequency;
-static bool syncedTime;
+static LARGE_INTEGER s_qpcFrequency = { 0 };
+static bool s_syncedTime = false;
 
 static double highResUpTime()
 {
@@ -57,40 +57,40 @@ static double highResUpTime()
     // http://support.microsoft.com/kb/895980
     // http://msdn.microsoft.com/en-us/library/ms644904.aspx ("...you can get different results on different processors due to bugs in the basic input/output system (BIOS) or the hardware abstraction layer (HAL)."
 
-    static LARGE_INTEGER qpcLast;
-    static DWORD tickCountLast;
-    static bool inited;
+    static LARGE_INTEGER s_qpcLast = { 0 };
+    static DWORD s_tickCountLast = 0;
+    static bool s_inited = false;
 
     LARGE_INTEGER qpc;
     QueryPerformanceCounter(&qpc);
     DWORD tickCount = GetTickCount();
 
-    if (inited) {
-        __int64 qpcElapsed = ((qpc.QuadPart - qpcLast.QuadPart) * 1000) / qpcFrequency.QuadPart;
+    if (s_inited) {
+        __int64 qpcElapsed = ((qpc.QuadPart - s_qpcLast.QuadPart) * 1000) / s_qpcFrequency.QuadPart;
         __int64 tickCountElapsed;
-        if (tickCount >= tickCountLast)
-            tickCountElapsed = (tickCount - tickCountLast);
+        if (tickCount >= s_tickCountLast)
+            tickCountElapsed = (tickCount - s_tickCountLast);
         else {
 #if COMPILER(MINGW)
             __int64 tickCountLarge = tickCount + 0x100000000ULL;
 #else
             __int64 tickCountLarge = tickCount + 0x100000000I64;
 #endif
-            tickCountElapsed = tickCountLarge - tickCountLast;
+            tickCountElapsed = tickCountLarge - s_tickCountLast;
         }
 
         // force a re-sync if QueryPerformanceCounter differs from GetTickCount by more than 500ms.
         // (500ms value is from http://support.microsoft.com/kb/274323)
         __int64 diff = tickCountElapsed - qpcElapsed;
         if (diff > 500 || diff < -500)
-            syncedTime = false;
+            s_syncedTime = false;
     } else
-        inited = true;
+        s_inited = true;
 
-    qpcLast = qpc;
-    tickCountLast = tickCount;
+    s_qpcLast = qpc;
+    s_tickCountLast = tickCount;
 
-    return (1000.0 * qpc.QuadPart) / static_cast<double>(qpcFrequency.QuadPart);
+    return (1000.0 * qpc.QuadPart) / static_cast<double>(s_qpcFrequency.QuadPart);
 }
 
 static double lowResUTCTime()
@@ -117,27 +117,25 @@ static double lowResUTCTime()
 
 static bool qpcAvailable()
 {
-    static bool available;
-    static bool checked;
+    static bool s_available = false;
+    static bool s_checked = false;
 
-    if (checked)
-        return available;
+    if (s_checked)
+        return s_available;
 
-    available = QueryPerformanceFrequency(&qpcFrequency);
-    checked = true;
-    return available;
+    s_available = QueryPerformanceFrequency(&s_qpcFrequency);
+    s_checked = true;
+    return s_available;
 }
 
+// 老版本代码有个问题，就是使用了本地时间，会被人篡改。
+// 所以我们舍弃精度，直接使用高精度计时器
 double currentTimeImpl()
 {
-    // Use a combination of ftime and QueryPerformanceCounter.
-    // ftime returns the information we want, but doesn't have sufficient resolution.
-    // QueryPerformanceCounter has high resolution, but is only usable to measure time intervals.
-    // To combine them, we call ftime and QueryPerformanceCounter initially. Later calls will use QueryPerformanceCounter
-    // by itself, adding the delta to the saved ftime.  We periodically re-sync to correct for drift.
-    static double syncLowResUTCTime;
-    static double syncHighResUpTime;
-    static double lastUTCTime;
+    static double s_syncLowResUTCTime = 0;
+    static double s_syncHighResUpTime = 0;
+    static double s_lastUTCTime = 0;
+    static bool s_isSyncedTime = false;
 
     double lowResTime = lowResUTCTime();
 
@@ -146,28 +144,64 @@ double currentTimeImpl()
 
     double highResTime = highResUpTime();
 
-    if (!syncedTime) {
+    if (!s_isSyncedTime) {
         timeBeginPeriod(1); // increase time resolution around low-res time getter
-        syncLowResUTCTime = lowResTime = lowResUTCTime();
+        s_syncLowResUTCTime = lowResTime = lowResUTCTime();
         timeEndPeriod(1); // restore time resolution
-        syncHighResUpTime = highResTime;
-        syncedTime = true;
+        s_syncHighResUpTime = highResTime;
+        s_isSyncedTime = true;
     }
 
-    double highResElapsed = highResTime - syncHighResUpTime;
-    double utc = syncLowResUTCTime + highResElapsed;
+    double highResElapsed = highResTime - s_syncHighResUpTime;
+    double utc = s_syncLowResUTCTime + highResElapsed;
+
+    if (utc < s_lastUTCTime)
+        utc = s_lastUTCTime + 0.0001;
+
+    s_lastUTCTime = utc;
+    return utc / 1000.0;
+}
+
+double currentTimeImpl_unuse()
+{
+    // Use a combination of ftime and QueryPerformanceCounter.
+    // ftime returns the information we want, but doesn't have sufficient resolution.
+    // QueryPerformanceCounter has high resolution, but is only usable to measure time intervals.
+    // To combine them, we call ftime and QueryPerformanceCounter initially. Later calls will use QueryPerformanceCounter
+    // by itself, adding the delta to the saved ftime.  We periodically re-sync to correct for drift.
+    static double s_syncLowResUTCTime;
+    static double s_syncHighResUpTime;
+    static double s_lastUTCTime;
+
+    double lowResTime = lowResUTCTime();
+
+    if (!qpcAvailable())
+        return lowResTime / 1000.0;
+
+    double highResTime = highResUpTime();
+
+    if (!s_syncedTime) {
+        timeBeginPeriod(1); // increase time resolution around low-res time getter
+        s_syncLowResUTCTime = lowResTime = lowResUTCTime();
+        timeEndPeriod(1); // restore time resolution
+        s_syncHighResUpTime = highResTime;
+        s_syncedTime = true;
+    }
+
+    double highResElapsed = highResTime - s_syncHighResUpTime;
+    double utc = s_syncLowResUTCTime + highResElapsed;
 
     // force a clock re-sync if we've drifted
-    double lowResElapsed = lowResTime - syncLowResUTCTime;
+    double lowResElapsed = lowResTime - s_syncLowResUTCTime;
     const double maximumAllowedDriftMsec = 15.625 * 2.0; // 2x the typical low-res accuracy
     if (fabs(highResElapsed - lowResElapsed) > maximumAllowedDriftMsec)
-        syncedTime = false;
+        s_syncedTime = false;
 
     // make sure time doesn't run backwards (only correct if difference is < 2 seconds, since DST or clock changes could occur)
     const double backwardTimeLimit = 2000.0;
-    if (utc < lastUTCTime && (lastUTCTime - utc) < backwardTimeLimit)
-        return lastUTCTime / 1000.0;
-    lastUTCTime = utc;
+    if (utc < s_lastUTCTime && (s_lastUTCTime - utc) < backwardTimeLimit)
+        return s_lastUTCTime / 1000.0;
+    s_lastUTCTime = utc;
     return utc / 1000.0;
 }
 
