@@ -259,7 +259,10 @@ public:
 	_A get_allocator() const
 		{return (_Tr.get_allocator()); }
 	iterator insert(const value_type& _X)
-		{return (_Tr.insert(_X).first); }
+	{
+    value_type val(_X);
+    return (_Tr.insert(move(val)).first);
+  }
 	iterator insert(iterator _P, const value_type& _X)
 		{return (_Tr.insert(/*(_Imp::iterator&)*/_P, _X)); }
 	void insert(_It _F, _It _L)

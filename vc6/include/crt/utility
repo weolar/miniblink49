@@ -12,6 +12,13 @@
 #endif
 #endif  /* _MSC_VER */
 _STD_BEGIN
+
+// #ifdef _WIN64
+// typedef unsigned __int64    size_t;
+// #else  /* _WIN64 */
+// typedef unsigned int        size_t;
+// #endif  /* _WIN64 */
+
 // TEMPLATE STRUCT pair
 template<class _T1, class _T2> struct pair {
     typedef _T1 first_type;

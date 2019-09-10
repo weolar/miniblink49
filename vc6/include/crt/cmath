@@ -10,6 +10,8 @@
 #endif /* _STD_USING */
 #endif /* _CMATH_ */
 
+#include "algorithmvc6.h"
+
 /*
  * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
  * Consult your license regarding permissions and restrictions.
