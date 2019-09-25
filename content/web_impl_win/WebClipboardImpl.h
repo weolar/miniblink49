@@ -58,12 +58,12 @@ private:
     void writeHTMLInternal(const blink::WebString& htmlText, const blink::WebURL& sourceUrl, const blink::WebString& plainText, bool writeSmartPaste);
     void writeBookmark(const String& titleData, const String& urlData);
     void writeBitmapFromHandle(HBITMAP source_hbitmap, const blink::IntSize& size);
-    bool writeBitmap(const SkBitmap& bitmap);
+    bool writeBitmapInternal(const SkBitmap& bitmap);
     bool convertBufferType(Buffer buffer, ClipboardType* result);
     HWND getClipboardWindow();
     void readAvailableTypes(ClipboardType type, Vector<blink::WebString>* types, bool* containsFilenames) const;
-    void writeToClipboard(unsigned int format, HANDLE handle);
-    void writeText(String string);
+    void writeToClipboardInternal(unsigned int format, HANDLE handle);
+    void writeTextInternal(String string);
 
     HWND m_clipboardOwner;
 };
