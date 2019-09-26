@@ -177,8 +177,7 @@ base::DictionaryValue* ClipboardUtil::getCustomPlainTexts(IDataObject* dataObjec
     
     base::JSONReader jsonReader;
     std::unique_ptr<base::Value> jsonVal = jsonReader.ReadToValue(json);
-
-    if (!jsonVal->IsType(base::Value::TYPE_DICTIONARY))
+    if (!jsonVal || !jsonVal->IsType(base::Value::TYPE_DICTIONARY))
         return nullptr;
 
     base::DictionaryValue* dictVal = nullptr;
