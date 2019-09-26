@@ -865,6 +865,10 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     // DataObject::toWebDragData()
     clearClipboard();
 
+    ScopedClipboard clipboard;
+    if (!clipboard.acquire(getClipboardWindow()))
+        return;
+
     WebVector<WebDragData::Item> items = data.items();
     for (size_t i = 0; i < items.size(); ++i) {
         WebDragData::Item& it = items[i];
