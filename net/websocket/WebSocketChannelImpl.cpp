@@ -787,6 +787,7 @@ bool WebSocketChannelImpl::processFrame()
             // the handler is invoked.
             OwnPtr<Vector<char>> continuousFrameData = adoptPtr(new Vector<char>());
             continuousFrameData->appendVector(m_continuousFrameData);
+            m_continuousFrameData.clear();
             m_hasContinuousFrame = false;
             if (m_continuousFrameOpCode == WebSocketOneFrame::OpCodeText) {
                 String message;
