@@ -641,8 +641,10 @@ bool WebURLLoaderManager::downloadOnIoThread()
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFinishLoading, nullptr, 0, 0, 0);
             }
         } else {
-            char* url = 0;
+            char* url = nullptr;
             curl_easy_getinfo(job->m_handle, CURLINFO_EFFECTIVE_URL, &url);
+            if (!url)
+                url = "url is empty";
             if (job->client() && job->loader()) {
                 MainTaskArgs* args = WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFail, nullptr, 0, 0, 0);
                 args->resourceError->reason = msg->data.result;
@@ -650,8 +652,10 @@ bool WebURLLoaderManager::downloadOnIoThread()
                 args->resourceError->unreachableURL = blink::KURL(blink::ParsedURLString, url);
                 args->resourceError->localizedDescription = blink::WebString::fromLatin1(curl_easy_strerror(msg->data.result));
 
-                String outString = String::format("kDidFail on io Thread:%d, %s\n", msg->data.result, url);
-                OutputDebugStringW(outString.charactersWithNullTermination().data());
+                char* output = (char*)malloc(0x300 + strlen(url));
+                sprintf(output, "kDidFail on io Thread:%d, %s\n", msg->data.result, url);          
+                OutputDebugStringA(output);
+                free(output);
             }
         }
         
