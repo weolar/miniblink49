@@ -1919,9 +1919,29 @@ void onCreateGlobalObjectInMainFrame(content::WebFrameClientImpl* client, blink:
     addAccessor(context, "webViewName", js_getWebViewName, nullptr, js_setWebViewName, nullptr);
     
     const char* injectCode =
-        "window.chrome = {app:null, runtime:null};"
-        "window.Intl = {DateTimeFormat : function (locales, options) {return {format : function(event) {return event.toLocaleString(locales, options);}};}}";
-
+        "window.chrome = {app:null, runtime:null};\n"
+        "window.Intl = {\n"
+        "    DateTimeFormat: function(locales, options) {\n"
+        "        return {\n"
+        "            format: function(event) {\n"
+        "                return event.toLocaleString(locales, options);\n"
+        "            },\n"
+        "            resolvedOptions: function() {\n"
+        "                return {locale:'zh-CN', calendar:'gregory', numberingSystem:'latn'};\n"
+        "            },\n"
+        "        };\n"
+        "    },\n"
+        "    Collator: {\n"
+        "        supportedLocalesOf : function(locales, options) {\n"
+        "            return locales;\n"
+        "        },\n"
+        "    },\n"
+        "};\n"
+        "window.Intl.DateTimeFormat.supportedLocalesOf = function(locales, options) {\n"
+        "    return locales;\n"
+        "}\n"
+        ;
+    
     blink::WebScriptSource injectSource(blink::WebString::fromUTF8(injectCode));
     frame->executeScript(injectSource);
 
