@@ -89,6 +89,7 @@ void WebPageImpl::initBlink()
 
 void WebPageImpl::registerDestroyNotif(DestroyNotif* destroyNotif)
 {
+    WTF::Locker<WTF::Mutex> locker(m_destroyNotifsMutex);
     size_t pos = m_destroyNotifs.find(destroyNotif);
     if (WTF::kNotFound == pos)
         m_destroyNotifs.append(destroyNotif);
@@ -96,6 +97,8 @@ void WebPageImpl::registerDestroyNotif(DestroyNotif* destroyNotif)
 
 void WebPageImpl::unregisterDestroyNotif(DestroyNotif* destroyNotif)
 {
+    RELEASE_ASSERT(WTF::isMainThread());
+    WTF::Locker<WTF::Mutex> locker(m_destroyNotifsMutex);
     size_t pos = m_destroyNotifs.find(destroyNotif);
     if (WTF::kNotFound != pos)
         m_destroyNotifs.remove(pos);

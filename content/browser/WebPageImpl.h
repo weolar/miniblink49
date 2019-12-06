@@ -290,6 +290,7 @@ public:
     bool m_postCloseWidgetSoonMessage;
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
+    WTF::Mutex m_destroyNotifsMutex;
     HRGN m_draggableRegion;
 
     HWND m_popupHandle;
