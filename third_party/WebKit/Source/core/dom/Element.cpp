@@ -1374,10 +1374,8 @@ Node::InsertionNotificationRequest Element::insertedInto(ContainerNode* insertio
     if (hasRareData())
         elementRareData()->clearClassListValueForQuirksMode();
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (isUpgradedCustomElement() && inDocument())
         CustomElement::didAttach(this, document());
-#endif // MINIBLINK_NOT_IMPLEMENTED
 
     TreeScope& scope = insertionPoint->treeScope();
     if (scope != treeScope())
