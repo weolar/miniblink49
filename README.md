@@ -16,9 +16,8 @@ Q群：94093808
 
 QQ（weolar）：93527630
 
-email：weolar@qq.com
+email：weolar@miniblink.net
 
-QQ（zero）：22249030
 
 # 简介 Abstract
 
