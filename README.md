@@ -98,7 +98,7 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 - 加Q群94093808
 
-- 邮箱weolar@qq.com
+- 邮箱weolar@miniblink.net
 
 - github里留言issue讨论
 
