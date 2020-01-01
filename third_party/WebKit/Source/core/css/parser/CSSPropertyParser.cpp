@@ -98,6 +98,9 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
     CSSParserValueList* valueList, const CSSParserContext& context,
     WillBeHeapVector<CSSProperty, 256>& parsedProperties, StyleRule::Type ruleType)
 {
+    if (!valueList->size())
+        return false; // Parser error
+
     int parsedPropertiesSize = parsedProperties.size();
 
     CSSPropertyParser parser(valueList, context, parsedProperties, ruleType);
