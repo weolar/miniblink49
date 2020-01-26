@@ -233,7 +233,8 @@ LayoutRect LayoutReplaced::replacedContentRect(const LayoutSize* overriddenIntri
     }
 
 #ifndef MINIBLINK_NO_CHANGE
-    if (wke::g_wkeMediaPlayerFactory)
+    String layoutName = name();
+    if (wke::g_wkeMediaPlayerFactory && layoutName == "LayoutImage")
         objectFit = ObjectFitFill;
 #endif
 
