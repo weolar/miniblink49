@@ -230,6 +230,7 @@ void TextCodecICU::registerEncodingNames(EncodingNameRegistrar registrar)
     registrar("gb18030", "gb18030");
     registrar("gb_2312", "gb_2312");
     registrar("GBK", "GBK");
+    registrar("big5", "big5");
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
@@ -256,6 +257,7 @@ void TextCodecICU::registerCodecs(TextCodecRegistrar registrar)
     registrar("gb18030", create, 0);
     registrar("gb_2312", create, 0);
     registrar("GBK", create, 0);
+    registrar("big5", create, 0);
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
@@ -459,7 +461,18 @@ static Vector<UChar> decodeGbkWithLastData(char* data, int len, char* lastData, 
     return result;
 }
 
-#define GBK_CONV_CODE_PAGE (936)
+#define GBK_CONV_CODE_PAGE  (936)
+#define BIG5_CONV_CODE_PAGE (950)
+
+static String decodeBig5(const char* bytes, size_t length)
+{
+    std::vector<UChar> resultBuffer;
+    WTF::MByteToWChar(bytes, length, &resultBuffer, BIG5_CONV_CODE_PAGE);
+    if (0 == resultBuffer.size())
+        return String();
+
+    return String(&resultBuffer[0], resultBuffer.size());
+}
 
 String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flush, bool stopOnError, bool& sawError)
 {
@@ -518,7 +531,10 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     return resultString;
 #endif
 
-#else
+#else // MINIBLINK_NOT_IMPLEMENTED
+    if (0 == strcasecmp(m_encoding.name(), "big5"))
+        return decodeBig5((const char*)bytes, length);
+
     Vector<UChar> resultBuffer;
     if (strcasecmp(m_encoding.name(), "gb2312") && 
         strcasecmp(m_encoding.name(), "GBK") && 
@@ -799,13 +815,18 @@ CString TextCodecICU::encode(const UChar* characters, size_t length, Unencodable
     return encodeCommon(characters, length, handling);
 #else
     std::vector<char> resultBuffer;
-    if (strcasecmp(m_encoding.name(), "gb2312") &&
+    if (strcasecmp(m_encoding.name(), "big5") && 
+        strcasecmp(m_encoding.name(), "gb2312") &&
         strcasecmp(m_encoding.name(), "GBK") &&
         strcasecmp(m_encoding.name(), "gb18030") &&
         strcasecmp(m_encoding.name(), "gb_2312"))
         return CString();
 
-    WCharToMByte(characters, length, &resultBuffer, GBK_CONV_CODE_PAGE);
+    UINT codePage = GBK_CONV_CODE_PAGE;
+    if (0 == strcasecmp(m_encoding.name(), "big5"))
+        codePage = BIG5_CONV_CODE_PAGE;
+
+    WTF::WCharToMByte(characters, length, &resultBuffer, codePage);
     if (0 == resultBuffer.size())
         return CString();
     return CString(&resultBuffer[0], resultBuffer.size());
@@ -824,6 +845,7 @@ CString TextCodecICU::encode(const LChar* characters, size_t length, Unencodable
         return CString();
 
     bool sawError = false;
+    
     String returnString = decode((const char*)characters, length, DoNotFlush, true, sawError);
     return encode(returnString.characters16(), returnString.length(), handling);
 #endif // MINIBLINK_NOT_IMPLEMENTED
