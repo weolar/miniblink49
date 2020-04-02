@@ -144,7 +144,7 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
             paramNames.append(newParam.attributeNames[i]);
             if (String(newParam.attributeValues[i]).lower() != "opaque" &&
                 String(newParam.attributeValues[i]).lower() != "transparent") {
-                paramValues.append("opaque");
+                paramValues.append("transparent");
             } else
                 paramValues.append(newParam.attributeValues[i]);
         } else {
@@ -154,7 +154,7 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
     }
     if (!isWmode) {
         paramNames.append("wmode");
-        paramValues.append("opaque");
+        paramValues.append("transparent");
     }
 
     newParam.attributeNames = WebVector<WebString>(paramNames);
