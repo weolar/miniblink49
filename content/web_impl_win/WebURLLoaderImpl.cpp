@@ -6,7 +6,6 @@
 #endif
 #include "content/web_impl_win/WebURLLoaderImpl.h"
 #include "net/WebURLLoaderWinINet.h"
-#include "libcef/browser/CefSchemeLoaderImpl.h"
 
 namespace content {
 
@@ -44,9 +43,6 @@ void WebURLLoaderImpl::loadAsynchronously(
     blink::WebURLLoaderClient* client)
 {
     bool canLoad = false;
-    m_cefSchemeLoader = CefSchemeLoaderImpl::LoadAsynchronously(request, client, this, canLoad);
-    if (canLoad)
-        return;
 
     m_loaderWinINet = new net::WebURLLoaderWinINet(this);
     m_loaderWinINet->loadAsynchronously(request, client);
@@ -54,9 +50,6 @@ void WebURLLoaderImpl::loadAsynchronously(
 
 void WebURLLoaderImpl::cancel()
 {
-    if (m_cefSchemeLoader)
-        m_cefSchemeLoader->Cancel();
-
     ASSERT(m_loaderWinINet);
     m_loaderWinINet->cancel();
 }

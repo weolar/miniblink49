@@ -8,6 +8,17 @@ function importPunycode() {
   }
 }
 
+// WHATWG URL implementation provided by internal/url
+const {
+  URL,
+  URLSearchParams,
+  domainToASCII,
+  domainToUnicode,
+  formatSymbol,
+  encodeStr,
+} = require('internal/url');
+
+// Original url.parse() API
 const toASCII = importPunycode().toASCII;
 
 exports.parse = urlParse;
@@ -16,6 +27,7 @@ exports.resolveObject = urlResolveObject;
 exports.format = urlFormat;
 
 exports.Url = Url;
+exports.URL = URL;
 
 function Url() {
   this.protocol = null;

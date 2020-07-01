@@ -33,9 +33,12 @@
 #include "handle-inl.h"
 #include "req-inl.h"
 
+#include "../../../wke/wkedefine.h"
+
+extern wkeNodeOnCreateProcessCallback g_wkeNodeOnCreateProcessCallback;
+extern void* g_wkeNodeOnCreateProcessCallbackparam;
 
 #define SIGKILL         9
-
 
 typedef struct env_var {
   const WCHAR* const wide;
@@ -960,6 +963,19 @@ void uv_process_endgame(uv_loop_t* loop, uv_process_t* handle) {
   uv__handle_close(handle);
 }
 
+void hideCmdApp(WCHAR* application_path, WCHAR* arguments, STARTUPINFOW* startup) {
+
+  if (g_wkeNodeOnCreateProcessCallback)
+    g_wkeNodeOnCreateProcessCallback(0, g_wkeNodeOnCreateProcessCallbackparam, application_path, arguments, startup);
+
+  int application_path_len = wcslen(application_path);
+  for (int i = 0; i < application_path_len - 6; ++i) {
+    if (0 != wcsnicmp(application_path + i, L"cmd.exe", 7))
+      continue;
+    startup->wShowWindow = SW_HIDE;
+    return;
+  }
+}
 
 int uv_spawn(uv_loop_t* loop,
              uv_process_t* process,
@@ -978,11 +994,22 @@ int uv_spawn(uv_loop_t* loop,
   process->exit_cb = options->exit_cb;
 
   if (options->flags & (UV_PROCESS_SETGID | UV_PROCESS_SETUID)) {
+    char* output = (char*)malloc(0x100);
+    sprintf(output, "uv_spawn fail1 : %d\n", UV_ENOTSUP);
+    OutputDebugStringA(output);
+    free(output);
+
     return UV_ENOTSUP;
   }
 
   if (options->file == NULL ||
       options->args == NULL) {
+
+    char* output = (char*)malloc(0x100);
+    sprintf(output, "uv_spawn fail2: %d\n", UV_EINVAL);
+    OutputDebugStringA(output);
+    free(output);
+
     return UV_EINVAL;
   }
 
@@ -1096,6 +1123,7 @@ int uv_spawn(uv_loop_t* loop,
   } else {
     startup.wShowWindow = SW_SHOWDEFAULT;
   }
+  hideCmdApp(application_path, arguments, &startup); // weolar TODO
 
   process_flags = CREATE_UNICODE_ENVIRONMENT;
 
@@ -1196,6 +1224,11 @@ int uv_spawn(uv_loop_t* loop,
     uv__stdio_destroy(process->child_stdio_buffer);
     process->child_stdio_buffer = NULL;
   }
+
+  char* output = (char*)malloc(0x100);
+  sprintf(output, "uv_spawn fail3: %d\n", err);
+  OutputDebugStringA(output);
+  free(output);
 
   return uv_translate_sys_error(err);
 }

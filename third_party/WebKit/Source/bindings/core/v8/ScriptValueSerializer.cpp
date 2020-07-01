@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "config.h"
 #include "bindings/core/v8/ScriptValueSerializer.h"
+#include "config.h"
 
 #include "bindings/core/v8/V8ArrayBuffer.h"
 #include "bindings/core/v8/V8ArrayBufferView.h"
@@ -248,8 +248,7 @@ void SerializedScriptValueWriter::writeArrayBufferView(const DOMArrayBufferView&
     append(ArrayBufferViewTag);
 #if ENABLE(ASSERT)
     const DOMArrayBuffer& arrayBuffer = *arrayBufferView.buffer();
-    ASSERT(static_cast<const uint8_t*>(arrayBuffer.data()) + arrayBufferView.byteOffset() ==
-        static_cast<const uint8_t*>(arrayBufferView.baseAddress()));
+    ASSERT(static_cast<const uint8_t*>(arrayBuffer.data()) + arrayBufferView.byteOffset() == static_cast<const uint8_t*>(arrayBufferView.baseAddress()));
 #endif
     DOMArrayBufferView::ViewType type = arrayBufferView.type();
 
@@ -666,7 +665,7 @@ ScriptValueSerializer::ScriptValueSerializer(SerializedScriptValueWriter& writer
             m_transferredMessagePorts.set(toV8Object(messagePorts->at(i).get(), creationContext, isolate()), i);
     }
     if (arrayBuffers) {
-        for (size_t i = 0; i < arrayBuffers->size(); i++)  {
+        for (size_t i = 0; i < arrayBuffers->size(); i++) {
             v8::Local<v8::Object> v8ArrayBuffer = toV8Object(arrayBuffers->at(i).get(), creationContext, isolate());
             // Coalesce multiple occurences of the same buffer to the first index.
             if (!m_transferredArrayBuffers.contains(v8ArrayBuffer))
@@ -1131,11 +1130,11 @@ bool SerializedScriptValueReader::readWithTag(SerializationTag tag, v8::Local<v8
         *value = v8Boolean(false, isolate());
         break;
     case TrueObjectTag:
-        *value = v8::BooleanObject::New(true);
+        *value = v8::BooleanObject::New(isolate(), true);
         creator.pushObjectReference(*value);
         break;
     case FalseObjectTag:
-        *value = v8::BooleanObject::New(false);
+        *value = v8::BooleanObject::New(isolate(), false);
         creator.pushObjectReference(*value);
         break;
     case StringTag:
@@ -1427,7 +1426,8 @@ bool SerializedScriptValueReader::readStringObject(v8::Local<v8::Value>* value)
     v8::Local<v8::Value> stringValue;
     if (!readString(&stringValue) || !stringValue->IsString())
         return false;
-    *value = v8::StringObject::New(stringValue.As<v8::String>());
+
+    *value = v8::StringObject::New(isolate(), stringValue.As<v8::String>());
     return true;
 }
 
@@ -1617,7 +1617,7 @@ bool SerializedScriptValueReader::readArrayBufferView(v8::Local<v8::Value>* valu
         *value = toV8(DOMInt8Array::create(arrayBuffer.release(), byteOffset, numElements), creationContext, isolate());
         break;
     case UnsignedByteArrayTag:
-        *value = toV8(DOMUint8Array::create(arrayBuffer.release(), byteOffset, numElements), creationContext,  isolate());
+        *value = toV8(DOMUint8Array::create(arrayBuffer.release(), byteOffset, numElements), creationContext, isolate());
         break;
     case UnsignedByteClampedArrayTag:
         *value = toV8(DOMUint8ClampedArray::create(arrayBuffer.release(), byteOffset, numElements), creationContext, isolate());

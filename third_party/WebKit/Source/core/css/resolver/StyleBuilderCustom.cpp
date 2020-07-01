@@ -44,6 +44,7 @@
 #include "core/StylePropertyShorthand.h"
 #include "core/css/BasicShapeFunctions.h"
 #include "core/css/CSSCursorImageValue.h"
+#include "core/css/CSSCustomPropertyDeclaration.h"
 #include "core/css/CSSGradientValue.h"
 #include "core/css/CSSGridTemplateAreasValue.h"
 #include "core/css/CSSHelper.h"
@@ -56,6 +57,8 @@
 #include "core/css/Pair.h"
 #include "core/css/StylePropertySet.h"
 #include "core/css/StyleRule.h"
+#include "core/css/CSSVariableReferenceValue.h"
+#include "core/css/resolver/CSSVariableResolver.h"
 #include "core/css/resolver/ElementStyleResources.h"
 #include "core/css/resolver/FilterOperationResolver.h"
 #include "core/css/resolver/FontBuilder.h"
@@ -106,6 +109,11 @@ static inline bool isValidVisitedLinkProperty(CSSPropertyID id)
 
 void StyleBuilder::applyProperty(CSSPropertyID id, StyleResolverState& state, CSSValue* value)
 {
+    if (RuntimeEnabledFeatures::cssVariablesEnabled() && id != CSSPropertyVariable && value->isVariableReferenceValue()) {
+        CSSVariableResolver::resolveAndApplyVariableReferences(state, id, *toCSSVariableReferenceValue(value));
+        return;
+    }
+
     ASSERT_WITH_MESSAGE(!isShorthandProperty(id), "Shorthand property id = %d wasn't expanded at parsing time", id);
 
     bool isInherit = state.parentNode() && value->isInheritedValue();
@@ -130,6 +138,35 @@ void StyleBuilder::applyProperty(CSSPropertyID id, StyleResolverState& state, CS
     }
 
     StyleBuilder::applyProperty(id, state, value, isInitial, isInherit);
+}
+
+void StyleBuilderFunctions::applyValueCSSPropertyVariable(StyleResolverState& state, CSSValue* value)
+{
+    CSSCustomPropertyDeclaration* declaration = toCSSCustomPropertyDeclaration(value);
+    switch (declaration->id()) {
+    case CSSValueInitial:
+        state.style()->removeVariable(declaration->name());
+        break;
+
+    case CSSValueUnset:
+    case CSSValueInherit:
+    {
+        state.style()->removeVariable(declaration->name());
+        StyleVariableData* parentVariables = state.parentStyle()->variables();
+        if (!parentVariables)
+            return;
+        CSSVariableData* value = parentVariables->getVariable(declaration->name());
+        if (!value)
+            return;
+        state.style()->setVariable(declaration->name(), value);
+        break;
+    }
+    case CSSValueInternalVariableValue:
+        state.style()->setVariable(declaration->name(), declaration->value());
+        break;
+    default:
+        ASSERT_NOT_REACHED();
+    }
 }
 
 void StyleBuilderFunctions::applyInitialCSSPropertyColor(StyleResolverState& state)

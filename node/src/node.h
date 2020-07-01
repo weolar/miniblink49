@@ -218,6 +218,10 @@ NODE_EXTERN void EmitBeforeExit(Environment* env);
 NODE_EXTERN int EmitExit(Environment* env);
 NODE_EXTERN void RunAtExit(Environment* env);
 
+NODE_EXTERN void AddLiveSet(intptr_t obj);
+NODE_EXTERN void RemoveLiveSet(intptr_t obj);
+NODE_EXTERN bool IsLiveObj(intptr_t obj);
+
 /* Converts a unixtime to V8 Date */
 #define NODE_UNIXTIME_V8(t) v8::Date::New(v8::Isolate::GetCurrent(),          \
     1000 * static_cast<double>(t))
@@ -495,6 +499,9 @@ extern "C" NODE_EXTERN void node_module_register(void* mod);
  * Callbacks are run in reverse order of registration, i.e. newest first.
  */
 NODE_EXTERN void AtExit(void (*cb)(void* arg), void* arg = 0);
+
+NODE_EXTERN void AddEnvironmentCleanupHook(v8::Isolate* isolate, void(*fun)(void* arg), void* arg);
+NODE_EXTERN void RemoveEnvironmentCleanupHook(v8::Isolate* isolate, void(*fun)(void* arg), void* arg);
 
 }  // namespace node
 

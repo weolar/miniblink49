@@ -90,9 +90,10 @@ class ZonePriorityQueue
   // Constructs an empty list.
   explicit ZonePriorityQueue(Zone* zone)
       : std::priority_queue<T, ZoneVector<T>, Compare>(Compare(),
-                                                       ZoneVector<T>
 #if USING_VC6RT == 1
-          ::allocator_type
+          zone_allocator<T>
+#else
+          ZoneVector<T>
 #endif
           (zone)) {}
 };
@@ -104,9 +105,11 @@ class ZoneQueue : public std::queue<T, ZoneDeque<T>> {
  public:
   // Constructs an empty queue.
   explicit ZoneQueue(Zone* zone)
-      : std::queue<T, ZoneDeque<T>>(ZoneDeque<T>
+      : std::queue<T, ZoneDeque<T>>(
 #if USING_VC6RT == 1
-          ::allocator_type
+          zone_allocator<T>
+#else
+          ZoneDeque<T>
 #endif
           (zone)) {}
 };
@@ -118,9 +121,11 @@ class ZoneStack : public std::stack<T, ZoneDeque<T>> {
  public:
   // Constructs an empty stack.
   explicit ZoneStack(Zone* zone)
-      : std::stack<T, ZoneDeque<T>>(ZoneDeque<T>
+      : std::stack<T, ZoneDeque<T>>(
 #if USING_VC6RT == 1
-          ::allocator_type
+          zone_allocator<T>
+#else
+          ZoneDeque<T>
 #endif
           (zone)) {}
 };

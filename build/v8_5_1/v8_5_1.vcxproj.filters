@@ -1416,15 +1416,6 @@
     <ClInclude Include="..\..\v8_5_1\src\crankshaft\unique.h">
       <Filter>src\crankshaft</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-codegen-ia32.h">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-gap-resolver-ia32.h">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-ia32.h">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_1\src\regexp\bytecodes-irregexp.h">
       <Filter>src\regexp</Filter>
     </ClInclude>
@@ -1563,9 +1554,6 @@
     <ClInclude Include="..\..\v8_5_1\src\regexp\x64\regexp-macro-assembler-x64.h">
       <Filter>src\regexp\x64</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\compiler\x64\instruction-codes-x64.h">
-      <Filter>src\compiler\x64</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_1\src\ic\access-compiler.h">
       <Filter>src\ic</Filter>
     </ClInclude>
@@ -1574,6 +1562,18 @@
     </ClInclude>
     <ClInclude Include="..\..\v8_5_1\src\ic\handler-compiler.h">
       <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\compiler\x64\instruction-codes-x64.h">
+      <Filter>src\compiler\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-codegen-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-gap-resolver-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2642,15 +2642,6 @@
     <ClCompile Include="..\..\v8_5_1\src\crankshaft\typing.cc">
       <Filter>src\crankshaft</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-codegen-ia32.cc">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-gap-resolver-ia32.cc">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-ia32.cc">
-      <Filter>src\crankshaft\ia32</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\debug\ia32\debug-ia32.cc">
       <Filter>src\debug\ia32</Filter>
     </ClCompile>
@@ -2816,15 +2807,6 @@
     <ClCompile Include="..\..\v8_5_1\src\regexp\x64\regexp-macro-assembler-x64.cc">
       <Filter>src\regexp\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\code-generator-x64.cc">
-      <Filter>src\compiler\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\instruction-scheduler-x64.cc">
-      <Filter>src\compiler\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\instruction-selector-x64.cc">
-      <Filter>src\compiler\x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\ic\x64\access-compiler-x64.cc">
       <Filter>src\ic\x64</Filter>
     </ClCompile>
@@ -2848,6 +2830,24 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\ic\x64\stub-cache-x64.cc">
       <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\code-generator-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\instruction-scheduler-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\compiler\x64\instruction-selector-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-codegen-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-gap-resolver-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\crankshaft\ia32\lithium-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

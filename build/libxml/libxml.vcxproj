@@ -121,7 +121,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/libxslt;../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -140,7 +140,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/libxslt;../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -212,7 +212,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;../../third_party/libxslt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -287,6 +287,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\HTMLparser.c" />
+    <ClCompile Include="..\..\third_party\libxml\src\HTMLtree.c" />
     <ClCompile Include="..\..\third_party\libxml\src\legacy.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -432,6 +434,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xpath.c" />
+    <ClCompile Include="..\..\third_party\libxml\src\xpointer.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\attributes.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\attrvt.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\documents.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\extensions.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\extra.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\functions.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\imports.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\keys.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\namespaces.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\numbers.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\preproc.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\security.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\templates.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\transform.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\variables.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xpath_pattern.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xslt.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xsltlocale.c" />
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xsltutils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\third_party\libxml\src\config.h" />
@@ -489,6 +512,28 @@
     <ClInclude Include="..\..\third_party\libxml\src\trionan.h" />
     <ClInclude Include="..\..\third_party\libxml\src\triop.h" />
     <ClInclude Include="..\..\third_party\libxml\src\triostr.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\attributes.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\documents.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\extensions.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\extra.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\functions.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\imports.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\keys.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\libxslt.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\namespaces.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\numbersInternals.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\pattern.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\preproc.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\security.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\templates.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\transform.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\variables.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xslt.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltconfig.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltexports.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltInternals.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltlocale.h" />
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltutils.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -5,8 +5,9 @@
 
 #if defined(_M_IX86)
 
-void __stdcall _ReadWriteBarrier(void);
-#define _Compiler_barrier()	_ReadWriteBarrier()
+//void /*__stdcall*/ _ReadWriteBarrier(void);
+//#define _Compiler_barrier()	_ReadWriteBarrier()
+#define _Compiler_barrier() 
 
 // #pragma push_macro("_InterlockedExchange64")
 // #pragma push_macro("_InterlockedExchangeAdd64")

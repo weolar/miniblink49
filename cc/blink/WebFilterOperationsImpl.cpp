@@ -3,94 +3,118 @@
 
 namespace cc_blink {
 
-    WebFilterOperationsImpl::WebFilterOperationsImpl()
-    {
+WebFilterOperationsImpl::WebFilterOperationsImpl()
+{
 
-    }
-    WebFilterOperationsImpl::~WebFilterOperationsImpl()
-    {
+}
 
-    }
+WebFilterOperationsImpl::WebFilterOperationsImpl(const blink::WebFilterOperations& other)
+{
+    const WebFilterOperationsImpl* otherPtr = (const WebFilterOperationsImpl*)&other;
+    m_operations = otherPtr->m_operations;
+}
 
-    void WebFilterOperationsImpl::appendGrayscaleFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::GRAYSCALE);
-    }
+WebFilterOperationsImpl::WebFilterOperationsImpl(const WebFilterOperationsImpl& other)
+{
+    m_operations = other.m_operations;
+}
 
-    void WebFilterOperationsImpl::appendSepiaFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::SEPIA);
-    }
+WebFilterOperationsImpl::~WebFilterOperationsImpl()
+{
+//     for (size_t i = 0; i < m_operations.size(); ++i) {
+//         delete m_operations[i];
+//     }
+}
 
-    void WebFilterOperationsImpl::appendSaturateFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::SATURATE);
-    }
+void WebFilterOperationsImpl::appendGrayscaleFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::GRAYSCALE).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendHueRotateFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::HUE_ROTATE);
-    }
+void WebFilterOperationsImpl::appendSepiaFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::SEPIA).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendInvertFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::INVERT);
-    }
+void WebFilterOperationsImpl::appendSaturateFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::SATURATE).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendBrightnessFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::BRIGHTNESS);
-    }
+void WebFilterOperationsImpl::appendHueRotateFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::HUE_ROTATE).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendContrastFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::CONTRAST);
-    }
+void WebFilterOperationsImpl::appendInvertFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::INVERT).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendOpacityFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::OPACITY);
-    }
+void WebFilterOperationsImpl::appendBrightnessFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::BRIGHTNESS).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendBlurFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::BLUR);
-    }
+void WebFilterOperationsImpl::appendContrastFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::CONTRAST).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendDropShadowFilter(blink::WebPoint offset, float stdDeviation, blink::WebColor)
-    {
-        m_operationTypes.append(blink::FilterOperation::DROP_SHADOW);
-    }
+void WebFilterOperationsImpl::appendOpacityFilter(float amount)
+{
+    m_operations.append(blink::BasicColorMatrixFilterOperation::create(amount, blink::FilterOperation::OPACITY).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendColorMatrixFilter(SkScalar matrix[20])
-    {
-        m_operationTypes.append(blink::FilterOperation::GRAYSCALE);
-    }
+void WebFilterOperationsImpl::appendBlurFilter(float amount)
+{
+    m_operations.append(blink::BlurFilterOperation::create(blink::Length(amount, blink::LengthType::Fixed)).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendZoomFilter(float amount, int inset)
-    {
-        m_operationTypes.append(blink::FilterOperation::GRAYSCALE);
-    }
+void WebFilterOperationsImpl::appendDropShadowFilter(blink::WebPoint offset, float stdDeviation, blink::WebColor color)
+{
+    m_operations.append(blink::DropShadowFilterOperation::create(offset, (int)stdDeviation, color).leakRef());
+}
 
-    void WebFilterOperationsImpl::appendSaturatingBrightnessFilter(float amount)
-    {
-        m_operationTypes.append(blink::FilterOperation::GRAYSCALE);
-    }
+void WebFilterOperationsImpl::appendColorMatrixFilter(SkScalar matrix[20])
+{
+    //m_operations.append(blink::BasicColorMatrixFilterOperation::create());
+}
 
-    // This grabs a ref on the passed-in filter.
-    void WebFilterOperationsImpl::appendReferenceFilter(SkImageFilter*)
-    {
-        m_operationTypes.append(blink::FilterOperation::GRAYSCALE);
-    }
+void WebFilterOperationsImpl::appendZoomFilter(float amount, int inset)
+{
+    //m_operations.append(blink::FilterOperation::GRAYSCALE);
+}
 
-    void WebFilterOperationsImpl::clear()
-    {
-        m_operationTypes.clear();
-    }
+void WebFilterOperationsImpl::appendSaturatingBrightnessFilter(float amount)
+{
+    //m_operations.append(blink::FilterOperation::GRAYSCALE);
+}
 
-    bool WebFilterOperationsImpl::isEmpty() const
-    {
-        return m_operationTypes.isEmpty();
-    }
+// This grabs a ref on the passed-in filter.
+void WebFilterOperationsImpl::appendReferenceFilter(SkImageFilter*)
+{
+    //m_operations.append(blink::FilterOperation::GRAYSCALE);
+}
+
+void WebFilterOperationsImpl::clear()
+{
+    m_operations.clear();
+}
+
+bool WebFilterOperationsImpl::isEmpty() const
+{
+    return m_operations.isEmpty();
+}
+
+const blink::FilterOperation& WebFilterOperationsImpl::at(size_t i) const
+{
+    return *(m_operations[i]);
+}
+
+size_t WebFilterOperationsImpl::getSize() const
+{
+    return m_operations.size();
+}
 
 } // cc_blink

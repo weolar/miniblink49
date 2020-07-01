@@ -8,9 +8,6 @@
 #include <ostream>
 
 // #include "base/basictypes.h"
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/include/base/cef_string16.h"
-#endif
 #include "base/file_path.h"
 #include "base/logging.h"
 // #include "base/strings/string_split.h"
@@ -39,13 +36,13 @@ namespace {
 const CommandLine::CharType kSwitchTerminator[] = FILE_PATH_LITERAL("--");
 const CommandLine::CharType kSwitchValueSeparator[] = FILE_PATH_LITERAL("=");
 
-const wchar_t kWhitespaceWide[] = L" ";
+//const wchar_t kWhitespaceWide[] = L" ";
 const char16 kWhitespaceUTF16[] = L" ";
 const char kWhitespaceASCII[] = " ";
 
 std::wstring UTF8ToWide(const std::string& src) {
     std::wstring output;
-    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()));
+    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()), false);
     output.append((const wchar_t*)out.data(), out.size());
     return output;
 }
@@ -53,7 +50,7 @@ std::wstring UTF8ToWide(const std::string& src) {
 std::wstring ASCIIToWide(const std::string& ascii) {
     //DCHECK(base::IsStringASCII(ascii)) << ascii;
     WTF::String str(ascii.data(), ascii.size());
-    Vector<UChar> ustring = WTF::ensureStringToUChars(str);
+    Vector<UChar> ustring = WTF::ensureUTF16UChar(str, false);
     return std::wstring(ustring.data(), ustring.size());
 }
 // 
@@ -114,19 +111,19 @@ TrimPositions TrimWhitespace(const string16& input, TrimPositions positions, str
     return TrimStringT(input, base::string16(kWhitespaceUTF16), positions, output);
 }
 
-TrimPositions TrimWhitespaceASCII(const std::string& input,
-    TrimPositions positions,
-    std::string* output) {
-    return TrimStringT(input, std::string(kWhitespaceASCII), positions, output);
-}
+// TrimPositions TrimWhitespaceASCII(const std::string& input,
+//     TrimPositions positions,
+//     std::string* output) {
+//     return TrimStringT(input, std::string(kWhitespaceASCII), positions, output);
+// }
 
 // This function is only for backward-compatibility.
 // To be removed when all callers are updated.
-TrimPositions TrimWhitespace(const std::string& input,
-    TrimPositions positions,
-    std::string* output) {
-    return TrimWhitespaceASCII(input, positions, output);
-}
+// TrimPositions TrimWhitespace(const std::string& input,
+//     TrimPositions positions,
+//     std::string* output) {
+//     return TrimWhitespaceASCII(input, positions, output);
+// }
 
 
 // Since we use a lazy match, make sure that longer versions (like "--") are
@@ -515,8 +512,8 @@ void CommandLine::PrependWrapper(const CommandLine::StringType& wrapper) {
   WTF::Vector<String> wrapper_argv_wtf;
   splitStringToVector(strData, ' ', false, wrapper_argv_wtf);
   for (size_t i = 0; i < wrapper_argv_wtf.size(); ++i) {
-      String arg = wrapper_argv_wtf[i];
-      wrapper_argv.push_back(ensureUTF16UChar(arg).data());
+    String arg = wrapper_argv_wtf[i];
+    wrapper_argv.push_back(WTF::ensureUTF16UChar(arg, true).data());
   }
 
   // Prepend the wrapper and update the switches/arguments |begin_args_|.

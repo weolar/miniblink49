@@ -1,13 +1,53 @@
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright (c) 2014 Marshall A. Greenblatt. Portions copyright (c) 2011
+// Google Inc. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of Google Inc. nor the name Chromium Embedded
+// Framework nor the names of its contributors may be used to endorse
+// or promote products derived from this software without specific prior
+// written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef BASE_TEMPLATE_UTIL_H_
-#define BASE_TEMPLATE_UTIL_H_
+#ifndef CEF_INCLUDE_BASE_CEF_TEMPLATE_UTIL_H_
+#define CEF_INCLUDE_BASE_CEF_TEMPLATE_UTIL_H_
+#pragma once
+
+#if defined(BASE_TEMPLATE_UTIL_H_)
+// Do nothing if the Chromium header has already been included.
+// This can happen in cases where Chromium code is used directly by the
+// client application. When using Chromium code directly always include
+// the Chromium header first to avoid type conflicts.
+#elif 0 // defined(BUILDING_CEF_SHARED)
+// When building CEF include the Chromium header directly.
+#include "base/template_util.h"
+#else  // !BUILDING_CEF_SHARED
+// The following is substantially similar to the Chromium implementation.
+// If the Chromium implementation diverges the below implementation should be
+// updated to match.
 
 #include <cstddef>  // For size_t.
 
-#include "build/build_config.h"
+//#include "include/base/cef_build.h"
 
 namespace base {
 
@@ -78,7 +118,7 @@ template <class T> struct is_const<const T> : true_type {};
 template <class T> struct is_void : false_type {};
 template <> struct is_void<void> : true_type {};
 
-namespace internal {
+namespace cef_internal {
 
 // Types YesType and NoType are guaranteed such that sizeof(YesType) <
 // sizeof(NoType).
@@ -118,7 +158,7 @@ struct IsClassHelper {
   static NoType Test(...);
 };
 
-}  // namespace internal
+}  // namespace cef_internal
 
 // Inherits from true_type if From is convertible to To, false_type otherwise.
 //
@@ -127,16 +167,16 @@ struct IsClassHelper {
 template <typename From, typename To>
 struct is_convertible
     : integral_constant<bool,
-                        sizeof(internal::ConvertHelper::Test<To>(
-                                   internal::ConvertHelper::Create<From>())) ==
-                        sizeof(internal::YesType)> {
+                        sizeof(cef_internal::ConvertHelper::Test<To>(
+                                   cef_internal::ConvertHelper::Create<From>())) ==
+                        sizeof(cef_internal::YesType)> {
 };
 
 template <typename T>
 struct is_class
     : integral_constant<bool,
-                        sizeof(internal::IsClassHelper::Test<T>(0)) ==
-                            sizeof(internal::YesType)> {
+                        sizeof(cef_internal::IsClassHelper::Test<T>(0)) ==
+                            sizeof(cef_internal::YesType)> {
 };
 
 template<bool B, class T = void>
@@ -147,4 +187,6 @@ struct enable_if<true, T> { typedef T type; };
 
 }  // namespace base
 
-#endif  // BASE_TEMPLATE_UTIL_H_
+#endif  // !BUILDING_CEF_SHARED
+
+#endif  // CEF_INCLUDE_BASE_CEF_TEMPLATE_UTIL_H_

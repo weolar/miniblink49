@@ -71,6 +71,7 @@ public:
     String charset() const { return m_charset; }
     Encoding contentTransferEncoding() const { return m_contentTransferEncoding; }
     String contentLocation() const { return m_contentLocation; }
+    String contentID() const { return m_contentID; }
 
     // Multi-part type and boundaries are only valid for multipart MIME headers.
     String multiPartType() const { return m_multipartType; }
@@ -88,6 +89,7 @@ private:
     String m_charset;
     Encoding m_contentTransferEncoding;
     String m_contentLocation;
+    String m_contentID;
     String m_multipartType;
     String m_endOfPartBoundary;
     String m_endOfDocumentBoundary;
@@ -161,6 +163,11 @@ PassRefPtrWillBeRawPtr<MIMEHeader> MIMEHeader::parseHeader(SharedBufferChunkRead
     mimeParametersIterator = keyValuePairs.find("content-location");
     if (mimeParametersIterator != keyValuePairs.end())
         mimeHeader->m_contentLocation = mimeParametersIterator->value;
+
+    // See rfc2557 - section 8.3 - Use of the Content-ID header and CID URLs.
+    mimeParametersIterator = keyValuePairs.find("content-id");
+    if (mimeParametersIterator != keyValuePairs.end())
+        mimeHeader->m_contentID = mimeParametersIterator->value;
 
     return mimeHeader.release();
 }
@@ -369,7 +376,8 @@ PassRefPtrWillBeRawPtr<ArchiveResource> MHTMLParser::parseNextPart(const MIMEHea
     // The specs mentions 5 ways to resolve a URL: http://tools.ietf.org/html/rfc2557#section-5
     // IE and Firefox (UNMht) seem to generate only absolute URLs.
     KURL location = KURL(KURL(), mimeHeader.contentLocation());
-    return ArchiveResource::create(contentBuffer, location, AtomicString(mimeHeader.contentType()), AtomicString(mimeHeader.charset()), String());
+    return ArchiveResource::create(
+        contentBuffer, location, mimeHeader.contentID(), AtomicString(mimeHeader.contentType()), AtomicString(mimeHeader.charset()), String());
 }
 
 size_t MHTMLParser::frameCount() const

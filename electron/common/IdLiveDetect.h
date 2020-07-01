@@ -1,7 +1,7 @@
 #ifndef common_IdLiveDetect_h
 #define common_IdLiveDetect_h
 
-#include <set>
+#include <map>
 #include <windows.h>
 
 namespace atom {
@@ -11,15 +11,17 @@ public:
     IdLiveDetect();
     ~IdLiveDetect();
 
-    int constructed();
+    int constructed(void* ptr);
     void deconstructed(int id);
+
+    void* getPtrById(int id);
 
     bool isLive(int id);
     static IdLiveDetect* get();
 
 private:
     int m_idGen;
-    std::set<int> m_liveSelf;
+    std::map<int, void*> m_liveSelf;
     CRITICAL_SECTION m_liveSelfLock;
     static IdLiveDetect* m_inst;
 };   

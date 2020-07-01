@@ -82,7 +82,7 @@ EVP_PKEY *EVP_PKCS82PKEY(PKCS8_PRIV_KEY_INFO *p8)
 
     if (!EVP_PKEY_set_type(pkey, OBJ_obj2nid(algoid))) {
         EVPerr(EVP_F_EVP_PKCS82PKEY, EVP_R_UNSUPPORTED_PRIVATE_KEY_ALGORITHM);
-        i2t_ASN1_OBJECT(obj_tmp, 80, algoid);
+        openssl_i2t_ASN1_OBJECT(obj_tmp, 80, algoid);
         ERR_add_error_data(2, "TYPE=", obj_tmp);
         goto error;
     }

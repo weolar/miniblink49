@@ -34,6 +34,8 @@ class CSSParserTokenRange;
 
 struct CSSParserFunction;
 class CSSParserValueList;
+class CSSParserValues;
+class CSSVariableData;
 
 struct CSSParserValue {
     CSSValueID id;
@@ -48,6 +50,7 @@ struct CSSParserValue {
             UChar32 start;
             UChar32 end;
         } m_unicodeRange;
+		CSSVariableData* variableData;
     };
     enum {
         Operator  = 0x100000,
@@ -103,6 +106,9 @@ public:
     void destroyAndClear();
 
 private:
+	void checkForVariableReferencesOrDestroyAndClear(const CSSParserTokenRange& originalRange);
+	void consumeVariableValue(const CSSParserTokenRange&);
+
     unsigned m_current;
     Vector<CSSParserValue, 4> m_values;
 };

@@ -115,12 +115,13 @@ void V8InjectedScriptHost::internalConstructorNameCallback(const v8::FunctionCal
 
     v8::Local<v8::Object> object = info[0].As<v8::Object>();
     v8::Local<v8::String> result = object->GetConstructorName();
-
+    v8::Isolate *isolae = info.GetIsolate();
     if (!result.IsEmpty() && toCoreStringWithUndefinedOrNullCheck(result) == "Object") {
         v8::Local<v8::String> constructorSymbol = v8AtomicString(info.GetIsolate(), "constructor");
-        if (object->HasRealNamedProperty(constructorSymbol) && !object->HasRealNamedCallbackProperty(constructorSymbol)) {
-            v8::TryCatch tryCatch;
-            v8::Local<v8::Value> constructor = object->GetRealNamedProperty(constructorSymbol);
+        if (object->HasRealNamedProperty(isolae->GetCurrentContext(), constructorSymbol).FromJust() && !object->HasRealNamedCallbackProperty(isolae->GetCurrentContext(), constructorSymbol).FromJust()) {
+            v8::TryCatch tryCatch(isolae);
+            v8::Local<v8::Value> constructor = object->GetRealNamedProperty(isolae->GetCurrentContext(), constructorSymbol).FromMaybe(v8::Local<v8::Value>());
+
             if (!constructor.IsEmpty() && constructor->IsFunction()) {
                 v8::Local<v8::String> constructorName = functionDisplayName(v8::Local<v8::Function>::Cast(constructor));
                 if (!constructorName.IsEmpty() && !tryCatch.HasCaught())
@@ -298,7 +299,7 @@ static v8::Local<v8::Array> getJSListenerFunctions(v8::Isolate* isolate, Executi
         v8::Local<v8::Object> function;
         {
             // getListenerObject() may cause JS in the event attribute to get compiled, potentially unsuccessfully.
-            v8::TryCatch block;
+            v8::TryCatch block(isolate);
             function = v8Listener->getListenerObject(executionContext);
             if (block.HasCaught())
                 continue;
@@ -363,7 +364,7 @@ void V8InjectedScriptHost::evalCallback(const v8::FunctionCallbackInfo<v8::Value
     }
 
     ASSERT(isolate->InContext());
-    v8::TryCatch tryCatch;
+    v8::TryCatch tryCatch(isolate);
     v8::Local<v8::Value> result;
     if (!v8Call(V8ScriptRunner::compileAndRunInternalScript(expression, info.GetIsolate()), result, tryCatch)) {
         v8SetReturnValue(info, tryCatch.ReThrow());
@@ -398,7 +399,8 @@ void V8InjectedScriptHost::evaluateWithExceptionDetailsCallback(const v8::Functi
     v8::Local<v8::Object> wrappedResult = v8::Object::New(isolate);
     if (wrappedResult.IsEmpty())
         return;
-    v8::TryCatch tryCatch;
+
+    v8::TryCatch tryCatch(isolate);
     v8::Local<v8::Script> script;
     v8::Local<v8::Value> result;
     if (!v8Call(V8ScriptRunner::compileScript(expression, String(), String(), TextPosition(), isolate), script, tryCatch)) {

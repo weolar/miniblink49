@@ -1245,6 +1245,32 @@ const Vector<AppliedTextDecoration>& ComputedStyle::appliedTextDecorations() con
     return rareInheritedData->appliedTextDecorations->vector();
 }
 
+StyleVariableData* ComputedStyle::variables() const
+{
+    ASSERT(RuntimeEnabledFeatures::cssVariablesEnabled());
+    return rareInheritedData->variables.get();
+}
+
+void ComputedStyle::setVariable(const AtomicString& name, PassRefPtr<CSSVariableData> value)
+{
+    RefPtr<StyleVariableData>& variables = rareInheritedData.access()->variables;
+    if (!variables)
+        variables = StyleVariableData::create();
+    else if (!variables->hasOneRef())
+        variables = variables->copy();
+    variables->setVariable(name, value);
+}
+
+void ComputedStyle::removeVariable(const AtomicString& name)
+{
+    RefPtr<StyleVariableData>& variables = rareInheritedData.access()->variables;
+    if (!variables)
+        return;
+    if (!variables->hasOneRef())
+        variables = variables->copy();
+    variables->removeVariable(name);
+}
+
 float ComputedStyle::wordSpacing() const { return fontDescription().wordSpacing(); }
 float ComputedStyle::letterSpacing() const { return fontDescription().letterSpacing(); }
 

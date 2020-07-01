@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (C) 2006, 2007 Apple Computer, Inc.
  * Copyright (c) 2006, 2007, 2008, 2009, 2012 Google Inc. All rights reserved.
  *
@@ -166,8 +166,8 @@ PassRefPtr<SimpleFontData> FontCache::fallbackFontForCharacter(
     };
 
     const static wchar_t* const commonFonts[] = {
-        L"Î¢ÈíÑÅºÚ",
-        L"ËÎÌå",
+        L"å¾®è½¯é›…é»‘",
+        L"å®‹ä½“",
         L"tahoma",
         L"arial unicode ms",
         L"lucida sans unicode",
@@ -256,8 +256,12 @@ static bool typefacesMatchesFamily(const SkTypeface* tf, const AtomicString& fam
         if (equalIgnoringCase(family, familyName))
             matchesRequestedFamily = true;
 #ifndef MINIBLINK_NOCHANGE
-        const char data[13] = { 0xE5, 0xBE, 0xAE, 0xE8, 0xBD, 0xAF, 0xE9, 0x9B, 0x85, 0xE9, 0xBB, 0x91, 0 };
-        if (family == "Microsoft YaHei" && familyName.equals(data, 13))
+        const unsigned char yaheiData[13] = { 0xE5, 0xBE, 0xAE, 0xE8, 0xBD, 0xAF, 0xE9, 0x9B, 0x85, 0xE9, 0xBB, 0x91, 0 }; // å¾®è½¯é›…é»‘
+        if (equalIgnoringCase(family, "microsoft yahei") && familyName.equals((const char*)yaheiData, 13))
+            matchesRequestedFamily = true;
+
+        const unsigned char songtiData[7] = { 0xE5, 0xAE, 0x8B, 0xE4, 0xBD, 0x93, 0 }; // å®‹ä½“
+        if (equalIgnoringCase(family, "simsun") && familyName.equals((const char*)songtiData, 7))
             matchesRequestedFamily = true;
 #endif
     }

@@ -24,6 +24,12 @@
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
 
+#if V8_MINOR_VERSION == 7
+namespace v8 {
+extern bool g_patchForCreateDataProperty;
+}
+#endif
+
 namespace blink {
 
 // Suppress warning: global constructors, because struct WrapperTypeInfo is trivial
@@ -118,6 +124,28 @@ static void pathAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void pathaAttributeSetter(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::String> propertyName = v8AtomicString(info.GetIsolate(), "path");
+
+    ASSERT(info.This()->IsObject());
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = true;
+#endif
+    bool b = v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), propertyName, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = false;
+#endif
+}
+
+static void pathAttributeSetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Value> v8Value = info[0];
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
+    FileV8Internal::pathaAttributeSetter(v8Value, info);
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
 static void constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     ExceptionState exceptionState(ExceptionState::ConstructionContext, "File", info.Holder(), info.GetIsolate());
@@ -162,7 +190,7 @@ static const V8DOMConfiguration::AccessorConfiguration V8FileAccessors[] = {
     {"lastModified", FileV8Internal::lastModifiedAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"lastModifiedDate", FileV8Internal::lastModifiedDateAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"webkitRelativePath", FileV8Internal::webkitRelativePathAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-    {"path", FileV8Internal::pathAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"path", FileV8Internal::pathAttributeGetterCallback, FileV8Internal::pathAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 };
 
 void V8File::constructorCallback(const v8::FunctionCallbackInfo<v8::Value>& info)

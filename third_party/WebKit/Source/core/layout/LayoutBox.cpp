@@ -1163,12 +1163,10 @@ void LayoutBox::paint(const PaintInfo& paintInfo, const LayoutPoint& paintOffset
     BoxPainter(*this).paint(paintInfo, paintOffset);
 }
 
-
 void LayoutBox::paintBoxDecorationBackground(const PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
     BoxPainter(*this).paintBoxDecorationBackground(paintInfo, paintOffset);
 }
-
 
 bool LayoutBox::getBackgroundPaintedExtent(LayoutRect& paintedExtent)
 {
@@ -2231,7 +2229,7 @@ void LayoutBox::updateLogicalHeight()
 
     LogicalExtentComputedValues computedValues;
     computeLogicalHeight(logicalHeight(), logicalTop(), computedValues);
-
+        
     setLogicalHeight(computedValues.m_extent);
     setLogicalTop(computedValues.m_position);
     setMarginBefore(computedValues.m_margins.m_before);
@@ -2420,6 +2418,11 @@ bool LayoutBox::skipContainingBlockForPercentHeightCalculation(const LayoutBox* 
     return document().inQuirksMode() && !containingBlock->isTableCell() && !containingBlock->isOutOfFlowPositioned() && containingBlock->style()->logicalHeight().isAuto();
 }
 
+static bool isFlexItem(const LayoutBox& box)
+{
+    return !box.isInline() && !box.isFloatingOrOutOfFlowPositioned() && box.parent() && box.parent()->isFlexibleBox();
+}
+
 LayoutUnit LayoutBox::computePercentageLogicalHeight(const Length& height) const
 {
     LayoutUnit availableHeight = -1;
@@ -2445,8 +2448,14 @@ LayoutUnit LayoutBox::computePercentageLogicalHeight(const Length& height) const
 
     bool includeBorderPadding = isTable();
 
+    LayoutUnit stretchedFlexHeight(-1);
+    if (isFlexItem(*cb))
+        stretchedFlexHeight = toLayoutFlexibleBox(cb->parent())->childLogicalHeightForPercentageResolution(*cb);
+
     if (isHorizontalWritingMode() != cb->isHorizontalWritingMode()) {
         availableHeight = containingBlockChild->containingBlockLogicalWidthForContent();
+    } else if (stretchedFlexHeight != LayoutUnit(-1)) {
+        availableHeight = stretchedFlexHeight;
     } else if (hasOverrideContainingBlockLogicalHeight()) {
         availableHeight = overrideContainingBlockContentLogicalHeight();
     } else if (cb->isTableCell()) {
@@ -3189,12 +3198,25 @@ static void computeBlockStaticDistance(Length& logicalTop, Length& logicalBottom
         return;
 
     // FIXME: The static distance computation has not been patched for mixed writing modes.
-    LayoutUnit staticLogicalTop = child->layer()->staticBlockPosition() - containerBlock->borderBefore();
+    LayoutUnit staticLogicalTop = child->layer()->staticBlockPosition();
     for (LayoutObject* curr = child->parent(); curr && curr != containerBlock; curr = curr->container()) {
-        if (curr->isBox() && !curr->isTableRow())
-            staticLogicalTop += toLayoutBox(curr)->logicalTop();
+        if (!curr->isBox() || curr->isTableRow())
+            continue;
+        const LayoutBox& box = *toLayoutBox(curr);
+        staticLogicalTop += box.logicalTop();
+        if (box.isRelPositioned()) // isInFlowPositioned
+            staticLogicalTop += box.offsetForInFlowPosition().height();
+        if (!box.isLayoutFlowThread())
+            continue;
+        // We're walking out of a flowthread here. This flow thread is not in the
+        // containing block chain, so we need to convert the position from the
+        // coordinate space of this flowthread to the containing coordinate space.
+        // The inline position cannot affect the block position, so we don't bother
+        // calculating it.
+        LayoutUnit dummyInlinePosition;
+        toLayoutFlowThread(box).flowThreadToContainingCoordinateSpace(staticLogicalTop, dummyInlinePosition);
     }
-    logicalTop.setValue(Fixed, staticLogicalTop);
+    logicalTop.setValue(Fixed, staticLogicalTop - containerBlock->borderBefore());
 }
 
 void LayoutBox::computePositionedLogicalHeight(LogicalExtentComputedValues& computedValues) const
@@ -4901,9 +4923,6 @@ void LayoutBox::setSize(const LayoutSize& size)
         return;
     m_frameRect.setSize(size);
 
-    if (size.width().toInt() == 1000000)
-        OutputDebugStringA("LayoutBox::setSize\n");
-
     frameRectChanged();
 }
 
@@ -4921,9 +4940,6 @@ void LayoutBox::setFrameRect(const LayoutRect& rect) {
     if (rect == m_frameRect)
         return;
     m_frameRect = rect;
-
-    if (m_frameRect.width().toInt() == 1000000)
-        OutputDebugStringA("LayoutBox::setWidth\n");
 
     frameRectChanged();
 }

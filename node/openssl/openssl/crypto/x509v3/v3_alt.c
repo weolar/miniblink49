@@ -169,7 +169,7 @@ STACK_OF(CONF_VALUE) *i2v_GENERAL_NAME(X509V3_EXT_METHOD *method,
         break;
 
     case GEN_RID:
-        i2t_ASN1_OBJECT(oline, 256, gen->d.rid);
+        openssl_i2t_ASN1_OBJECT(oline, 256, gen->d.rid);
         X509V3_add_value("Registered ID", oline, &ret);
         break;
     }

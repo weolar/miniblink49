@@ -27,7 +27,7 @@ void V8UIEventInit::toImpl(v8::Isolate* isolate, v8::Local<v8::Value> v8Value, U
     if (exceptionState.hadException())
         return;
 
-    v8::TryCatch block;
+    v8::TryCatch block(isolate);
     v8::Local<v8::Object> v8Object;
     if (!v8Call(v8Value->ToObject(isolate->GetCurrentContext()), v8Object, block)) {
         exceptionState.rethrowV8Exception(block.Exception());

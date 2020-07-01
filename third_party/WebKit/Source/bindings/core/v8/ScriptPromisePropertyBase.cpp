@@ -156,14 +156,8 @@ void ScriptPromisePropertyBase::clearWrappers()
     for (WeakPersistentSet::iterator i = m_wrappers.begin(); i != m_wrappers.end(); ++i) {
         v8::Local<v8::Object> wrapper = (*i)->newLocal(m_isolate);
         if (!wrapper.IsEmpty()) {
-			//zero
-#if V8_MINOR_VERSION == 7
 			blink::V8HiddenValue::deleteHiddenValue(m_isolate, wrapper, resolverName());
 			blink::V8HiddenValue::deleteHiddenValue(m_isolate, wrapper, promiseName());
-#else
-            wrapper->DeleteHiddenValue(resolverName());
-            wrapper->DeleteHiddenValue(promiseName());
-#endif
         }
     }
     m_wrappers.clear();

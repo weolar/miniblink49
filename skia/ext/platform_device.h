@@ -108,7 +108,7 @@ class SK_API PlatformDevice {
   // The DC that corresponds to the bitmap, used for GDI operations drawing
   // into the bitmap. This is possibly heavyweight, so it should be existant
   // only during one pass of rendering.
-  virtual PlatformSurface BeginPlatformPaint();
+  virtual PlatformSurface BeginPlatformPaint(void* hWnd);
 
   // Finish a previous call to beginPlatformPaint.
   virtual void EndPlatformPaint();
@@ -118,8 +118,10 @@ class SK_API PlatformDevice {
   // be more efficient if you don't free it until after this call so it doesn't
   // have to be created twice.  If src_rect is null, then the entirety of the
   // source device will be copied.
-  virtual void DrawToNativeContext(PlatformSurface surface, int x, int y,
+  virtual bool DrawToNativeContext(PlatformSurface surface, int x, int y,
                                    const PlatformRect* src_rect) = 0;
+
+  virtual bool DrawToNativeLayeredContext(PlatformSurface surface, const RECT* src_rect, const RECT* client_rect) = 0;
 
   // Returns true if GDI operations can be used for drawing into the bitmap.
   virtual bool SupportsPlatformPaint();

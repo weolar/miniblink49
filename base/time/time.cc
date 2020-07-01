@@ -212,7 +212,8 @@ Time Time::LocalMidnight() const {
 bool Time::FromStringInternal(const char* time_string,
     bool is_local,
     Time* parsed_time) {
-    ASSERT((time_string != NULL) && (parsed_time != NULL));
+    if (!((time_string != NULL) && (parsed_time != NULL)))
+        DebugBreak();
 
     if (time_string[0] == '\0')
         return false;

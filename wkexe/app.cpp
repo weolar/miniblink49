@@ -147,7 +147,7 @@ bool HandleLoadUrlBegin(wkeWebView webView, void* param, const char *url, void *
 {
 	if (strcmp(url, "http://hook.test/") == 0) {
 		wkeNetSetMIMEType(job, "text/html");
-		wkeNetSetURL(job, url);
+        wkeNetChangeRequestUrl(job, url);
 		wkeNetSetData(job, "<li>这是个hook页面</li><a herf=\"http://www.baidu.com/\">HookRequest</a>", sizeof("<li>这是个hook页面</li><a herf=\"http://www.baidu.com/\">HookRequest</a>"));
 		return true;
 	}

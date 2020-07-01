@@ -62,12 +62,7 @@ public:
     static void clearWrapper(v8::Local<v8::Object> listenerObject, bool isAttribute, v8::Isolate* isolate)
     {
         v8::Local<v8::String> wrapperProperty = getHiddenProperty(isAttribute, isolate);
-		//zero
-#if V8_MINOR_VERSION == 7
 		blink::V8HiddenValue::deleteHiddenValue(isolate, listenerObject, wrapperProperty);
-#else
-        listenerObject->DeleteHiddenValue(wrapperProperty);
-#endif
     }
 
     CORE_EXPORT static PassRefPtr<EventListener> getEventListener(ScriptState*, v8::Local<v8::Value>, bool isAttribute, ListenerLookupType);
@@ -77,12 +72,7 @@ private:
     {
         v8::HandleScope scope(scriptState->isolate());
         ASSERT(scriptState->isolate()->InContext());
-		//zero
-#if V8_MINOR_VERSION == 7
 		v8::Local<v8::Value> listener = blink::V8HiddenValue::getHiddenValue(scriptState->isolate(), object, wrapperProperty);
-#else
-        v8::Local<v8::Value> listener = object->GetHiddenValue(wrapperProperty);
-#endif
         if (listener.IsEmpty())
             return 0;
         return static_cast<V8EventListener*>(v8::External::Cast(*listener)->Value());
@@ -111,12 +101,7 @@ PassRefPtr<V8EventListener> V8EventListenerList::findOrCreateWrapper(v8::Local<v
 
     RefPtr<V8EventListener> wrapperPtr = WrapperType::create(object, isAttribute, scriptState);
     if (wrapperPtr)
-		//zero
-#if V8_MINOR_VERSION == 7
 		blink::V8HiddenValue::setHiddenValue(isolate, object, wrapperProperty, v8::External::New(isolate, wrapperPtr.get()));
-#else
-        object->SetHiddenValue(wrapperProperty, v8::External::New(isolate, wrapperPtr.get()));
-#endif
     return wrapperPtr;
 }
 

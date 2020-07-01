@@ -30,7 +30,7 @@
 
 uv_handle_type uv_guess_handle(uv_file file) {
   HANDLE handle;
-  DWORD mode;
+  //DWORD mode;
 
   if (file < 0) {
     return UV_UNKNOWN_HANDLE;
@@ -38,7 +38,11 @@ uv_handle_type uv_guess_handle(uv_file file) {
 
   handle = uv__get_osfhandle(file);
   if (/*0xfffffffe == handle && */(1 == file || 2 == file))
-      return UV_FILE; // exe 非console模式，uv__get_osfhandle会失败
+    return UV_FILE; // exe 非console模式，uv__get_osfhandle会失败
+
+  // exe 非console模式，如果env不传参数，会走到stdio.js：getStdin里，然后走到这。不过暂时屏蔽掉，因为即使返回UV_FILE后续还是会打开文件失败
+//   if (0 == file)
+//     return UV_FILE; 
 
   switch (GetFileType(handle)) {
     case FILE_TYPE_CHAR:

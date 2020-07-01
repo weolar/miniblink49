@@ -145,6 +145,11 @@ closeIcuConverter(uconv_t *conv)
 }
 #endif /* LIBXML_ICU_ENABLED */
 
+static int
+gbkToUTF8(unsigned char* out, int *outlen, const unsigned char* in, int* inlen) {
+    return -1; // 并不会真正走到这里，因为blink在外部会强制转码并且设置固定utf16解码方式
+}
+
 /************************************************************************
  *									*
  *		Conversions To/From UTF8 encoding			*
@@ -160,7 +165,6 @@ closeIcuConverter(uconv_t *conv)
  *
  * Take a block of ASCII chars in and try to convert it to an UTF-8
  * block of chars out.
- * Returns 0 if success, or -1 otherwise
  * The value of @inlen after return is the number of octets consumed
  *     if the return value is positive, else unpredictable.
  * The value of @outlen after return is the number of octets consumed.
@@ -1422,6 +1426,7 @@ xmlInitCharEncodingHandlers(void) {
     xmlNewCharEncodingHandler("ISO-8859-1", isolat1ToUTF8, NULL);
     xmlNewCharEncodingHandler("ASCII", asciiToUTF8, NULL);
     xmlNewCharEncodingHandler("US-ASCII", asciiToUTF8, NULL);
+    xmlNewCharEncodingHandler("GBK", gbkToUTF8, NULL);
 #endif /* LIBXML_OUTPUT_ENABLED */
 #if !defined(LIBXML_ICONV_ENABLED) && !defined(LIBXML_ICU_ENABLED)
 #ifdef LIBXML_ISO8859X_ENABLED

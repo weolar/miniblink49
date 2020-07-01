@@ -404,11 +404,21 @@ void LayoutTheme::addVisualOverflow(const LayoutObject& object, IntRect& borderB
 #endif
 }
 
+static bool isInputNode(LayoutObject* layoutObject)
+{
+    Node* node = layoutObject->node();
+    if (!node)
+        return false;
+    if (!node->hasTagName(HTMLNames::inputTag))
+        return false;
+    
+    return true;
+}
+
 bool LayoutTheme::shouldDrawDefaultFocusRing(LayoutObject* layoutObject) const
 {
-    return false;
-#ifdef MINIBLINK_NOT_IMPLEMENTED // weolar
-    if (supportsFocusRing(layoutObject->styleRef()))
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED // weolar
+    if (supportsFocusRing(layoutObject->styleRef()) || !isInputNode(layoutObject))
         return false;
     Node* node = layoutObject->node();
     if (!node)

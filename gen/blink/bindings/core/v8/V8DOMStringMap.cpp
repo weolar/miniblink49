@@ -113,7 +113,7 @@ static void namedPropertyGetterCallback(v8::Local<v8::Name> name, const v8::Prop
 static void namedPropertySetter(v8::Local<v8::Name> name, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     auto nameString = name.As<v8::String>();
-    v8::String::Utf8Value namedProperty(nameString);
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), nameString);
     ExceptionState exceptionState(ExceptionState::SetterContext, *namedProperty, "DOMStringMap", info.Holder(), info.GetIsolate());
     DOMStringMap* impl = V8DOMStringMap::toImpl(info.Holder());
     V8StringResource<> propertyName(nameString);
@@ -141,7 +141,7 @@ static void namedPropertyQuery(v8::Local<v8::Name> name, const v8::PropertyCallb
 {
     DOMStringMap* impl = V8DOMStringMap::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(name.As<v8::String>());
-    v8::String::Utf8Value namedProperty(name);
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), name);
     ExceptionState exceptionState(ExceptionState::GetterContext, *namedProperty, "DOMStringMap", info.Holder(), info.GetIsolate());
     bool result = impl->namedPropertyQuery(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())

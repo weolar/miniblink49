@@ -72,8 +72,7 @@ v8::Local<v8::Value> V8ThrowException::createDOMException(v8::Isolate* isolate, 
     if (!frame || !BindingSecurity::shouldAllowAccessToFrame(isolate, frame, DoNotReportSecurityError))
         sanitizedCreationContext = isolate->GetCurrentContext()->Global();
 
-    v8::TryCatch tryCatch;
-
+    v8::TryCatch tryCatch(isolate);
     DOMException* domException = DOMException::create(ec, sanitizedMessage, unsanitizedMessage);
     v8::Local<v8::Value> exception = toV8(domException, sanitizedCreationContext, isolate);
 

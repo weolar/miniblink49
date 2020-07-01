@@ -58,8 +58,8 @@ typedef unsigned short wchar_t;
 #define _WCHAR_T_DEFINED
 #endif
 
-#ifndef _TIME_T_DEFINED
-#ifdef  _WIN64
+#if 1 // ndef _TIME_T_DEFINED
+#if 1 // def  _WIN64
 typedef __int64 time_t;         /* time value */
 #else
 typedef long    time_t;         /* time value */
@@ -100,12 +100,12 @@ struct __utimbuf64 {
 
 /* Function Prototypes */
 
-_CRTIMP int __cdecl _utime(const char *, struct _utimbuf *);
-
-_CRTIMP int __cdecl _futime(int, struct _utimbuf *);
-
-/* Wide Function Prototypes */
-_CRTIMP int __cdecl _wutime(const wchar_t *, struct _utimbuf *);
+// _CRTIMP int __cdecl _utime(const char *, struct _utimbuf *);
+// 
+// _CRTIMP int __cdecl _futime(int, struct _utimbuf *);
+// 
+// /* Wide Function Prototypes */
+// _CRTIMP int __cdecl _wutime(const wchar_t *, struct _utimbuf *);
 
 #if     _INTEGRAL_MAX_BITS >= 64
 _CRTIMP int __cdecl _utime64(const char *, struct __utimbuf64 *);
@@ -115,7 +115,7 @@ _CRTIMP int __cdecl _wutime64(const wchar_t *, struct __utimbuf64 *);
 
 #if     !__STDC__
 /* Non-ANSI name for compatibility */
-_CRTIMP int __cdecl utime(const char *, struct utimbuf *);
+//_CRTIMP int __cdecl utime(const char *, struct utimbuf *);
 #endif
 
 #ifdef  __cplusplus

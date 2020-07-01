@@ -71,6 +71,15 @@ private:
 #if defined(USING_SYSTEM_ICU)
     mutable bool m_needsGBKFallbacks;
 #endif
+    static const int kIncrementalDataChunkLength = 6;
+    char m_incrementalDataChunk[kIncrementalDataChunkLength];
+    int m_incrementalDataChunkLength = 0;
+
+    bool hasValidChar();
+    bool toUnicode(unsigned char c, UChar& uc);
+
+//     int m_partialSequenceSize;
+//     uint8_t m_partialSequence[kIncrementalDataChunkLength;
 };
 
 struct ICUConverterWrapper {

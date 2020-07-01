@@ -123,8 +123,13 @@ void AutomaticTrackSelection::performAutomaticTextTrackSelection(const TrackGrou
     if (!trackToEnable && defaultTrack)
         trackToEnable = defaultTrack;
 
-    if (!trackToEnable && m_configuration.forceEnableSubtitleOrCaptionTrack && group.kind == TrackGroup::CaptionsAndSubtitles)
-        trackToEnable = fallbackTrack ? fallbackTrack : group.tracks[0];
+    if (!trackToEnable && m_configuration.forceEnableSubtitleOrCaptionTrack && group.kind == TrackGroup::CaptionsAndSubtitles) {
+        if (fallbackTrack) {
+            trackToEnable = fallbackTrack;
+        } else {
+            trackToEnable = group.tracks[0];
+        }
+    }
 
     if (currentlyEnabledTracks.size()) {
         for (size_t i = 0; i < currentlyEnabledTracks.size(); ++i) {

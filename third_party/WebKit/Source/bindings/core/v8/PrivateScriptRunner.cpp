@@ -47,7 +47,7 @@ static void importFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 static v8::Local<v8::Value> compileAndRunPrivateScript(ScriptState* scriptState, String scriptClassName, const char* source, size_t size)
 {
-    v8::TryCatch block;
+    v8::TryCatch block(scriptState->isolate());
     String sourceString(source, size);
     String fileName = scriptClassName + ".js";
 
@@ -192,10 +192,10 @@ static void initializeHolderIfNeeded(ScriptState* scriptState, v8::Local<v8::Obj
     v8::Local<v8::Context> context = scriptState->context();
     v8::Local<v8::Value> isInitialized = V8HiddenValue::getHiddenValue(isolate, holderObject, V8HiddenValue::privateScriptObjectIsInitialized(isolate));
     if (isInitialized.IsEmpty()) {
-        v8::TryCatch block;
+        v8::TryCatch block(isolate);
         v8::Local<v8::Value> initializeFunction;
         if (classObject->Get(scriptState->context(), v8String(isolate, "initialize")).ToLocal(&initializeFunction) && initializeFunction->IsFunction()) {
-            v8::TryCatch block;
+            v8::TryCatch block(isolate);
             v8::Local<v8::Value> result;
             if (!V8ScriptRunner::callFunction(v8::Local<v8::Function>::Cast(initializeFunction), scriptState->executionContext(), holder, 0, 0, isolate).ToLocal(&result)) {
                 fprintf(stderr, "Private script error: Object constructor threw an exception.\n");
@@ -301,7 +301,8 @@ v8::Local<v8::Value> PrivateScriptRunner::runDOMAttributeGetter(ScriptState* scr
         RELEASE_ASSERT_NOT_REACHED();
     }
     initializeHolderIfNeeded(scriptState, classObject, holder);
-    v8::TryCatch block;
+
+    v8::TryCatch block(isolate);
     v8::Local<v8::Value> result;
     if (!V8ScriptRunner::callFunction(v8::Local<v8::Function>::Cast(getter), scriptState->executionContext(), holder, 0, 0, isolate).ToLocal(&result)) {
         rethrowExceptionInPrivateScript(isolate, block, scriptStateInUserScript, ExceptionState::GetterContext, attributeName, className);
@@ -327,7 +328,7 @@ bool PrivateScriptRunner::runDOMAttributeSetter(ScriptState* scriptState, Script
     }
     initializeHolderIfNeeded(scriptState, classObject, holder);
     v8::Local<v8::Value> argv[] = { v8Value };
-    v8::TryCatch block;
+    v8::TryCatch block(isolate);
     v8::Local<v8::Value> result;
     if (!V8ScriptRunner::callFunction(v8::Local<v8::Function>::Cast(setter), scriptState->executionContext(), holder, WTF_ARRAY_LENGTH(argv), argv, isolate).ToLocal(&result)) {
         rethrowExceptionInPrivateScript(isolate, block, scriptStateInUserScript, ExceptionState::SetterContext, attributeName, className);
@@ -346,7 +347,7 @@ v8::Local<v8::Value> PrivateScriptRunner::runDOMMethod(ScriptState* scriptState,
         RELEASE_ASSERT_NOT_REACHED();
     }
     initializeHolderIfNeeded(scriptState, classObject, holder);
-    v8::TryCatch block;
+    v8::TryCatch block(scriptState->isolate());
     v8::Local<v8::Value> result;
     if (!V8ScriptRunner::callFunction(v8::Local<v8::Function>::Cast(method), scriptState->executionContext(), holder, argc, argv, scriptState->isolate()).ToLocal(&result)) {
         rethrowExceptionInPrivateScript(scriptState->isolate(), block, scriptStateInUserScript, ExceptionState::ExecutionContext, methodName, className);

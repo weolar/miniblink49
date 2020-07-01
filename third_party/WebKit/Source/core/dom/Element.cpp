@@ -1374,10 +1374,8 @@ Node::InsertionNotificationRequest Element::insertedInto(ContainerNode* insertio
     if (hasRareData())
         elementRareData()->clearClassListValueForQuirksMode();
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (isUpgradedCustomElement() && inDocument())
         CustomElement::didAttach(this, document());
-#endif // MINIBLINK_NOT_IMPLEMENTED
 
     TreeScope& scope = insertionPoint->treeScope();
     if (scope != treeScope())
@@ -2932,6 +2930,7 @@ SpellcheckAttributeState Element::spellcheckAttributeState() const
 
 bool Element::isSpellCheckingEnabled() const
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     for (const Element* element = this; element; element = element->parentOrShadowHostElement()) {
         switch (element->spellcheckAttributeState()) {
         case SpellcheckAttributeTrue:
@@ -2944,6 +2943,9 @@ bool Element::isSpellCheckingEnabled() const
     }
 
     return true;
+#else
+    return false; // weolar
+#endif
 }
 
 #if ENABLE(ASSERT)

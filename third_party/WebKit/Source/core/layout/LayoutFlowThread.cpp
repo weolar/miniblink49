@@ -185,4 +185,24 @@ void LayoutFlowThread::MultiColumnSetSearchAdapter::collectIfNeeded(const MultiC
         m_result = interval.data();
 }
 
+void LayoutFlowThread::flowThreadToContainingCoordinateSpace(LayoutUnit& blockPosition, LayoutUnit& inlinePosition) const
+{
+    LayoutPoint position(inlinePosition, blockPosition);
+    // First we have to make |position| physical, because that's what offsetLeft()
+    // expects and returns.
+    if (!isHorizontalWritingMode())
+        position = position.transposedPoint();
+    position = flipForWritingMode(position);
+
+    position.move(columnOffset(position));
+
+    // Make |position| logical again, and read out the values.
+    position = flipForWritingMode(position);
+    if (!isHorizontalWritingMode())
+        position = position.transposedPoint();
+    blockPosition = position.y();
+    inlinePosition = position.x();
+}
+
+
 } // namespace blink

@@ -185,6 +185,35 @@ LayoutObject::SelectionState InlineTextBox::selectionState() const
     return state;
 }
 
+static bool hasWrappedSelectionNewline(const InlineTextBox& box)
+{
+    // TODO(wkorman): We shouldn't need layout at this point and it should
+    // be enforced by DocumentLifecycle. http://crbug.com/537821
+    // Bail out as currently looking up selection state can cause the editing
+    // code can force a re-layout while scrutinizing the editing position, and
+    // InlineTextBox instances are not guaranteed to survive a re-layout.
+    if (box.layoutObject().needsLayout())
+        return false;
+
+    LayoutObject::SelectionState state = box.selectionState();
+    return /*RuntimeEnabledFeatures::selectionPaintingWithoutSelectionGapsEnabled()*/true
+        && (state == LayoutObject::SelectionStart || state == LayoutObject::SelectionInside)
+        // Checking last leaf child can be slow, so we make sure to do this only
+        // after the other simple conditionals.
+        && (box.root().lastLeafChild() == &box)
+        // It's possible to have mixed LTR/RTL on a single line, and we only
+        // want to paint a newline when we're the last leaf child and we make
+        // sure there isn't a differently-directioned box following us.
+        && ((!box.isLeftToRightDirection() && box.root().firstSelectedBox() == &box)
+            || (box.isLeftToRightDirection() && box.root().lastSelectedBox() == &box));
+}
+
+static float newlineSpaceWidth(const InlineTextBox& box)
+{
+    const ComputedStyle& styleToUse = box.layoutObject().styleRef(box.isFirstLineStyle());
+    return styleToUse.font().spaceWidth();
+}
+
 LayoutRect InlineTextBox::localSelectionRect(int startPos, int endPos)
 {
     int sPos = std::max(startPos - m_start, 0);
@@ -220,9 +249,27 @@ LayoutRect InlineTextBox::localSelectionRect(int startPos, int endPos)
     else if (r.maxX() > logicalRight())
         logicalWidth = logicalRight() - r.x();
 
-    LayoutPoint topPoint = isHorizontal() ? LayoutPoint(r.x(), selTop) : LayoutPoint(selTop, r.x());
-    LayoutUnit width = isHorizontal() ? logicalWidth : selHeight;
-    LayoutUnit height = isHorizontal() ? selHeight : logicalWidth;
+    LayoutPoint topPoint;
+    LayoutUnit width;
+    LayoutUnit height;
+    if (isHorizontal()) {
+        topPoint = LayoutPoint(r.x(), selTop);
+        width = logicalWidth;
+        height = selHeight;
+        if (hasWrappedSelectionNewline(*this)) {
+            if (!isLeftToRightDirection())
+                topPoint.setX(topPoint.x() - newlineSpaceWidth(*this));
+            width += newlineSpaceWidth(*this);
+        }
+    } else {
+        topPoint = LayoutPoint(selTop, r.x());
+        width = selHeight;
+        height = logicalWidth;
+        // TODO(wkorman): RTL text embedded in top-to-bottom text can create
+        // bottom-to-top situations. Add tests and ensure we handle correctly.
+        if (hasWrappedSelectionNewline(*this))
+            height += newlineSpaceWidth(*this);
+    }
 
     return LayoutRect(topPoint, LayoutSize(width, height));
 }
@@ -520,7 +567,9 @@ TextRun InlineTextBox::constructTextRun(const ComputedStyle& style, const Font& 
     TextRun run(string, textPos().toFloat(), expansion(), expansionBehavior(), direction(), dirOverride() || style.rtlOrdering() == VisualOrder, !layoutObject().canUseSimpleFontCodePath());
     run.setTabSize(!style.collapseWhiteSpace(), style.tabSize());
     run.setCodePath(layoutObject().canUseSimpleFontCodePath() ? TextRun::ForceSimple : TextRun::ForceComplex);
+#ifdef MINIBLINK_NO_HARFBUZZ
     ASSERT(TextRun::ForceSimple == run.codePath());
+#endif
     run.setTextJustify(style.textJustify());
 
     // Propagate the maximum length of the characters buffer to the TextRun, even when we're only processing a substring.

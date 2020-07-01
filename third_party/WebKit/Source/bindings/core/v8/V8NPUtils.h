@@ -44,7 +44,7 @@ CORE_EXPORT void convertV8ObjectToNPVariant(v8::Isolate*, v8::Local<v8::Value>, 
 CORE_EXPORT v8::Local<v8::Value> convertNPVariantToV8Object(v8::Isolate*, const NPVariant*, NPObject*);
 
 // Helper function to create an NPN String Identifier from a v8 string.
-NPIdentifier getStringIdentifier(v8::Local<v8::String>);
+NPIdentifier getStringIdentifier(v8::Isolate*, v8::Local<v8::String>);
 
 // The ExceptionHandler will be notified of any exceptions thrown while
 // operating on a NPObject.
@@ -56,7 +56,7 @@ CORE_EXPORT void popExceptionHandler();
 // current ExceptionHandler.
 class ExceptionCatcher {
 public:
-    ExceptionCatcher();
+    ExceptionCatcher(v8::Isolate* isolate);
     ~ExceptionCatcher();
 private:
     v8::TryCatch m_tryCatch;

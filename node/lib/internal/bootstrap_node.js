@@ -1,4 +1,4 @@
-// Hello, and welcome to hacking node.js!
+﻿// Hello, and welcome to hacking node.js!
 //
 // This file is invoked by node::LoadEnvironment in src/node.cc, and is
 // responsible for bootstrapping the node.js core. As special caution is given
@@ -43,6 +43,8 @@
       setupGlobalTimeouts();
       setupGlobalConsole();
     }
+
+    setupAsarSupport();
 
     const _process = NativeModule.require('internal/process');
 
@@ -147,6 +149,17 @@
 
         preloadModules();
         run(Module.runMain);
+      } else if (("_getPreloadScript" in process)) { // weolar add
+        const Module = NativeModule.require('module');
+        const vm = NativeModule.require('vm');
+      	
+        const module = new Module('[preloadScript]');
+        var source = process._getPreloadScript();
+        //source = Module.wrap(source);
+        preloadModules();
+        module._compile(source, "preloadScript.js");
+        
+        process._tickCallback();
       } else {
         preloadModules();
         // If -i or --interactive were passed, or stdin is a TTY.
@@ -505,6 +518,12 @@
   NativeModule.prototype.cache = function() {
     NativeModule._cache[this.id] = this;
   };
+
+  function setupAsarSupport() {
+    if (("_isInElectronEnv" in process) && !process._isInElectronEnv()) // weolar add
+      return;
+    process.binding('atom_common_asar').initAsarSupport(process, NativeModule.require);
+  }
 
   startup();
 });

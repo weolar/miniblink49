@@ -472,8 +472,13 @@ bool SVGImage::dataChanged(bool allDataReceived)
         m_page = page.release();
 
         TRACE_EVENT0("blink", "SVGImage::dataChanged::load");
-        loader.load(FrameLoadRequest(0, blankURL(), SubstituteData(data(), AtomicString("image/svg+xml", AtomicString::ConstructFromLiteral),
-            AtomicString("UTF-8", AtomicString::ConstructFromLiteral), KURL(), ForceSynchronousLoad)));
+
+        AtomicString mimeType("image/svg+xml", AtomicString::ConstructFromLiteral);
+        AtomicString textEncoding("UTF-8", AtomicString::ConstructFromLiteral);
+        KURL kurl;
+        
+        SubstituteData sdata(data(), mimeType, textEncoding, kurl, ForceSynchronousLoad);
+        loader.load(FrameLoadRequest(0, blankURL(), sdata));
 
         // Set the intrinsic size before a container size is available.
         m_intrinsicSize = containerSize();

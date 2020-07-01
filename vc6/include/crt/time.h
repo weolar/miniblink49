@@ -71,7 +71,7 @@ typedef unsigned short wchar_t;
 /* Define the implementation defined time type */
 
 #ifndef _TIME_T_DEFINED
-#ifdef  _WIN64
+#if 1 // def  _WIN64            /* fix vc6 time bug */
 typedef __int64   time_t;       /* time value */
 #else
 typedef _W64 long time_t;       /* time value */
@@ -152,19 +152,43 @@ _CRTIMP extern char * _tzname[2];
 
 /* Function prototypes */
 
-_CRTIMP char * __cdecl asctime(const struct tm *);
-_CRTIMP char * __cdecl ctime(const time_t *);
-_CRTIMP clock_t __cdecl clock(void);
-_CRTIMP double __cdecl difftime(time_t, time_t);
-_CRTIMP struct tm * __cdecl gmtime(const time_t *);
-_CRTIMP struct tm * __cdecl localtime(const time_t *);
-_CRTIMP time_t __cdecl mktime(struct tm *);
-_CRTIMP time_t __cdecl _mkgmtime(struct tm *);
-_CRTIMP size_t __cdecl strftime(char *, size_t, const char *,
-        const struct tm *);
-_CRTIMP char * __cdecl _strdate(char *);
-_CRTIMP char * __cdecl _strtime(char *);
-_CRTIMP time_t __cdecl time(time_t *);
+// _CRTIMP char * __cdecl asctime(const struct tm *);
+// _CRTIMP char * __cdecl ctime(const time_t *);
+// _CRTIMP clock_t __cdecl clock(void);
+// _CRTIMP double __cdecl difftime(time_t, time_t);
+// _CRTIMP struct tm * __cdecl gmtime(const time_t *);
+// _CRTIMP struct tm * __cdecl localtime(const time_t *);
+// _CRTIMP time_t __cdecl mktime(struct tm *);
+// _CRTIMP time_t __cdecl _mkgmtime(struct tm *);
+_CRTIMP size_t __cdecl strftime(char *, size_t, const char *, const struct tm *);
+// _CRTIMP char * __cdecl _strdate(char *);
+// _CRTIMP char * __cdecl _strtime(char *);
+//_CRTIMP time_t __cdecl time(time_t *);
+
+time_t time_64(time_t *pt);
+struct tm* gmtime_64(const time_t *);
+struct tm* localtime_64(const __int64 *pt);
+time_t mktime_64(struct tm *);
+
+__inline __int64 __cdecl time(__int64* t)
+{
+    return time_64(t);
+}
+
+__inline struct tm* __cdecl gmtime(const time_t* t)
+{
+    return gmtime_64(t);
+}
+
+__inline time_t __cdecl mktime(struct tm* t)
+{
+    return mktime_64(t);
+}
+
+__inline struct tm* localtime(const time_t* t)
+{
+    return localtime_64(t);
+}
 
 #ifdef  _POSIX_
 _CRTIMP void __cdecl tzset(void);
@@ -183,8 +207,8 @@ _CRTIMP __time64_t __cdecl _time64(__time64_t *);
 
 /* --------- The following functions are OBSOLETE --------- */
 /* The Win32 API GetLocalTime and SetLocalTime should be used instead. */
-unsigned __cdecl _getsystime(struct tm *);
-unsigned __cdecl _setsystime(struct tm *, unsigned);
+// unsigned __cdecl _getsystime(struct tm *);
+// unsigned __cdecl _setsystime(struct tm *, unsigned);
 /* --------- The preceding functions are OBSOLETE --------- */
 
 
@@ -198,11 +222,11 @@ typedef unsigned int size_t;
 /* wide function prototypes, also declared in wchar.h */
  
 _CRTIMP wchar_t * __cdecl _wasctime(const struct tm *);
-_CRTIMP wchar_t * __cdecl _wctime(const time_t *);
-_CRTIMP size_t __cdecl wcsftime(wchar_t *, size_t, const wchar_t *,
-        const struct tm *);
-_CRTIMP wchar_t * __cdecl _wstrdate(wchar_t *);
-_CRTIMP wchar_t * __cdecl _wstrtime(wchar_t *);
+// _CRTIMP wchar_t * __cdecl _wctime(const time_t *);
+// _CRTIMP size_t __cdecl wcsftime(wchar_t *, size_t, const wchar_t *,
+//         const struct tm *);
+// _CRTIMP wchar_t * __cdecl _wstrdate(wchar_t *);
+// _CRTIMP wchar_t * __cdecl _wstrtime(wchar_t *);
 
 #if     _INTEGRAL_MAX_BITS >= 64
 _CRTIMP wchar_t * __cdecl _wctime64(const __time64_t *);

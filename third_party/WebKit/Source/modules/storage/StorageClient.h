@@ -17,6 +17,7 @@ public:
     virtual ~StorageClient() { }
 
     virtual PassOwnPtr<StorageNamespace> createSessionStorageNamespace() = 0;
+
     virtual bool canAccessStorage(LocalFrame*, StorageType) const = 0;
 };
 

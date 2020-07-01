@@ -202,14 +202,19 @@ inline Environment* Environment::GetCurrent(v8::Isolate* isolate) {
 }
 
 inline Environment* Environment::GetCurrent(v8::Local<v8::Context> context) {
-  return static_cast<Environment*>(
-      context->GetAlignedPointerFromEmbedderData(kContextEmbedderDataIndex));
+  Environment* env = static_cast<Environment*>(context->GetAlignedPointerFromEmbedderData(kContextEmbedderDataIndex));
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 inline Environment* Environment::GetCurrent(
     const v8::FunctionCallbackInfo<v8::Value>& info) {
   ASSERT(info.Data()->IsExternal());
-  return static_cast<Environment*>(info.Data().As<v8::External>()->Value());
+  Environment* env = static_cast<Environment*>(info.Data().As<v8::External>()->Value());
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 template <typename T>
@@ -219,7 +224,10 @@ inline Environment* Environment::GetCurrent(
   // XXX(bnoordhuis) Work around a g++ 4.9.2 template type inferrer bug
   // when the expression is written as info.Data().As<v8::External>().
   v8::Local<v8::Value> data = info.Data();
-  return static_cast<Environment*>(data.As<v8::External>()->Value());
+  Environment* env = static_cast<Environment*>(data.As<v8::External>()->Value());
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 inline Environment::Environment(v8::Local<v8::Context> context,
@@ -232,17 +240,19 @@ inline Environment::Environment(v8::Local<v8::Context> context,
       trace_sync_io_(false),
       makecallback_cntr_(0),
       async_wrap_uid_(0),
-      debugger_agent_(this),
+      debugger_agent_(nullptr),
 #if HAVE_INSPECTOR
-      inspector_agent_(this),
+      inspector_agent_(nullptr),
 #endif
       http_parser_buffer_(nullptr),
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-    file_system_hooks_(nullptr),
-    is_blink_core_(false),
-    blink_microtask_suppression_handle_(nullptr),
+      file_system_hooks_(nullptr),
+      is_blink_core_(false),
+      blink_microtask_suppression_handle_(nullptr),
 #endif
-      context_(context->GetIsolate(), context) {
+      context_(context->GetIsolate(), context),
+      cleanup_hooks_(nullptr),
+      cleanup_hook_counter_(0) {
   // We'll be creating new objects so make sure we've entered the context.
   v8::HandleScope handle_scope(isolate());
   v8::Context::Scope context_scope(context);
@@ -259,11 +269,14 @@ inline Environment::Environment(v8::Local<v8::Context> context,
   RB_INIT(&cares_task_list_);
   handle_cleanup_waiting_ = 0;
 
-  destroy_ids_list_.reserve(512);
+  InitEnv();
+  AddLiveSet((intptr_t)this);
 }
 
 inline Environment::~Environment() {
   v8::HandleScope handle_scope(isolate());
+  CleanEnv();
+  RemoveLiveSet((intptr_t)this);
 
   context()->SetAlignedPointerInEmbedderData(kContextEmbedderDataIndex,
                                              nullptr);
@@ -422,7 +435,7 @@ inline int64_t Environment::get_async_wrap_uid() {
 }
 
 inline std::vector<int64_t>* Environment::destroy_ids_list() {
-  return &destroy_ids_list_;
+  return destroy_ids_list_;
 }
 
 inline uint32_t* Environment::heap_statistics_buffer() const {
@@ -565,6 +578,26 @@ inline v8::Local<v8::Object> Environment::NewInternalFieldObject() {
   v8::MaybeLocal<v8::Object> m_obj =
       generic_internal_field_template()->NewInstance(context());
   return m_obj.ToLocalChecked();
+}
+
+template <typename T, typename OnCloseCallback>
+inline void Environment::CloseHandle(T* handle, OnCloseCallback callback) {
+  handle_cleanup_waiting_++;
+  static_assert(sizeof(T) >= sizeof(uv_handle_t), "T is a libuv handle");
+  static_assert(offsetof(T, data) == offsetof(uv_handle_t, data), "T is a libuv handle");
+  static_assert(offsetof(T, close_cb) == offsetof(uv_handle_t, close_cb), "T is a libuv handle");
+  struct CloseData {
+    Environment* env;
+    OnCloseCallback callback;
+    void* original_data;
+  };
+  handle->data = new CloseData{ this, callback, handle->data };
+  uv_close(reinterpret_cast<uv_handle_t*>(handle), [](uv_handle_t* handle) {
+    std::unique_ptr<CloseData> data{ static_cast<CloseData*>(handle->data) };
+    data->env->handle_cleanup_waiting_--;
+    handle->data = data->original_data;
+    data->callback(reinterpret_cast<T*>(handle));
+  });
 }
 
 #define VP(PropertyName, StringValue) V(v8::Private, PropertyName, StringValue)

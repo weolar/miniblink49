@@ -1542,7 +1542,8 @@ class V8_EXPORT StackTrace {
    * Returns a StackFrame at a particular index.
    */
   Local<StackFrame> GetFrame(uint32_t index) const;
-
+  Local<StackFrame> GetFrame(v8::Isolate* isolate, uint32_t index) const { return GetFrame(index); }
+  
   /**
    * Returns the number of StackFrames.
    */
@@ -2006,6 +2007,7 @@ class V8_EXPORT Value : public Data {
   V8_WARN_UNUSED_RESULT MaybeLocal<Uint32> ToArrayIndex(
       Local<Context> context) const;
 
+  bool BooleanValue(Isolate* isolate) const { return BooleanValue(); }
   V8_WARN_UNUSED_RESULT Maybe<bool> BooleanValue(Local<Context> context) const;
   V8_WARN_UNUSED_RESULT Maybe<double> NumberValue(Local<Context> context) const;
   V8_WARN_UNUSED_RESULT Maybe<int64_t> IntegerValue(
@@ -2105,6 +2107,7 @@ class V8_EXPORT String : public Name {
    * representation of this string.
    */
   int Utf8Length() const;
+  int Utf8Length(Isolate*) const { return Utf8Length(); }
 
   /**
    * Returns whether this string is known to contain only one byte data.
@@ -2170,6 +2173,9 @@ class V8_EXPORT String : public Name {
                 int length = -1,
                 int* nchars_ref = NULL,
                 int options = NO_OPTIONS) const;
+  int WriteUtf8(Isolate* isolate, char* buffer, int length = -1, int* nchars_ref = NULL, int options = NO_OPTIONS) const {
+      return WriteUtf8(buffer, length, nchars_ref, options);
+  }
 
   /**
    * A zero length string.
@@ -2404,6 +2410,7 @@ class V8_EXPORT String : public Name {
   class V8_EXPORT Utf8Value {
    public:
     explicit Utf8Value(Local<v8::Value> obj);
+    explicit Utf8Value(Isolate* isolate, Local<v8::Value> obj);
     ~Utf8Value();
     char* operator*() { return str_; }
     const char* operator*() const { return str_; }
@@ -3947,6 +3954,7 @@ class V8_EXPORT NumberObject : public Object {
 class V8_EXPORT BooleanObject : public Object {
  public:
   static Local<Value> New(bool value);
+  static Local<Value> New(Isolate* isolate, bool value) { return New(value); }
 
   bool ValueOf() const;
 
@@ -3963,6 +3971,7 @@ class V8_EXPORT BooleanObject : public Object {
 class V8_EXPORT StringObject : public Object {
  public:
   static Local<Value> New(Local<String> value);
+  static Local<Value> New(Isolate* isolate, Local<String> value) { return New(value); }
 
   Local<String> ValueOf() const;
 
@@ -4937,6 +4946,7 @@ class V8_EXPORT Exception {
    * or capture the current stack trace if not available.
    */
   static Local<Message> CreateMessage(Local<Value> exception);
+  static Local<Message> CreateMessage(Isolate* isolate, Local<Value> exception) { return CreateMessage(exception); }
 
   /**
    * Returns the original stack trace that was captured at the creation time

@@ -70,7 +70,7 @@ bool V8FontFaceSetForEachCallback::handleItem(ScriptValue thisValue, FontFace* f
     }
     v8::Local<v8::Value> argv[] = { fontFaceHandle, fontFaceAgainHandle, setHandle };
 
-    v8::TryCatch exceptionCatcher;
+    v8::TryCatch exceptionCatcher(m_scriptState->isolate());
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(m_scriptState->executionContext(), m_callback.newLocal(m_scriptState->isolate()), thisHandle, 3, argv, m_scriptState->isolate());
     return !exceptionCatcher.HasCaught();
@@ -105,7 +105,7 @@ bool V8FontFaceSetForEachCallback::handleItem(FontFace* fontFace, FontFace* font
     }
     v8::Local<v8::Value> argv[] = { fontFaceHandle, fontFaceAgainHandle, setHandle };
 
-    v8::TryCatch exceptionCatcher;
+    v8::TryCatch exceptionCatcher(m_scriptState->isolate());
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(m_scriptState->executionContext(), m_callback.newLocal(m_scriptState->isolate()), m_scriptState->context()->Global(), 3, argv, m_scriptState->isolate());
     return !exceptionCatcher.HasCaught();

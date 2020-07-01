@@ -109,6 +109,12 @@ public:
 
     void serialize(StringBuilder&) const;
 
+	CSSValueID id() const;
+	CSSValueID functionId() const;
+
+	bool hasStringBacking() const;
+	CSSParserToken copyWithUpdatedString(const CSSParserString&) const;
+	
 private:
     void initValueFromCSSParserString(const CSSParserString& value)
     {
@@ -132,6 +138,7 @@ private:
         UChar m_delimiter;
         HashTokenType m_hashTokenType;
         double m_numericValue;
+		mutable int m_id;
 
         struct {
             UChar32 start;

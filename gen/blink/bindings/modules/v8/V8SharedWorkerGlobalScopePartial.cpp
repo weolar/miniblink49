@@ -7,7 +7,7 @@
 #include "config.h"
 #include "V8SharedWorkerGlobalScopePartial.h"
 
-#include "../../../../../out/Debug/gen/blink/modules/SharedWorkerGlobalScopeModulesConstructors.h"
+#include "gen/blink/modules/SharedWorkerGlobalScopeModulesConstructors.h"
 #include "bindings/core/v8/ExceptionState.h"
 #include "bindings/core/v8/V8DOMConfiguration.h"
 #include "bindings/core/v8/V8ObjectConstructor.h"
@@ -86,7 +86,9 @@ static void SharedWorkerGlobalScopeConstructorAttributeSetterCallback(v8::Local<
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wglobal-constructors"
 #endif
+// weolar
 static const V8DOMConfiguration::AttributeConfiguration V8SharedWorkerGlobalScopeAttributes[] = {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     {"Cache", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Cache::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"CacheStorage", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CacheStorage::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"CloseEvent", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CloseEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -108,6 +110,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8SharedWorkerGlobalScop
     {"Response", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Response::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"ServiceWorkerRegistration", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ServiceWorkerRegistration::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"SubtleCrypto", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SubtleCrypto::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif
     {"TextDecoder", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TextDecoder::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"TextEncoder", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TextEncoder::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebSocket", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebSocket::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -129,6 +132,7 @@ void V8SharedWorkerGlobalScopePartial::installV8SharedWorkerGlobalScopeTemplate(
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (RuntimeEnabledFeatures::geofencingEnabled()) {
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
         {"CircularGeofencingRegion", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CircularGeofencingRegion::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
@@ -164,6 +168,7 @@ void V8SharedWorkerGlobalScopePartial::installV8SharedWorkerGlobalScopeTemplate(
         {"Permissions", v8ConstructorAttributeGetter, SharedWorkerGlobalScopePartialV8Internal::SharedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Permissions::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
+#endif
 }
 
 void V8SharedWorkerGlobalScopePartial::preparePrototypeObject(v8::Isolate* isolate, v8::Local<v8::Object> prototypeObject, v8::Local<v8::FunctionTemplate> interfaceTemplate)

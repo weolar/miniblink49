@@ -64,12 +64,8 @@ public:
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
         if (context.IsEmpty())
             return false;
-		//zero
-#if V8_MINOR_VERSION == 7
+
         return context != v8::Debug::GetDebugContext(isolate);
-#else
-		return context != v8::Debug::GetDebugContext();
-#endif
     }
 
     static ScriptState* from(v8::Local<v8::Context> context)
@@ -87,6 +83,21 @@ public:
     // You must check scriptState->contextIsValid() before using the context.
     static ScriptState* forMainWorld(LocalFrame*);
     static ScriptState* forWorld(LocalFrame*, DOMWrapperWorld&);
+
+    static ScriptState* forReceiverObject(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
+
+    static ScriptState* forReceiverObject(const v8::PropertyCallbackInfo<v8::Value>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
+
+    static ScriptState* forReceiverObject(const v8::PropertyCallbackInfo<void>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
 
     v8::Isolate* isolate() const { return m_isolate; }
     DOMWrapperWorld& world() const { return *m_world; }

@@ -52,6 +52,55 @@ ALWAYS_INLINE void spinLockUnlock(int volatile* lock)
     atomicSetOneToZero(lock);
 }
 
+class SpinLock {
+public:
+    SpinLock()
+    {
+        m_refCount = 0;
+        m_owner = 0;
+    }
+
+    class Guard {
+    public:
+        explicit Guard(SpinLock& mutex)
+            : m_mutex(mutex)
+        {
+            m_mutex.lock();
+        }
+
+        ~Guard()
+        {	
+            m_mutex.unlock();
+        }
+    private:
+        SpinLock& m_mutex;
+    };
+
+    void lock()
+    {
+        //static_assert(sizeof(m_lock) == sizeof(int), "int and m_lock are different sizes");
+        DWORD owner = ::GetCurrentThreadId();
+
+        do {
+            InterlockedCompareExchange((volatile long *)&m_owner, (long)owner, 0);
+        } while (m_owner != owner);
+
+        InterlockedIncrement(reinterpret_cast<long volatile*>(&m_refCount));
+    }
+
+    void unlock()
+    {
+        ASSERT(m_owner && ::GetCurrentThreadId() == m_owner);
+        InterlockedDecrement(reinterpret_cast<long volatile*>(&m_refCount));
+        if (0 == m_refCount)
+            InterlockedExchange(reinterpret_cast<long volatile*>(&m_owner), 0);
+    }
+
+private:
+    long m_refCount;
+    DWORD m_owner;
+};
+
 } // namespace WTF
 
 using WTF::spinLockLock;

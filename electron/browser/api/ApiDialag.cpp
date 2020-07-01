@@ -1,6 +1,11 @@
 ﻿
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "common/NodeRegisterHelp.h"
+#include "common/StringUtil.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "gin/dictionary.h"
@@ -31,6 +36,7 @@ public:
         builder.SetMethod("_showOpenDialog", &Dialog::_showOpenDialogApi);
         builder.SetMethod("_showSaveDialog", &Dialog::_showSaveDialogApi);
         builder.SetMethod("_showMessageBox", &Dialog::_showMessageBoxApi);
+        builder.SetMethod("_showErrorBox", &Dialog::_showErrorBoxApi);
         
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "Dialog"), prototype->GetFunction());
@@ -50,11 +56,11 @@ public:
 
     // showSaveDialog([browserWindow, ]options[, callback])
     void _showSaveDialogApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        _showOpenOrSaveDialogApi(true, args);
+        _showOpenOrSaveDialogApi(false, args);
     }
 
     void _showOpenDialogApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        _showOpenOrSaveDialogApi(false, args);
+        _showOpenOrSaveDialogApi(true, args);
     }
 
     // showOpenDialog([browserWindow, ]options[, callback])
@@ -96,6 +102,12 @@ public:
             callback->Call(recv, 1, argv);
         } else
             args.GetReturnValue().Set(result);
+    }
+
+    void _showErrorBoxApi(const std::string& title, const std::string& content) {
+        std::wstring titleW = StringUtil::UTF8ToUTF16(title);
+        std::wstring contentW = StringUtil::UTF8ToUTF16(content);
+        ::MessageBoxW(nullptr, contentW.c_str(), titleW.c_str(), MB_OK);
     }
 
     void _showMessageBoxApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -190,14 +202,17 @@ private:
         optionsDict.GetString("message", message);
         optionsDict.GetString("type", type);
 
-        base::ListValue* buttonsList;
-        optionsDict.GetList("buttons", &buttonsList);
+        base::ListValue* buttonsList = nullptr;
+        bool b = optionsDict.GetList("buttons", &buttonsList);
+        if (!b || !buttonsList)
+            return;
+        
         for (size_t i = 0; i < buttonsList->GetSize(); ++i) {
             std::string button;
             buttonsList->GetString(i, &button);
             if (!button.empty())
                 buttons->push_back(button);
-        }        
+        }
     }
 
     void getOptions(v8::Isolate* isolate, 
@@ -383,13 +398,13 @@ private:
 
         OPENFILENAMEW ofn = { 0 };
         std::vector<wchar_t> fileResult;
-        fileResult.resize(1 * MAX_PATH + 1);
+        fileResult.resize(4 * MAX_PATH + 1);
 
         ofn.lStructSize = sizeof(ofn);
         ofn.hwndOwner = parentWindow;
-        ofn.lpstrFilter = filtersStr.data(); // L"Picture File(*.bmp,*.jpg)\0*.bmp;*.jpg;\0\0";
+        ofn.lpstrFilter = &filtersStr[0]; // L"Picture File(*.bmp,*.jpg)\0*.bmp;*.jpg;\0\0";
         ofn.nFilterIndex = 1;
-        ofn.lpstrFile = fileResult.data();
+        ofn.lpstrFile = &fileResult[0];
         ofn.nMaxFile = 1 * MAX_PATH;
         ofn.lpstrFileTitle = nullptr;// titleW.c_str();
         ofn.nMaxFileTitle = 0;// titleW.size();
@@ -408,9 +423,9 @@ private:
         if (FNERR_BUFFERTOOSMALL != CommDlgExtendedError())
             return false;
 
-        unsigned short size = *((unsigned short*)fileResult.data());
-        fileResult.resize(size + 2);
-        ofn.lpstrFile = fileResult.data();
+        unsigned short size = *((unsigned short*)&fileResult[0]);
+        fileResult.resize(2 * size + 2);
+        ofn.lpstrFile = &fileResult[0];
         ofn.nMaxFile = size;
         b = isOpenOrSave ? GetOpenFileNameW(&ofn) : GetSaveFileNameW(&ofn);
         if (b) {
@@ -423,18 +438,18 @@ private:
 
     void splitPathFromGetOpenFileNameResult(const std::vector<wchar_t>& fileResult, base::ListValue* paths) {
         std::vector<std::wstring> pathsTemp;
-        const wchar_t* begin = fileResult.data();
+        const wchar_t* begin = &fileResult[0];
         const wchar_t* end = nullptr;
         for (size_t i = 0; i < fileResult.size() - 1 && L'\0' != *begin; ++i) {
             if (L'\0' == fileResult[i]) {
-                end = fileResult.data() + i;
+                end = &fileResult[0] + i;
                 if (end == begin)
                     return;
 
                 std::wstring path(begin, end - begin);
                 pathsTemp.push_back((path));
 
-                begin = fileResult.data() + i + 1;
+                begin = &fileResult[0] + i + 1;
             }
         }
 
@@ -480,7 +495,7 @@ private:
         BROWSEINFO bi;
         bi.hwndOwner = parentWindow;
         bi.pidlRoot = NULL;
-        bi.pszDisplayName = szDir.data();
+        bi.pszDisplayName = &szDir[0];
         bi.lpszTitle = title.c_str();
         bi.iImage = 0;
 
@@ -489,8 +504,8 @@ private:
         bi.lParam = (LPARAM)(LPCWSTR)defaultPath.c_str();
 
         LPITEMIDLIST lp = SHBrowseForFolder(&bi);
-        if (lp && SHGetPathFromIDList(lp, szDir.data())) {
-            *strDir = szDir.data();
+        if (lp && SHGetPathFromIDList(lp, &szDir[0])) {
+            *strDir = &szDir[0];
             if (0 != strDir->size() && L'\\' != strDir->at(strDir->size() - 1))
                 strDir->append(L"\\");
             return IDOK;
@@ -511,17 +526,17 @@ private:
                     wcDirPath.resize(MAX_PATH);
                     HWND hComboAddr = GetDlgItem(hwnd, ID_COMBO_ADDR);
                     if (hComboAddr != NULL)
-                        GetWindowText(hComboAddr, wcDirPath.data(), MAX_PATH);
+                        GetWindowText(hComboAddr, &wcDirPath[0], MAX_PATH);
                     
-                    if (!wcslen(wcDirPath.data()))
+                    if (!wcslen(&wcDirPath[0]))
                         break;
                     
-                    DWORD dwAttr = GetFileAttributes(wcDirPath.data());
+                    DWORD dwAttr = GetFileAttributes(&wcDirPath[0]);
                     if (dwAttr != -1 && (FILE_ATTRIBUTE_DIRECTORY & dwAttr)) {
                         LPOPENFILENAMEW oFn = (LPOPENFILENAME)GetProp(hwnd, L"OPENFILENAME");
                         if (oFn) {
                             int size = oFn->nMaxFile > MAX_PATH ? MAX_PATH : oFn->nMaxFile;
-                            memcpy(oFn->lpstrFile, wcDirPath.data(), size * sizeof(wchar_t));
+                            memcpy(oFn->lpstrFile, &wcDirPath[0], size * sizeof(wchar_t));
                             ::RemoveProp(hwnd, L"OPENFILENAME");
                             ::EndDialog(hwnd, 1);
                         } else {
@@ -566,15 +581,15 @@ private:
 
         std::vector<wchar_t> wcDirPath;
         wcDirPath.resize(MAX_PATH);
-        CommDlg_OpenSave_GetFilePathW(::GetParent(hdlg), wcDirPath.data(), sizeof(wchar_t) * MAX_PATH);
+        CommDlg_OpenSave_GetFilePathW(::GetParent(hdlg), &wcDirPath[0], sizeof(wchar_t) * MAX_PATH);
         HWND hComboAddr = ::GetDlgItem(::GetParent(hdlg), ID_COMBO_ADDR);
         if (NULL == hComboAddr)
             return 1;
 
-        size_t pathSize = wcslen(wcDirPath.data());
+        size_t pathSize = wcslen(&wcDirPath[0]);
         if (0 != pathSize) { //去掉文件夹快捷方式的后缀名。
             if (pathSize >= 4) {
-                wchar_t* wcExtension = ::PathFindExtensionW(wcDirPath.data());
+                wchar_t* wcExtension = ::PathFindExtensionW(&wcDirPath[0]);
                 if (wcslen(wcExtension)) {
                     wcExtension = ::CharLowerW(wcExtension);
                     if (!wcscmp(wcExtension, L".lnk")) {
@@ -583,7 +598,7 @@ private:
                 }
             }
 
-            ::SetWindowTextW(hComboAddr, wcDirPath.data());
+            ::SetWindowTextW(hComboAddr, &wcDirPath[0]);
         } else {
             ::SetWindowTextW(hComboAddr, L"");
         }

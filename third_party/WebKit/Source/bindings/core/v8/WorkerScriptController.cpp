@@ -147,7 +147,6 @@ bool WorkerScriptController::initializeContextIfNeeded()
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     WorkerThreadDebugger::setContextDebugData(context);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 
     // Create a new JS object and use it as the prototype for the shadow global object.
     const WrapperTypeInfo* wrapperTypeInfo = m_workerGlobalScope.wrapperTypeInfo();
@@ -185,8 +184,7 @@ ScriptValue WorkerScriptController::evaluate(const String& script, const String&
         m_disableEvalPending = String();
     }
 
-    v8::TryCatch block;
-
+    v8::TryCatch block(isolate());
     v8::Local<v8::Script> compiledScript;
     v8::MaybeLocal<v8::Value> maybeResult;
     if (v8Call(V8ScriptRunner::compileScript(script, fileName, String(), scriptStartPosition, isolate(), cacheHandler, SharableCrossOrigin, v8CacheOptions), compiledScript, block))
@@ -277,19 +275,13 @@ bool WorkerScriptController::isExecutionTerminating() const
 
 void WorkerScriptController::forbidExecution()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     ASSERT(m_workerGlobalScope.isContextThread());
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     m_executionForbidden = true;
 }
 
 bool WorkerScriptController::isExecutionForbidden() const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     ASSERT(m_workerGlobalScope.isContextThread());
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     return m_executionForbidden;
 }
 

@@ -75,7 +75,9 @@ template <typename T, size_t N>
 char (&ArraySizeHelper(const T (&array)[N]))[N];
 #endif
 
+#ifndef arraysize
 #define arraysize(array) (sizeof(ArraySizeHelper(array)))
+#endif
 
 // ARRAYSIZE_UNSAFE performs essentially the same calculation as arraysize,
 // but can be used on anonymous types or types defined inside

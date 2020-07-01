@@ -336,7 +336,7 @@ template <typename T>
 static bool encodeImage(T& source, const String& mimeType, const double* quality, Vector<char>* output)
 {
     Vector<unsigned char>* encodedImage = reinterpret_cast<Vector<unsigned char>*>(output);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     if (mimeType == "image/jpeg") {
         int compressionQuality = JPEGImageEncoder::DefaultCompressionQuality;
         if (quality && *quality >= 0.0 && *quality <= 1.0)
@@ -345,10 +345,10 @@ static bool encodeImage(T& source, const String& mimeType, const double* quality
             return false;
 
     } else if (mimeType == "image/webp") {
-        int compressionQuality = WEBPImageEncoder::DefaultCompressionQuality;
-        if (quality && *quality >= 0.0 && *quality <= 1.0)
-            compressionQuality = static_cast<int>(*quality * 100 + 0.5);
-        if (!WEBPImageEncoder::encode(source, compressionQuality, encodedImage))
+//         int compressionQuality = WEBPImageEncoder::DefaultCompressionQuality;
+//         if (quality && *quality >= 0.0 && *quality <= 1.0)
+//             compressionQuality = static_cast<int>(*quality * 100 + 0.5);
+//         if (!WEBPImageEncoder::encode(source, compressionQuality, encodedImage))
             return false;
     } else {
         if (!PNGImageEncoder::encode(source, encodedImage))

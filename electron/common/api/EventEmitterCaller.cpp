@@ -4,7 +4,7 @@
 
 #include "common/api/EventEmitterCaller.h"
 
-#include "node/include/node.h"
+#include "node/src/node.h"
 #include "base/values.h"
 
 namespace mate {

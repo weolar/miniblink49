@@ -1,5 +1,8 @@
 
+#ifndef CARES_STATICLIB
 #define CARES_STATICLIB
+#endif
+
 #include "ares.h"
 #include "async-wrap.h"
 #include "async-wrap-inl.h"

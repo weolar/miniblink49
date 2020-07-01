@@ -47,10 +47,10 @@
 #include "wtf/text/CString.h"
 #include "wtf/text/StringBuffer.h"
 #include "wtf/text/UTF8.h"
-#include <libxslt/imports.h>
-#include <libxslt/security.h>
-#include <libxslt/variables.h>
-#include <libxslt/xsltutils.h>
+#include "third_party/libxslt/libxslt/imports.h"
+#include "third_party/libxslt/libxslt/security.h"
+#include "third_party/libxslt/libxslt/variables.h"
+#include "third_party/libxslt/libxslt/xsltutils.h"
 
 namespace blink {
 

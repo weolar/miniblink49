@@ -5,7 +5,7 @@
 #include "third_party/skia/include/core/SkCanvas.h"
 #include "cc/blink/WebLayerImpl.h"
 #include "cc/raster/SkBitmapRefWrap.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 
 namespace cc_blink {
 

@@ -114,7 +114,7 @@ FontPlatformData* FontCache::getFontPlatformData(const FontDescription& fontDesc
     return result;
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
 
 typedef HashMap<FontCache::FontFileKey, RefPtr<OpenTypeVerticalData>, IntHash<FontCache::FontFileKey>, UnsignedWithZeroKeyHashTraits<FontCache::FontFileKey>> FontVerticalDataCache;
 
@@ -138,7 +138,7 @@ PassRefPtr<OpenTypeVerticalData> FontCache::getVerticalData(const FontFileKey& k
     fontVerticalDataCache.set(key, verticalData);
     return verticalData;
 }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
 
 static FontDataCache* gFontDataCache = 0;
 
@@ -199,7 +199,7 @@ static inline void purgePlatformFontDataCache()
 
 static inline void purgeFontVerticalDataCache()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     FontVerticalDataCache& fontVerticalDataCache = fontVerticalDataCacheInstance();
     if (!fontVerticalDataCache.isEmpty()) {
         // Mark & sweep unused verticalData
@@ -219,7 +219,7 @@ static inline void purgeFontVerticalDataCache()
         }
         fontVerticalDataCache.removeAll(keysToRemove);
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
 }
 
 void FontCache::purge(PurgeSeverity PurgeSeverity)

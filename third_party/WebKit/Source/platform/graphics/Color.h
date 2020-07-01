@@ -56,7 +56,7 @@ struct NamedColor {
     unsigned ARGBValue;
 };
 
-const NamedColor* findColor(register const char* str, register unsigned len);
+const NamedColor* findColor(/*register*/ const char* str, /*register*/ unsigned len);
 
 class PLATFORM_EXPORT Color {
     WTF_MAKE_FAST_ALLOCATED(Color);

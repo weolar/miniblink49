@@ -150,7 +150,7 @@ bool CSSPropertyMetadata::isInheritedProperty(CSSPropertyID property)
         ASSERT_NOT_REACHED();
         return false;
     case CSSPropertyFillRule:
-    case CSSPropertyWebkitLineBoxContain:
+    //case CSSPropertyWebkitLineBoxContain:
     case CSSPropertyWebkitHyphenateCharacter:
     case CSSPropertyStrokeOpacity:
     case CSSPropertyFontFamily:
@@ -184,7 +184,7 @@ bool CSSPropertyMetadata::isInheritedProperty(CSSPropertyID property)
     case CSSPropertyWritingMode:
     case CSSPropertyWebkitTextSecurity:
     case CSSPropertyWebkitLineBreak:
-    case CSSPropertyGlyphOrientationHorizontal:
+    //case CSSPropertyGlyphOrientationHorizontal:
     case CSSPropertyFillOpacity:
     case CSSPropertyBorderCollapse:
     case CSSPropertyWebkitRtlOrdering:
@@ -194,7 +194,7 @@ bool CSSPropertyMetadata::isInheritedProperty(CSSPropertyID property)
     case CSSPropertyLineHeight:
     case CSSPropertyWebkitTextStrokeWidth:
     case CSSPropertyStrokeDashoffset:
-    case CSSPropertyGlyphOrientationVertical:
+    //case CSSPropertyGlyphOrientationVertical:
     case CSSPropertyWebkitTextDecorationsInEffect:
     case CSSPropertyWebkitTextFillColor:
     case CSSPropertyFontStretch:
@@ -254,91 +254,98 @@ bool CSSPropertyMetadata::isEnabledProperty(CSSPropertyID unresolvedProperty)
     if (!enabledProperties) {
         enabledProperties = new BitArray<numCSSProperties>(true); // All bits sets to 1.
         if (!RuntimeEnabledFeatures::css3TextDecorationsEnabled())
-            enabledProperties->clear(CSSPropertyTextDecorationColor - 1);
-        if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
-            enabledProperties->clear(CSSPropertyMotion - 1);
+            enabledProperties->clear(CSSPropertyTextDecorationColor - firstCSSProperty);
+//         if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
+//             enabledProperties->clear(CSSPropertyMotion - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridTemplate - 1);
+            enabledProperties->clear(CSSPropertyGridTemplate - firstCSSProperty);
         if (!RuntimeEnabledFeatures::css3TextDecorationsEnabled())
-            enabledProperties->clear(CSSPropertyTextDecorationLine - 1);
+            enabledProperties->clear(CSSPropertyTextDecorationLine - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssScrollSnapPointsEnabled())
-            enabledProperties->clear(CSSPropertyScrollSnapType - 1);
+            enabledProperties->clear(CSSPropertyScrollSnapType - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridAutoRows - 1);
+            enabledProperties->clear(CSSPropertyGridAutoRows - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridColumn - 1);
-        if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
-            enabledProperties->clear(CSSPropertyMotionRotation - 1);
+            enabledProperties->clear(CSSPropertyGridColumn - firstCSSProperty);
+//         if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
+//             enabledProperties->clear(CSSPropertyMotionRotation - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGrid - 1);
-        if (!RuntimeEnabledFeatures::cssScrollBlocksOnEnabled())
-            enabledProperties->clear(CSSPropertyScrollBlocksOn - 1);
+            enabledProperties->clear(CSSPropertyGrid - firstCSSProperty);
+//         if (!RuntimeEnabledFeatures::cssScrollBlocksOnEnabled())
+//             enabledProperties->clear(CSSPropertyScrollBlocksOn - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridTemplateRows - 1);
+            enabledProperties->clear(CSSPropertyGridTemplateRows - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssomSmoothScrollEnabled())
-            enabledProperties->clear(CSSPropertyScrollBehavior - 1);
+            enabledProperties->clear(CSSPropertyScrollBehavior - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridAutoFlow - 1);
-        if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
-            enabledProperties->clear(CSSPropertyMotionPath - 1);
+            enabledProperties->clear(CSSPropertyGridAutoFlow - firstCSSProperty);
+//         if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
+//             enabledProperties->clear(CSSPropertyMotionPath - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyJustifySelf - 1);
+            enabledProperties->clear(CSSPropertyJustifySelf - firstCSSProperty);
         if (!RuntimeEnabledFeatures::css3TextEnabled())
-            enabledProperties->clear(CSSPropertyTextJustify - 1);
+            enabledProperties->clear(CSSPropertyTextJustify - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssCompositingEnabled())
-            enabledProperties->clear(CSSPropertyIsolation - 1);
+            enabledProperties->clear(CSSPropertyIsolation - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssScrollSnapPointsEnabled())
-            enabledProperties->clear(CSSPropertyScrollSnapPointsX - 1);
+            enabledProperties->clear(CSSPropertyScrollSnapPointsX - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssScrollSnapPointsEnabled())
-            enabledProperties->clear(CSSPropertyScrollSnapPointsY - 1);
+            enabledProperties->clear(CSSPropertyScrollSnapPointsY - firstCSSProperty);
         if (!RuntimeEnabledFeatures::columnFillEnabled())
-            enabledProperties->clear(CSSPropertyColumnFill - 1);
+            enabledProperties->clear(CSSPropertyColumnFill - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridTemplateColumns - 1);
+            enabledProperties->clear(CSSPropertyGridTemplateColumns - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssMaskSourceTypeEnabled())
-            enabledProperties->clear(CSSPropertyMaskSourceType - 1);
+            enabledProperties->clear(CSSPropertyMaskSourceType - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssIndependentTransformPropertiesEnabled())
-            enabledProperties->clear(CSSPropertyScale - 1);
+            enabledProperties->clear(CSSPropertyScale - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridAutoColumns - 1);
+            enabledProperties->clear(CSSPropertyGridAutoColumns - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridRowStart - 1);
+            enabledProperties->clear(CSSPropertyGridRowStart - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssCompositingEnabled())
-            enabledProperties->clear(CSSPropertyMixBlendMode - 1);
+            enabledProperties->clear(CSSPropertyMixBlendMode - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridRowEnd - 1);
+            enabledProperties->clear(CSSPropertyGridRowEnd - firstCSSProperty);
         if (!RuntimeEnabledFeatures::css3TextDecorationsEnabled())
-            enabledProperties->clear(CSSPropertyTextUnderlinePosition - 1);
+            enabledProperties->clear(CSSPropertyTextUnderlinePosition - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridRow - 1);
+            enabledProperties->clear(CSSPropertyGridRow - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridColumnStart - 1);
+            enabledProperties->clear(CSSPropertyGridColumnStart - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyJustifyItems - 1);
+            enabledProperties->clear(CSSPropertyJustifyItems - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssIndependentTransformPropertiesEnabled())
-            enabledProperties->clear(CSSPropertyRotate - 1);
+            enabledProperties->clear(CSSPropertyRotate - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridTemplateAreas - 1);
+            enabledProperties->clear(CSSPropertyGridTemplateAreas - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssFontSizeAdjustEnabled())
-            enabledProperties->clear(CSSPropertyFontSizeAdjust - 1);
+            enabledProperties->clear(CSSPropertyFontSizeAdjust - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridColumnEnd - 1);
+            enabledProperties->clear(CSSPropertyGridColumnEnd - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssScrollSnapPointsEnabled())
-            enabledProperties->clear(CSSPropertyScrollSnapCoordinate - 1);
+            enabledProperties->clear(CSSPropertyScrollSnapCoordinate - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssGridLayoutEnabled())
-            enabledProperties->clear(CSSPropertyGridArea - 1);
+            enabledProperties->clear(CSSPropertyGridArea - firstCSSProperty);
         if (!RuntimeEnabledFeatures::css3TextEnabled())
-            enabledProperties->clear(CSSPropertyTextAlignLast - 1);
-        if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
-            enabledProperties->clear(CSSPropertyMotionOffset - 1);
+            enabledProperties->clear(CSSPropertyTextAlignLast - firstCSSProperty);
+//         if (!RuntimeEnabledFeatures::cssMotionPathEnabled())
+//             enabledProperties->clear(CSSPropertyMotionOffset - firstCSSProperty);
         if (!RuntimeEnabledFeatures::css3TextDecorationsEnabled())
-            enabledProperties->clear(CSSPropertyTextDecorationStyle - 1);
+            enabledProperties->clear(CSSPropertyTextDecorationStyle - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssIndependentTransformPropertiesEnabled())
-            enabledProperties->clear(CSSPropertyTranslate - 1);
+            enabledProperties->clear(CSSPropertyTranslate - firstCSSProperty);
         if (!RuntimeEnabledFeatures::cssScrollSnapPointsEnabled())
-            enabledProperties->clear(CSSPropertyScrollSnapDestination - 1);
+            enabledProperties->clear(CSSPropertyScrollSnapDestination - firstCSSProperty);
     }
-    return enabledProperties->get(property - 1);
+
+	if (unresolvedProperty >= firstCSSProperty)
+		return enabledProperties->get(property - firstCSSProperty);
+
+	if (unresolvedProperty == CSSPropertyVariable)
+		return true;
+
+	return false;
 }
 
 void CSSPropertyMetadata::filterEnabledCSSPropertiesIntoVector(const CSSPropertyID* properties, size_t propertyCount, Vector<CSSPropertyID>& outVector)

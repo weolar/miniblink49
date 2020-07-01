@@ -911,7 +911,7 @@ void InspectorDebuggerAgent::compileScript(ErrorString* errorString, const Strin
     v8::Isolate* isolate = debugger().isolate();
     ScriptState::Scope scope(injectedScript.scriptState());
     v8::Local<v8::String> source = v8String(isolate, expression);
-    v8::TryCatch tryCatch;
+    v8::TryCatch tryCatch(isolate);
     v8::Local<v8::Script> script;
     if (!v8Call(V8ScriptRunner::compileScript(source, sourceURL, String(), TextPosition(), isolate), script, tryCatch)) {
         v8::Local<v8::Message> message = tryCatch.Message();
@@ -961,7 +961,7 @@ void InspectorDebuggerAgent::runScript(ErrorString* errorString, const ScriptId&
         *errorString = "Script execution failed";
         return;
     }
-    v8::TryCatch tryCatch;
+    v8::TryCatch tryCatch(isolate);
     v8::Local<v8::Value> value;
     ScriptValue scriptValue;
     if (v8Call(V8ScriptRunner::runCompiledScript(isolate, script, scriptState->executionContext()), value, tryCatch)) {
@@ -1700,7 +1700,7 @@ DEFINE_TRACE(InspectorDebuggerAgent)
 PassRefPtr<TypeBuilder::Debugger::ExceptionDetails> InspectorDebuggerAgent::createExceptionDetails(v8::Isolate* isolate, v8::Local<v8::Message> message)
 {
     RefPtr<ExceptionDetails> exceptionDetails = ExceptionDetails::create().setText(toCoreStringWithUndefinedOrNullCheck(message->Get()));
-    exceptionDetails->setLine(message->GetLineNumber());
+    exceptionDetails->setLine(message->GetLineNumber(isolate->GetCurrentContext()).FromJust());
     exceptionDetails->setColumn(message->GetStartColumn());
     v8::Local<v8::StackTrace> messageStackTrace = message->GetStackTrace();
     if (!messageStackTrace.IsEmpty() && messageStackTrace->GetFrameCount() > 0)

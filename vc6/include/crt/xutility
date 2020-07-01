@@ -83,13 +83,13 @@ template<class _II1, class _II2> inline
 	pair<_II1, _II2> mismatch(_II1 _F, _II1 _L, _II2 _X)
 	{for (; _F != _L && *_F == *_X; ++_F, ++_X)
 		;
-	return (pair<_II1, _II2>(_F, _X)); }
+	return (pair<_II1, _II2>(move(_F), move(_X))); }
 		// TEMPLATE FUNCTION mismatch WITH PRED
 template<class _II1, class _II2, class _Pr> inline
 	pair<_II1, _II2> mismatch(_II1 _F, _II1 _L, _II2 _X, _Pr _P)
 	{for (; _F != _L && _P(*_F, *_X); ++_F, ++_X)
 		;
-	return (pair<_II1, _II2>(_F, _X)); }
+	return (pair<_II1, _II2>(move(_F), move(_X))); }
 		// TEMPLATE FUNCTION swap
 template<class _Ty> inline
 	void swap(_Ty& _X, _Ty& _Y)

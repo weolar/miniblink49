@@ -163,7 +163,7 @@ int EVP_PBE_CipherInit(ASN1_OBJECT *pbe_obj, const char *pass, int passlen,
         if (!pbe_obj)
             BUF_strlcpy(obj_tmp, "NULL", sizeof obj_tmp);
         else
-            i2t_ASN1_OBJECT(obj_tmp, sizeof obj_tmp, pbe_obj);
+            openssl_i2t_ASN1_OBJECT(obj_tmp, sizeof obj_tmp, pbe_obj);
         ERR_add_error_data(2, "TYPE=", obj_tmp);
         return 0;
     }

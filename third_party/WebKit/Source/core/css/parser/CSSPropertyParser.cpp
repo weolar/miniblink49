@@ -55,6 +55,7 @@
 #include "core/css/HashTools.h"
 #include "core/css/Pair.h"
 #include "core/css/Rect.h"
+#include "core/css/CSSVariableReferenceValue.h"
 #include "core/css/parser/CSSParserFastPaths.h"
 #include "core/css/parser/CSSParserValues.h"
 #include "core/frame/UseCounter.h"
@@ -97,6 +98,9 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
     CSSParserValueList* valueList, const CSSParserContext& context,
     WillBeHeapVector<CSSProperty, 256>& parsedProperties, StyleRule::Type ruleType)
 {
+    if (!valueList->size())
+        return false; // Parser error
+
     int parsedPropertiesSize = parsedProperties.size();
 
     CSSPropertyParser parser(valueList, context, parsedProperties, ruleType);
@@ -443,6 +447,13 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
 
     int num = inShorthand() ? 1 : m_valueList->size();
 
+    if (RuntimeEnabledFeatures::cssVariablesEnabled() && value->id == CSSValueInternalVariableValue) {
+        // We don't expand the shorthand here because crazypants.
+        m_parsedProperties.append(CSSProperty(propId, CSSVariableReferenceValue::create(value->variableData), important, false, 0, m_implicitShorthand));
+        m_valueList->next();
+        return true;
+    }
+
     if (CSSParserFastPaths::isKeywordPropertyID(propId)) {
         if (!CSSParserFastPaths::isValidKeywordPropertyAndValue(propId, id))
             return false;
@@ -650,7 +661,7 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
     case CSSPropertyBackgroundAttachment:
     case CSSPropertyBackgroundClip:
     case CSSPropertyWebkitBackgroundClip:
-    case CSSPropertyWebkitBackgroundComposite:
+    //case CSSPropertyWebkitBackgroundComposite:
     case CSSPropertyBackgroundImage:
     case CSSPropertyBackgroundOrigin:
     case CSSPropertyMaskSourceType:
@@ -1457,12 +1468,12 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
             validPrimitive = true;
         break;
 
-    case CSSPropertyWebkitLineBoxContain:
-        if (id == CSSValueNone)
-            validPrimitive = true;
-        else
-            parsedValue = parseLineBoxContain();
-        break;
+//     case CSSPropertyWebkitLineBoxContain:
+//         if (id == CSSValueNone)
+//             validPrimitive = true;
+//         else
+//             parsedValue = parseLineBoxContain();
+//         break;
     case CSSPropertyWebkitFontFeatureSettings:
         if (id == CSSValueNormal)
             validPrimitive = true;
@@ -1504,12 +1515,12 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
         parsedValue = parseTouchAction();
         break;
 
-    case CSSPropertyScrollBlocksOn:
-        if (id == CSSValueNone)
-            validPrimitive = true;
-        else
-            parsedValue = parseScrollBlocksOn();
-        break;
+//     case CSSPropertyScrollBlocksOn:
+//         if (id == CSSValueNone)
+//             validPrimitive = true;
+//         else
+//             parsedValue = parseScrollBlocksOn();
+//         break;
 
     case CSSPropertyAlignContent:
         parsedValue = parseContentDistributionOverflowPosition();
@@ -1542,6 +1553,11 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
         break;
     case CSSPropertyScrollSnapDestination:
         parsedValue = parsePosition(m_valueList);
+        break;
+
+    case CSSPropertyBackdropFilter:
+    case CSSPropertyFontFeatureSettings:
+    case CSSPropertyImageOrientation:
         break;
 
     default:
@@ -2914,7 +2930,7 @@ bool CSSPropertyParser::parseFillProperty(CSSPropertyID propId, CSSPropertyID& p
                 m_valueList->next();
             break;
         }
-        case CSSPropertyWebkitBackgroundComposite:
+        //case CSSPropertyWebkitBackgroundComposite:
         case CSSPropertyWebkitMaskComposite:
             if (val->id >= CSSValueClear && val->id <= CSSValuePlusLighter) {
                 currValue = cssValuePool().createIdentifierValue(val->id);
@@ -7606,6 +7622,13 @@ bool CSSPropertyParser::parseViewportShorthand(CSSPropertyID propId, CSSProperty
 template <typename CharacterType>
 static CSSPropertyID unresolvedCSSPropertyID(const CharacterType* propertyName, unsigned length)
 {
+    if (length == 0)
+        return CSSPropertyInvalid;
+//     if (length >= 2 && propertyName[0] == '-' && propertyName[1] == '-')
+//         return CSSPropertyVariable;
+    if (length > maxCSSPropertyNameLength)
+        return CSSPropertyInvalid;
+
     char buffer[maxCSSPropertyNameLength + 1]; // 1 for null character
 
     for (unsigned i = 0; i != length; ++i) {
@@ -7723,11 +7746,11 @@ bool CSSPropertyParser::parseSVGValue(CSSPropertyID propId, bool important)
             validPrimitive = true;
         break;
 
-    case CSSPropertyEnableBackground:
-    // accumulate | new [x] [y] [width] [height] | inherit
-        if (id == CSSValueAccumulate) // TODO : new
-            validPrimitive = true;
-        break;
+//     case CSSPropertyEnableBackground:
+//     // accumulate | new [x] [y] [width] [height] | inherit
+//         if (id == CSSValueAccumulate) // TODO : new
+//             validPrimitive = true;
+//         break;
 
     case CSSPropertyClipPath:
     case CSSPropertyFilter:
@@ -7804,20 +7827,20 @@ bool CSSPropertyParser::parseSVGValue(CSSPropertyID propId, bool important)
             validPrimitive = true;
         break;
 
-    case CSSPropertyGlyphOrientationVertical: // auto | <angle> | inherit
-        if (id == CSSValueAuto) {
-            validPrimitive = true;
-            break;
-        }
+//     case CSSPropertyGlyphOrientationVertical: // auto | <angle> | inherit
+//         if (id == CSSValueAuto) {
+//             validPrimitive = true;
+//             break;
+//         }
     /* fallthrough intentional */
-    case CSSPropertyGlyphOrientationHorizontal: // <angle> (restricted to _deg_ per SVG 1.1 spec) | inherit
-        if (value->unit == CSSPrimitiveValue::CSS_DEG || value->unit == CSSPrimitiveValue::CSS_NUMBER) {
-            parsedValue = CSSPrimitiveValue::create(value->fValue, CSSPrimitiveValue::CSS_DEG);
-
-            if (parsedValue)
-                m_valueList->next();
-        }
-        break;
+//     case CSSPropertyGlyphOrientationHorizontal: // <angle> (restricted to _deg_ per SVG 1.1 spec) | inherit
+//         if (value->unit == CSSPrimitiveValue::CSS_DEG || value->unit == CSSPrimitiveValue::CSS_NUMBER) {
+//             parsedValue = CSSPrimitiveValue::create(value->fValue, CSSPrimitiveValue::CSS_DEG);
+// 
+//             if (parsedValue)
+//                 m_valueList->next();
+//         }
+//         break;
 
     case CSSPropertyFill: // <paint> | inherit
     case CSSPropertyStroke: // <paint> | inherit

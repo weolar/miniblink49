@@ -9,7 +9,7 @@
 
 // Some compilers can't compile SSSE3 or SSE4 intrinsics.  We give them stub methods.
 // The stubs should never be called, so we make them crash just to confirm that.
-#if SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_SSE41
+#if 0 // SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_SSE41
 void S32A_Opaque_BlitRow32_SSE4(SkPMColor* SK_RESTRICT, const SkPMColor* SK_RESTRICT, int, U8CPU) {
     sk_throw();
 }

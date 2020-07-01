@@ -15,7 +15,7 @@ namespace base {
 
 // Explicit instantiations for commonly used comparisons.
 #define DEFINE_MAKE_CHECK_OP_STRING(type) \
-  template std::string* MakeCheckOpString<type, type>(type, type, char const*);
+  template<type, type> std::string* MakeCheckOpString(type, type, char const*);
 DEFINE_MAKE_CHECK_OP_STRING(int)
 DEFINE_MAKE_CHECK_OP_STRING(long)       // NOLINT(runtime/int)
 DEFINE_MAKE_CHECK_OP_STRING(long long)  // NOLINT(runtime/int)
@@ -27,22 +27,26 @@ DEFINE_MAKE_CHECK_OP_STRING(void const*)
 #undef DEFINE_MAKE_CHECK_OP_STRING
 
 
-// Explicit instantiations for floating point checks.
-#define DEFINE_CHECK_OP_IMPL(NAME)                                            \
-  template std::string* Check##NAME##Impl<float, float>(float lhs, float rhs, \
-                                                        char const* msg);     \
-  template std::string* Check##NAME##Impl<double, double>(                    \
-      double lhs, double rhs, char const* msg);
-DEFINE_CHECK_OP_IMPL(EQ)
-DEFINE_CHECK_OP_IMPL(NE)
-DEFINE_CHECK_OP_IMPL(LE)
-DEFINE_CHECK_OP_IMPL(LT)
-DEFINE_CHECK_OP_IMPL(GE)
-DEFINE_CHECK_OP_IMPL(GT)
-#undef DEFINE_CHECK_OP_IMPL
+// template<float, float> std::string* CheckEQImpl(float lhs, float rhs, char const* msg);
+// template<double, double> std::string* CheckEQImpl(double lhs, double rhs, char const* msg);
+// 
+// // Explicit instantiations for floating point checks.
+// #define DEFINE_CHECK_OP_IMPL(NAME)                                            \
+//   template<float, float> std::string* Check##NAME##Impl(float lhs, float rhs, \
+//                                                         char const* msg);     \
+//   template<double, double> std::string* Check##NAME##Impl(                    \
+//       double lhs, double rhs, char const* msg);
+// DEFINE_CHECK_OP_IMPL(EQ)
+// DEFINE_CHECK_OP_IMPL(NE)
+// DEFINE_CHECK_OP_IMPL(LE)
+// DEFINE_CHECK_OP_IMPL(LT)
+// DEFINE_CHECK_OP_IMPL(GE)
+// DEFINE_CHECK_OP_IMPL(GT)
+// #undef DEFINE_CHECK_OP_IMPL
 
 #if USING_VC6RT == 1
-std::basic_string<char, std::char_traits<char>, class std::allocator<char> >* MakeCheckOpString<__int64, __int64>(__int64 const & lhs, __int64 const & rhs, char const * msg) {
+template<__int64, __int64>
+std::basic_string<char, std::char_traits<char>, class std::allocator<char> >* MakeCheckOpString(__int64 const & lhs, __int64 const & rhs, char const * msg) {
 	char* buf = new char[2000];
 	sprintf(buf, " (%I64d vs. %I64d)", lhs, rhs);
 	std::ostringstream ss;

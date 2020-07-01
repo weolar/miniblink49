@@ -534,6 +534,14 @@ static void getSVGDocumentMethodCallback(const v8::FunctionCallbackInfo<v8::Valu
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject
+#if V8_MINOR_VERSION == 7
+    , v8::Local<v8::Value> data
+#endif
+    ) {
+    return true; // 全部放行
+}
+
 } // namespace HTMLIFrameElementV8Internal
 
 static const V8DOMConfiguration::AccessorConfiguration V8HTMLIFrameElementAccessors[] = {
@@ -571,6 +579,11 @@ static void installV8HTMLIFrameElementTemplate(v8::Local<v8::FunctionTemplate> f
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
+
+#if V8_MAJOR_VERSION >= 4 && V8_MINOR_VERSION > 5
+    instanceTemplate->SetAccessCheckCallback(HTMLIFrameElementV8Internal::securityCheck,
+        v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8HTMLIFrameElement::wrapperTypeInfo)));
+#endif
 
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());

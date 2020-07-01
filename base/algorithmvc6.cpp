@@ -12,9 +12,9 @@
 extern "C" double fmod(double _Xx, double _Yx);
 
 #if !defined(_WIN64)
-void __cdecl operator delete(void * pv, const std::nothrow_t&)
+void __cdecl operator delete(void* pv, const std::nothrow_t&)
 {
-    ::delete(pv);
+    ::free(pv);
 }
 #endif
 
@@ -137,41 +137,11 @@ double exp(double x)
 int isinf(double d)
 {
     return fpclassify(d) == FP_INFINITE;
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 1;
-//         } else if (val == -0.5) {
-//             return -1;
-//         } else {
-//             return 0;
-//         }
-//     } else {
-//         return 0;
-//     }
 }
 
 int isnan(double d)
 {
     return fpclassify(d) == FP_NAN;
-
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 0;
-//         }
-//         else if (val == -0.5) {
-//             return 0;
-//         }
-//         else {
-//             return 1;
-//         }
-//     }
-//     else {
-//         return 0;
-//     }
 }
 
 double log(double val)
@@ -207,6 +177,30 @@ __int64 abs(__int64 val)
 {
     return (val > 0 ? val : -val);
 }
+
+unsigned __int64 abs(unsigned __int64 val)
+{
+    return val;
+}
+
+int abs(int val)
+{
+    return (val > 0 ? val : -val);
+}
+
+unsigned int abs(unsigned int val)
+{
+    return val;
+}
+
+double abs(double val) {
+    return (val > 0 ? val : -val);
+}
+
+float abs(float val) {
+    return (val > 0 ? val : -val);
+}
+
 
 double fabs(double val)
 {
@@ -260,17 +254,17 @@ double ldexp(double x, int exponent)
 
 bool isfinite(__int64 arg)
 {
-    return arg == arg && arg != std::numeric_limits<__int64>::infinity() && arg != -std::numeric_limits<__int64>::infinity();
+    return /*arg == arg &&*/ arg != std::numeric_limits<__int64>::infinity() && arg != -std::numeric_limits<__int64>::infinity();
 }
 
 bool isfinite(int arg)
 {
-    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+    return /*arg == arg &&*/ arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
 }
 
 bool isfinite(unsigned int arg)
 {
-    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+    return /*arg == arg &&*/ arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
 }
 
 bool isfinite(double arg)
@@ -283,13 +277,15 @@ double nearbyint(double x)
   return ::nearbyint(x);
 }
 
+template<>
 bool __cdecl operator != <char, char_traits<char>, allocator<char> >(basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
 {
     string bCopy(b);
     return a != bCopy;
 }
 
-basic_string<char, char_traits<char>, allocator<char> > __cdecl std::operator + <char, char_traits<char>, allocator<char> >(
+template<>
+basic_string<char, char_traits<char>, allocator<char> > __cdecl operator + <char, char_traits<char>, allocator<char> >(
     char const * a, basic_string<char, char_traits<char>, allocator<char> > const & b)
 {
     string aCopy(a);
@@ -297,6 +293,7 @@ basic_string<char, char_traits<char>, allocator<char> > __cdecl std::operator + 
     return aCopy;
 }
 
+template<>
 basic_string<char, char_traits<char>, allocator<char> > __cdecl operator + <char, char_traits<char>, allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, 
     basic_string<char, char_traits<char>, allocator<char> > const & b)
@@ -306,37 +303,42 @@ basic_string<char, char_traits<char>, allocator<char> > __cdecl operator + <char
     return result;
 }
 
-bool __cdecl operator < <unsigned short, char_traits<unsigned short>, allocator<unsigned short> > (
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a,
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+template<>
+bool __cdecl operator < <wchar_t, char_traits<wchar_t>, allocator<wchar_t> > (
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a,
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & b)
 {
     return (a.compare(b) < 0);
 }
 
-basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > __cdecl operator + 
-<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
-    unsigned short const * a, 
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+template<>
+basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > __cdecl operator + 
+<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+    wchar_t const * a, 
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & b)
 {
     wstring aCopy(a);
     aCopy.append(b);
     return aCopy;
 }
 
-bool __cdecl operator == <unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a, 
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+template<>
+bool __cdecl operator == <wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a, 
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & b)
 {
     return (a.compare(b) == 0);
 }
 
-bool __cdecl operator == <unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
-    basic_string<unsigned short, std::char_traits<unsigned short>, allocator<unsigned short> > const & a, unsigned short const * b)
+template<>
+bool __cdecl operator == <wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+    basic_string<wchar_t, std::char_traits<wchar_t>, allocator<wchar_t> > const & a, wchar_t const * b)
 {
     wstring bCopy(b);
     return a.compare(bCopy) == 0;
 }
 
+template<>
 bool __cdecl operator < <char, char_traits<char>, allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a,
     basic_string<char, char_traits<char>, allocator<char> > const & b)
@@ -344,13 +346,15 @@ bool __cdecl operator < <char, char_traits<char>, allocator<char> >(
     return a.compare(b) < 0;
 }
 
-bool __cdecl operator != <unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
-    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a, 
-    unsigned short const * b)
+template<>
+bool __cdecl operator != <wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a, 
+    wchar_t const * b)
 {
     return a.compare(b) != 0;
 }
 
+template<>
 bool __cdecl operator == <char, char_traits<char>, allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, 
     basic_string<char, char_traits<char>, allocator<char> > const & b)
@@ -358,6 +362,7 @@ bool __cdecl operator == <char, char_traits<char>, allocator<char> >(
     return a.compare(b) == 0;
 }
 
+template<>
 bool __cdecl operator != <char, char_traits<char>, allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a,
     basic_string<char, char_traits<char>, allocator<char> > const & b)
@@ -365,12 +370,15 @@ bool __cdecl operator != <char, char_traits<char>, allocator<char> >(
     return a.compare(b) != 0;
 }
 
+template<>
 bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, 
     char const * b)
 {
     return a.compare(b) == 0;
 }
+
+template<>
 bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 	char const * a,
 	basic_string<char, char_traits<char>, allocator<char> > const & b) 
@@ -378,13 +386,49 @@ bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 	return b.compare(a) == 0;
 }
 
-basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::operator + <char, char_traits<char>, class std::allocator<char> >(
+template<>
+bool __cdecl operator!=<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a,
+    basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & b)
+{
+    return a.compare(b) != 0;
+}
+
+template<>
+basic_string<wchar_t, struct std::char_traits<wchar_t>, class std::allocator<wchar_t> > __cdecl 
+    operator+<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+        basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a,
+        basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
+
+template<>
+basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > __cdecl 
+    operator+<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >(
+        basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > const & a, wchar_t const * b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
+
+template<>
+basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl operator + <char, char_traits<char>, class std::allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
 {
     string aCopy(a);
     aCopy.append(b);
     return aCopy;
 }
+
+// template<>
+// void std::basic_string<char, std::char_traits<char>, std::allocator<char> >::clear(void)
+// {
+//     _Eos(0);
+// }
 
 } // std
 
@@ -627,7 +671,7 @@ double droundd(double val, int places) {
 
 double trunc(double val)
 {
-    double absVal = (val > 0 ? val : -val);
+    //double absVal = (val > 0 ? val : -val);
     double result = floor(val);
     if (val < 0)
         result = -result;
@@ -791,11 +835,19 @@ extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 //     DebugBreak();
 // }
 
-// extern "C" unsigned long  __cdecl _byteswap_ulong(unsigned long)
-// {
-//     DebugBreak();
-//     return 0;
-// }
+#ifdef __clang__
+
+extern "C" unsigned long  __cdecl _byteswap_ulong(unsigned long i)
+{
+    unsigned int j;
+    j = (i << 24);
+    j += (i << 8) & 0x00FF0000;
+    j += (i >> 8) & 0x0000FF00;
+    j += (i >> 24);
+    return j;
+}
+
+#endif
 
 extern "C" void* _alloca_probe_16(size_t length)
 {
@@ -838,8 +890,6 @@ extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
 
     return result;
 }
-
-FILE _iob[3] = { 0 };
 
 extern __declspec(dllimport) double _HUGE;
 

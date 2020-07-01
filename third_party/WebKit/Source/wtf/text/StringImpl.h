@@ -280,43 +280,13 @@ private:
     void destroyIfNotStatic();
 
 public:
-    bool hasHash() const
-    {
-        return rawHash() != 0;
-    }
-
-    unsigned existingHash() const
-    {
-        ASSERT(hasHash());
-        return rawHash();
-    }
-
-    unsigned hash() const
-    {
-        if (hasHash())
-            return existingHash();
-        return hashSlowCase();
-    }
-
-    ALWAYS_INLINE bool hasOneRef() const
-    {
-        return m_refCount == 1;
-    }
-
-    ALWAYS_INLINE void ref()
-    {
-        ++m_refCount;
-    }
-
-    ALWAYS_INLINE void deref()
-    {
-        if (hasOneRef()) {
-            destroyIfNotStatic();
-            return;
-        }
-
-        --m_refCount;
-    }
+    bool hasHash() const;
+    unsigned existingHash() const;
+    unsigned hash() const;
+    bool hasOneRef() const;
+    void ref();
+    void deref();
+    int getRef();
 
     static StringImpl* empty();
     static StringImpl* empty16Bit();
@@ -438,11 +408,18 @@ public:
 #endif
     static const UChar latin1CaseFoldTable[256];
 
+    void setIsUnuse(int val);
+    int getIsUnuse();
+
 private:
     template<typename CharType> static size_t allocationSize(unsigned length)
     {
         RELEASE_ASSERT(length <= ((std::numeric_limits<unsigned>::max() - sizeof(StringImpl)) / sizeof(CharType)));
-        return sizeof(StringImpl) + length * sizeof(CharType);
+        return sizeof(StringImpl) + length * sizeof(CharType)
+#ifdef _DEBUG
+            + 10 // weolar: c_str
+#endif
+            ;
     }
 
     template <class UCharPredicate> PassRefPtr<StringImpl> stripMatchedCharacters(UCharPredicate);

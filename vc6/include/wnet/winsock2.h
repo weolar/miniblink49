@@ -3858,5 +3858,12 @@ typedef struct timeval FAR *LPTIMEVAL;
 #include <wsipv6ok.h>
 #endif // IPV6STRICT
 
+typedef struct _TRANSMIT_FILE_BUFFERS {
+    PVOID Head;
+    DWORD HeadLength;
+    PVOID Tail;
+    DWORD TailLength;
+} TRANSMIT_FILE_BUFFERS, *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
+
 #endif  /* _WINSOCK2API_ */
 

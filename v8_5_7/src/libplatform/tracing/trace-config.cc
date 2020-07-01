@@ -24,7 +24,8 @@ bool TraceConfig::IsCategoryGroupEnabled(const char* category_group) const {
   std::stringstream category_stream(category_group);
   while (category_stream.good()) {
     std::string category;
-    getline(category_stream, category, ',');
+    //getline(category_stream, category, ',');
+    *(int*)1 = 1;
     for (auto included_category : included_categories_) {
       if (category == included_category) return true;
     }

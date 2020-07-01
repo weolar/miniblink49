@@ -1,0 +1,1267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_vc6|Win32">
+      <Configuration>Release_vc6</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_vc6|x64">
+      <Configuration>Release_vc6</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B5C4BF1D-4BFC-44BC-A7B5-762E3E9D9FF8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Win32Project1</RootNamespace>
+    <ProjectName>v8_7_5_1</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath>
+    </ReferencePath>
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_6_7;../../v8_6_7/include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_6_7</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;USING_VC6RT=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_6_7;../../v8_6_7/include</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4800;4530;4251</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;USING_VC6RT=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_7_5</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=0;_HAS_EXCEPTIONS=0;V8_TARGET_ARCH_IA32;ENABLE_DISASSEMBLER;V8_PROMISE_INTERNAL_FIELD_COUNT;v8_promise_internal_field_count;V8_CONCURRENT_MARKING;DISABLE_UNTRUSTED_CODE_MITIGATIONS;ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_SHARED;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;V8_ENABLE_CHECKS;OBJECT_PRINT;VERIFY_HEAP;V8_TRACE_MAPS;V8_ENABLE_ALLOCATION_TIMEOUT;V8_ENABLE_FORCE_SLOW_PATH;ENABLE_HANDLE_ZAPPING;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_DEPRECATION_WARNINGS;BUILDING_V8_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_7_5;../../v8_7_5/include;../../gen/v8_7_5</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <ForceSymbolReferences>__chkstk</ForceSymbolReferences>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../v8_7_5;../../v8_7_5/include;../../gen/v8_7_5</AdditionalIncludeDirectories>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\v8_6_7\include\v8-inspector-protocol.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-inspector.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-platform.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-profiler.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-testing.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-util.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-value-serializer-version.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-version-string.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8-version.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8.h" />
+    <ClInclude Include="..\..\v8_6_7\include\v8config.h" />
+    <ClInclude Include="..\..\v8_7_5\src\accessors.h" />
+    <ClInclude Include="..\..\v8_7_5\src\address-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\allocation-site-scopes-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\allocation-site-scopes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\allocation.h" />
+    <ClInclude Include="..\..\v8_7_5\src\api-arguments-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\api-arguments.h" />
+    <ClInclude Include="..\..\v8_7_5\src\api-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\api-natives.h" />
+    <ClInclude Include="..\..\v8_7_5\src\api.h" />
+    <ClInclude Include="..\..\v8_7_5\src\arguments-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\arguments.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asan.h" />
+    <ClInclude Include="..\..\v8_7_5\src\assembler-arch.h" />
+    <ClInclude Include="..\..\v8_7_5\src\assembler-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\assert-scope.h" />
+    <ClInclude Include="..\..\v8_7_5\src\async-hooks-wrapper.h" />
+    <ClInclude Include="..\..\v8_7_5\src\bailout-reason.h" />
+    <ClInclude Include="..\..\v8_7_5\src\basic-block-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\bignum-dtoa.h" />
+    <ClInclude Include="..\..\v8_7_5\src\bignum.h" />
+    <ClInclude Include="..\..\v8_7_5\src\bit-vector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\bootstrapper.h" />
+    <ClInclude Include="..\..\v8_7_5\src\boxed-float.h" />
+    <ClInclude Include="..\..\v8_7_5\src\cached-powers.h" />
+    <ClInclude Include="..\..\v8_7_5\src\callable.h" />
+    <ClInclude Include="..\..\v8_7_5\src\cancelable-task.h" />
+    <ClInclude Include="..\..\v8_7_5\src\char-predicates-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\char-predicates.h" />
+    <ClInclude Include="..\..\v8_7_5\src\checks.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-comments.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-desc.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-events.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-factory.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-reference.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-stub-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\code-tracer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\collector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compilation-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compilation-statistics.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\constant-pool.h" />
+    <ClInclude Include="..\..\v8_7_5\src\constants-arch.h" />
+    <ClInclude Include="..\..\v8_7_5\src\contexts-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\contexts.h" />
+    <ClInclude Include="..\..\v8_7_5\src\conversions-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\conversions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\counters-definitions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\counters-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\counters.h" />
+    <ClInclude Include="..\..\v8_7_5\src\cpu-features.h" />
+    <ClInclude Include="..\..\v8_7_5\src\date.h" />
+    <ClInclude Include="..\..\v8_7_5\src\dateparser-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\dateparser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\deoptimize-reason.h" />
+    <ClInclude Include="..\..\v8_7_5\src\deoptimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\detachable-vector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\disasm.h" />
+    <ClInclude Include="..\..\v8_7_5\src\disassembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\diy-fp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\double.h" />
+    <ClInclude Include="..\..\v8_7_5\src\dtoa.h" />
+    <ClInclude Include="..\..\v8_7_5\src\eh-frame.h" />
+    <ClInclude Include="..\..\v8_7_5\src\elements-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\elements-kind.h" />
+    <ClInclude Include="..\..\v8_7_5\src\elements.h" />
+    <ClInclude Include="..\..\v8_7_5\src\execution.h" />
+    <ClInclude Include="..\..\v8_7_5\src\external-reference-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\external-reference.h" />
+    <ClInclude Include="..\..\v8_7_5\src\fast-dtoa.h" />
+    <ClInclude Include="..\..\v8_7_5\src\feedback-vector-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\feedback-vector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\field-index-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\field-index.h" />
+    <ClInclude Include="..\..\v8_7_5\src\field-type.h" />
+    <ClInclude Include="..\..\v8_7_5\src\fixed-dtoa.h" />
+    <ClInclude Include="..\..\v8_7_5\src\flag-definitions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\flags.h" />
+    <ClInclude Include="..\..\v8_7_5\src\flush-instruction-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\frame-constants.h" />
+    <ClInclude Include="..\..\v8_7_5\src\frames-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\frames.h" />
+    <ClInclude Include="..\..\v8_7_5\src\function-kind.h" />
+    <ClInclude Include="..\..\v8_7_5\src\futex-emulation.h" />
+    <ClInclude Include="..\..\v8_7_5\src\gdb-jit.h" />
+    <ClInclude Include="..\..\v8_7_5\src\global-handles.h" />
+    <ClInclude Include="..\..\v8_7_5\src\globals.h" />
+    <ClInclude Include="..\..\v8_7_5\src\handler-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\handles-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\handles.h" />
+    <ClInclude Include="..\..\v8_7_5\src\hash-seed-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap-symbols.h" />
+    <ClInclude Include="..\..\v8_7_5\src\icu_util.h" />
+    <ClInclude Include="..\..\v8_7_5\src\identity-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\custom-preview.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\injected-script.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\inspected-context.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\remote-object-id.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\search-util.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\string-16.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\string-util.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\test-interface.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-console-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-console-message.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-console.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-debugger-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-debugger-script.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-debugger.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-heap-profiler-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-inspector-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-inspector-session-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-profiler-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-regex.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-runtime-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-schema-agent-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-stack-trace-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\v8-value-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\value-mirror.h" />
+    <ClInclude Include="..\..\v8_7_5\src\inspector\wasm-translation.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interface-descriptors.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\block-coverage-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-array-accessor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-array-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-array-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-array-random-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-array-writer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-flags.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-jump-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-label.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-node.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-operands.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-register-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-register-optimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-register.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-source-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecode-traits.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\bytecodes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\constant-array-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\control-flow-builders.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\handler-table-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\interpreter-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\interpreter-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\interpreter-intrinsics-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\interpreter-intrinsics.h" />
+    <ClInclude Include="..\..\v8_7_5\src\interpreter\interpreter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\isolate-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\isolate-data.h" />
+    <ClInclude Include="..\..\v8_7_5\src\isolate-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\isolate.h" />
+    <ClInclude Include="..\..\v8_7_5\src\json-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\json-stringifier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\keys.h" />
+    <ClInclude Include="..\..\v8_7_5\src\label.h" />
+    <ClInclude Include="..\..\v8_7_5\src\layout-descriptor-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\layout-descriptor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\default-foreground-task-runner.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\default-platform.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\default-worker-threads-task-runner.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\delayed-task-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\task-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\tracing\trace-buffer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\tracing\trace-writer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\worker-thread.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libsampler\sampler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\locked-queue-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\locked-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\log-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\log-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\log.h" />
+    <ClInclude Include="..\..\v8_7_5\src\lookup-cache-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\lookup-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\lookup-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\lookup.h" />
+    <ClInclude Include="..\..\v8_7_5\src\machine-type.h" />
+    <ClInclude Include="..\..\v8_7_5\src\macro-assembler-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\macro-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\map-updater.h" />
+    <ClInclude Include="..\..\v8_7_5\src\math-random.h" />
+    <ClInclude Include="..\..\v8_7_5\src\maybe-handles-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\maybe-handles.h" />
+    <ClInclude Include="..\..\v8_7_5\src\memcopy.h" />
+    <ClInclude Include="..\..\v8_7_5\src\message-template.h" />
+    <ClInclude Include="..\..\v8_7_5\src\messages.h" />
+    <ClInclude Include="..\..\v8_7_5\src\microtask-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\msan.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects-body-descriptors-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects-body-descriptors.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects-definitions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\allocation-site-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\allocation-site.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\api-callbacks-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\api-callbacks.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\arguments-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\arguments.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\bigint.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\cell-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\cell.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\code-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\code.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\compilation-cache-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\compilation-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\compressed-slots-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\compressed-slots.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\data-handler-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\data-handler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\debug-objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\debug-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\descriptor-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\descriptor-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\dictionary-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\dictionary.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\embedder-data-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\embedder-data-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\embedder-data-slot-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\embedder-data-slot.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\feedback-cell-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\feedback-cell.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\fixed-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\fixed-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\foreign-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\foreign.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\frame-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\frame-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\free-space-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\free-space.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\hash-table-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\hash-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\heap-number-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\heap-number.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\heap-object-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\heap-object.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\instance-type-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\instance-type.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\intl-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-array-buffer-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-array-buffer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-break-iterator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-break-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-collator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-collator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-collection-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-collection-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-collection.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-date-time-format-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-date-time-format.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-generator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-list-format-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-list-format.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-locale-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-locale.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-number-format-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-number-format.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-plural-rules-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-plural-rules.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-promise-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-promise.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-proxy-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-proxy.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-regexp-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-regexp-string-iterator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-regexp-string-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-regexp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-relative-time-format-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-relative-time-format.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-segment-iterator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-segment-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-segmenter-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-segmenter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-weak-refs-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\js-weak-refs.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\literal-objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\literal-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\managed.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\map-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\maybe-object-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\maybe-object.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\microtask-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\microtask.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\module-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\module.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\name-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\name.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\object-macros-undef.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\object-macros.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\oddball-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\oddball.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\ordered-hash-table-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\ordered-hash-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\promise-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\promise.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-array-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-array.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-cell-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-cell.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-descriptor-object-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\property-descriptor-object.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\prototype-info-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\prototype-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\regexp-match-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\scope-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\script-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\script.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\shared-function-info-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\shared-function-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\slots-atomic-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\slots-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\slots.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\smi-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\smi.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\stack-frame-info-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\stack-frame-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\string-comparator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\string-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\string-table-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\string-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\string.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\struct-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\struct.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\template-objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\template-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\templates-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\objects\templates.h" />
+    <ClInclude Include="..\..\v8_7_5\src\optimized-compilation-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ostreams.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\expression-scope-reparenter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\expression-scope.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\func-name-inferrer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\keywords-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\parse-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\parser-base.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\parsing.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\preparse-data-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\preparse-data.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\preparser-logger.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\preparser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\rewriter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\scanner-character-streams.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\scanner-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\scanner.h" />
+    <ClInclude Include="..\..\v8_7_5\src\parsing\token.h" />
+    <ClInclude Include="..\..\v8_7_5\src\pending-compilation-error-handler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\perf-jit.h" />
+    <ClInclude Include="..\..\v8_7_5\src\pointer-with-payload.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\allocation-tracker.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\circular-queue-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\circular-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\cpu-profiler-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\cpu-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\heap-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\heap-snapshot-generator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\heap-snapshot-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\profile-generator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\profile-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\profiler-listener.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\sampling-heap-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\strings-storage.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\tick-sample.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\tracing-cpu-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\unbound-queue-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\profiler\unbound-queue.h" />
+    <ClInclude Include="..\..\v8_7_5\src\property-descriptor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\property-details.h" />
+    <ClInclude Include="..\..\v8_7_5\src\property.h" />
+    <ClInclude Include="..\..\v8_7_5\src\prototype-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\prototype.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ptr-compr-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ptr-compr.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\bytecodes-irregexp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\ia32\regexp-macro-assembler-ia32.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\interpreter-irregexp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\jsregexp-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\jsregexp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\property-sequences.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-ast.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler-irregexp-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler-irregexp.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler-tracer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-stack.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\regexp-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\regexp\x64\regexp-macro-assembler-x64.h" />
+    <ClInclude Include="..\..\v8_7_5\src\register-arch.h" />
+    <ClInclude Include="..\..\v8_7_5\src\register-configuration.h" />
+    <ClInclude Include="..\..\v8_7_5\src\register.h" />
+    <ClInclude Include="..\..\v8_7_5\src\reglist.h" />
+    <ClInclude Include="..\..\v8_7_5\src\reloc-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\roots-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\roots.h" />
+    <ClInclude Include="..\..\v8_7_5\src\runtime-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\runtime\runtime-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\runtime\runtime.h" />
+    <ClInclude Include="..\..\v8_7_5\src\safepoint-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\setup-isolate.h" />
+    <ClInclude Include="..\..\v8_7_5\src\signature.h" />
+    <ClInclude Include="..\..\v8_7_5\src\simulator-base.h" />
+    <ClInclude Include="..\..\v8_7_5\src\simulator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\code-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\deserializer-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\deserializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\embedded-data.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\embedded-file-writer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\natives.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\object-deserializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\partial-deserializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\partial-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\read-only-deserializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\read-only-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\references.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\roots-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\serializer-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\serializer-common.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\snapshot-source-sink.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\snapshot.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\startup-deserializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\snapshot\startup-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\source-position-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\source-position.h" />
+    <ClInclude Include="..\..\v8_7_5\src\splay-tree-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\splay-tree.h" />
+    <ClInclude Include="..\..\v8_7_5\src\startup-data-util.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-builder-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-case.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-constants.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-hasher-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-hasher.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-search.h" />
+    <ClInclude Include="..\..\v8_7_5\src\string-stream.h" />
+    <ClInclude Include="..\..\v8_7_5\src\strtod.h" />
+    <ClInclude Include="..\..\v8_7_5\src\task-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\siphash\halfsiphash.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\utf8-decoder\utf8-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\valgrind\valgrind.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\vtune\ittnotify_config.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\vtune\ittnotify_types.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\vtune\jitprofiling.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\vtune\v8-vtune.h" />
+    <ClInclude Include="..\..\v8_7_5\src\third_party\vtune\vtune-jit.h" />
+    <ClInclude Include="..\..\v8_7_5\src\thread-id.h" />
+    <ClInclude Include="..\..\v8_7_5\src\thread-local-top.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ast.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\cfg.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\contextual.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\csa-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\declarable.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\declaration-visitor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\declarations.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\earley-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\file-visitor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\global-context.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\implementation-visitor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\instructions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\globals.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\json-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\json.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\message-handler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\message-macros.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\message-pipe.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\ls\message.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\parameter-difference.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\server-data.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\source-positions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\torque-compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\torque-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\type-oracle.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\types.h" />
+    <ClInclude Include="..\..\v8_7_5\src\torque\utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\tracing\trace-event.h" />
+    <ClInclude Include="..\..\v8_7_5\src\tracing\traced-value.h" />
+    <ClInclude Include="..\..\v8_7_5\src\tracing\tracing-category-observer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\transitions-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\transitions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\trap-handler\handler-inside-win.h" />
+    <ClInclude Include="..\..\v8_7_5\src\trap-handler\trap-handler-internal.h" />
+    <ClInclude Include="..\..\v8_7_5\src\trap-handler\trap-handler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\turbo-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\type-hints.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unicode-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unicode-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unicode-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unicode.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unoptimized-compilation-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\uri.h" />
+    <ClInclude Include="..\..\v8_7_5\src\utils-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\v8.h" />
+    <ClInclude Include="..\..\v8_7_5\src\v8memory.h" />
+    <ClInclude Include="..\..\v8_7_5\src\v8threads.h" />
+    <ClInclude Include="..\..\v8_7_5\src\value-serializer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\vector-slot-pair.h" />
+    <ClInclude Include="..\..\v8_7_5\src\vector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\version.h" />
+    <ClInclude Include="..\..\v8_7_5\src\visitors.h" />
+    <ClInclude Include="..\..\v8_7_5\src\vm-state-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\vm-state.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\ia32\liftoff-assembler-ia32.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\liftoff-assembler-defs.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\liftoff-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\liftoff-compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\liftoff-register.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\baseline\x64\liftoff-assembler-x64.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\compilation-environment.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\function-body-decoder-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\function-body-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\function-compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\graph-builder-interface.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\js-to-wasm-wrapper-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\jump-table-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\leb-helper.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\local-decl-encoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\memory-tracing.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\module-compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\module-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\module-instantiate.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\object-access.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\signature-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\streaming-decoder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\value-type.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-code-manager.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-constants.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-engine.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-external-refs.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-feature-flags.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-features.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-import-wrapper-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-interpreter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-js.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-limits.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-linkage.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-memory.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-module-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-module.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-objects-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-objects.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-opcodes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-result.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-serialization.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-text.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-tier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\wasm\wasm-value.h" />
+    <ClInclude Include="..\..\v8_7_5\src\x64\assembler-x64-inl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\assembler-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\constants-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\frame-constants-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\macro-assembler-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\register-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\x64\sse-instr.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\zone\accounting-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-chunk-list.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-containers.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-handle-set.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-list-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-segment.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone-splay-tree.h" />
+    <ClInclude Include="..\..\v8_7_5\src\zone\zone.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\v8_7_5\src\accessors.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\address-map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\allocation.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\api-arguments.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\api-natives.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\api.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\arguments.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\assert-scope.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\async-hooks-wrapper.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\bailout-reason.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\basic-block-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\bignum-dtoa.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\bignum.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\bit-vector.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\bootstrapper.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\cached-powers.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\cancelable-task.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\code-comments.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\code-desc.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\code-factory.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\code-reference.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\code-stub-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compilation-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compilation-statistics.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\constant-pool.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\contexts.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\conversions.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\counters.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\date.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\dateparser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\deoptimize-reason.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\deoptimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\detachable-vector.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\disassembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\diy-fp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\dtoa.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\eh-frame.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\elements-kind.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\elements.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\execution.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\external-reference-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\external-reference.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\fast-dtoa.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\feedback-vector.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\field-type.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\fixed-dtoa.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\flags.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\flush-instruction-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\frames.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\futex-emulation.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\gdb-jit.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\global-handles.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\handler-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\handles.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\icu_util.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\identity-map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\custom-preview.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\injected-script.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\inspected-context.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\remote-object-id.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\search-util.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\string-16.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\string-util.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\test-interface.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-console-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-console-message.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-console.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-debugger-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-debugger-script.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-debugger.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-heap-profiler-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-inspector-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-inspector-session-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-profiler-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-regex.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-runtime-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-schema-agent-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-stack-trace-impl.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\v8-value-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\value-mirror.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\inspector\wasm-translation.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interface-descriptors.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-array-accessor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-array-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-array-iterator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-array-random-iterator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-array-writer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-decoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-flags.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-label.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-node.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-operands.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-register-optimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-register.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecode-source-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\bytecodes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\constant-array-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\control-flow-builders.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\handler-table-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\interpreter-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\interpreter-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\interpreter-intrinsics-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\interpreter-intrinsics.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\interpreter\interpreter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\isolate-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\isolate.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\json-parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\json-stringifier.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\keys.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\layout-descriptor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\default-foreground-task-runner.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\default-platform.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\default-worker-threads-task-runner.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\delayed-task-queue.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\task-queue.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\trace-buffer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\trace-config.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\trace-object.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\trace-writer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\tracing-controller.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\worker-thread.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libsampler\sampler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\log-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\log.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\lookup-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\lookup.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\machine-type.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\map-updater.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\math-random.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\memcopy.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\messages.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\microtask-queue.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects-debug.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects-printer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\bigint.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\code.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\debug-objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\embedder-data-array.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\js-array-buffer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\js-objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\literal-objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\managed.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\module.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\ordered-hash-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\scope-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\stack-frame-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\string-comparator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\string.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\objects\template-objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\optimized-compilation-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ostreams.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\expression-scope-reparenter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\func-name-inferrer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\parse-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\parsing.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\preparse-data.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\preparser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\rewriter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\scanner-character-streams.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\scanner.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\parsing\token.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\pending-compilation-error-handler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\perf-jit.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\allocation-tracker.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\cpu-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\heap-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\heap-snapshot-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\profile-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\profiler-listener.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\sampling-heap-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\strings-storage.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\tick-sample.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\profiler\tracing-cpu-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\property-descriptor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\property.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\ia32\regexp-macro-assembler-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\regexp\interpreter-irregexp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\jsregexp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\property-sequences.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-ast.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler-irregexp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler-tracer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-macro-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-stack.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\regexp\x64\regexp-macro-assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\register-configuration.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\reloc-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\roots.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime-profiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-array.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-atomics.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-bigint.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-classes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-collections.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-date.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-debug.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-forin.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-function.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-futex.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-internal.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-interpreter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-literals.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-module.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-numbers.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-object.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-operators.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-promise.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-proxy.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-regexp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-scopes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-strings.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-symbol.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-test.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-typedarray.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-wasm.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime-weak-refs.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\runtime\runtime.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\safepoint-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\setup-isolate-full.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\simulator-base.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\code-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\deserializer-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\deserializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\embedded-data.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\embedded-empty.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\embedded-file-writer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\natives-common.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\object-deserializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\partial-deserializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\partial-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\read-only-deserializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\read-only-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\roots-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\serializer-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\serializer-common.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\snapshot-common.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\snapshot-empty.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\snapshot-source-sink.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\startup-deserializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\snapshot\startup-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\source-position-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\source-position.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\startup-data-util.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\string-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\string-case.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\string-constants.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\string-stream.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\strtod.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\task-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\third_party\siphash\halfsiphash.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\third_party\vtune\jitprofiling.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\third_party\vtune\vtune-jit.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\thread-id.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\thread-local-top.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\cfg.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\csa-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\declarable.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\declaration-visitor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\declarations.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\earley-parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\file-visitor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\implementation-visitor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\instructions.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\ls\json-parser_.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\ls\json.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\ls\message-handler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\server-data.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\source-positions.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\torque-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\torque-parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\type-oracle.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\types.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\utils_.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\tracing\trace-event.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\tracing\traced-value.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\tracing\tracing-category-observer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\transitions.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\trap-handler\handler-inside-win.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\trap-handler\handler-inside.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\trap-handler\handler-outside-win.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\trap-handler\handler-outside.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\trap-handler\handler-shared.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\turbo-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\type-hints.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\unicode-decoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\unicode.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\unoptimized-compilation-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\unwinder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\uri.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\v8.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\v8dll-main.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\v8threads.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\value-serializer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\vector-slot-pair.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\version.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\visitors.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\baseline\liftoff-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\baseline\liftoff-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\function-body-decoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\function-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\graph-builder-interface.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\jump-table-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\local-decl-encoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\memory-tracing.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\module-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\module-decoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\module-instantiate.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\signature-map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\streaming-decoder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-code-manager.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-debug.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-engine.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-external-refs.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-features.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-interpreter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-js.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-memory.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-module-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-module.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-objects.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-opcodes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-result.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-serialization.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-text.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\x64\assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\cpu-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\deoptimizer-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\disasm-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\eh-frame-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\frame-constants-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\interface-descriptors-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\x64\macro-assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\zone\accounting-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\zone\zone-segment.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\zone\zone.cc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

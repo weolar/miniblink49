@@ -63,7 +63,7 @@ static bool useMockTheme()
 }
 
 unsigned LayoutThemeDefault::m_activeSelectionBackgroundColor = 0xff1e90ff;
-unsigned LayoutThemeDefault::m_activeSelectionForegroundColor = Color::black;
+unsigned LayoutThemeDefault::m_activeSelectionForegroundColor = Color::white; // Color::black;
 unsigned LayoutThemeDefault::m_inactiveSelectionBackgroundColor = 0xffc8c8c8;
 unsigned LayoutThemeDefault::m_inactiveSelectionForegroundColor = 0xff323232;
 

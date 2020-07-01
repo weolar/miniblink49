@@ -4,19 +4,27 @@
 
 #include "config.h"
 #include "core/frame/NavigatorLanguage.h"
+#include "core/frame/Settings.h"
+#include "core/page/Page.h"
 
 #include "platform/Language.h"
 
 namespace blink {
 
-NavigatorLanguage::NavigatorLanguage()
+NavigatorLanguage::NavigatorLanguage(LocalFrame* frame)
     : m_languagesChanged(true)
+    , m_frame_(frame)
 {
 }
 
 AtomicString NavigatorLanguage::language()
 {
-    return defaultLanguage();
+    Page *page = m_frame_->page();
+    if (page) {
+        Settings &seting = page->settings();
+        return AtomicString(seting.language());
+    } else
+        return defaultLanguage();
 }
 
 bool NavigatorLanguage::hasLanguagesChanged()

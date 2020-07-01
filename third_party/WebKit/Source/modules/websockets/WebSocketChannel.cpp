@@ -59,7 +59,7 @@ WebSocketChannel* WebSocketChannel::create(ExecutionContext* context, WebSocketC
     }
 
     if (context->isWorkerGlobalScope()) {
-#if MINIBLINK_NOT_IMPLEMENTED
+#if 1 // MINIBLINK_NOT_IMPLEMENTED
         WorkerGlobalScope* workerGlobalScope = toWorkerGlobalScope(context);
         return WorkerWebSocketChannel::create(*workerGlobalScope, client, sourceURL, lineNumber);
 #else

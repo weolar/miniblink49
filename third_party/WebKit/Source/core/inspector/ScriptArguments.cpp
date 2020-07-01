@@ -62,6 +62,7 @@ private:
     V8ValueStringBuilder(v8::Isolate* isolate)
         : m_arrayLimit(maxArrayItemsLimit)
         , m_isolate(isolate)
+        , m_tryCatch(isolate)
     {
     }
 

@@ -1327,7 +1327,7 @@ typedef enum tagSHCONTF
     SHCONTF_NETPRINTERSRCH      = 0x0200,   // hint that client is looking for printers
     SHCONTF_SHAREABLE           = 0x0400,   // hint that client is looking sharable resources (remote shares)
     SHCONTF_STORAGE             = 0x0800,   // include all items with accessible storage and their ancestors
-};
+} __SHCONTF__;
 typedef DWORD SHCONTF;
 
 #define SHCIDS_ALLFIELDS        0x80000000L
@@ -9778,6 +9778,306 @@ void __RPC_STUB IModalWindow_Show_Stub(
 
 
 #endif 	/* __IModalWindow_INTERFACE_DEFINED__ */
+
+//////////////////////////////////////////////////////////////////////////
+
+typedef /* [v1_enum] */
+enum FDAP {
+    FDAP_BOTTOM = 0,
+    FDAP_TOP = 1
+} 	FDAP;
+
+enum _FILEOPENDIALOGOPTIONS {
+    FOS_OVERWRITEPROMPT = 0x2,
+    FOS_STRICTFILETYPES = 0x4,
+    FOS_NOCHANGEDIR = 0x8,
+    FOS_PICKFOLDERS = 0x20,
+    FOS_FORCEFILESYSTEM = 0x40,
+    FOS_ALLNONSTORAGEITEMS = 0x80,
+    FOS_NOVALIDATE = 0x100,
+    FOS_ALLOWMULTISELECT = 0x200,
+    FOS_PATHMUSTEXIST = 0x800,
+    FOS_FILEMUSTEXIST = 0x1000,
+    FOS_CREATEPROMPT = 0x2000,
+    FOS_SHAREAWARE = 0x4000,
+    FOS_NOREADONLYRETURN = 0x8000,
+    FOS_NOTESTFILECREATE = 0x10000,
+    FOS_HIDEMRUPLACES = 0x20000,
+    FOS_HIDEPINNEDPLACES = 0x40000,
+    FOS_NODEREFERENCELINKS = 0x100000,
+    FOS_DONTADDTORECENT = 0x2000000,
+    FOS_FORCESHOWHIDDEN = 0x10000000,
+    FOS_DEFAULTNOMINIMODE = 0x20000000,
+    FOS_FORCEPREVIEWPANEON = 0x40000000
+};
+typedef DWORD FILEOPENDIALOGOPTIONS;
+
+enum _TRANSFER_SOURCE_FLAGS {
+    TSF_NORMAL = 0,
+    TSF_FAIL_EXIST = 0,
+    TSF_RENAME_EXIST = 0x1,
+    TSF_OVERWRITE_EXIST = 0x2,
+    TSF_ALLOW_DECRYPTION = 0x4,
+    TSF_NO_SECURITY = 0x8,
+    TSF_COPY_CREATION_TIME = 0x10,
+    TSF_COPY_WRITE_TIME = 0x20,
+    TSF_USE_FULL_ACCESS = 0x40,
+    TSF_DELETE_RECYCLE_IF_POSSIBLE = 0x80,
+    TSF_COPY_HARD_LINK = 0x100,
+    TSF_COPY_LOCALIZED_NAME = 0x200,
+    TSF_MOVE_AS_COPY_DELETE = 0x400,
+    TSF_SUSPEND_SHELLEVENTS = 0x800
+};
+typedef DWORD TRANSFER_SOURCE_FLAGS;
+
+#define FOF_NO_UI (FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_NOCONFIRMMKDIR) // don't display any UI at all
+#define FOFX_SHOWELEVATIONPROMPT 0x00040000 
+
+#ifdef __cplusplus
+
+MIDL_INTERFACE("04b0f1a7-9490-44bc-96e1-4296a31252e2")
+IFileOperationProgressSink : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE StartOperations(void) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE FinishOperations(
+        /* [in] */ HRESULT hrResult) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PreRenameItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [string][unique][in] */ LPCWSTR pszNewName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PostRenameItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [string][in] */ LPCWSTR pszNewName,
+        /* [in] */ HRESULT hrRename,
+        /* [in] */ IShellItem *psiNewlyCreated) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PreMoveItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PostMoveItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName,
+        /* [in] */ HRESULT hrMove,
+        /* [in] */ IShellItem *psiNewlyCreated) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PreCopyItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PostCopyItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName,
+        /* [in] */ HRESULT hrCopy,
+        /* [in] */ IShellItem *psiNewlyCreated) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PreDeleteItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PostDeleteItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiItem,
+        /* [in] */ HRESULT hrDelete,
+        /* [in] */ IShellItem *psiNewlyCreated) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PreNewItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PostNewItem(
+        /* [in] */ DWORD dwFlags,
+        /* [in] */ IShellItem *psiDestinationFolder,
+        /* [string][unique][in] */ LPCWSTR pszNewName,
+        /* [string][unique][in] */ LPCWSTR pszTemplateName,
+        /* [in] */ DWORD dwFileAttributes,
+        /* [in] */ HRESULT hrNew,
+        /* [in] */ IShellItem *psiNewItem) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE UpdateProgress(
+        /* [in] */ UINT iWorkTotal,
+        /* [in] */ UINT iWorkSoFar) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ResetTimer(void) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE PauseTimer(void) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ResumeTimer(void) = 0;
+};
+
+MIDL_INTERFACE("947aab5f-0a5c-4c13-b4d6-4bf7836fc9f8")
+IFileOperation : public IUnknown{
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Advise(
+            /* [in] */ IFileOperationProgressSink *pfops,
+            /* [out] */ DWORD *pdwCookie) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE Unadvise(
+            /* [in] */ DWORD dwCookie) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetOperationFlags(
+            /* [in] */ DWORD dwOperationFlags) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetProgressMessage(
+            /* [string][in] */ LPCWSTR pszMessage) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetProgressDialog(
+            /* [in] */ /*IOperationsProgressDialog*/void *popd) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetProperties(
+            /* [in] */ /*IPropertyChangeArray*/void *pproparray) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE SetOwnerWindow(
+            /* [in] */ HWND hwndOwner) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE ApplyPropertiesToItem(
+            /* [in] */ IShellItem *psiItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE ApplyPropertiesToItems(
+            /* [in] */ IUnknown *punkItems) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE RenameItem(
+            /* [in] */ IShellItem *psiItem,
+            /* [string][in] */ LPCWSTR pszNewName,
+            /* [unique][in] */ IFileOperationProgressSink *pfopsItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE RenameItems(
+            /* [in] */ IUnknown *pUnkItems,
+            /* [string][in] */ LPCWSTR pszNewName) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE MoveItem(
+            /* [in] */ IShellItem *psiItem,
+            /* [in] */ IShellItem *psiDestinationFolder,
+            /* [string][unique][in] */ LPCWSTR pszNewName,
+            /* [unique][in] */ IFileOperationProgressSink *pfopsItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE MoveItems(
+            /* [in] */ IUnknown *punkItems,
+            /* [in] */ IShellItem *psiDestinationFolder) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE CopyItem(
+            /* [in] */ IShellItem *psiItem,
+            /* [in] */ IShellItem *psiDestinationFolder,
+            /* [string][unique][in] */ LPCWSTR pszCopyName,
+            /* [unique][in] */ IFileOperationProgressSink *pfopsItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE CopyItems(
+            /* [in] */ IUnknown *punkItems,
+            /* [in] */ IShellItem *psiDestinationFolder) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE DeleteItem(
+            /* [in] */ IShellItem *psiItem,
+            /* [unique][in] */ IFileOperationProgressSink *pfopsItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE DeleteItems(
+            /* [in] */ IUnknown *punkItems) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE NewItem(
+            /* [in] */ IShellItem *psiDestinationFolder,
+            /* [in] */ DWORD dwFileAttributes,
+            /* [string][unique][in] */ LPCWSTR pszName,
+            /* [string][unique][in] */ LPCWSTR pszTemplateName,
+            /* [unique][in] */ IFileOperationProgressSink *pfopsItem) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE PerformOperations(void) = 0;
+
+        virtual HRESULT STDMETHODCALLTYPE GetAnyOperationsAborted(
+            /* [out] */ BOOL *pfAnyOperationsAborted) = 0;
+
+};
+
+MIDL_INTERFACE("42f85136-db7e-439c-85f1-e4075d135fc8")
+IFileDialog : public IModalWindow
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE SetFileTypes(
+        /* [in] */ UINT cFileTypes,
+        /* [size_is][in] */ const /*COMDLG_FILTERSPEC*/void *rgFilterSpec) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetFileTypeIndex(
+        /* [in] */ UINT iFileType) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetFileTypeIndex(
+        /* [out] */ UINT *piFileType) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE Advise(
+        /* [in] */ /*IFileDialogEvents*/void *pfde,
+        /* [out] */ DWORD *pdwCookie) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE Unadvise(
+        /* [in] */ DWORD dwCookie) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetOptions(
+        /* [in] */ FILEOPENDIALOGOPTIONS fos) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetOptions(
+        /* [out] */ FILEOPENDIALOGOPTIONS *pfos) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetDefaultFolder(
+        /* [in] */ IShellItem *psi) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetFolder(
+        /* [in] */ IShellItem *psi) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetFolder(
+        /* [out] */ IShellItem **ppsi) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetCurrentSelection(
+        /* [out] */ IShellItem **ppsi) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetFileName(
+        /* [string][in] */ LPCWSTR pszName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetFileName(
+        /* [string][out] */ LPWSTR *pszName) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetTitle(
+        /* [string][in] */ LPCWSTR pszTitle) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetOkButtonLabel(
+        /* [string][in] */ LPCWSTR pszText) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetFileNameLabel(
+        /* [string][in] */ LPCWSTR pszLabel) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE GetResult(
+        /* [out] */ IShellItem **ppsi) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE AddPlace(
+        /* [in] */ IShellItem *psi,
+        /* [in] */ FDAP fdap) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetDefaultExtension(
+        /* [string][in] */ LPCWSTR pszDefaultExtension) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE Close(
+        /* [in] */ HRESULT hr) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetClientGuid(
+        /* [in] */ REFGUID guid) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ClearClientData(void) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE SetFilter(
+        /* [in] */ /*IShellItemFilter*/void *pFilter) = 0;
+
+};
+#endif // __cplusplus
+//////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __IPassportWizard_INTERFACE_DEFINED__

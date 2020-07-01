@@ -84,7 +84,7 @@ static void installV8NodeFilterTemplate(v8::Local<v8::FunctionTemplate> function
         {"FILTER_ACCEPT", 1, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
         {"FILTER_REJECT", 2, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
         {"FILTER_SKIP", 3, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
-        {"SHOW_ALL", 0xFFFFFFFF, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedLong},
+        {"SHOW_ALL", (int)0xFFFFFFFF, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedLong},
         {"SHOW_ELEMENT", 0x1, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedLong},
         {"SHOW_ATTRIBUTE", 0x2, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedLong},
         {"SHOW_TEXT", 0x4, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedLong},

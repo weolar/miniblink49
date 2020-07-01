@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <map>
 
 // Caveat emptor: we're going slightly crazy with macros here but the end
 // hopefully justifies the means. We have a lot of per-context properties
@@ -61,6 +62,8 @@ namespace node {
   V(decorated_private_symbol, "node:decorated")                               \
   V(npn_buffer_private_symbol, "node:npnBuffer")                              \
   V(processed_private_symbol, "node:processed")                               \
+  V(napi_env, "node:napi:env")                                                \
+  V(napi_wrapper, "node:napi:wrapper")                                        \
   V(selected_npn_buffer_private_symbol, "node:selectedNpnBuffer")             \
 
 // Strings are per-isolate primitives but Environment proxies them
@@ -257,6 +260,7 @@ namespace node {
   V(tty_constructor_template, v8::FunctionTemplate)                           \
   V(udp_constructor_function, v8::Function)                                   \
   V(write_wrap_constructor_function, v8::Function)                            \
+  V(url_constructor_function, v8::Function)                                   \
 
 class Environment;
 
@@ -434,8 +438,15 @@ class Environment {
   FN_BlinkMicrotaskSuppressionEnter BlinkMicrotaskSuppressionEnter;
   typedef void (* FN_BlinkMicrotaskSuppressionLeave)(Environment* self);
   FN_BlinkMicrotaskSuppressionLeave BlinkMicrotaskSuppressionLeave;
-  void InitBlinkMicrotaskSuppression();
+  void InitBlinkMicrotaskSuppression();  
 #endif
+  void AddCleanupHook(void(*fn)(void*), void* arg);
+  void RemoveCleanupHook(void(*fn)(void*), void* arg);
+  struct CleanupHookCallback;
+  std::vector<CleanupHookCallback*>* get_cleanup_hooks() { return cleanup_hooks_; }
+
+  void InitEnv();
+  void CleanEnv();
 
   static inline Environment* GetCurrent(v8::Isolate* isolate);
   static inline Environment* GetCurrent(v8::Local<v8::Context> context);
@@ -451,6 +462,9 @@ class Environment {
                                  uv_loop_t* loop);
   inline void CleanupHandles();
   inline void Dispose();
+
+  template <typename T, typename OnCloseCallback>
+  inline void CloseHandle(T* handle, OnCloseCallback callback);
 
   void AssignToContext(v8::Local<v8::Context> context);
 
@@ -567,12 +581,12 @@ class Environment {
 #undef V
 
   inline debugger::Agent* debugger_agent() {
-    return &debugger_agent_;
+    return debugger_agent_;
   }
 
 #if HAVE_INSPECTOR
   inline inspector::Agent* inspector_agent() {
-    return &inspector_agent_;
+    return inspector_agent_;
   }
 #endif
 
@@ -623,10 +637,10 @@ class Environment {
   bool trace_sync_io_;
   size_t makecallback_cntr_;
   int64_t async_wrap_uid_;
-  std::vector<int64_t> destroy_ids_list_;
-  debugger::Agent debugger_agent_;
+  std::vector<int64_t>* destroy_ids_list_;
+  debugger::Agent* debugger_agent_;
 #if HAVE_INSPECTOR
-  inspector::Agent inspector_agent_;
+  inspector::Agent* inspector_agent_;
 #endif
 
   HandleWrapQueue handle_wrap_queue_;
@@ -685,6 +699,31 @@ class Environment {
 
     DISALLOW_COPY_AND_ASSIGN(IsolateData);
   };
+
+ public:
+  struct CleanupHookCallback {
+    CleanupHookCallback(void(*fn)(void*), void* arg, uint64_t insertion_order_counter)
+    {
+      fn_ = fn;
+      arg_ = arg;
+      insertion_order_counter_ = insertion_order_counter;
+    }
+    void(*fn_)(void*);
+    void* arg_;
+
+    // We keep track of the insertion order for these objects, so that we can
+    // call the callbacks in reverse order when we are cleaning up.
+    uint64_t insertion_order_counter_;
+
+    static bool CompareGT(const CleanupHookCallback* a, const CleanupHookCallback* b) {
+      // Sort in descending order so that the most recently inserted callbacks are run first.
+      return a->insertion_order_counter_ > b->insertion_order_counter_;
+    }
+  };
+ private:
+  // Use an unordered_set, so that we have efficient insertion and removal.
+  std::vector<CleanupHookCallback*>* cleanup_hooks_;
+  uint64_t cleanup_hook_counter_ ;
 
   DISALLOW_COPY_AND_ASSIGN(Environment);
 };

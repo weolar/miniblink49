@@ -104,6 +104,15 @@ typedef _W64 int            intptr_t;
 #define _INTPTR_T_DEFINED
 #endif
 
+#ifndef _UINTPTR_T_DEFINED
+#ifdef  _WIN64
+typedef unsigned __int64    uintptr_t;
+#else
+typedef _W64 unsigned int   uintptr_t;
+#endif
+#define _UINTPTR_T_DEFINED
+#endif
+
 
 /* Maximum heap request the heap manager will attempt */
 

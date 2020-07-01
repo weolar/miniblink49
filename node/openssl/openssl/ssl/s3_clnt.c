@@ -1666,7 +1666,7 @@ int ssl3_get_key_exchange(SSL *s)
             goto err;
         }
 
-        if (EVP_PKEY_bits(pkey) <= SSL_C_EXPORT_PKEYLENGTH(s->s3->tmp.new_cipher)) {
+        if (openssl_EVP_PKEY_bits(pkey) <= SSL_C_EXPORT_PKEYLENGTH(s->s3->tmp.new_cipher)) {
             al = SSL_AD_UNEXPECTED_MESSAGE;
             SSLerr(SSL_F_SSL3_GET_KEY_EXCHANGE, SSL_R_UNEXPECTED_MESSAGE);
             goto f_err;
@@ -3538,7 +3538,7 @@ int ssl3_check_cert_and_algorithm(SSL *s)
     }
 #endif
     pkey = X509_get_pubkey(sc->peer_pkeys[idx].x509);
-    pkey_bits = EVP_PKEY_bits(pkey);
+    pkey_bits = openssl_EVP_PKEY_bits(pkey);
     i = X509_certificate_type(sc->peer_pkeys[idx].x509, pkey);
     EVP_PKEY_free(pkey);
 

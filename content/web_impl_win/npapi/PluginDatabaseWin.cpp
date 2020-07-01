@@ -76,15 +76,17 @@ static inline void addPluginPathsFromRegistry(HKEY rootKey, HashSet<String>& pat
         if (result != ERROR_SUCCESS)
             break;
 
-        WCHAR pathStr[_MAX_PATH];
-        DWORD pathStrSize = sizeof(pathStr);
+        Vector<WCHAR> pathStr;
+        DWORD pathStrSize = _MAX_PATH;
+        pathStr.resize(pathStrSize);
         DWORD type;
 
-        result = getRegistryValue(key, name, L"Path", &type, pathStr, &pathStrSize);
-        if (result != ERROR_SUCCESS || type != REG_SZ)
+        pathStrSize *= sizeof(WCHAR);
+        result = getRegistryValue(key, name, L"Path", &type, pathStr.data(), &pathStrSize);
+        if (result != ERROR_SUCCESS || type != REG_SZ || pathStrSize <= 2)
             continue;
 
-        paths.add(String(pathStr, pathStrSize / sizeof(WCHAR) - 1));
+        paths.add(String(pathStr.data(), (pathStrSize / sizeof(WCHAR)) - 1));
     }
 
     RegCloseKey(key);

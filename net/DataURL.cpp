@@ -25,7 +25,7 @@
  */
 
 #include "config.h"
-#include "DataURL.h"
+#include "net/DataURL.h"
 
 #include "third_party/WebKit/Source/wtf/text/UTF8.h"
 #include "third_party/WebKit/Source/wtf/text/Base64.h"
@@ -38,72 +38,9 @@
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
+#include "wtf/text/WTFStringUtil.h"
 
 namespace net {
-
-// void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl)
-// {
-//     if (!handle || !client)
-//         return;
-// 
-//     String url = kurl.string();
-// 
-//     int index = url.find(',');
-//     if (index == -1) {
-//         blink::WebURLError error;
-//         error.domain = blink::WebString(url);
-//         error.localizedDescription = blink::WebString::fromUTF8("Cannot show DataURL\n");
-//         client->didFail(handle, error);
-//         return;
-//     }
-// 
-//     String mediaType = url.substring(5, index - 5);
-//     String data = url.substring(index + 1);
-// 
-//     bool base64 = mediaType.endsWith(";base64", WTF::TextCaseInsensitive);
-//     if (base64)
-//         mediaType = mediaType.left(mediaType.length() - 7);
-// 
-//     if (mediaType.isEmpty())
-//         mediaType = "text/plain";
-// 
-//     String mimeType = blink::extractMIMETypeFromMediaType(WTF::AtomicString(mediaType));
-//     String charset = blink::extractCharsetFromMediaType(WTF::AtomicString(mediaType));
-// 
-//     if (charset.isEmpty())
-//         charset = "US-ASCII";
-// 
-//     blink::WebURLResponse response;
-//     response.initialize();
-//     response.setMIMEType(mimeType);
-//     response.setTextEncodingName(charset);
-//     response.setURL(blink::WebURL(kurl));
-// 
-//     int64_t totalEncodedDataLength = 0;
-//     if (base64) {
-//         data = blink::decodeURLEscapeSequences(data);
-//         client->didReceiveResponse(handle, response);
-// 
-//         Vector<char> out;
-//         if (WTF::base64Decode(data, out, WTF::isSpaceOrNewline) && out.size() > 0) {
-//             response.setExpectedContentLength(out.size());
-//             client->didReceiveData(handle, out.data(), out.size(), 0);
-//         }
-//         totalEncodedDataLength = out.size();
-//     } else {
-//         WTF::TextEncoding encoding(charset);
-//         data = blink::decodeURLEscapeSequences(data, encoding);
-//         client->didReceiveResponse(handle, response);
-// 
-//         WTF::CString encodedData = encoding.encode(data, WTF::URLEncodedEntitiesForUnencodables);
-//         response.setExpectedContentLength(encodedData.length());
-//         if (encodedData.length())
-//             client->didReceiveData(handle, encodedData.data(), encodedData.length(), 0);
-//         totalEncodedDataLength = encodedData.length();
-//     }
-// 
-//     client->didFinishLoading(handle, currentTime(), totalEncodedDataLength);
-// }
 
 void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl)
 {
@@ -133,7 +70,7 @@ void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* clien
 bool parseDataURL(const blink::KURL& kurl, String& mimeType, String& charset, Vector<char>& out)
 {
     out.clear();
-    String url = kurl.string();
+    String url = WTF::ensureStringToUTF8String(kurl.string());
 
     int index = url.find(',');
     if (index == -1)
@@ -157,14 +94,14 @@ bool parseDataURL(const blink::KURL& kurl, String& mimeType, String& charset, Ve
 
     int64_t totalEncodedDataLength = 0;
     if (base64) {
-        data = blink::decodeURLEscapeSequences(data);
+        data = WTF::ensureStringToUTF8String(blink::decodeURLEscapeSequences(data));
         if (!(WTF::base64Decode(data, out, WTF::isSpaceOrNewline) && out.size() > 0))
             return false;
         
         totalEncodedDataLength = out.size();
     } else {
         WTF::TextEncoding encoding(charset);
-        data = blink::decodeURLEscapeSequences(data, encoding);
+        data = WTF::ensureStringToUTF8String(blink::decodeURLEscapeSequences(data, encoding));
 
         WTF::CString encodedData = encoding.encode(data, WTF::URLEncodedEntitiesForUnencodables);
         if (0 == encodedData.length())

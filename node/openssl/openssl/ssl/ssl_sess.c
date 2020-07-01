@@ -984,7 +984,7 @@ X509 *SSL_SESSION_get0_peer(SSL_SESSION *s)
     return s->peer;
 }
 
-int SSL_SESSION_set1_id_context(SSL_SESSION *s, const unsigned char *sid_ctx,
+int openssl_SSL_SESSION_set1_id_context(SSL_SESSION *s, const unsigned char *sid_ctx,
                                 unsigned int sid_ctx_len)
 {
     if (sid_ctx_len > SSL_MAX_SID_CTX_LENGTH) {

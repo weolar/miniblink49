@@ -429,7 +429,7 @@ LayoutUnit RootInlineBox::selectionTopAdjustedForPrecedingBlock() const
 
 LayoutUnit RootInlineBox::selectionBottom() const
 {
-    LayoutUnit selectionBottom = m_selectionBottom;
+    LayoutUnit selectionBottom = layoutObject().document().inNoQuirksMode() ? m_selectionBottom : m_lineBottom;
 
     if (m_hasAnnotationsAfter)
         selectionBottom += !layoutObject().style()->isFlippedLinesWritingMode() ? computeUnderAnnotationAdjustment(m_lineBottom) : computeOverAnnotationAdjustment(m_lineBottom);

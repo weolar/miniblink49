@@ -639,6 +639,9 @@
     <ClInclude Include="..\..\v8_5_7\src\zone\zone-allocator.h">
       <Filter>src\zone</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\runtime\runtime.h">
+      <Filter>src\runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\v8_5_7\src\libplatform\default-platform.cc">

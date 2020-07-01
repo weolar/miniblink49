@@ -179,6 +179,11 @@ public:
     void remove(Resource*);
     bool contains(const Resource*) const;
 
+    const HeapHashSet<Member<Resource>>& getLiveResources() const
+    {
+        return m_liveResources;
+    }
+
     static KURL removeFragmentIdentifierIfNeeded(const KURL& originalURL);
 
     static String defaultCacheIdentifier();

@@ -138,7 +138,7 @@ typedef struct _NPVariant {
         NPString stringValue;
         NPObject *objectValue;
     } value;
-#ifdef TENCENT_CHANGES
+#if 0 // def TENCENT_CHANGES
     NPString extra;
 #endif
 } NPVariant;

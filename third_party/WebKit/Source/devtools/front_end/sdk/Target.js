@@ -27,7 +27,8 @@ WebInspector.Target = function(name, type, connection, parentTarget, callback)
     this._modelByConstructor = new Map();
 
     /** @type {!Object.<string, boolean>} */
-    this._capabilities = {};
+    this._capabilities = {}; 
+    // front_end\sdk\InspectorBackend.registerCommand.sendMessage
     this.pageAgent().canScreencast(this._initializeCapability.bind(this, WebInspector.Target.Capabilities.CanScreencast, this._loadedWithCapabilities.bind(this, callback)));
 }
 

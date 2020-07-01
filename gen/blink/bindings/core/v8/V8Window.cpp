@@ -13,6 +13,7 @@
 #include "bindings/core/v8/ScriptPromise.h"
 #include "bindings/core/v8/ScriptState.h"
 #include "bindings/core/v8/ScriptValue.h"
+#include "bindings/core/v8/V8External.h"
 #include "bindings/core/v8/V8AbstractEventListener.h"
 #include "bindings/core/v8/V8AnimationEffectReadOnly.h"
 #include "bindings/core/v8/V8AnimationEffectTiming.h"
@@ -368,6 +369,7 @@
 #include "bindings/core/v8/V8TreeWalker.h"
 #include "bindings/core/v8/V8UIEvent.h"
 #include "bindings/core/v8/V8URL.h"
+#include "bindings/core/v8/V8URLSearchParams.h"
 #include "bindings/core/v8/V8VTTCue.h"
 #include "bindings/core/v8/V8VTTRegion.h"
 #include "bindings/core/v8/V8VTTRegionList.h"
@@ -384,10 +386,12 @@
 #include "bindings/core/v8/V8XMLHttpRequestProgressEvent.h"
 #include "bindings/core/v8/V8XMLHttpRequestUpload.h"
 #include "bindings/core/v8/V8XMLSerializer.h"
-// #include "bindings/core/v8/V8XPathEvaluator.h"
-// #include "bindings/core/v8/V8XPathExpression.h"
-// #include "bindings/core/v8/V8XPathResult.h"
-// #include "bindings/core/v8/V8XSLTProcessor.h"
+#ifndef MINIBLINK_NO_XPATH
+#include "bindings/core/v8/V8XPathEvaluator.h"
+#include "bindings/core/v8/V8XPathExpression.h"
+#include "bindings/core/v8/V8XPathResult.h"
+#include "bindings/core/v8/V8XSLTProcessor.h"
+#endif
 #include "core/dom/ContextFeatures.h"
 #include "core/dom/Document.h"
 #include "core/dom/GlobalEventHandlers.h"
@@ -400,6 +404,12 @@
 #include "platform/TraceEvent.h"
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
+
+#if V8_MINOR_VERSION == 7
+namespace v8 {
+extern bool g_patchForCreateDataProperty;
+}
+#endif
 
 namespace blink {
 
@@ -426,19 +436,31 @@ template<class CallbackInfo>
 static bool DOMWindowCreateDataProperty(v8::Local<v8::Name> name, v8::Local<v8::Value> v8Value, const CallbackInfo& info)
 {
     DOMWindow* impl = V8Window::toImpl(info.Holder());
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value attributeName(info.GetIsolate(), name);
+#else
     v8::String::Utf8Value attributeName(name);
+#endif
     ExceptionState exceptionState(ExceptionState::SetterContext, *attributeName, "Window", info.Holder(), info.GetIsolate());
     if (!BindingSecurity::shouldAllowAccessToFrame(info.GetIsolate(), impl->frame(), exceptionState)) {
         exceptionState.throwIfNeeded();
         return false;
     }
     ASSERT(info.This()->IsObject());
-    return v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = true;
+#endif
+    bool b = v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = false;
+#endif
+
+    return b;
 }
 
 static void DOMWindowConstructorAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
 {
-    return; // 新chromium不再设置此回调
+    //return; // 新chromium不再设置此回调
 
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
     do {
@@ -1024,6 +1046,43 @@ static void applicationCacheAttributeGetter(const v8::PropertyCallbackInfo<v8::V
         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "applicationCache"), v8Value);
         v8SetReturnValue(info, v8Value);
     }
+}
+
+static void externalAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+
+    DOMWindow* impl = V8Window::toImpl(holder);
+
+    External* cppValue(WTF::getPtr(impl->external()));
+
+    // Keep the wrapper object for the return value alive as long as |this|
+    // object is alive in order to save creation time of the wrapper object.
+    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue))
+        return;
+    v8::Local<v8::Value> v8Value(toV8(cppValue, holder, info.GetIsolate()));
+    const char kKeepAliveKey[] = "KeepAlive#Window#external";
+    //V8HiddenValue::setHiddenValue(ScriptState::current(info.GetIsolate()), holder, v8AtomicString(info.GetIsolate(), StringView(kKeepAliveKey, sizeof kKeepAliveKey)), v8Value);
+    V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), kKeepAliveKey), v8Value);
+
+    v8SetReturnValue(info, v8Value);
+}
+
+static void externalAttributeGetterCallback(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    DOMWindowV8Internal::externalAttributeGetter(info);
+}
+
+static void externalAttributeSetter(v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
+{
+    // Prepare the value to be set.
+    v8::Local<v8::String> propertyName = v8AtomicString(info.GetIsolate(), "external");
+    v8CallBoolean(info.Holder()->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), propertyName, v8Value));
+}
+
+static void externalAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
+{
+    DOMWindowV8Internal::externalAttributeSetter(v8Value, info);
 }
 
 static void applicationCacheAttributeGetterCallback(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -5016,7 +5075,7 @@ static void onunhandledrejectionAttributeSetterCallback(v8::Local<v8::Name>, v8:
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
 static void performanceAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 
@@ -5159,12 +5218,8 @@ static void closeOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-    //zero
-#if V8_MINOR_VERSION == 7
+
     v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "close"));
-#else
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "close"));
-#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -5232,12 +5287,8 @@ static void focusOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-    //zero
-#if V8_MINOR_VERSION == 7
+
     v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "focus"));
-#else
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "focus"));
-#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -5286,12 +5337,8 @@ static void blurOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value>
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-    //zero
-#if V8_MINOR_VERSION == 7
+
     v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "blur"));
-#else
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "blur"));
-#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -5544,12 +5591,8 @@ static void postMessageOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8:
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-    //zero
-#if V8_MINOR_VERSION == 7
+
     v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "postMessage"));
-#else
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "postMessage"));
-#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -6952,12 +6995,8 @@ static void toStringOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Va
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-    //zero
-#if V8_MINOR_VERSION == 7
+
     v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "toString"));
-#else
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "toString"));
-#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -6979,7 +7018,7 @@ static void DOMWindowOriginSafeMethodSetter(v8::Local<v8::Name> name, v8::Local<
     if (holder.IsEmpty())
         return;
     DOMWindow* impl = V8Window::toImpl(holder);
-    v8::String::Utf8Value attributeName(name);
+    v8::String::Utf8Value attributeName(info.GetIsolate(), name);
     ExceptionState exceptionState(ExceptionState::SetterContext, *attributeName, "Window", info.Holder(), info.GetIsolate());
     if (!BindingSecurity::shouldAllowAccessToFrame(info.GetIsolate(), impl->frame(), exceptionState)) {
         exceptionState.throwIfNeeded();
@@ -7024,7 +7063,7 @@ static bool isOriginAccessibleFromDOMWindow(const SecurityOrigin* targetOrigin, 
     return accessingWindow && accessingWindow->document()->securityOrigin()->canAccessCheckSuborigins(targetOrigin);
 }
 
-static bool mycanAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow,
+static bool canAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow,
     SecurityReportingOption reportingOption = ReportSecurityError)
 {
     ASSERT_WITH_SECURITY_IMPLICATION(!(targetWindow && targetWindow->frame()) || targetWindow == targetWindow->frame()->domWindow());
@@ -7041,29 +7080,25 @@ static bool mycanAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWind
     return false;
 }
 
-static bool myshouldAllowAccessTo(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, DOMWindow* target, SecurityReportingOption reportingOption)
+static bool shouldAllowAccessTo(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, DOMWindow* target, SecurityReportingOption reportingOption)
 {
     ASSERT(target);
     const Frame* frame = target->frame();
     if (!frame || !frame->securityContext())
         return false;
 
-    bool b = mycanAccessFrame(isolate, accessingWindow, frame->securityContext()->securityOrigin(), target, reportingOption);
-
-    OutputDebugStringA("myshouldAllowAccessTo:\n");
-    String url1 = accessingWindow->document()->url().string();
-    url1.append("\n");
-    OutputDebugStringA(url1.utf8().data());
-
-    String url2 = target->document()->url().string();
-    url2.append(String::format("\n---- %d ----\n", b));
-    OutputDebugStringA(url2.utf8().data());
-
+    bool b = canAccessFrame(isolate, accessingWindow, frame->securityContext()->securityOrigin(), target, reportingOption);
     return b;
 }
 
-static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject)
+static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject
+#if V8_MINOR_VERSION == 7
+    , v8::Local<v8::Value> data
+#endif
+    )
 {
+    return true; // 全部放行
+
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     v8::Local<v8::Object> window = V8Window::findInstanceInPrototypeChain(accessedObject, isolate);
     if (window.IsEmpty())
@@ -7082,7 +7117,7 @@ static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8:
     if (targetFrame->loader().stateMachine()->isDisplayingInitialEmptyDocument())
         targetFrame->loader().didAccessInitialDocument();
 
-    return myshouldAllowAccessTo(isolate, toLocalDOMWindow(toDOMWindow(accessingContext)), targetWindow, DoNotReportSecurityError);
+    return shouldAllowAccessTo(isolate, toLocalDOMWindow(toDOMWindow(accessingContext)), targetWindow, DoNotReportSecurityError);
 }
 
 } // namespace DOMWindowV8Internal
@@ -7110,7 +7145,7 @@ static const V8DOMConfiguration::AttributeConfiguration shadowAttributes[] = {
 #pragma clang diagnostic ignored "-Wglobal-constructors"
 #endif
 static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
-    {"self", DOMWindowV8Internal::selfAttributeGetterCallback, /*DOMWindowV8Internal::selfAttributeSetterCallback*/0, 0, 0, 0, static_cast<v8::AccessControl>(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"self", DOMWindowV8Internal::selfAttributeGetterCallback, DOMWindowV8Internal::selfAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"name", DOMWindowV8Internal::nameAttributeGetterCallback, DOMWindowV8Internal::nameAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"history", DOMWindowV8Internal::historyAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"locationbar", DOMWindowV8Internal::locationbarAttributeGetterCallback, DOMWindowV8Internal::locationbarAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -7127,6 +7162,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"parent", DOMWindowV8Internal::parentAttributeGetterCallback, DOMWindowV8Internal::parentAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"frameElement", DOMWindowV8Internal::frameElementAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"navigator", DOMWindowV8Internal::navigatorAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"external", DOMWindowV8Internal::externalAttributeGetterCallback,   DOMWindowV8Internal::externalAttributeSetterCallback, 0, 0, 0,      static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"screen", DOMWindowV8Internal::screenAttributeGetterCallback, DOMWindowV8Internal::screenAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"innerWidth", DOMWindowV8Internal::innerWidthAttributeGetterCallback, DOMWindowV8Internal::innerWidthAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"innerHeight", DOMWindowV8Internal::innerHeightAttributeGetterCallback, DOMWindowV8Internal::innerHeightAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -7232,7 +7268,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"onpopstate", DOMWindowV8Internal::onpopstateAttributeGetterCallback, DOMWindowV8Internal::onpopstateAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"onstorage", DOMWindowV8Internal::onstorageAttributeGetterCallback, DOMWindowV8Internal::onstorageAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"onunload", DOMWindowV8Internal::onunloadAttributeGetterCallback, DOMWindowV8Internal::onunloadAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     {"performance", DOMWindowV8Internal::performanceAttributeGetterCallback, DOMWindowV8Internal::performanceAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 #endif // MINIBLINK_NOT_IMPLEMENTED
     {"AnimationEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8AnimationEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -7379,13 +7415,13 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"MediaList", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MediaQueryList", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaQueryList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MediaQueryListEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaQueryListEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MessageChannel", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessageChannel::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MessageEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessageEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MessagePort", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessagePort::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MessageChannel", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessageChannel::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MessageEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessageEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MessagePort", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MessagePort::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MouseEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MouseEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MutationEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MutationObserver", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationObserver::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"MutationRecord", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationRecord::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MutationEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MutationObserver", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationObserver::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"MutationRecord", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MutationRecord::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"NamedNodeMap", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8NamedNodeMap::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Navigator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Navigator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Node", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Node::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -7393,13 +7429,13 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"NodeIterator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8NodeIterator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"NodeList", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8NodeList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"PageTransitionEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PageTransitionEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"Performance", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Performance::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceEntry", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceEntry::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceMark", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceMark::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceMeasure", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceMeasure::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceNavigation", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceNavigation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceResourceTiming", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceResourceTiming::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//     {"PerformanceTiming", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceTiming::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"Performance", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Performance::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceEntry", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceEntry::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceMark", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceMark::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceMeasure", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceMeasure::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceNavigation", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceNavigation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceResourceTiming", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceResourceTiming::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"PerformanceTiming", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PerformanceTiming::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"PopStateEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PopStateEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"ProcessingInstruction", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ProcessingInstruction::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"ProgressEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ProgressEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -7509,21 +7545,26 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"TreeWalker", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TreeWalker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"UIEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8UIEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"URL", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8URL::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"URLSearchParams", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8URLSearchParams::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"VTTCue", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VTTCue::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"ValidityState", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ValidityState::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebKitCSSMatrix", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebKitCSSMatrix::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WheelEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WheelEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Window", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
- //  {"Worker", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Worker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
+    {"Worker", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Worker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif
     {"XMLDocument", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLDocument::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLHttpRequest", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequest::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLHttpRequestEventTarget", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequestEventTarget::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLHttpRequestProgressEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequestProgressEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLHttpRequestUpload", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequestUpload::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XMLSerializer", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLSerializer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathEvaluator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathEvaluator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathExpression", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathExpression::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathResult", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"XMLSerializer", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLSerializer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#ifndef MINIBLINK_NO_XPATH
+    {"XPathEvaluator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathEvaluator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"XPathExpression", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathExpression::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"XPathResult", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif
 };
 #if defined(COMPONENT_BUILD) && defined(WIN32) && COMPILER(CLANG)
 #pragma clang diagnostic pop
@@ -7547,7 +7588,7 @@ static const V8DOMConfiguration::MethodConfiguration V8WindowMethods[] = {
     {"resizeTo", DOMWindowV8Internal::resizeToMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts},
     {"resizeBy", DOMWindowV8Internal::resizeByMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts},
     {"getSelection", DOMWindowV8Internal::getSelectionMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
-    {"find", DOMWindowV8Internal::findMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
+    //{"find", DOMWindowV8Internal::findMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
     {"getMatchedCSSRules", DOMWindowV8Internal::getMatchedCSSRulesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
     {"webkitRequestAnimationFrame", DOMWindowV8Internal::webkitRequestAnimationFrameMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
     {"webkitCancelAnimationFrame", DOMWindowV8Internal::webkitCancelAnimationFrameMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
@@ -7566,7 +7607,7 @@ static void configureShadowObjectTemplate(v8::Local<v8::ObjectTemplate> templ, v
 
     // Install a security handler with V8.
     //zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
 
 #else
     templ->SetAccessCheckCallbacks(V8Window::namedSecurityCheckCustom, V8Window::indexedSecurityCheckCustom, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
@@ -8047,7 +8088,7 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
     if (RuntimeEnabledFeatures::sharedWorkerEnabled()) {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
         {"SharedWorker", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SharedWorker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
@@ -8151,8 +8192,10 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
     instanceTemplate->SetInternalFieldCount(V8Window::internalFieldCount);
 
     // Cross-origin access check
+#if V8_MINOR_VERSION == 7
     //instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
-
+#endif
+    
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
 }

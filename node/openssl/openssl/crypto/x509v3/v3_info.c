@@ -122,7 +122,7 @@ static STACK_OF(CONF_VALUE) *i2v_AUTHORITY_INFO_ACCESS(X509V3_EXT_METHOD
         if (!ret)
             break;
         vtmp = sk_CONF_VALUE_value(ret, i);
-        i2t_ASN1_OBJECT(objtmp, sizeof objtmp, desc->method);
+        openssl_i2t_ASN1_OBJECT(objtmp, sizeof objtmp, desc->method);
         nlen = strlen(objtmp) + strlen(vtmp->name) + 5;
         ntmp = OPENSSL_malloc(nlen);
         if (!ntmp) {

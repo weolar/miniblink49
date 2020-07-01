@@ -14,6 +14,15 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
     return a;
 }
 
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, struct std::char_traits<char> >(
+    basic_ostream<char, char_traits<char> > & a, char const * b)
+{
+    ostringstream aCopy;
+    aCopy.write(b, strlen(b));
+    a << aCopy;
+    return a;
+}
+
 }
 
 #endif // USING_VC6RT

@@ -155,6 +155,7 @@ class V8_EXPORT Debug {
    */
   typedef void (*DebugMessageDispatchHandler)();
 
+  static bool SetDebugEventListener(Isolate* isolate, EventCallback that, Local<Value> data = Local<Value>()) { return SetDebugEventListener(that, data); }
   static bool SetDebugEventListener(EventCallback that,
                                     Local<Value> data = Local<Value>());
 
@@ -252,6 +253,7 @@ class V8_EXPORT Debug {
    * least one DebugEventListener or MessageHandler is set.
    */
   static Local<Context> GetDebugContext();
+  static Local<Context> GetDebugContext(Isolate* isolate) { return GetDebugContext(); }
 
 
   /**

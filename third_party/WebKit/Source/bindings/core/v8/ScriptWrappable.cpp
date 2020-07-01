@@ -63,4 +63,29 @@ v8::Local<v8::Object> ScriptWrappable::associateWithWrapper(v8::Isolate* isolate
     return V8DOMWrapper::associateObjectWithWrapper(isolate, this, wrapperTypeInfo, wrapper);
 }
 
+void ScriptWrappable::disposeWrapper(const v8::WeakCallbackInfo<ScriptWrappable>& data)
+{
+    auto scriptWrappable = reinterpret_cast<ScriptWrappable*>(data.GetInternalField(v8DOMWrapperObjectIndex));
+    RELEASE_ASSERT_WITH_SECURITY_IMPLICATION(scriptWrappable == this);
+    RELEASE_ASSERT(containsWrapper());
+
+    m_wrapper.Reset();
+}
+
+void ScriptWrappable::firstWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data)
+{
+    data.GetParameter()->disposeWrapper(data);
+    data.SetSecondPassCallback(secondWeakCallback);
+}
+
+void ScriptWrappable::secondWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data)
+{
+    // FIXME: I noticed that 50%~ of minor GC cycle times can be consumed
+    // inside data.GetParameter()->deref(), which causes Node destructions. We should
+    // make Node destructions incremental.
+    auto scriptWrappable = reinterpret_cast<ScriptWrappable*>(data.GetInternalField(v8DOMWrapperObjectIndex));
+    auto typeInfo = reinterpret_cast<WrapperTypeInfo*>(data.GetInternalField(v8DOMWrapperTypeIndex));
+    typeInfo->derefObject(scriptWrappable);
+}
+
 } // namespace blink

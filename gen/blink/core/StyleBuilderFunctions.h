@@ -1243,6 +1243,7 @@ public:
     static void applyInheritCSSPropertyVisibility(StyleResolverState&);
     static void applyValueCSSPropertyVisibility(StyleResolverState&, CSSValue*);
 
+	static void applyValueCSSPropertyVariable(StyleResolverState& state, CSSValue* value);
 };
 
 } // namespace blink

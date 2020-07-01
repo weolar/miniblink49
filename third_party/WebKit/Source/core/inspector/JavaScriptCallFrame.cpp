@@ -137,7 +137,8 @@ int JavaScriptCallFrame::scopeType(int scopeIndex) const
     v8::Local<v8::Object> callFrame = m_callFrame.newLocal(m_isolate);
     v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callFrame->Get(v8AtomicString(m_isolate, "scopeType")));
     v8::Local<v8::Array> scopeType = v8::Local<v8::Array>::Cast(V8ScriptRunner::callInternalFunction(func, callFrame, 0, 0, m_isolate).ToLocalChecked());
-    return scopeType->Get(scopeIndex)->Int32Value();
+
+    return scopeType->Get(scopeIndex)->Int32Value(m_isolate->GetCurrentContext()).FromJust();
 }
 
 v8::Local<v8::Value> JavaScriptCallFrame::thisObject() const
@@ -157,7 +158,7 @@ bool JavaScriptCallFrame::isAtReturn() const
     v8::Local<v8::Value> result = m_callFrame.newLocal(m_isolate)->Get(v8AtomicString(m_isolate, "isAtReturn"));
     if (result.IsEmpty() || !result->IsBoolean())
         return false;
-    return result->BooleanValue();
+    return result->BooleanValue(m_isolate);
 }
 
 v8::Local<v8::Value> JavaScriptCallFrame::returnValue() const
@@ -173,7 +174,8 @@ v8::Local<v8::Value> JavaScriptCallFrame::evaluateWithExceptionDetails(v8::Local
         expression,
         scopeExtension
     };
-    v8::TryCatch tryCatch;
+
+    v8::TryCatch tryCatch(m_isolate);
     v8::Local<v8::Object> wrappedResult = v8::Object::New(m_isolate);
     v8::Local<v8::Value> result;
     if (V8ScriptRunner::callInternalFunction(evalFunction, callFrame, WTF_ARRAY_LENGTH(argv), argv, m_isolate).ToLocal(&result)) {
@@ -214,7 +216,7 @@ v8::Local<v8::Object> JavaScriptCallFrame::createExceptionDetails(v8::Isolate* i
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "text"), message->Get());
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "url"), message->GetScriptOrigin().ResourceName());
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "scriptId"), v8::Integer::New(isolate, message->GetScriptOrigin().ScriptID()->Value()));
-    exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "line"), v8::Integer::New(isolate, message->GetLineNumber()));
+    exceptionDetails->Set(isolate->GetCurrentContext(), v8::String::NewFromUtf8(isolate, "line"), v8::Integer::New(isolate, message->GetLineNumber(isolate->GetCurrentContext()).FromJust()));
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "column"), v8::Integer::New(isolate, message->GetStartColumn()));
     if (!message->GetStackTrace().IsEmpty())
         exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "stackTrace"), message->GetStackTrace()->AsArray());

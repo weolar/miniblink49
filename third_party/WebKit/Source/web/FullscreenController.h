@@ -53,7 +53,7 @@ public:
 
     void enterFullScreenForElement(Element*);
     void exitFullScreenForElement(Element*);
-#ifdef IMPLEMENTED_NEWEST_BLINK
+#ifndef IMPLEMENTED_NEWEST_BLINK
     bool isFullscreen() { return m_fullScreenFrame; }
 #else
     bool isFullscreen() { return false; }
@@ -67,7 +67,7 @@ protected:
 
 private:
     void updatePageScaleConstraints(bool removeConstraints);
-#ifdef IMPLEMENTED_NEWEST_BLINK
+#ifndef IMPLEMENTED_NEWEST_BLINK
     WebViewImpl* m_webViewImpl;
 
     float m_exitFullscreenPageScaleFactor;

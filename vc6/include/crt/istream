@@ -36,7 +36,7 @@ public:
 		{if (good())
 			{if (tie() != 0)
 				tie()->flush();
-			if (!_Noskip && flags() & skipws)
+			if (!_Noskip && (flags() & ios_base::skipws))
 				{const _Ctype& _Fac = _USE(getloc(), _Ctype);
 				_TRY_IO_BEGIN
 				int_type _C = rdbuf()->sgetc();

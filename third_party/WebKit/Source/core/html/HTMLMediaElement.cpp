@@ -75,6 +75,7 @@
 #include "public/platform/Platform.h"
 #include "public/platform/WebContentDecryptionModule.h"
 #include "public/platform/WebInbandTextTrack.h"
+#include "web/WebInputEventConversion.h"
 #include "wtf/CurrentTime.h"
 #include "wtf/MainThread.h"
 #include "wtf/MathExtras.h"
@@ -1032,6 +1033,9 @@ void HTMLMediaElement::startPlayerLoad()
         requestURL.setPass(String());
 
     m_player->load(loadType(), requestURL, corsMode());
+#ifndef MINIBLINK_NO_CHANGE
+    configureMediaControls();
+#endif
 }
 
 void HTMLMediaElement::setPlayerPreload()
@@ -3623,6 +3627,25 @@ bool HTMLMediaElement::isInteractiveContent() const
 
 void HTMLMediaElement::defaultEventHandler(Event* event)
 {
+    WebMediaPlayer* player = webMediaPlayer();
+    LayoutObject* obj = layoutObject();
+    if (player && event->isMouseEvent() && obj) {
+        MouseEvent* evt = (MouseEvent*)event;
+        WebMouseEventBuilder webEvent(nullptr, obj, *evt);
+        
+        FrameView* view = document().view();
+        IntPoint absolutePoint = roundedIntPoint(obj->localToAbsolute(FloatPoint(), UseTransforms));
+        IntPoint r = view->contentsToRootFrame(absolutePoint);
+        player->setContentsToNativeWindowOffset(r);
+
+        IntPoint pointInRootFrame = IntPoint(webEvent.windowX, webEvent.windowY);
+        pointInRootFrame = view->contentsToRootFrame(pointInRootFrame);
+        webEvent.windowX = pointInRootFrame.x();
+        webEvent.windowY = pointInRootFrame.y();
+
+        player->handleMouseEvent(webEvent);
+    }
+
     if (event->type() == EventTypeNames::focusin) {
         if (mediaControls())
             mediaControls()->mediaElementFocused();

@@ -22,14 +22,14 @@ namespace base {
 
 namespace {
 
-void OnNoMemory() {
-  // Kill the process. This is important for security, since WebKit doesn't
-  // NULL-check many memory allocations. If a malloc fails, returns NULL, and
-  // the buffer is then used, it provides a handy mapping of memory starting at
-  // address 0 for an attacker to utilize.
-  __debugbreak();
-  _exit(1);
-}
+// void OnNoMemory() {
+//   // Kill the process. This is important for security, since WebKit doesn't
+//   // NULL-check many memory allocations. If a malloc fails, returns NULL, and
+//   // the buffer is then used, it provides a handy mapping of memory starting at
+//   // address 0 for an attacker to utilize.
+//   __debugbreak();
+//   _exit(1);
+// }
 
 // HeapSetInformation function pointer.
 typedef BOOL (WINAPI* HeapSetFn)(HANDLE, HEAP_INFORMATION_CLASS, PVOID, SIZE_T);

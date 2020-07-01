@@ -26,9 +26,9 @@ namespace DataTransferItemPartialV8Internal {
 
 static void webkitGetAsEntryMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-    DataTransferItem* impl = V8DataTransferItem::toImpl(info.Holder());
-    ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
-    v8SetReturnValue(info, DataTransferItemFileSystem::webkitGetAsEntry(executionContext, *impl));
+//     DataTransferItem* impl = V8DataTransferItem::toImpl(info.Holder());
+//     ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
+//     v8SetReturnValue(info, DataTransferItemFileSystem::webkitGetAsEntry(executionContext, *impl)); // weolar:暂时不实现这接口
 }
 
 static void webkitGetAsEntryMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)

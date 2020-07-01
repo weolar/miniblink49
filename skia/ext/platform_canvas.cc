@@ -18,10 +18,10 @@ bool SupportsPlatformPaint(const SkCanvas* canvas) {
   return platform_device && platform_device->SupportsPlatformPaint();
 }
 
-PlatformSurface BeginPlatformPaint(SkCanvas* canvas) {
+PlatformSurface BeginPlatformPaint(void* hWnd, SkCanvas* canvas) {
   PlatformDevice* platform_device = GetPlatformDevice(GetTopDevice(*canvas));
   if (platform_device)
-    return platform_device->BeginPlatformPaint();
+    return platform_device->BeginPlatformPaint(hWnd);
 
   return 0;
 }
@@ -37,6 +37,14 @@ void DrawToNativeContext(SkCanvas* canvas, PlatformSurface context, int x,
   PlatformDevice* platform_device = GetPlatformDevice(GetTopDevice(*canvas));
   if (platform_device)
     platform_device->DrawToNativeContext(context, x, y, src_rect);
+}
+
+bool DrawToNativeLayeredContext(SkCanvas* canvas, PlatformSurface context, const PlatformRect* src_rect, const PlatformRect* client_rect)
+{
+    PlatformDevice* platform_device = GetPlatformDevice(GetTopDevice(*canvas));
+    if (platform_device)
+        return platform_device->DrawToNativeLayeredContext(context, src_rect, client_rect);
+    return false;
 }
 
 void MakeOpaque(SkCanvas* canvas, int x, int y, int width, int height) {

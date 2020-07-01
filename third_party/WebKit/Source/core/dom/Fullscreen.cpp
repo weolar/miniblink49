@@ -429,8 +429,10 @@ void Fullscreen::didEnterFullScreenForElement(Element* element)
     if (!document()->isActive())
         return;
 
+#if MINIBLINK_HAS_FULLSCREEN_STYLE
     if (m_fullScreenLayoutObject)
         m_fullScreenLayoutObject->unwrapLayoutObject();
+#endif
 
     m_fullScreenElement = element;
 
@@ -438,6 +440,7 @@ void Fullscreen::didEnterFullScreenForElement(Element* element)
     // when the element is removed from the normal flow. Only do this for a LayoutBox, as only
     // a box will have a frameRect. The placeholder will be created in setFullScreenLayoutObject()
     // during layout.
+#if MINIBLINK_HAS_FULLSCREEN_STYLE
     LayoutObject* layoutObject = m_fullScreenElement->layoutObject();
     bool shouldCreatePlaceholder = layoutObject && layoutObject->isBox();
     if (shouldCreatePlaceholder) {
@@ -455,6 +458,7 @@ void Fullscreen::didEnterFullScreenForElement(Element* element)
     document()->updateLayoutTreeIfNeeded();
 
     m_fullScreenElement->didBecomeFullscreenElement();
+#endif
 
     if (document()->frame())
         document()->frame()->eventHandler().scheduleHoverStateUpdate();
@@ -474,11 +478,14 @@ void Fullscreen::didExitFullScreenForElement(Element*)
 
     m_fullScreenElement->setContainsFullScreenElementOnAncestorsCrossingFrameBoundaries(false);
 
+#if MINIBLINK_HAS_FULLSCREEN_STYLE
     if (m_fullScreenLayoutObject)
         m_fullScreenLayoutObject->unwrapLayoutObject();
-
+#endif
     m_fullScreenElement = nullptr;
+#if MINIBLINK_HAS_FULLSCREEN_STYLE
     document()->setNeedsStyleRecalc(SubtreeStyleChange, StyleChangeReasonForTracing::create(StyleChangeReason::FullScreen));
+#endif
 
     if (document()->frame())
         document()->frame()->eventHandler().scheduleHoverStateUpdate();

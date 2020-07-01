@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_vc6|Win32">
+      <Configuration>Release_vc6</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E014DAC2-3EBF-4730-BAA4-81EBC7BE83C5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ots</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath>
+    </ReferencePath>
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_OT;HB_NO_MT;HB_NO_UNICODE_FUNCS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <Lib />
+    <ClCompile>
+      <PreprocessorDefinitions>USING_VC6RT=1;_CRT_SECURE_NO_WARNINGS;HAVE_OT;HB_NO_MT;HB_NO_UNICODE_FUNCS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4530</DisableSpecificWarnings>
+      <Optimization>MinSpace</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_OT;HB_NO_MT;HB_NO_UNICODE_FUNCS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_OT;HB_NO_MT;HB_NO_UNICODE_FUNCS;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS;HAVE_OT;HB_NO_MT;HB_NO_UNICODE_FUNCS;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-atomic-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-blob.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-deserialize-json.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-deserialize-text.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-cache-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-common.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-deprecated.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-face-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-face.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-font-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-font.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-icu.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-mutex-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-object-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-open-file-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-open-type-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-cmap-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-font.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-glyf-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-head-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-hhea-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-hmtx-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-common-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gdef-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gpos-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gsub-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gsubgpos-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-jstf-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-map-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-maxp-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-fallback.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-table.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-win1256.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-machine.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-myanmar-machine.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-machine.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-fallback-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-normalize-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-tag.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-set-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-set.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-impl-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-list.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-unicode-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-unicode.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-utf-private.hh" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-version.h" />
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-blob.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-serialize.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-buffer.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-common.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-face.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-fallback-shape.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-font.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-font.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-map.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-default.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-hangul.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-hebrew.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-table.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-myanmar.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-thai.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-tibetan.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-table.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-fallback.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-normalize.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-tag.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-set.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shape.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shaper.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-unicode.cc" />
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-warning.cc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

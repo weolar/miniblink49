@@ -2,6 +2,7 @@
 #ifndef _FUNCTIONAL_
 #define _FUNCTIONAL_
 #include <xstddef>
+#include <functionalvc6.h>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -80,6 +81,7 @@ template<class _Ty>
 	bool operator()(const _Ty& _X, const _Ty& _Y) const
 		{return (_X < _Y); }
 	};
+
 		// TEMPLATE STRUCT greater_equal
 template<class _Ty>
 	struct greater_equal : binary_function<_Ty, _Ty, bool> {
@@ -149,9 +151,11 @@ template<class _Bfn>
 	class binder1st
 	: public unary_function<typename _Bfn::second_argument_type,
 		typename _Bfn::result_type> {
+	typedef typename _Bfn::first_argument_type _Bfn_first_argument_type;
 public:
 	binder1st(const _Bfn& _X,
-		typename const _Bfn::first_argument_type& _Y)
+		//typename const _Bfn::first_argument_type& _Y)
+		const _Bfn_first_argument_type& _Y)
 		: op(_X), value(_Y) {}
 	result_type operator()(const argument_type& _X) const
 		{return (op(value, _X)); }
@@ -182,8 +186,7 @@ protected:
 		// TEMPLATE FUNCTION bind2nd
 template<class _Bfn, class _Ty> inline
 	binder2nd<_Bfn> bind2nd(const _Bfn& _X, const _Ty& _Y)
-		{return (binder2nd<_Bfn>(_X,
-			_Bfn::second_argument_type(_Y))); }
+		{return (binder2nd<_Bfn>(_X, typename _Bfn::second_argument_type(_Y))); }
 		// TEMPLATE CLASS pointer_to_unary_function
 template<class _A, class _R>
 	class pointer_to_unary_function

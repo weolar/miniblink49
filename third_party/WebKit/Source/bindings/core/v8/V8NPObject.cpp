@@ -119,7 +119,7 @@ static void npObjectInvokeImpl(const v8::FunctionCallbackInfo<v8::Value>& info, 
     case InvokeMethod:
         if (npObject->_class->invoke) {
             v8::Local<v8::String> functionName = v8::Local<v8::String>::Cast(info.Data());
-            NPIdentifier identifier = getStringIdentifier(functionName);
+            NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), functionName);
             retval = npObject->_class->invoke(npObject, identifier, npArgs.get(), numArgs, &result);
         }
         break;
@@ -234,7 +234,6 @@ V8TemplateMapTraits::MapType* V8TemplateMapTraits::MapFromWeakCallbackInfo(const
     return &V8NPTemplateMap::sharedInstance(data.GetIsolate()).m_map;
 }
 
-
 static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<v8::Object> self, NPIdentifier identifier, v8::Local<v8::Value> key)
 {
     NPObject* npObject = v8ObjectToNPObject(self);
@@ -243,7 +242,6 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
     // has already been deleted.
     if (!npObject || !_NPN_IsAlive(npObject))
         return V8ThrowException::throwReferenceError(isolate, "NPObject deleted");
-
 
     if (npObject->_class->hasProperty && npObject->_class->getProperty && npObject->_class->hasProperty(npObject, identifier)) {
         if (!_NPN_IsAlive(npObject))
@@ -259,7 +257,6 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
             returnValue = convertNPVariantToV8Object(isolate, &result, npObject);
         _NPN_ReleaseVariantValue(&result);
         return returnValue;
-
     }
 
     if (!_NPN_IsAlive(npObject))
@@ -290,7 +287,7 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
 
 void npObjectNamedPropertyGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(name);
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
     v8SetReturnValue(info, npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, name));
 }
 
@@ -302,7 +299,7 @@ void npObjectIndexedPropertyGetter(uint32_t index, const v8::PropertyCallbackInf
 
 void npObjectGetNamedProperty(v8::Local<v8::Object> self, v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(name);
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
     v8SetReturnValue(info, npObjectGetProperty(info.GetIsolate(), self, identifier, name));
 }
 
@@ -314,7 +311,7 @@ void npObjectGetIndexedProperty(v8::Local<v8::Object> self, uint32_t index, cons
 
 void npObjectQueryProperty(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Integer>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(name);
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
     if (npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, name).IsEmpty())
         return;
     v8SetReturnValueInt(info, 0);
@@ -348,7 +345,7 @@ static v8::Local<v8::Value> npObjectSetProperty(v8::Local<v8::Object> self, NPId
 
 void npObjectNamedPropertySetter(v8::Local<v8::String> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(name);
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
     v8SetReturnValue(info, npObjectSetProperty(info.Holder(), identifier, value, info.GetIsolate()));
 }
 
@@ -361,7 +358,7 @@ void npObjectIndexedPropertySetter(uint32_t index, v8::Local<v8::Value> value, c
 
 void npObjectSetNamedProperty(v8::Local<v8::Object> self, v8::Local<v8::String> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(name);
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
     v8SetReturnValue(info, npObjectSetProperty(self, identifier, value, info.GetIsolate()));
 }
 

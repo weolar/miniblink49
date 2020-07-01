@@ -448,8 +448,8 @@ WebViewImpl::WebViewImpl(WebViewClient* client)
     MediaKeysController::provideMediaKeysTo(*m_page, &m_mediaKeysClientImpl);
     provideSpeechRecognitionTo(*m_page, SpeechRecognitionClientProxy::create(client ? client->speechRecognizer() : 0));
     provideDatabaseClientTo(*m_page, DatabaseClientImpl::create());
-    provideWorkerGlobalScopeProxyProviderTo(*m_page, WorkerGlobalScopeProxyProviderImpl::create());
 #endif // MINIBLINK_NOT_IMPLEMENTED
+    provideWorkerGlobalScopeProxyProviderTo(*m_page, WorkerGlobalScopeProxyProviderImpl::create());
 
     provideContextFeaturesTo(*m_page, ContextFeaturesClientImpl::create());
     provideStorageQuotaClientTo(*m_page, StorageQuotaClientImpl::create());

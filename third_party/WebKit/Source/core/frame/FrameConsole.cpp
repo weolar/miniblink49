@@ -122,36 +122,34 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
 
     //////////////////////////////////////////////////////////////////////////
     // weolar
-    WTF::String argumentString = consoleMessage->message();
-    if (consoleMessage->scriptArguments())
-        consoleMessage->scriptArguments()->getAllArgumentAsString(argumentString);
-
-    WTF::String outstr;
-    outstr.append(String::format("FrameConsole:[%d],[", lineNumber));
-    outstr.append(argumentString);
-    outstr.append("],[");
-    outstr.append(messageURL);
-    outstr.append("]\n");
-
-    //saveDumpFile("xx", (char*)outstr.characters16(), outstr.length() * 2);
-    Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr);
-    OutputDebugStringW(utf16.data());
-
-    if (WTF::kNotFound != outstr.find("callstack")) {
-        for (size_t i = 0; i < consoleMessage->callStack()->size(); ++i) {
-            int num = consoleMessage->callStack()->at(i).lineNumber();
-            outstr.append(String::format(" %d", num));
-            outstr.append("\n");
-            Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr);
-            OutputDebugStringW(utf16.data());
-        }
-    }
-
+//     WTF::String argumentString = consoleMessage->message();
+//     if (consoleMessage->scriptArguments())
+//         consoleMessage->scriptArguments()->getAllArgumentAsString(argumentString);
+//
+//     WTF::String outstr;
+//     outstr.append(String::format("FrameConsole:[%d],[", lineNumber));
+//     outstr.append(argumentString);
+//     outstr.append("],[");
+//     outstr.append(messageURL);
+//     outstr.append("]\n");
+//     Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr, true);
+//     OutputDebugStringW(utf16.data());
     //////////////////////////////////////////////////////////////////////////
 
     String stackTrace;
     if (reportedCallStack)
         stackTrace = FrameConsole::formatStackTraceString(consoleMessage->message(), reportedCallStack);
+
+    //////////////////////////////////////////////////////////////////////////
+
+//     if (!stackTrace.isNull() && !stackTrace.isEmpty() && WTF::kNotFound != outstr.find("__callstack__")) {
+//         Vector<UChar> stackTraceString = WTF::ensureUTF16UChar(stackTrace, false);
+//         stackTraceString.append(L'\n');
+//         stackTraceString.append(L'\0');
+//         OutputDebugStringW(stackTraceString.data());
+//     }
+    //////////////////////////////////////////////////////////////////////////
+
     frame().chromeClient().addMessageToConsole(m_frame, consoleMessage->source(), consoleMessage->level(), consoleMessage->message(), lineNumber, messageURL, stackTrace);
 }
 
@@ -173,13 +171,13 @@ String FrameConsole::formatStackTraceString(const String& originalMessage, PassR
     for (size_t i = 0; i < callStack->size(); ++i) {
         const ScriptCallFrame& frame = callStack->at(i);
         stackTrace.append("\n    at " + (frame.functionName().length() ? frame.functionName() : "(anonymous function)"));
-        stackTrace.appendLiteral(" (");
-        stackTrace.append(frame.sourceURL());
-        stackTrace.append(':');
+        stackTrace.appendLiteral(" [");
         stackTrace.appendNumber(frame.lineNumber());
-        stackTrace.append(':');
+        stackTrace.append("]:[");
         stackTrace.appendNumber(frame.columnNumber());
-        stackTrace.append(')');
+        stackTrace.append("]:[");
+        stackTrace.append(frame.sourceURL());
+        stackTrace.append(']');
     }
 
     return stackTrace.toString();

@@ -180,6 +180,9 @@ void InlineTextBoxPainter::paint(const PaintInfo& paintInfo, const LayoutPoint& 
     if (m_inlineTextBox.hasHyphen())
         length = textRun.length();
 
+//     if (textRun.codePath() == TextRun::ForceComplex)
+//         return;
+
     int selectionStart = 0;
     int selectionEnd = 0;
     if (paintSelectedTextOnly || paintSelectedTextSeparately)

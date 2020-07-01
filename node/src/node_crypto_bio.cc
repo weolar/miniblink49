@@ -1,3 +1,7 @@
+#undef HAVE_OPENSSL // weolar
+
+#if HAVE_OPENSSL
+
 #include "node_crypto_bio.h"
 #include "openssl/bio.h"
 #include "util.h"
@@ -468,3 +472,5 @@ NodeBIO::~NodeBIO() {
 }
 
 }  // namespace node
+
+#endif // #ifdef NODE_UES_OPENSSL

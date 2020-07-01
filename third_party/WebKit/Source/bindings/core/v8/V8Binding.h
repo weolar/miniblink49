@@ -670,7 +670,8 @@ WillBeHeapVector<RefPtrWillBeMember<T>> toRefPtrWillBeMemberNativeArray(v8::Loca
     WillBeHeapVector<RefPtrWillBeMember<T>> result;
     result.reserveInitialCapacity(length);
     v8::Local<v8::Object> object = v8::Local<v8::Object>::Cast(v8Value);
-    v8::TryCatch block;
+    v8::TryCatch block(isolate);
+
     for (uint32_t i = 0; i < length; ++i) {
         v8::Local<v8::Value> element;
         if (!v8Call(object->Get(isolate->GetCurrentContext(), i), element, block)) {
@@ -738,7 +739,8 @@ HeapVector<Member<T>> toMemberNativeArray(v8::Local<v8::Value> value, int argume
     HeapVector<Member<T>> result;
     result.reserveInitialCapacity(length);
     v8::Local<v8::Object> object = v8::Local<v8::Object>::Cast(v8Value);
-    v8::TryCatch block;
+    v8::TryCatch block(isolate);
+
     for (uint32_t i = 0; i < length; ++i) {
         v8::Local<v8::Value> element;
         if (!v8Call(object->Get(isolate->GetCurrentContext(), i), element, block)) {
@@ -781,7 +783,8 @@ VectorType toImplArray(v8::Local<v8::Value> value, int argumentIndex, v8::Isolat
     VectorType result;
     result.reserveInitialCapacity(length);
     v8::Local<v8::Object> object = v8::Local<v8::Object>::Cast(value);
-    v8::TryCatch block;
+    v8::TryCatch block(isolate);
+
     for (uint32_t i = 0; i < length; ++i) {
         v8::Local<v8::Value> element;
         if (!v8Call(object->Get(isolate->GetCurrentContext(), i), element, block)) {
@@ -849,7 +852,8 @@ inline bool toV8Sequence(v8::Local<v8::Value> value, uint32_t& length, v8::Isola
     // FIXME: The specification states that the length property should be used as fallback, if value
     // is not a platform object that supports indexed properties. If it supports indexed properties,
     // length should actually be one greater than value's maximum indexed property index.
-    v8::TryCatch block;
+
+    v8::TryCatch block(isolate);
     v8::Local<v8::Value> lengthValue;
     if (!v8Call(object->Get(isolate->GetCurrentContext(), lengthSymbol), lengthValue, block)) {
         exceptionState.rethrowV8Exception(block.Exception());

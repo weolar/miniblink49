@@ -28,9 +28,7 @@
 #include "base/base_export.h"
 #include "base/basictypes.h"
 #include "base/compiler_specific.h"
-//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/include/base/cef_scoped_ptr.h"
-//#endif
+#include "base/memory/scoped_ptr.h"
 
 namespace base {
 

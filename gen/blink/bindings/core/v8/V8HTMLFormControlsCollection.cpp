@@ -107,7 +107,7 @@ static void namedPropertyQuery(v8::Local<v8::Name> name, const v8::PropertyCallb
 {
     HTMLFormControlsCollection* impl = V8HTMLFormControlsCollection::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(name.As<v8::String>());
-    v8::String::Utf8Value namedProperty(name);
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), name);
     ExceptionState exceptionState(ExceptionState::GetterContext, *namedProperty, "HTMLFormControlsCollection", info.Holder(), info.GetIsolate());
     bool result = impl->namedPropertyQuery(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())

@@ -74,7 +74,7 @@ AtomicString V8CustomXPathNSResolver::lookupNamespaceURI(const String& prefix)
     }
 
     // Catch exceptions from calling the namespace resolver.
-    v8::TryCatch tryCatch;
+    v8::TryCatch tryCatch(isolate);
     tryCatch.SetVerbose(true); // Print exceptions to console.
 
     const int argc = 1;

@@ -67,6 +67,18 @@ static void preconnectHost(PreloadRequest* request)
     preconnect(host, crossOrigin);
 }
 
+// some ali url is use GBK by mistake
+// TODO ScriptLoader::prepareScript
+bool isBlacklistWebsiteToUseUtf8(const String& url)
+{
+    if (WTF::kNotFound != url.find("g.alicdn.com/kissy/k/1.4.4/seed.js") ||
+        WTF::kNotFound != url.find("g.alicdn.com/kg/??select") ||
+        WTF::kNotFound != url.find("g.alicdn.com/kg/??slide")
+        )
+        return true;
+    return false;
+}
+
 void HTMLResourcePreloader::preload(PassOwnPtr<PreloadRequest> preload)
 {
     if (preload->isPreconnect()) {
@@ -81,8 +93,14 @@ void HTMLResourcePreloader::preload(PassOwnPtr<PreloadRequest> preload)
     // making Document::completeURLWithOverride logic to be statically accessible.
     if (request.url().protocolIsData())
         return;
-    if (preload->resourceType() == Resource::Script || preload->resourceType() == Resource::CSSStyleSheet || preload->resourceType() == Resource::ImportResource)
-        request.setCharset(preload->charset().isEmpty() ? m_document->charset().string() : preload->charset());
+    if (preload->resourceType() == Resource::Script || preload->resourceType() == Resource::CSSStyleSheet || preload->resourceType() == Resource::ImportResource) {
+        String charset = preload->charset().isEmpty() ? m_document->charset().string() : preload->charset();
+#ifndef MINIBLINK_NO_CHANGE
+        if (preload->resourceType() == Resource::Script && isBlacklistWebsiteToUseUtf8(preload->resourceURL()))
+            charset = "UTF-8";
+#endif
+        request.setCharset(charset);
+    }
     request.setForPreload(true);
     Platform::current()->histogramCustomCounts("WebCore.PreloadDelayMs", static_cast<int>(1000 * (monotonicallyIncreasingTime() - preload->discoveryTime())), 0, 2000, 20);
     m_document->loader()->startPreload(preload->resourceType(), request);

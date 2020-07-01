@@ -136,13 +136,18 @@ T StyleBuilderConverter::convertLineWidth(StyleResolverState& state, CSSValue* v
     if (valueID == CSSValueInvalid) {
         // Any original result that was >= 1 should not be allowed to fall below 1.
         // This keeps border lines from vanishing.
-        T result = primitiveValue->computeLength<T>(state.cssToLengthConversionData());
-        if (state.style()->effectiveZoom() < 1.0f && result < 1.0) {
-            T originalLength = primitiveValue->computeLength<T>(state.cssToLengthConversionData().copyWithAdjustedZoom(1.0));
-            if (originalLength >= 1.0)
-                return 1.0;
-        }
-        return result;
+
+        // https://chromium.googlesource.com/chromium/src/+/f73426be35a4b02a6d029407db459a87bc5e4688
+        // FIXME: We are moving to use the full page zoom implementation to handle
+        // high-dpi.  In that case specyfing a border-width of less than 1px would
+        // result in a border that is one device pixel thick.  With this change that
+        // would instead be rounded up to 2 device pixels.  Consider clamping it to
+        // device pixels or zoom adjusted CSS pixels instead of raw CSS pixels.
+        // Reference crbug.com/485650 and crbug.com/382483
+        double result = primitiveValue->computeLength<double>(state.cssToLengthConversionData());
+        if (result > 0.0 && result < 1.0)
+            return 1.0;
+        return clampTo<T>(roundForImpreciseConversion<T>(result), defaultMinimumForClamp<T>(), defaultMaximumForClamp<T>());
     }
     ASSERT_NOT_REACHED();
     return 0;

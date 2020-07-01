@@ -254,7 +254,13 @@
     void setWideViewportQuirkEnabled(bool wideViewportQuirkEnabled); \
     bool xssAuditorEnabled() const { return m_xssAuditorEnabled; } \
     void setXSSAuditorEnabled(bool xssAuditorEnabled); \
-    void setFromStrings(const String& name, const String& value);
+    void setFromStrings(const String& name, const String& value); \
+    void setLanguage(const String& language); \
+    const String& language()  const { return m_language; } \
+    void setVendor(const String& vendor); \
+    const String& Vendor()  const { return m_vendor; } \
+    void setproductSub(const String& productSub); \
+    const String& productSub()  const { return m_productSub; } \
 // End of SETTINGS_GETTERS_AND_SETTERS.
 
 #define SETTINGS_MEMBER_VARIABLES \
@@ -382,6 +388,9 @@
     bool m_webSecurityEnabled : 1; \
     bool m_wideViewportQuirkEnabled : 1; \
     bool m_xssAuditorEnabled : 1; \
+    String m_language; \
+    String m_vendor; \
+    String m_productSub; \
 // End of SETTINGS_MEMBER_VARIABLES.
 
 #define SETTINGS_INITIALIZER_LIST \
@@ -500,6 +509,9 @@
     , m_webSecurityEnabled(true) \
     , m_wideViewportQuirkEnabled(false) \
     , m_xssAuditorEnabled(false) \
+    , m_language("zh-cn") \
+    , m_vendor("Google Inc.") \
+    , m_productSub("20030107")
 // End of SETTINGS_INITIALIZER_LIST.
 
 #define SETTINGS_SETTER_BODIES \
@@ -2019,7 +2031,25 @@ void Settings::setFromStrings(const String& name, const String& value) \
         ); \
         return; \
     } \
-}
+} \
+void Settings::setLanguage(const String& language) \
+{ \
+    if (m_language == language) \
+        return; \
+    m_language = language; \
+} \
+void Settings::setVendor(const String& vendor) \
+{ \
+    if (m_vendor == vendor) \
+        return; \
+    m_vendor = vendor; \
+} \
+void Settings::setproductSub(const String& productSub) \
+{ \
+    if (m_productSub == productSub) \
+        return; \
+    m_productSub = productSub; \
+} \
 // End of SETTINGS_SETTER_BODIES.
 
 #endif // SettingsMacros_h

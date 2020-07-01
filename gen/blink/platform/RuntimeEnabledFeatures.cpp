@@ -816,4 +816,16 @@ bool RuntimeEnabledFeatures::isSVG1DOMEnabled = true;
 bool RuntimeEnabledFeatures::isScrollCustomizationEnabled = false;
 bool RuntimeEnabledFeatures::isScrollRestorationEnabled = false;
 
+bool RuntimeEnabledFeatures::isCspCheckEnabled = false;
+bool RuntimeEnabledFeatures::isMemoryCacheEnabled = false;
+bool RuntimeEnabledFeatures::isNavigationToNewWindowEnabled = false;
+bool RuntimeEnabledFeatures::isUpdataInOtherThreadEnabled = false;
+bool RuntimeEnabledFeatures::isNpapiPluginsEnabled = false;
+bool RuntimeEnabledFeatures::isHeadlessEnabled = false;
+bool RuntimeEnabledFeatures::isFreshLocalFileEnabled = false;
+bool RuntimeEnabledFeatures::isAlwaysIsNotSolideColor = false;
+bool RuntimeEnabledFeatures::isDrawDirtyDebugLineEnabled = false;
+bool RuntimeEnabledFeatures::isDrawTileLineEnabled = false;
+bool RuntimeEnabledFeatures::isCssVariablesEnabled = true;
+
 } // namespace blink

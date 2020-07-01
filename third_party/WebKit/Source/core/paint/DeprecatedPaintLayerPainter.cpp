@@ -452,7 +452,7 @@ static bool paintForFixedRootBackground(const DeprecatedPaintLayer* layer, Paint
 bool DeprecatedPaintLayerPainter::shouldPaintLayerInSoftwareMode(const DeprecatedPaintLayerPaintingInfo& paintingInfo, PaintLayerFlags paintFlags)
 {
     DisableCompositingQueryAsserts disabler;
-
+    
     return m_paintLayer.compositingState() == NotComposited
         || (paintingInfo.paintBehavior & PaintBehaviorFlattenCompositingLayers)
         || ((paintFlags & PaintLayerPaintingReflection) && !m_paintLayer.has3DTransform())

@@ -32,7 +32,7 @@ TextPainter::TextPainter(GraphicsContext* context, const Font& font, const TextR
     , m_emphasisMarkOffset(0)
     , m_combinedText(0)
 {
-    ASSERT(run.codePath() != TextRun::ForceComplex);
+    //ASSERT(run.codePath() != TextRun::ForceComplex);
 }
 
 TextPainter::~TextPainter()

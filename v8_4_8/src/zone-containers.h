@@ -37,16 +37,17 @@ class ZoneVector : public std::vector<T, zone_allocator<T>> {
   ZoneVector(size_t size, T def, Zone* zone)
       : std::vector<T, zone_allocator<T>>(size, def, zone_allocator<T>(zone)) {}
 
-  // Constructs a new vector and fills it with the contents of the range
-  // [first, last).
-  template <class InputIt>
-  ZoneVector(InputIt first, InputIt last, Zone* zone)
-	  : std::vector<T, zone_allocator<T>>(first, last,
-		  zone_allocator<T>(zone)) {}
-
 #if USING_VC6RT == 1
   explicit ZoneVector(const zone_allocator<T>& alloc)
 	  : std::vector<T, zone_allocator<T>>(zone_allocator<T>(((zone_allocator<T>*)(&alloc))->zone())) {}
+#else
+  // Constructs a new vector and fills it with the contents of the range
+  // [first, last).
+//   template <class InputIt>
+//   ZoneVector(InputIt first, InputIt last, Zone* zone)
+//       : std::vector<T, zone_allocator<T>>(first, last,
+//           zone_allocator<T>(zone)) {
+//   } 
 #endif
 };
 

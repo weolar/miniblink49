@@ -25,8 +25,10 @@ template<class _Ty> inline
 		(_SIZT)_N * sizeof (_Ty))); }
 		// TEMPLATE FUNCTION _Construct
 template<class _T1, class _T2> inline
-	void _Construct(_T1 _FARQ *_P, const _T2& _V)
-	{new ((void _FARQ *)_P) _T1(_V); }
+void _Construct(_T1 _FARQ *_P, _T2&& _V)
+{
+    new ((void _FARQ *)_P) _T1(move(_V));
+}
 		// TEMPLATE FUNCTION _Destroy
 template<class _Ty> inline
 	void _Destroy(_Ty _FARQ *_P)

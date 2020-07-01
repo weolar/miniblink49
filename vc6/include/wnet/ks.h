@@ -3486,9 +3486,9 @@ typedef interface IKsControl* PIKSCONTROL;
     STDMETHOD_(NTSTATUS, QueryInterface)(THIS_                   \
         REFIID InterfaceId,                                     \
         PVOID* Interface                                        \
-        ) PURE;                                                 \
-    STDMETHOD_(ULONG,AddRef)(THIS) PURE;                        \
-    STDMETHOD_(ULONG,Release)(THIS) PURE;
+        ) = 0;                                                 \
+    STDMETHOD_(ULONG,AddRef)(THIS) = 0;                        \
+    STDMETHOD_(ULONG,Release)(THIS) = 0;
 
 #endif //!defined(DEFINE_ABSTRACT_UNKNOWN)
 
@@ -3504,21 +3504,21 @@ DECLARE_INTERFACE_(IKsControl,IUnknown)
         IN OUT PVOID PropertyData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-        ) PURE;
+        ) = 0;
     STDMETHOD_(NTSTATUS, KsMethod)(THIS_
         IN PKSMETHOD Method,
         IN ULONG MethodLength,
         IN OUT PVOID MethodData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-        ) PURE;
+        ) = 0;
     STDMETHOD_(NTSTATUS, KsEvent)(THIS_
         IN PKSEVENT Event OPTIONAL,
         IN ULONG EventLength,
         IN OUT PVOID EventData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-        ) PURE;
+        ) = 0;
 };
 
 typedef interface IKsReferenceClock* PIKSREFERENCECLOCK;
@@ -3530,21 +3530,21 @@ DECLARE_INTERFACE_(IKsReferenceClock,IUnknown)
     DEFINE_ABSTRACT_UNKNOWN() // For C
 
     STDMETHOD_(LONGLONG,GetTime)(THIS
-        ) PURE;
+        ) = 0;
     STDMETHOD_(LONGLONG,GetPhysicalTime)(THIS
-        ) PURE;
+        ) = 0;
     STDMETHOD_(LONGLONG,GetCorrelatedTime)(THIS_
         OUT PLONGLONG SystemTime
-        ) PURE;
+        ) = 0;
     STDMETHOD_(LONGLONG,GetCorrelatedPhysicalTime)(THIS_
         OUT PLONGLONG SystemTime
-        ) PURE;
+        ) = 0;
     STDMETHOD_(NTSTATUS, GetResolution)(THIS_
         OUT PKSRESOLUTION Resolution
-        ) PURE;
+        ) = 0;
     STDMETHOD_(NTSTATUS, GetState)(THIS_
         OUT PKSSTATE State
-        ) PURE;
+        ) = 0;
 };
 #undef INTERFACE
 
@@ -3559,7 +3559,7 @@ DECLARE_INTERFACE_(IKsDeviceFunctions, IUnknown)
         IN ULONG NumberOfMapRegisters,
         IN ULONG MaxMappingsByteCount,
         IN ULONG MappingTableStride
-        ) PURE;
+        ) = 0;
 };
 
 #undef INTERFACE

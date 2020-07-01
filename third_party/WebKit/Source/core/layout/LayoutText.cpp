@@ -138,7 +138,7 @@ static void makeCapitalized(String* string, UChar previous)
 
 static bool fixComplexPathToSimpleFont(bool isSimplePath, String& text)
 {
-#ifndef NO_WEOLAR_CHANGE
+#ifdef MINIBLINK_NO_HARFBUZZ
     if (text.isNull() || text.isEmpty())
         return true;
     Vector<UChar> forceSimpleText = text.charactersWithNullTermination();

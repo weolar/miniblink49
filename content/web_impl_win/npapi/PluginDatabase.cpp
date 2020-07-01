@@ -26,12 +26,13 @@
 
 #include "config.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
-
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
-
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/platform/FileMetadata.h"
+#include "platform/RuntimeEnabledFeatures.h"
+#include "third_party/WebKit/Source/wtf/text/CString.h"
+#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #if ENABLE(NETSCAPE_PLUGIN_METADATA_CACHE)
 #include "FileSystem.h"
 #endif
@@ -39,9 +40,6 @@
 #define PURE = 0
 #include <windows.h>
 #include <Shlwapi.h>
-
-#include "third_party/WebKit/Source/wtf/text/CString.h"
-#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
 using namespace blink;
 
@@ -290,23 +288,26 @@ String PluginDatabase::MIMETypeForExtension(const String& extension) const
 
 PluginPackage* PluginDatabase::findPlugin(const KURL& url, String& mimeType)
 {
+    if (!blink::RuntimeEnabledFeatures::npapiPluginsEnabled())
+        return nullptr;
+
     if (!mimeType.isEmpty())
         return pluginForMIMEType(mimeType);
     
     String filename = url.lastPathComponent();
     if (filename.endsWith('/'))
-        return 0;
+        return nullptr;
     
     int extensionPos = filename.reverseFind('.');
     if (extensionPos == -1)
-        return 0;
+        return nullptr;
     
     String mimeTypeForExtension = MIMETypeForExtension(filename.substring(extensionPos + 1));
     PluginPackage* plugin = pluginForMIMEType(mimeTypeForExtension);
     if (!plugin) {
         // FIXME: if no plugin could be found, query Windows for the mime type
         // corresponding to the extension.
-        return 0;
+        return nullptr;
     }
     
     mimeType = mimeTypeForExtension;
@@ -332,6 +333,8 @@ void PluginDatabase::getDeletedPlugins(PluginSet& plugins) const
 {
     PluginSet::const_iterator end = m_plugins.end();
     for (PluginSet::const_iterator it = m_plugins.begin(); it != end; ++it) {
+        if ((*it)->isVirtual())
+            continue;
         if (!fileExistsAndIsNotDisabled((*it)->path()))
             plugins.add(*it);
     }
@@ -557,8 +560,8 @@ void PluginDatabase::loadPersistentMetadataCache()
 
 static bool writeUTF8String(PlatformFileHandle file, const String& string)
 {
-    CString utf8String = string.utf8();
-    int length = utf8String.length() + 1;
+    Vector<UChar> utf8String = WTF::ensureUTF16UChar(string, false);
+    int length = utf8String.size() + 1;
     return writeToFile(file, utf8String.data(), length) == length;
 }
 

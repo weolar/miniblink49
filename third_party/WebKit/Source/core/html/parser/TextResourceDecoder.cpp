@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright (C) 1999 Lars Knoll (knoll@mpi-hd.mpg.de)
     Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2012 Apple Inc. All rights reserved.
     Copyright (C) 2005, 2006, 2007 Alexey Proskuryakov (ap@nypop.com)
@@ -229,6 +229,10 @@ size_t TextResourceDecoder::checkForBOM(const char* data, size_t len)
         lengthOfBOM = 4;
     }
 
+#ifndef MINIBLINK_NOCHANGE
+    if (lengthOfBOM > 0 && lengthOfBOM > len) // 修复只有ff fe两字节时的js会崩溃的问题
+        lengthOfBOM = len;
+#endif
     if (lengthOfBOM || bufferLength + len >= 4)
         m_checkedForBOM = true;
 

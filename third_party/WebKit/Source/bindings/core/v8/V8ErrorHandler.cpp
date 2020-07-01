@@ -72,7 +72,8 @@ v8::Local<v8::Value> V8ErrorHandler::callListenerFunction(ScriptState* scriptSta
         error = v8::Null(isolate());
 
     v8::Local<v8::Value> parameters[5] = { v8String(isolate(), errorEvent->message()), v8String(isolate(), errorEvent->filename()), v8::Integer::New(isolate(), errorEvent->lineno()), v8::Integer::New(isolate(), errorEvent->colno()), error };
-    v8::TryCatch tryCatch;
+    
+    v8::TryCatch tryCatch(isolate());
     tryCatch.SetVerbose(true);
     v8::MaybeLocal<v8::Value> result;
     if (scriptState->executionContext()->isWorkerGlobalScope()) {

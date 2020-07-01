@@ -12,218 +12,284 @@
 _STD_BEGIN
 #define _DEQUEMAPSIZ	2
 #define _DEQUESIZ (4096 < sizeof (_Ty) ? 1 : 4096 / sizeof (_Ty))
-		// TEMPLATE CLASS deque
-template<class _Ty, class _A = allocator<_Ty> >
-	class deque {
+    // TEMPLATE CLASS deque
+    template<class _Ty, class _A = allocator<_Ty> >
+class deque {
 public:
-	typedef deque<_Ty, _A> _Myt;
-	typedef _A allocator_type;
-	typedef typename _A::size_type size_type;
-	typedef typename _A::difference_type difference_type;
-	typedef typename _A::pointer _Tptr;
-	typedef typename _A::const_pointer _Ctptr;
-	typedef _POINTER_X(_Tptr, _A) _Mapptr;
-	typedef typename _A::reference reference;
-	typedef typename _A::const_reference const_reference;
-	typedef typename _A::value_type value_type;
-		// CLASS iterator
-	class iterator : public _Ranit<_Ty, difference_type> {
-	public:
-		friend class deque<_Ty, _A>;
-		iterator()
-			: _First(0), _Last(0), _Next(0), _Map(0) {}
-		iterator(_Tptr _P, _Mapptr _M)
-			: _First(*_M), _Last(*_M + _DEQUESIZ),
-				_Next(_P), _Map(_M) {}
-		reference operator*() const
-			{return (*_Next); }
-		_Tptr operator->() const
-			{return (&**this); }
-		iterator& operator++()
-			{if (++_Next == _Last)
-				{_First = *++_Map;
-				_Last = _First + _DEQUESIZ;
-				_Next = _First; }
-			return (*this); }
-		iterator operator++(int)
-			{iterator _Tmp = *this;
-			++*this;
-			return (_Tmp); }
-		iterator& operator--()
-			{if (_Next == _First)
-				{_First = *--_Map;
-				_Last = _First + _DEQUESIZ;
-				_Next = _Last; }
-			--_Next;
-			return (*this); }
-		iterator operator--(int)
-			{iterator _Tmp = *this;
-			--*this;
-			return (_Tmp); }
-		iterator& operator+=(difference_type _N)
-			{_Add(_N);
-			return (*this); }
-		iterator& operator-=(difference_type _N)
-			{return (*this += -_N); }
-		iterator operator+(difference_type _N) const
-			{iterator _Tmp = *this;
-			return (_Tmp += _N); }
-		iterator operator-(difference_type _N) const
-			{iterator _Tmp = *this;
-			return (_Tmp -= _N); }
-		difference_type operator-(const iterator& _X) const
-			{return (_Map == _X._Map ? _Next - _X._Next
-				: _DEQUESIZ * (_Map - _X._Map - 1)
-				+ (_Next - _First) + (_X._Last - _X._Next)); }
-		reference operator[](difference_type _N) const
-			{return (*(*this + _N)); }
-		bool operator==(const iterator& _X) const
-			{return (_Next == _X._Next); }
-		bool operator!=(const iterator& _X) const
-			{return (!(*this == _X)); }
-		bool operator<(const iterator& _X) const
-			{return (_Map < _X._Map
-				|| _Map == _X._Map && _Next < _X._Next); }
-		bool operator<=(const iterator& _X) const
-			{return (!(_X < *this)); }
-		bool operator>(const iterator& _X) const
-			{return (_X < *this); }
-		bool operator>=(const iterator& _X) const
-			{return (!(*this < _X)); }
-	protected:
-		void _Add(difference_type _N)
-			{difference_type _Off = _N + _Next - _First;
-			difference_type _Moff = (0 <= _Off)
-				? _Off / (difference_type)_DEQUESIZ
-				: -((((difference_type)_DEQUESIZ) - 1 - _Off) / ((difference_type)_DEQUESIZ));
-			if (_Moff == 0)
-				_Next += _N;
-			else
-				{_Map += _Moff;
-				_First = *_Map;
-				_Last = _First + _DEQUESIZ;
-				_Next = _First + (_Off - _Moff * _DEQUESIZ); }}
-	_PROTECTED:
-		_Tptr _First, _Last, _Next;
-		_Mapptr _Map;
-		};
-		// CLASS const_iterator
-	class const_iterator : public iterator {
-	public:
-		const_iterator()
-			{}
-		const_iterator(_Tptr _P, _Mapptr _M)
-			: iterator(_P, _M) {}
-		const_iterator(const iterator& _X)
-			: iterator(_X) {}
-		const_reference operator*() const
-			{return (*_Next); }
-		_Ctptr operator->() const
-			{return (&**this); }
-		const_iterator& operator++()
-			{if (++_Next == _Last)
-				{_First = *++_Map;
-				_Last = _First + _DEQUESIZ;
-				_Next = _First; }
-			return (*this); }
-		const_iterator operator++(int)
-			{const_iterator _Tmp = *this;
-			++*this;
-			return (_Tmp); }
-		const_iterator& operator--()
-			{if (_Next == _First)
-				{_First = *--_Map;
-				_Last = _First + _DEQUESIZ;
-				_Next = _Last; }
-			--_Next;
-			return (*this); }
-		const_iterator operator--(int)
-			{const_iterator _Tmp = *this;
-			--*this;
-			return (_Tmp); }
-		const_iterator& operator+=(difference_type _N)
-			{_Add(_N);
-			return (*this); }
-		const_iterator& operator-=(difference_type _N)
-			{return (*this += -_N); }
-		const_iterator operator+(difference_type _N) const
-			{iterator _Tmp = *this;
-			return (_Tmp += _N); }
-		const_iterator operator-(difference_type _N) const
-			{iterator _Tmp = *this;
-			return (_Tmp -= _N); }
-		difference_type operator-(const const_iterator& _X) const
-			{return (_Map == _X._Map ? _Next - _X._Next
-				: _DEQUESIZ * (_Map - _X._Map - 1)
-				+ (_Next - _First) + (_X._Last - _X._Next)); }
-		const_reference operator[](difference_type _N) const
-			{return (*(*this + _N)); }
-		bool operator==(const const_iterator& _X) const
-			{return (_Next == _X._Next); }
-		bool operator!=(const const_iterator& _X) const
-			{return (!(*this == _X)); }
-		bool operator<(const const_iterator& _X) const
-			{return (_Map < _X._Map
-				|| _Map == _X._Map && _Next < _X._Next); }
-		bool operator<=(const const_iterator& _X) const
-			{return (!(_X < *this)); }
-		bool operator>(const const_iterator& _X) const
-			{return (_X < *this); }
-		bool operator>=(const const_iterator& _X) const
-			{return (!(*this < _X)); }
-		};
-	typedef reverse_iterator<const_iterator, value_type,
-		const_reference, _Ctptr, difference_type>
-			const_reverse_iterator;
-	typedef reverse_iterator<iterator, value_type,
-		reference, _Tptr, difference_type>
-			reverse_iterator;
-	explicit deque(const _A& _Al = _A())
-		: allocator(_Al),
-			_First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
-		{}
-	explicit deque(size_type _N, const _Ty& _V = _Ty(),
-		const _A& _Al = _A())
-		: allocator(_Al),
-			_First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
-		{insert(begin(), _N, _V); }
-	deque(const _Myt& _X)
-		: allocator(_X.allocator),
-			_First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
-		{copy(_X.begin(), _X.end(), back_inserter(*this)); }
-	typedef const_iterator _It;
-		deque(_It _F, _It _L, const _A& _Al = _A())
-		: allocator(_Al),
-			_First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
-		{copy(_F, _L, back_inserter(*this)); }
-	~deque()
-		{while (!empty())
-			pop_front(); }
-	_Myt& operator=(const _Myt& _X)
-		{if (this != &_X)
-			{iterator _S;
-			if (_X.size() <= size())
-				{_S = copy(_X.begin(), _X.end(), begin());
-				erase(_S, end()); }
-			else
-				{const_iterator _Sx = _X.begin() + size();
-				_S = copy(_X.begin(), _Sx, begin());
-				copy(_Sx, _X.end(), inserter(*this, _S)); }}
-		return (*this); }
+    typedef deque<_Ty, _A> _Myt;
+    typedef _A allocator_type;
+    typedef typename _A::size_type size_type;
+    typedef typename _A::difference_type difference_type;
+    typedef typename _A::pointer _Tptr;
+    typedef typename _A::const_pointer _Ctptr;
+    typedef _POINTER_X(_Tptr, _A) _Mapptr;
+    typedef typename _A::reference reference;
+    typedef typename _A::const_reference const_reference;
+    typedef typename _A::value_type value_type;
+
+    // CLASS iterator
+    class iterator : public _Ranit<_Ty, difference_type> {
+    public:
+        friend class deque<_Ty, _A>;
+        iterator()
+            : _First(0), _Last(0), _Next(0), _Map(0) {}
+        iterator(_Tptr _P, _Mapptr _M)
+            : _First(*_M), _Last(*_M + _DEQUESIZ),
+            _Next(_P), _Map(_M)
+        {
+        }
+        reference operator*() const
+        { return (*_Next); }
+        _Tptr operator->() const
+        { return (&**this); }
+        iterator& operator++()
+        {
+            if (++_Next == _Last) {
+                _First = *++_Map;
+                _Last = _First + _DEQUESIZ;
+                _Next = _First;
+            }
+            return (*this);
+        }
+        iterator operator++(int)
+        {
+            iterator _Tmp = *this;
+            ++*this;
+            return (_Tmp);
+        }
+        iterator& operator--()
+        {
+            if (_Next == _First) {
+                _First = *--_Map;
+                _Last = _First + _DEQUESIZ;
+                _Next = _Last;
+            }
+            --_Next;
+            return (*this);
+        }
+        iterator operator--(int)
+        {
+            iterator _Tmp = *this;
+            --*this;
+            return (_Tmp);
+        }
+        iterator& operator+=(difference_type _N)
+        {
+            _Add(_N);
+            return (*this);
+        }
+        iterator& operator-=(difference_type _N)
+        { return (*this += -_N); }
+        iterator operator+(difference_type _N) const
+        {
+            iterator _Tmp = *this;
+            return (_Tmp += _N);
+        }
+        iterator operator-(difference_type _N) const
+        {
+            iterator _Tmp = *this;
+            return (_Tmp -= _N);
+        }
+        difference_type operator-(const iterator& _X) const
+        {
+            return (_Map == _X._Map ? _Next - _X._Next
+                : _DEQUESIZ * (_Map - _X._Map - 1)
+                + (_Next - _First) + (_X._Last - _X._Next));
+        }
+        reference operator[](difference_type _N) const
+        { return (*(*this + _N)); }
+        bool operator==(const iterator& _X) const
+        { return (_Next == _X._Next); }
+        bool operator!=(const iterator& _X) const
+        { return (!(*this == _X)); }
+        bool operator<(const iterator& _X) const
+        {
+            return (_Map < _X._Map
+                || _Map == _X._Map && _Next < _X._Next);
+        }
+        bool operator<=(const iterator& _X) const
+        { return (!(_X < *this)); }
+        bool operator>(const iterator& _X) const
+        { return (_X < *this); }
+        bool operator>=(const iterator& _X) const
+        { return (!(*this < _X)); }
+    protected:
+        void _Add(difference_type _N)
+        {
+            difference_type _Off = _N + _Next - _First;
+            difference_type _Moff = (0 <= _Off)
+                ? _Off / (difference_type)_DEQUESIZ
+                : -((((difference_type)_DEQUESIZ) - 1 - _Off) / ((difference_type)_DEQUESIZ));
+            if (_Moff == 0)
+                _Next += _N;
+            else {
+                _Map += _Moff;
+                _First = *_Map;
+                _Last = _First + _DEQUESIZ;
+                _Next = _First + (_Off - _Moff * _DEQUESIZ);
+            }
+        }
+    protected:
+        _Tptr _First, _Last, _Next;
+        _Mapptr _Map;
+    };
+
+    // CLASS const_iterator
+    class const_iterator : public iterator {
+    public:
+        const_iterator()
+        {}
+        const_iterator(_Tptr _P, _Mapptr _M)
+            : iterator(_P, _M) {}
+        const_iterator(const iterator& _X)
+            : iterator(_X) {}
+        const_reference operator*() const
+        { return (*_Next); }
+        _Ctptr operator->() const
+        { return (&**this); }
+        const_iterator& operator++()
+        {
+            if (++_Next == this->_Last) {
+                this->_First = *++this->_Map;
+                this->_Last = this->_First + _DEQUESIZ;
+                this->_Next = this->_First;
+            }
+            return (*this);
+        }
+        const_iterator operator++(int)
+        {
+            const_iterator _Tmp = *this;
+            ++*this;
+            return (_Tmp);
+        }
+        const_iterator& operator--()
+        {
+            if (this->_Next == this->_First) {
+                this->_First = *--this->_Map;
+                this->_Last = this->_First + _DEQUESIZ;
+                this->_Next = this->_Last;
+            }
+            --this->_Next;
+            return (*this);
+        }
+        const_iterator operator--(int)
+        {
+            const_iterator _Tmp = *this;
+            --*this;
+            return (_Tmp);
+        }
+        const_iterator& operator+=(difference_type _N)
+        {
+            _Add(_N);
+            return (*this);
+        }
+        const_iterator& operator-=(difference_type _N)
+        { return (*this += -_N); }
+        const_iterator operator+(difference_type _N) const
+        {
+            iterator _Tmp = *this;
+            return (_Tmp += _N);
+        }
+        const_iterator operator-(difference_type _N) const
+        {
+            iterator _Tmp = *this;
+            return (_Tmp -= _N);
+        }
+        difference_type operator-(const const_iterator& _X) const
+        {
+            return (this->_Map == _X._Map ? this->_Next - _X._Next
+                : _DEQUESIZ * (this->_Map - _X._Map - 1)
+                + (this->_Next - this->_First) + (_X._Last - _X._Next));
+        }
+        const_reference operator[](difference_type _N) const
+        { return (*(*this + _N)); }
+        bool operator==(const const_iterator& _X) const
+        { return (this->_Next == _X._Next); }
+        bool operator!=(const const_iterator& _X) const
+        { return (!(*this == _X)); }
+        bool operator<(const const_iterator& _X) const
+        {
+            return (this->_Map < _X._Map
+                || this->_Map == _X._Map && _Next < _X._Next);
+        }
+        bool operator<=(const const_iterator& _X) const
+        { return (!(_X < *this)); }
+        bool operator>(const const_iterator& _X) const
+        { return (_X < *this); }
+        bool operator>=(const const_iterator& _X) const
+        { return (!(*this < _X)); }
+    };
+
+    typedef reverse_iterator<const_iterator, value_type,
+        const_reference, _Ctptr, difference_type>
+        const_reverse_iterator;
+    typedef reverse_iterator<iterator, value_type,
+        reference, _Tptr, difference_type>
+        reverse_iterator;
+    explicit deque(const _A& _Al = _A())
+        : allocator(_Al),
+        _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
+    }
+    explicit deque(size_type _N, const _Ty& _V = _Ty(),
+        const _A& _Al = _A())
+        : allocator(_Al),
+        _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
+        insert(begin(), _N, _V);
+    }
+    deque(const _Myt& _X)
+        : allocator(_X.allocator),
+        _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
+        copy(_X.begin(), _X.end(), back_inserter(*this));
+    }
+    typedef const_iterator _It;
+    deque(_It _F, _It _L, const _A& _Al = _A())
+        : allocator(_Al),
+        _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
+        copy(_F, _L, back_inserter(*this));
+    }
+    ~deque()
+    {
+        while (!empty())
+            pop_front();
+    }
+    _Myt& operator=(const _Myt& _X)
+    {
+        if (this != &_X) {
+            iterator _S;
+            if (_X.size() <= size()) {
+                _S = copy(_X.begin(), _X.end(), begin());
+                erase(_S, end());
+            } else {
+                const_iterator _Sx = _X.begin() + size();
+                _S = copy(_X.begin(), _Sx, begin());
+                copy(_Sx, _X.end(), inserter(*this, _S));
+            }
+        }
+        return (*this);
+    }
+
     //////////////////////////////////////////////////////////////////////////
+
     deque(_Myt&& _Right)
         : allocator(_STD move(_Right.allocator))
-        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {
+        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
         _Assign_rv(_STD forward<_Myt>(_Right));
     }
 
     deque(_Myt&& _Right, const _A& _Al)
         : allocator(_Al)
-        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {
+        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0)
+    {
         _Assign_rv(_STD forward<_Myt>(_Right));
     }
 
-    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+    _Myt& operator=(_Myt&& _Right)
+    { // assign by moving _Right
         if (this != &_Right) { // different, assign it
             clear();
             _Assign_rv(_STD forward<_Myt>(_Right));
@@ -231,325 +297,384 @@ public:
         return (*this);
     }
 
-    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+    void _Assign_rv(_Myt&& _Right)
+    { // swap with empty *this, same allocator
         swap(_Right);
     }
     //////////////////////////////////////////////////////////////////////////
-	iterator begin()
-		{return (_First); }
-	const_iterator begin() const
-		{return ((const_iterator)_First); }
-	iterator end()
-		{return (_Last); }
-	const_iterator end() const
-		{return ((const_iterator)_Last); }
-	reverse_iterator rbegin()
-		{return (reverse_iterator(end())); }
-	const_reverse_iterator rbegin() const
-		{return (const_reverse_iterator(end())); }
-	reverse_iterator rend()
-		{return (reverse_iterator(begin())); }
-	const_reverse_iterator rend() const
-		{return (const_reverse_iterator(begin())); }
-	void resize(size_type _N, _Ty _X = _Ty())
-		{if (size() < _N)
-			insert(end(), _N - size(), _X);
-		else if (_N < size())
-			erase(begin() + _N, end()); }
-	size_type size() const
-		{return (_Size); }
-	size_type max_size() const
-		{return (allocator.max_size()); }
-	bool empty() const
-		{return (size() == 0); }
-	_A get_allocator() const
-		{return (allocator); }
-	const_reference at(size_type _P) const
-		{if (size() <= _P)
-			_Xran();
-		return (*(begin() + _P)); }
-	reference at(size_type _P)
-		{if (size() <= _P)
-			_Xran();
-		return (*(begin() + _P)); }
-	const_reference operator[](size_type _P) const
-		{return (*(begin() + _P)); }
-	reference operator[](size_type _P)
-		{return (*(begin() + _P)); }
-	reference front()
-		{return (*begin()); }
-	const_reference front() const
-		{return (*begin()); }
-	reference back()
-		{return (*(end() - 1)); }
-	const_reference back() const
-		{return (*(end() - 1)); }
-	void push_front(const _Ty& _X)
-		{if (empty() || _First._Next == _First._First)
-			_Buyfront();
-		allocator.construct(--_First._Next, _X);
-		++_Size; }
-	void pop_front()
-		{allocator.destroy(_First._Next++);
-		--_Size;
-		if (empty() || _First._Next == _First._Last)
-			_Freefront(); }
-	void push_back(const _Ty& _X)
-		{if (empty() || _Last._Next == _Last._Last)
-			{_Buyback();
-			allocator.construct(_Last._Next++, _X); }
-		else if (_Last._Next + 1 == _Last._Last)
-			{allocator.construct(_Last._Next++, _X);
-			_Buyback(); }
-		else
-			allocator.construct(_Last._Next++, _X);
-		++_Size; }
-	void pop_back()
-		{
-		if (_Last._Next == _Last._First)
-			_Freeback();
-		if (!empty())
-			allocator.destroy(--_Last._Next);
+    iterator begin()
+    { return (_First); }
+    const_iterator begin() const
+    { return ((const_iterator)_First); }
+    iterator end()
+    { return (_Last); }
+    const_iterator end() const
+    { return ((const_iterator)_Last); }
+    reverse_iterator rbegin()
+    { return (reverse_iterator(end())); }
+    const_reverse_iterator rbegin() const
+    { return (const_reverse_iterator(end())); }
+    reverse_iterator rend()
+    { return (reverse_iterator(begin())); }
+    const_reverse_iterator rend() const
+    { return (const_reverse_iterator(begin())); }
+    void resize(size_type _N, _Ty _X = _Ty())
+    {
+        if (size() < _N)
+            insert(end(), _N - size(), _X);
+        else if (_N < size())
+            erase(begin() + _N, end());
+    }
+    size_type size() const
+    { return (_Size); }
+    size_type max_size() const
+    { return (allocator.max_size()); }
+    bool empty() const
+    { return (size() == 0); }
+    _A get_allocator() const
+    { return (allocator); }
+    const_reference at(size_type _P) const
+    {
+        if (size() <= _P)
+            _Xran();
+        return (*(begin() + _P));
+    }
+    reference at(size_type _P)
+    {
+        if (size() <= _P)
+            _Xran();
+        return (*(begin() + _P));
+    }
+    const_reference operator[](size_type _P) const
+    { return (*(begin() + _P)); }
+    reference operator[](size_type _P)
+    { return (*(begin() + _P)); }
+    reference front()
+    { return (*begin()); }
+    const_reference front() const
+    { return (*begin()); }
+    reference back()
+    { return (*(end() - 1)); }
+    const_reference back() const
+    { return (*(end() - 1)); }
+    void push_front(const _Ty& _X)
+    {
+        if (empty() || _First._Next == _First._First)
+            _Buyfront();
+        allocator.construct(--_First._Next, _X);
+        ++_Size;
+    }
+    void pop_front()
+    {
+        allocator.destroy(_First._Next++);
         --_Size;
-        if ( empty())
-            _Freeback(); }
-	void assign(_It _F, _It _L)
-		{erase(begin(), end());
-		insert(begin(), _F, _L); }
-	void assign(size_type _N, const _Ty& _X = _Ty())
-		{erase(begin(), end());
-		insert(begin(), _N, _X); }
-	iterator insert(iterator _P, const _Ty& _X = _Ty())
-		{if (_P == begin())
-			{push_front(_X);
-			return (begin()); }
-		else if (_P == end())
-			{push_back(_X);
-			return (end() - 1); }
-		else
-			{iterator _S;
-			size_type _Off = _P - begin();
-			if (_Off < size() / 2)
-				{push_front(front());
-				_S = begin() + _Off;
-				copy(begin() + 2, _S + 1, begin() + 1); }
-			else
-				{push_back(back());
-				_S = begin() + _Off;
-				copy_backward(_S, end() - 2, end() - 1); }
-			*_S = _X;
-			return (_S); }}
-	void insert(iterator _P, size_type _M, const _Ty& _X)
-		{iterator _S;
-		size_type _I;
-		size_type _Off = _P - begin();
-		size_type _Rem = _Size - _Off;
-		if (_Off < _Rem)
-			if (_Off < _M)
-				{for (_I = _M - _Off; 0 < _I; --_I)
-					push_front(_X);
-				for (_I = _Off; 0 < _I; --_I)
-					push_front(begin()[_M - 1]);
-				_S = begin() + _M;
-				fill(_S, _S + _Off, _X); }
-			else
-				{for (_I = _M; 0 < _I; --_I)
-					push_front(begin()[_M - 1]);
-				_S = begin() + _M;
-				copy(_S + _M, _S + _Off, _S);
-				fill(begin() + _Off, _S + _Off, _X); }
-		else
-			if (_Rem < _M)
-				{for (_I = _M - _Rem; 0 < _I; --_I)
-					push_back(_X);
-				for (_I = 0; _I < _Rem; ++_I)
-					push_back(begin()[_Off + _I]);
-				_S = begin() + _Off;
-				fill(_S, _S + _Rem, _X); }
-			else
-				{for (_I = 0; _I < _M; ++_I)
-					push_back(begin()[_Off + _Rem - _M + _I]);
-				_S = begin() + _Off;
-				copy_backward(_S, _S + _Rem - _M, _S + _Rem);
-				fill(_S, _S + _M, _X); }}
-	void insert(iterator _P, _It _F, _It _L)
-		{size_type _M = 0;
-		_Distance(_F, _L, _M);
-		size_type _I;
-		size_type _Off = _P - begin();
-		size_type _Rem = _Size - _Off;
-		if (_Off < _Rem)
-			if (_Off < _M)
-				{_It _Qx = _F;
-				advance(_Qx, _M - _Off);
-				for (_It _Q = _Qx; _F != _Q; )
-					push_front(*--_Q);
-				for (_I = _Off; 0 < _I; --_I)
-					push_front(begin()[_M - 1]);
-				copy(_Qx, _L, begin() + _M); }
-			else
-				{for (_I = _M; 0 < _I; --_I)
-					push_front(begin()[_M - 1]);
-				iterator _S = begin() + _M;
-				copy(_S + _M, _S + _Off, _S);
-				copy(_F, _L, begin() + _Off); }
-		else
-			if (_Rem < _M)
-				{_It _Qx = _F;
-				advance(_Qx, _Rem);
-				for (_It _Q = _Qx; _Q != _L; ++_Q)
-					push_back(*_Q);
-				for (_I = 0; _I < _Rem; ++_I)
-					push_back(begin()[_Off + _I]);
-				copy(_F, _Qx, begin() + _Off); }
-			else
-				{for (_I = 0; _I < _M; ++_I)
-					push_back(begin()[_Off + _Rem - _M + _I]);
-				iterator _S = begin() + _Off;
-				copy_backward(_S, _S + _Rem - _M, _S + _Rem);
-				copy(_F, _L, _S); }}
-	iterator erase(iterator _P)
-		{return (erase(_P, _P + 1)); }
-	iterator erase(iterator _F, iterator _L)
-		{size_type _N = _L - _F;
-		size_type _M = _F - begin();
-		if (_M < (size_type)(end() - _L))
-			{copy_backward(begin(), _F, _L);
-			for (; 0 < _N; --_N)
-				pop_front(); }
-		else
-			{copy(_L, end(), _F);
-			for (; 0 < _N; --_N)
-				pop_back(); }
-		return (_M == 0 ? begin() : begin() + _M); }
-	void clear()
-		{erase(begin(), end()); }
-	void swap(_Myt& _X)
-		{if (allocator == _X.allocator)
-			{std::swap(_First, _X._First);
-			std::swap(_Last, _X._Last);
-			std::swap(_Map, _X._Map);
-			std::swap(_Mapsize, _X._Mapsize);
-			std::swap(_Size, _X._Size); }
-		else
-			{_Myt _Ts = *this; *this = _X, _X = _Ts; }}
-	friend void swap(_Myt& _X, _Myt& _Y)
-		{_X.swap(_Y); }
+        if (empty() || _First._Next == _First._Last)
+            _Freefront();
+    }
+    void push_back(const _Ty& _X)
+    {
+        if (empty() || _Last._Next == _Last._Last) {
+            _Buyback();
+            allocator.construct(_Last._Next++, _X);
+        } else if (_Last._Next + 1 == _Last._Last) {
+            allocator.construct(_Last._Next++, _X);
+            _Buyback();
+        } else
+            allocator.construct(_Last._Next++, _X);
+        ++_Size;
+    }
+    void pop_back()
+    {
+        if (_Last._Next == _Last._First)
+            _Freeback();
+        if (!empty())
+            allocator.destroy(--_Last._Next);
+        --_Size;
+        if (empty())
+            _Freeback();
+    }
+    void assign(_It _F, _It _L)
+    {
+        erase(begin(), end());
+        insert(begin(), _F, _L);
+    }
+    void assign(size_type _N, const _Ty& _X = _Ty())
+    {
+        erase(begin(), end());
+        insert(begin(), _N, _X);
+    }
+    iterator insert(iterator _P, const _Ty& _X = _Ty())
+    {
+        if (_P == begin()) {
+            push_front(_X);
+            return (begin());
+        } else if (_P == end()) {
+            push_back(_X);
+            return (end() - 1);
+        } else {
+            iterator _S;
+            size_type _Off = _P - begin();
+            if (_Off < size() / 2) {
+                push_front(front());
+                _S = begin() + _Off;
+                copy(begin() + 2, _S + 1, begin() + 1);
+            } else {
+                push_back(back());
+                _S = begin() + _Off;
+                copy_backward(_S, end() - 2, end() - 1);
+            }
+            *_S = _X;
+            return (_S);
+        }
+    }
+    void insert(iterator _P, size_type _M, const _Ty& _X)
+    {
+        iterator _S;
+        size_type _I;
+        size_type _Off = _P - begin();
+        size_type _Rem = _Size - _Off;
+        if (_Off < _Rem) {
+            if (_Off < _M) {
+                for (_I = _M - _Off; 0 < _I; --_I)
+                    push_front(_X);
+                for (_I = _Off; 0 < _I; --_I)
+                    push_front(begin()[_M - 1]);
+                _S = begin() + _M;
+                fill(_S, _S + _Off, _X);
+            } else {
+                for (_I = _M; 0 < _I; --_I)
+                    push_front(begin()[_M - 1]);
+                _S = begin() + _M;
+                copy(_S + _M, _S + _Off, _S);
+                fill(begin() + _Off, _S + _Off, _X);
+            } else {
+                if (_Rem < _M) {
+                    for (_I = _M - _Rem; 0 < _I; --_I)
+                        push_back(_X);
+                    for (_I = 0; _I < _Rem; ++_I)
+                        push_back(begin()[_Off + _I]);
+                    _S = begin() + _Off;
+                    fill(_S, _S + _Rem, _X);
+                } else {
+                    for (_I = 0; _I < _M; ++_I)
+                        push_back(begin()[_Off + _Rem - _M + _I]);
+                    _S = begin() + _Off;
+                    copy_backward(_S, _S + _Rem - _M, _S + _Rem);
+                    fill(_S, _S + _M, _X);
+                }
+            }
+        }
+    }
+    void insert(iterator _P, _It _F, _It _L)
+    {
+        size_type _M = 0;
+        _Distance(_F, _L, _M);
+        size_type _I;
+        size_type _Off = _P - begin();
+        size_type _Rem = _Size - _Off;
+        if (_Off < _Rem)
+            if (_Off < _M) {
+                _It _Qx = _F;
+                advance(_Qx, _M - _Off);
+                for (_It _Q = _Qx; _F != _Q; )
+                    push_front(*--_Q);
+                for (_I = _Off; 0 < _I; --_I)
+                    push_front(begin()[_M - 1]);
+                copy(_Qx, _L, begin() + _M);
+            } else {
+                for (_I = _M; 0 < _I; --_I)
+                    push_front(begin()[_M - 1]);
+                iterator _S = begin() + _M;
+                copy(_S + _M, _S + _Off, _S);
+                copy(_F, _L, begin() + _Off);
+            } else
+                if (_Rem < _M) {
+                    _It _Qx = _F;
+                    advance(_Qx, _Rem);
+                    for (_It _Q = _Qx; _Q != _L; ++_Q)
+                        push_back(*_Q);
+                    for (_I = 0; _I < _Rem; ++_I)
+                        push_back(begin()[_Off + _I]);
+                    copy(_F, _Qx, begin() + _Off);
+                } else {
+                    for (_I = 0; _I < _M; ++_I)
+                        push_back(begin()[_Off + _Rem - _M + _I]);
+                    iterator _S = begin() + _Off;
+                    copy_backward(_S, _S + _Rem - _M, _S + _Rem);
+                    copy(_F, _L, _S);
+                }
+    }
+    iterator erase(iterator _P)
+    { return (erase(_P, _P + 1)); }
+    iterator erase(iterator _F, iterator _L)
+    {
+        size_type _N = _L - _F;
+        size_type _M = _F - begin();
+        if (_M < (size_type)(end() - _L)) {
+            copy_backward(begin(), _F, _L);
+            for (; 0 < _N; --_N)
+                pop_front();
+        } else {
+            copy(_L, end(), _F);
+            for (; 0 < _N; --_N)
+                pop_back();
+        }
+        return (_M == 0 ? begin() : begin() + _M);
+    }
+    void clear()
+    { erase(begin(), end()); }
+    void swap(_Myt& _X)
+    {
+        if (allocator == _X.allocator) {
+            std::swap(_First, _X._First);
+            std::swap(_Last, _X._Last);
+            std::swap(_Map, _X._Map);
+            std::swap(_Mapsize, _X._Mapsize);
+            std::swap(_Size, _X._Size);
+        } else { _Myt _Ts = *this; *this = _X, _X = _Ts; }
+    }
+    friend void swap(_Myt& _X, _Myt& _Y)
+    { _X.swap(_Y); }
 protected:
-	void _Buyback()
-		{_Tptr _P = allocator.allocate(_DEQUESIZ, (void *)0);
-		if (empty())
-			{_Mapsize = _DEQUEMAPSIZ;
-			size_type _N = _Mapsize / 2;
-			_Getmap();
-			_Setptr(_Map + _N, _P);
-			_First = iterator(_P + _DEQUESIZ / 2, _Map + _N);
-			_Last = _First; }
-		else if (_Last._Map < _Map + (_Mapsize - 1))
-			{_Setptr(++_Last._Map, _P);
-			_Last = iterator(_P, _Last._Map); }
-		else
-			{difference_type _I = _Last._Map - _First._Map + 1;
-			_Mapptr _M = _Growmap(2 * _I);
-			_Setptr(_M + _I, _P);
-			_First = iterator(_First._Next, _M);
-			_Last = iterator(_P, _M + _I); }}
-	void _Buyfront()
-		{_Tptr _P = allocator.allocate(_DEQUESIZ, (void *)0);
-		if (empty())
-			{_Mapsize = _DEQUEMAPSIZ;
-			size_type _N = _Mapsize / 2;
-			_Getmap();
-			_Setptr(_Map + _N, _P);
-			_First = iterator(_P + (_DEQUESIZ / 2 + 1),
-				_Map + _N);
-			_Last = _First; }
-		else if (_Map < _First._Map)
-			{_Setptr(--_First._Map, _P);
-			_First = iterator(_P + _DEQUESIZ, _First._Map); }
-		else if (_Last._Map == _First._Map)
-			{_Setptr(_Last._Map++, *_First._Map);
-			_Setptr(_First._Map+1, *_First._Map);
-			_Setptr(_First._Map, _P);
-			_First = iterator(_P + _DEQUESIZ, _First._Map); }
-		else
-			{difference_type _I = _Last._Map - _First._Map + 1;
-			_Mapptr _M = _Growmap(2 * _I);
-			_Setptr(--_M, _P);
-			_First = iterator(_P + _DEQUESIZ, _M);
-			_Last = iterator(_Last._Next, _M + _I); }}
-	void _Freeback()
-		{_Freeptr(_Last._Map--);
-		if (empty())
-			{
-            if(_First._Map == _Last._Map)
+    void _Buyback()
+    {
+        _Tptr _P = allocator.allocate(_DEQUESIZ, (void *)0);
+        if (empty()) {
+            _Mapsize = _DEQUEMAPSIZ;
+            size_type _N = _Mapsize / 2;
+            _Getmap();
+            _Setptr(_Map + _N, _P);
+            _First = iterator(_P + _DEQUESIZ / 2, _Map + _N);
+            _Last = _First;
+        } else if (_Last._Map < _Map + (_Mapsize - 1)) {
+            _Setptr(++_Last._Map, _P);
+            _Last = iterator(_P, _Last._Map);
+        } else {
+            difference_type _I = _Last._Map - _First._Map + 1;
+            _Mapptr _M = _Growmap(2 * _I);
+            _Setptr(_M + _I, _P);
+            _First = iterator(_First._Next, _M);
+            _Last = iterator(_P, _M + _I);
+        }
+    }
+    void _Buyfront()
+    {
+        _Tptr _P = allocator.allocate(_DEQUESIZ, (void *)0);
+        if (empty()) {
+            _Mapsize = _DEQUEMAPSIZ;
+            size_type _N = _Mapsize / 2;
+            _Getmap();
+            _Setptr(_Map + _N, _P);
+            _First = iterator(_P + (_DEQUESIZ / 2 + 1),
+                _Map + _N);
+            _Last = _First;
+        } else if (_Map < _First._Map) {
+            _Setptr(--_First._Map, _P);
+            _First = iterator(_P + _DEQUESIZ, _First._Map);
+        } else if (_Last._Map == _First._Map) {
+            _Setptr(_Last._Map++, *_First._Map);
+            _Setptr(_First._Map + 1, *_First._Map);
+            _Setptr(_First._Map, _P);
+            _First = iterator(_P + _DEQUESIZ, _First._Map);
+        } else {
+            difference_type _I = _Last._Map - _First._Map + 1;
+            _Mapptr _M = _Growmap(2 * _I);
+            _Setptr(--_M, _P);
+            _First = iterator(_P + _DEQUESIZ, _M);
+            _Last = iterator(_Last._Next, _M + _I);
+        }
+    }
+    void _Freeback()
+    {
+        _Freeptr(_Last._Map--);
+        if (empty()) {
+            if (_First._Map == _Last._Map)
                 _Freeptr(_First._Map);
             _First = iterator();
-			_Last = _First;
-			_Freemap(); }
-		else
-			_Last = iterator(*_Last._Map + _DEQUESIZ,
-				_Last._Map); }
-	void _Freefront()
-		{_Freeptr(_First._Map++);
-		if (empty())
-			{_First = iterator();
-			_Last = _First;
-			_Freemap(); }
-		else
-			_First = iterator(*_First._Map, _First._Map); }
-	void _Xran() const
-		{_THROW(out_of_range, "invalid deque<T> subscript"); }
-	void _Freemap()
-		{allocator.deallocate(_Map, _Mapsize); }
-	void _Freeptr(_Mapptr _M)
-		{allocator.deallocate(*_M, _DEQUESIZ); }
-	void _Getmap()
-		{_Map = (_Mapptr)allocator._Charalloc(
-			_Mapsize * sizeof (_Tptr)); }
-	_Mapptr _Growmap(size_type _Newsize)
-		{_Mapptr _M = (_Mapptr)allocator._Charalloc(
-			_Newsize * sizeof (_Tptr));
-		copy(_First._Map, _Last._Map + 1,
-			_M + _Newsize / 4);
-		allocator.deallocate(_Map, _Mapsize);
-		_Map = _M;
-		_Mapsize = _Newsize;
-		return (_M + _Newsize / 4); }
-	void _Setptr(_Mapptr _M, _Tptr _P)
-		{*_M = _P; }
-	_A allocator;
-	iterator _First, _Last;
-	_Mapptr _Map;
-	size_type _Mapsize, _Size;
-	};
-		// deque TEMPLATE OPERATORS
+            _Last = _First;
+            _Freemap();
+        } else
+            _Last = iterator(*_Last._Map + _DEQUESIZ,
+                _Last._Map);
+    }
+    void _Freefront()
+    {
+        _Freeptr(_First._Map++);
+        if (empty()) {
+            _First = iterator();
+            _Last = _First;
+            _Freemap();
+        } else
+            _First = iterator(*_First._Map, _First._Map);
+    }
+    void _Xran() const
+    { _THROW(out_of_range, "invalid deque<T> subscript"); }
+    void _Freemap()
+    { allocator.deallocate(_Map, _Mapsize); }
+    void _Freeptr(_Mapptr _M)
+    { allocator.deallocate(*_M, _DEQUESIZ); }
+    void _Getmap()
+    {
+        _Map = (_Mapptr)allocator._Charalloc(
+            _Mapsize * sizeof(_Tptr));
+    }
+    _Mapptr _Growmap(size_type _Newsize)
+    {
+        _Mapptr _M = (_Mapptr)allocator._Charalloc(
+            _Newsize * sizeof(_Tptr));
+        copy(_First._Map, _Last._Map + 1,
+            _M + _Newsize / 4);
+        allocator.deallocate(_Map, _Mapsize);
+        _Map = _M;
+        _Mapsize = _Newsize;
+        return (_M + _Newsize / 4);
+    }
+    void _Setptr(_Mapptr _M, _Tptr _P)
+    { *_M = _P; }
+    _A allocator;
+    iterator _First, _Last;
+    _Mapptr _Map;
+    size_type _Mapsize, _Size;
+};
+// deque TEMPLATE OPERATORS
 template<class _Ty, class _A> inline
-	bool operator==(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (_X.size() == _Y.size()
-		&& equal(_X.begin(), _X.end(), _Y.begin())); }
+bool operator==(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (_X.size() == _Y.size()
+        && equal(_X.begin(), _X.end(), _Y.begin()));
+}
 template<class _Ty, class _A> inline
-	bool operator!=(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (!(_X == _Y)); }
+bool operator!=(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (!(_X == _Y));
+}
 template<class _Ty, class _A> inline
-	bool operator<(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (lexicographical_compare(_X.begin(), _X.end(),
-		_Y.begin(), _Y.end())); }
+bool operator<(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (lexicographical_compare(_X.begin(), _X.end(),
+        _Y.begin(), _Y.end()));
+}
 template<class _Ty, class _A> inline
-	bool operator<=(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (!(_Y < _X)); }
+bool operator<=(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (!(_Y < _X));
+}
 template<class _Ty, class _A> inline
-	bool operator>(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (_Y < _X); }
+bool operator>(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (_Y < _X);
+}
 template<class _Ty, class _A> inline
-	bool operator>=(const deque<_Ty, _A>& _X,
-		const deque<_Ty, _A>& _Y)
-	{return (!(_X < _Y)); }
+bool operator>=(const deque<_Ty, _A>& _X,
+    const deque<_Ty, _A>& _Y)
+{
+    return (!(_X < _Y));
+}
 _STD_END
 #ifdef  _MSC_VER
 #pragma pack(pop)
@@ -558,24 +683,24 @@ _STD_END
 #endif /* _DEQUE_ */
 
 /*
- * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
- * Consult your license regarding permissions and restrictions.
- */
+* Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED.
+* Consult your license regarding permissions and restrictions.
+*/
 
 /*
- * This file is derived from software bearing the following
- * restrictions:
- *
- * Copyright (c) 1994
- * Hewlett-Packard Company
- *
- * Permission to use, copy, modify, distribute and sell this
- * software and its documentation for any purpose is hereby
- * granted without fee, provided that the above copyright notice
- * appear in all copies and that both that copyright notice and
- * this permission notice appear in supporting documentation.
- * Hewlett-Packard Company makes no representations about the
- * suitability of this software for any purpose. It is provided
- * "as is" without express or implied warranty.
- */
+* This file is derived from software bearing the following
+* restrictions:
+*
+* Copyright (c) 1994
+* Hewlett-Packard Company
+*
+* Permission to use, copy, modify, distribute and sell this
+* software and its documentation for any purpose is hereby
+* granted without fee, provided that the above copyright notice
+* appear in all copies and that both that copyright notice and
+* this permission notice appear in supporting documentation.
+* Hewlett-Packard Company makes no representations about the
+* suitability of this software for any purpose. It is provided
+* "as is" without express or implied warranty.
+*/
 

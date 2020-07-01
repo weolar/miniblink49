@@ -388,8 +388,12 @@ inline int umemcasecmp(const UChar* a, const UChar* b, int len)
     return 0;
 }
 
+bool isChineseUtf16Char(UChar c);
+
 inline bool isAlphanumeric(UChar32 c)
 {
+    if (isChineseUtf16Char(c)) // same as icu
+        return true;
     return (c < '9' && c > '0') || (c < 'z' && c > 'a') || (c < 'Z' && c > 'A') || (' ' == c);
 }
 

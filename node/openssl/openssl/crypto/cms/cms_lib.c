@@ -355,7 +355,7 @@ BIO *cms_DigestAlgorithm_init_bio(X509_ALGOR *digestAlgorithm)
     BIO *mdbio = NULL;
     ASN1_OBJECT *digestoid;
     const EVP_MD *digest;
-    X509_ALGOR_get0(&digestoid, NULL, NULL, digestAlgorithm);
+    openssl_X509_ALGOR_get0(&digestoid, NULL, NULL, digestAlgorithm);
     digest = EVP_get_digestbyobj(digestoid);
     if (!digest) {
         CMSerr(CMS_F_CMS_DIGESTALGORITHM_INIT_BIO,
@@ -381,7 +381,7 @@ int cms_DigestAlgorithm_find_ctx(EVP_MD_CTX *mctx, BIO *chain,
 {
     int nid;
     ASN1_OBJECT *mdoid;
-    X509_ALGOR_get0(&mdoid, NULL, NULL, mdalg);
+    openssl_X509_ALGOR_get0(&mdoid, NULL, NULL, mdalg);
     nid = OBJ_obj2nid(mdoid);
     /* Look for digest type to match signature */
     for (;;) {

@@ -1,6 +1,5 @@
 
 #include "config.h"
-#include "base/rand_util.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/WebURLLoaderImpl.h"
@@ -11,25 +10,31 @@
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/WebCryptoImpl.h"
+#include "content/web_impl_win/WaitableEvent.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
+#include "content/web_impl_win/npapi/PluginDatabase.h"
+#include "content/web_impl_win/WebMessagePortChannelImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
-#include "content/browser/SharedTimerWin.h"
+#include "content/resources/MediaPlayerData.h"
 #include "content/browser/WebPage.h"
+#include "content/browser/PlatformMessagePortChannel.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
-#include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
 #include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
+#include "third_party/WebKit/Source/platform/WebThreadSupportingGC.h"
+#include "third_party/WebKit/Source/platform/plugins/PluginData.h"
 #include "third_party/WebKit/Source/platform/PartitionAllocMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/platform/heap/BlinkGCMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
 #include "third_party/skia/include/core/SkGraphics.h"
-#include "net/ActivatingLoaderCheck.h"
+#include "net/ActivatingObjCheck.h"
 #include "gen/blink/core/UserAgentStyleSheets.h"
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/Source/core/loader/ImageLoader.h" // TODO
@@ -41,6 +46,18 @@
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
+#include "net/WebStorageNamespaceImpl.h"
+#include "wke/wkeUtil.h"
+#include "base/rand_util.h"
+#include "base/values.h"
+#include <crtdbg.h>
+
+DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
+DWORD g_rasterTaskCount = 0;
+DWORD g_mouseCount = 0;
+DWORD g_paintCount = 0;
+DWORD g_scheduledActionCount = 0;
+double g_autoRecordActionsTime = 0;
 
 #ifdef _DEBUG
 
@@ -54,7 +71,6 @@ class CallAddrsRecord;
 CallAddrsRecord* g_callAddrsRecord = nullptr;
 
 extern std::set<void*>* g_activatingStyleFetchedImage;
-extern std::set<void*>* g_activatingIncrementLoadEventDelayCount;
 
 typedef void* (__cdecl * MyFree)(void*);
 MyFree myFree = nullptr;
@@ -67,7 +83,7 @@ void* __cdecl newFree(void* p)
     return myFree(p);
 }
 
-typedef void *  (__cdecl* MyRealloc)(void*, size_t);
+typedef void*  (__cdecl* MyRealloc)(void*, size_t);
 MyRealloc myRealloc = nullptr;
 
 void* __cdecl newRealloc(void* p, size_t s)
@@ -78,7 +94,38 @@ void* __cdecl newRealloc(void* p, size_t s)
     return myRealloc(p, s);
 }
 
+typedef void*  (__cdecl* MyMalloc)(size_t);
+MyMalloc myMalloc = nullptr;
+
+void* __cdecl newMalloc(size_t s)
+{
+    if (s == 256)
+        s = s;
+    return myMalloc(s);
+}
+
 #endif
+
+static void onAllocationHook(void* address, size_t, const char* typeName)
+{
+//     char* output = (char*)malloc(0x100);
+//     sprintf_s(output, 0x99, "onAllocationHook: %p\n", address);
+//     OutputDebugStringA(output);
+//     free(output);
+    //net::ActivatingObjCheck::inst()->add((intptr_t)address);
+}
+
+static void onFreeHook(void* address)
+{
+//     char* output = (char*)malloc(0x100);
+//     sprintf_s(output, 0x99, "onFreeHook: %p\n", address);
+//     OutputDebugStringA(output);
+//     free(output);
+// 
+//     if (!net::ActivatingObjCheck::inst()->isActivating((intptr_t)address))
+//         DebugBreak();
+//     net::ActivatingObjCheck::inst()->remove((intptr_t)address);
+}
 
 namespace blink {
 #ifdef _DEBUG
@@ -104,7 +151,7 @@ public:
     ~DOMStorageMapWrap()
     {
     }
-    blink::DOMStorageMap map;
+    net::DOMStorageMap map;
 };
 
 DWORD sCurrentThreadTlsKey = -1;
@@ -128,7 +175,16 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
     blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
     blink::RuntimeEnabledFeatures::setTouchEnabled(false);
+    blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(true);
+    blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
+    blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
+    blink::RuntimeEnabledFeatures::setDOMConvenienceAPIEnabled(true);
+    blink::RuntimeEnabledFeatures::setTextBlobEnabled(true);
+    blink::RuntimeEnabledFeatures::setCssVariablesEnabled(true);
+    blink::RuntimeEnabledFeatures::setCSSMotionPathEnabled(true);
 }
+
+typedef BOOL (WINAPI* PFN_SetThreadStackGuarantee)(PULONG StackSizeInBytes);
 
 void BlinkPlatformImpl::initialize()
 {
@@ -136,7 +192,14 @@ void BlinkPlatformImpl::initialize()
     scrt_initialize_thread_safe_statics();
 #endif
     x86_check_features();
-    ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
+    //_control87(0x133f, 0xffff);
+
+//     ULONG stackSizeInBytes = 894 * 1024;
+//     PFN_SetThreadStackGuarantee pSetThreadStackGuarantee = (PFN_SetThreadStackGuarantee)::GetProcAddress(::GetModuleHandleW(L"Kernel32.dll"), "SetThreadStackGuarantee");
+//     pSetThreadStackGuarantee(&stackSizeInBytes);
+    
+    ::CoInitializeEx(nullptr, 0); // COINIT_MULTITHREADED
+    ::OleInitialize(nullptr);
 
     setRuntimeEnabledFeatures();
 
@@ -145,7 +208,7 @@ void BlinkPlatformImpl::initialize()
     blink::Platform::initialize(platform);
     gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
     blink::initialize(blink::Platform::current());
-    initializeOffScreenTimerWindow();
+    //initializeOffScreenTimerWindow();
 
     // Maximum allocation size allowed for image scaling filters that
     // require pre-scaling. Skia will fallback to a filter that doesn't
@@ -154,9 +217,17 @@ void BlinkPlatformImpl::initialize()
     const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
-    platform->startGarbageCollectedThread();
+    platform->m_defaultGcTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::garbageCollectedTimer);
+    platform->m_defaultGcTimer->start(40, 40, FROM_HERE);
 
-    OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
+    platform->m_resTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::resourceGarbageCollectedTimer);
+    platform->m_resTimer->start(120, 120, FROM_HERE);
+
+    WTF::PartitionAllocHooks::setAllocationHook(onAllocationHook);
+    WTF::PartitionAllocHooks::setFreeHook(onFreeHook);
+    
+//     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
+//     platform->m_perfTimer->start(2, 2, FROM_HERE);
 }
 
 BlinkPlatformImpl::BlinkPlatformImpl() 
@@ -170,24 +241,38 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
+    m_blobRegistryImpl = nullptr;
+    m_webCryptoImpl = nullptr;
     m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
+    m_gcTimer = nullptr;
+    m_perfTimer = nullptr;
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
+    m_numberOfProcessors = 1;
+    m_isDisableGC = false;
+
     ::InitializeCriticalSection(m_lock);
 
-    setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+    setUserAgent(getUserAgent());
 
 #ifdef _DEBUG
-    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
-    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    //myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    //myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    //myMalloc = (MyMalloc)ReplaceFuncAndCopy(malloc, newMalloc);
+    //_CrtSetBreakAlloc(3584109);
 #endif
 }
 
 BlinkPlatformImpl::~BlinkPlatformImpl()
 {
+    if (m_gcTimer)
+        delete m_gcTimer;
+    delete m_defaultGcTimer;
+    delete m_resTimer;
+
     ::DeleteCriticalSection(m_lock);
     delete m_lock;
     m_lock = nullptr;
@@ -240,14 +325,22 @@ void BlinkPlatformImpl::unregisterMemoryDumpProvider(blink::WebMemoryDumpProvide
     }
 }
 
+void shutdownIoThread(blink::WebThreadSupportingGC* webThread, int* waitCount)
+{
+    webThread->shutdown();
+    atomicDecrement(waitCount);
+}
+
 void BlinkPlatformImpl::preShutdown()
 {
     WebPluginImpl::shutdown();
     destroyWebInfo();
 
-    if (m_ioThread)
-        delete m_ioThread;
-    m_ioThread = nullptr;
+    int waitCount = 1;
+    blink::WebThreadSupportingGC* webThread = m_ioThread.leakPtr();
+    webThread->platformThread().postTask(FROM_HERE, WTF::bind(&shutdownIoThread, webThread, &waitCount));
+    while (waitCount) { }
+    delete webThread;
 
     WebThread* mainThread = m_mainThread;
     delete mainThread;
@@ -255,23 +348,30 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    wke::freeV8TempObejctOnOneFrameBefore();
+    ((WebThreadImpl*)currentThread())->fire();
+
     net::WebURLLoaderManager::sharedInstance()->shutdown();
     WebPage::shutdown();
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
 
     cc::RasterTaskWorkerThreadPool* rasterPool = cc::RasterTaskWorkerThreadPool::shared();
     rasterPool->shutdown();
-
+ 
     SkGraphics::PurgeResourceCache();
     SkGraphics::PurgeFontCache();
     SkGraphics::Term();
 
-    net::ActivatingLoaderCheck::inst()->shutdown();
+    net::ActivatingObjCheck::inst()->shutdown();
 
     MemoryCache* memoryCache = MemoryCache::create();
     replaceMemoryCacheForTesting(memoryCache);
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::Heap::collectAllGarbage();
 
@@ -295,8 +395,9 @@ void BlinkPlatformImpl::shutdown()
 #ifdef _DEBUG
     if (blink::g_activatingImageLoader && !blink::g_activatingImageLoader->empty() ||
         // blink::g_activatingFontFallbackList && !blink::g_activatingFontFallbackList->empty() ||
-        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() ||
-        g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty())
+        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() 
+        // || g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty()
+        )
         DebugBreak();
 #endif
 
@@ -306,7 +407,7 @@ void BlinkPlatformImpl::shutdown()
     blink::shutdown();
     closeThread();
 
-    net::ActivatingLoaderCheck::inst()->destroy();
+    net::ActivatingObjCheck::inst()->destroy();
 
 #ifdef _DEBUG
     size_t v8MemSize = g_v8MemSize;
@@ -315,27 +416,80 @@ void BlinkPlatformImpl::shutdown()
     g_callAddrsRecord;
 #endif
     delete this;
+
+    //_CrtDumpMemoryLeaks();
+}
+
+void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    String output = String::format("perfTimer: paintToMemory:%d raster:%d, scheduled:%d, AutoRecordActions:%f\n",
+        g_paintToMemoryCanvasInUiThreadCount, g_rasterTaskCount, g_scheduledActionCount, (float)g_autoRecordActionsTime);
+    OutputDebugStringA(output.utf8().data());
+
+    g_paintToMemoryCanvasInUiThreadCount = 0;
+    g_rasterTaskCount = 0;
+    g_mouseCount = 0;
+    g_paintCount = 0;
+    g_scheduledActionCount = 0;
+    g_autoRecordActionsTime = 0;
+}
+
+BlinkPlatformImpl::AutoDisableGC::AutoDisableGC()
+{
+    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+    platform->m_isDisableGC = true;
+}
+
+BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC()
+{
+    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+    platform->m_isDisableGC = false;
+}
+
+void BlinkPlatformImpl::resourceGarbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    doGarbageCollected();
+}
+
+void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    doGarbageCollected();
 }
 
 void BlinkPlatformImpl::doGarbageCollected()
 {
-    //net::gActivatingLoaderCheck->doGarbageCollected(false);
-    //blink::memoryCache()->evictResources();
-    //Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
+    if (m_isDisableGC)
+        return;
+    
     v8::Isolate::GetCurrent()->LowMemoryNotification();
-    //     v8::Isolate::GetCurrent()->IdleNotificationDeadline(currentMonotonicallyTime + 0.1);
-    //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
     SkGraphics::PurgeResourceCache();
+    SkGraphics::PurgeFontCache();
 
-    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
+    WebPage::gcAll();
 
+#ifdef _DEBUG
 //     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
 //     OutputDebugStringA(out.utf8().data());
+#endif
 }
 
-void BlinkPlatformImpl::startGarbageCollectedThread()
+void BlinkPlatformImpl::setGcTimer(double intervalSec)
 {
-    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
+    if (!m_gcTimer)
+        m_gcTimer = new blink::Timer<BlinkPlatformImpl>(this, &BlinkPlatformImpl::garbageCollectedTimer);
+
+    if (!m_gcTimer->isActive() || intervalSec < m_gcTimer->nextFireInterval())
+        m_gcTimer->startOneShot(intervalSec, FROM_HERE);
+
+    if (m_defaultGcTimer)
+        delete m_defaultGcTimer;
+    m_defaultGcTimer = nullptr;
+}
+
+void BlinkPlatformImpl::setResGcTimer(double intervalSec)
+{
+    m_resTimer->stop();
+    m_resTimer->startOneShot(intervalSec, FROM_HERE);
 }
 
 void BlinkPlatformImpl::closeThread()
@@ -409,14 +563,24 @@ blink::WebThread* BlinkPlatformImpl::currentThread()
 
 blink::WebThread* BlinkPlatformImpl::tryGetIoThread() const
 {
-	return m_ioThread;
+    if (!m_ioThread)
+        return nullptr;
+    return &m_ioThread->platformThread();
+}
+
+static void initializeIoThread(blink::WebThreadSupportingGC* webThreadSupportingGC)
+{
+    webThreadSupportingGC->initialize();
 }
 
 blink::WebThread* BlinkPlatformImpl::ioThread()
 {
-	if (!m_ioThread)
-		m_ioThread = createThread("ioThread");
-	return m_ioThread;
+    if (!m_ioThread) {
+        m_ioThread = blink::WebThreadSupportingGC::create("ioThread");
+        m_ioThread->platformThread().postTask(FROM_HERE, WTF::bind(&initializeIoThread, m_ioThread.get()));
+    }
+
+    return &m_ioThread->platformThread();
 }
 
 void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, size_t length)
@@ -426,8 +590,8 @@ void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, siz
 
 blink::WebURLLoader* BlinkPlatformImpl::createURLLoader()
 {
-    //return new content::WebURLLoaderImpl();
-    return new content::WebURLLoaderImplCurl();
+   //return new content::WebURLLoaderImpl();
+   return new content::WebURLLoaderImplCurl();
 }
 
 const unsigned char* BlinkPlatformImpl::getTraceCategoryEnabledFlag(const char* categoryName)
@@ -467,15 +631,23 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return *m_userAgent; // PC
-    //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
+    return blink::WebString::fromUTF8(m_userAgent->c_str());
 }
 
-void BlinkPlatformImpl::setUserAgent(char* ua)
+const char* BlinkPlatformImpl::getUserAgent()
+{
+    const char* defaultUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
+    BlinkPlatformImpl* self = (BlinkPlatformImpl*)blink::Platform::current();
+    if (!self)
+        return defaultUA;
+    return self->m_userAgent->c_str();
+}
+
+void BlinkPlatformImpl::setUserAgent(const char* ua)
 {
     if (m_userAgent)
         delete m_userAgent;
-	m_userAgent = new String(ua);
+    m_userAgent = new std::string(ua);
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
@@ -500,8 +672,17 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
     else if (0 == strcmp("textAreaResizeCorner@2x", name))
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
-    else if (0 == strcmp("mediaControls.css", name))
-        return blink::WebData((const char*)blink::mediaControlsAndroidUserAgentStyleSheet, sizeof(blink::mediaControlsAndroidUserAgentStyleSheet));
+    else if (0 == strcmp("mediaControls.css", name)) {
+        std::string buffer(blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));;
+        buffer += "video::-webkit-media-controls {display: none;}";
+        return blink::WebData(buffer.c_str(), buffer.size());
+        //return blink::WebData((const char*)blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));
+    } else if (0 == strcmp("fullscreen.css", name)) {
+//         std::vector<char> buffer;
+//         readJsFile(L"E:\\mycode\\miniblink49\\trunk\\third_party\\WebKit\\Source\\core\\css\\fullscreen.css", &buffer);
+//         return blink::WebData(&buffer[0], buffer.size());
+        return blink::WebData((const char*)content::fullscreenCss, sizeof(content::fullscreenCss));
+    }
     //////////////////////////////////////////////////////////////////////////
     else if (0 == strcmp("calendarPicker.css", name))
         return blink::WebData((const char*)content::calendarPickerCss, sizeof(content::calendarPickerCss));
@@ -531,7 +712,60 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::HTMLMarqueeElementJs, sizeof(content::HTMLMarqueeElementJs));
     else if (0 == strcmp("PluginPlaceholderElement.js", name))
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
+    else if (0 == strcmp("DebuggerScriptSource.js", name)) {
+        return blink::WebData((const char*)content::DebuggerScriptSourceJs, sizeof(content::DebuggerScriptSourceJs));
+    } else if (0 == strcmp("InjectedScriptSource.js", name))
+        return blink::WebData((const char*)content::InjectedScriptSourceJs, sizeof(content::InjectedScriptSourceJs));
+    else if (0 == strcmp("InspectorOverlayPage.html", name))
+        return blink::WebData((const char*)content::InspectorOverlayPageHtml, sizeof(content::InspectorOverlayPageHtml));
+    else if (0 == strcmp("xhtmlmp.css", name)) {
+        char xhtmlmpCss[] = "@viewport {width: auto;min-zoom: 0.25;max-zoom: 5;}";
+        return blink::WebData(xhtmlmpCss, sizeof(xhtmlmpCss));
+    }
+    else if (0 == strcmp("mediaplayerSoundLevel0", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel0, sizeof(content::MediaplayerSoundLevel0));
+    else if (0 == strcmp("mediaplayerSoundLevel1", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel1, sizeof(content::MediaplayerSoundLevel1));
+    else if (0 == strcmp("mediaplayerSoundLevel2", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel2, sizeof(content::MediaplayerSoundLevel2));
+    else if (0 == strcmp("mediaplayerSoundLevel3", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel3, sizeof(content::MediaplayerSoundLevel3));
+    else if (0 == strcmp("mediaplayerSoundDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerSoundDisabled, sizeof(content::MediaplayerSoundDisabled));
     
+    else if (0 == strcmp("mediaplayerPlay", name))
+        return blink::WebData((const char*)content::MediaplayerPlay, sizeof(content::MediaplayerPlay));
+    else if (0 == strcmp("mediaplayerPause", name))
+        return blink::WebData((const char*)content::MediaplayerPause, sizeof(content::MediaplayerPause));
+    else if (0 == strcmp("mediaplayerPlayDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerPlayDisabled, sizeof(content::MediaplayerPlayDisabled));
+
+    else if (0 == strcmp("mediaplayerOverlayPlay", name))
+        return blink::WebData((const char*)content::MediaplayerOverlayPlay, sizeof(content::MediaplayerOverlayPlay));
+    else if (0 == strcmp("mediaplayerSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerSliderThumb, sizeof(content::MediaplayerSliderThumb));
+    else if (0 == strcmp("mediaplayerVolumeSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerVolumeSliderThumb, sizeof(content::MediaplayerVolumeSliderThumb));
+
+    else if (0 == strcmp("mediaplayerFullscreen", name))
+        return blink::WebData((const char*)content::MediaplayerFullscreen, sizeof(content::MediaplayerFullscreen));
+    else if (0 == strcmp("mediaplayerClosedCaption", name))
+        return blink::WebData((const char*)content::MediaplayerClosedcaption, sizeof(content::MediaplayerClosedcaption));
+    else if (0 == strcmp("mediaplayerClosedCaptionDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerClosedcaptionDisabled, sizeof(content::MediaplayerClosedcaptionDisabled));
+
+    else if (0 == strcmp("mediaplayerCastOn", name))
+        return blink::WebData((const char*)content::MediaplayerCastOn, sizeof(content::MediaplayerCastOn));
+    else if (0 == strcmp("mediaplayerCastOff", name))
+        return blink::WebData((const char*)content::MediaplayerCastOff, sizeof(content::MediaplayerCastOff));
+    else if (0 == strcmp("mediaplayerOverlayCastOff", name))
+        return blink::WebData((const char*)content::MediaplayerOverlayCastOff, sizeof(content::MediaplayerOverlayCastOff));
+
+    else if (0 == strcmp("mediaplayerSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerSliderThumb, sizeof(content::MediaplayerSliderThumb));
+    else if (0 == strcmp("mediaplayerVolumeSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerVolumeSliderThumb, sizeof(content::MediaplayerVolumeSliderThumb));
+
     notImplemented();
     return blink::WebData(" ", 1);
 }
@@ -564,13 +798,34 @@ blink::WebScrollbarBehavior* BlinkPlatformImpl::scrollbarBehavior()
     return m_webScrollbarBehavior;
 }
 
+uint32_t BlinkPlatformImpl::getUniqueIdForProcess()
+{
+    return ::GetCurrentProcessId();
+}
+
+void BlinkPlatformImpl::createMessageChannel(blink::WebMessagePortChannel** channel1, blink::WebMessagePortChannel** channel2)
+{
+    PlatformMessagePortChannel::MessagePortQueue* queue1 = PlatformMessagePortChannel::MessagePortQueue::create();
+    PlatformMessagePortChannel::MessagePortQueue* queue2 = PlatformMessagePortChannel::MessagePortQueue::create();
+
+    WebMessagePortChannelImpl* channelImpl1 = new WebMessagePortChannelImpl(queue1, queue2);
+    WebMessagePortChannelImpl* channelImpl2 = new WebMessagePortChannelImpl(queue2, queue1);
+
+    channelImpl1->getChannel()->m_entangledChannel = channelImpl2->getChannel();
+    channelImpl2->getChannel()->m_entangledChannel = channelImpl1->getChannel();
+
+    *channel1 = channelImpl1;
+    *channel2 = channelImpl2;
+}
+
 blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) const
 {
     blink::WebURLError error;
-    error.reason = -1;
+    error.reason = -3; // net::ERR_ABORTED
     error.domain = blink::WebString(url.string());
     error.localizedDescription = blink::WebString::fromUTF8("url cancelledError\n");
-
+    error.isCancellation = true;
+    error.staleCopyInCache = false;
     WTF::String outError = "url cancelledError:";
     outError.append((WTF::String)url.string());
     outError.append("\n");
@@ -583,14 +838,14 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createLocalStorageNamespace()
 {
     if (!m_localStorageStorageMap)
         m_localStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, m_localStorageStorageMap->map);
+    return new net::WebStorageNamespaceImpl("", net::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
 }
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
 {
     if (!m_sessionStorageStorageMap)
         m_sessionStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
+    return new net::WebStorageNamespaceImpl("", m_storageNamespaceIdCount++, &m_sessionStorageStorageMap->map, false);
 }
 
 bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
@@ -614,10 +869,19 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
     return blink::WebString();
 }
 
+blink::WebCrypto* BlinkPlatformImpl::crypto() {
+    
+    if (!m_webCryptoImpl)
+        m_webCryptoImpl = new WebCryptoImpl();
+    return m_webCryptoImpl;
+}
+
 // Blob ----------------------------------------------------------------
 blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
 {
-    return new WebBlobRegistryImpl();
+    if (!m_blobRegistryImpl)
+        m_blobRegistryImpl = new WebBlobRegistryImpl();
+    return m_blobRegistryImpl;
 }
 
 // clipboard ----------------------------------------------------------------
@@ -632,9 +896,48 @@ blink::WebClipboard* BlinkPlatformImpl::clipboard()
 // Plugins -------------------------------------------------------------
 void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
 {
-    builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
-    builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
-    builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+//     builder->addPlugin(blink::WebString::fromUTF8("Shockwave Flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+//     builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
+//     builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+
+    const Vector<PluginPackage*>& plugins = PluginDatabase::installedPlugins()->plugins();
+
+    for (size_t i = 0; i < plugins.size(); ++i) {
+        PluginPackage* package = plugins[i];
+        String name = package->name();
+        String desc = package->description();
+        String file = package->fileName();
+
+        builder->addPlugin(name, desc, file);
+
+        const MIMEToDescriptionsMap& mimeToDescriptions = package->mimeToDescriptions();
+        MIMEToDescriptionsMap::const_iterator end = mimeToDescriptions.end();
+
+        for (MIMEToDescriptionsMap::const_iterator it = mimeToDescriptions.begin(); it != end; ++it) {
+            String type = it->key;
+            String desc = it->value;
+
+            // third_party\WebKit\Source\core\dom\DOMImplementation.cpp会询问
+            // third_party\WebKit\Source\platform\plugins\PluginData.cpp 里得到的插件mime是否有支持的，有的话就创建PluginDocument
+            if (desc.startsWith("application/virtual-plugin-")) {
+                if (!package->load())
+                    continue;
+
+                NPError npErr = package->pluginFuncs()->newp((NPMIMEType)"application/pdf", nullptr, 0, 0, nullptr, nullptr, nullptr);
+                if (NPERR_NO_ERROR != npErr)
+                    continue;
+                type = "application/pdf";
+                desc = "pdfviewer";
+            }
+
+            builder->addMediaTypeToLastPlugin(type, desc);
+
+            Vector<String> extensions = package->mimeToExtensions().get(type);
+            for (size_t j = 0; j < extensions.size(); ++j) {
+                builder->addFileExtensionToLastMediaType(extensions[j]);
+            }
+        }
+    }
 }
 
 blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
@@ -643,5 +946,26 @@ blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
         m_webFileUtilitiesImpl = new WebFileUtilitiesImpl();
     return m_webFileUtilitiesImpl;
 }
+
+// WaitableEvent -------------------------------------------------------
+
+WebWaitableEvent* BlinkPlatformImpl::createWaitableEvent(blink::WebWaitableEvent::ResetPolicy policy, blink::WebWaitableEvent::InitialState state)
+{
+    return new WaitableEvent(policy == blink::WebWaitableEvent::ResetPolicy::Manual, state == blink::WebWaitableEvent::InitialState::Signaled);
+}
+
+WebWaitableEvent* BlinkPlatformImpl::waitMultipleEvents(const blink::WebVector<blink::WebWaitableEvent*>& webEvents)
+{
+    Vector<WaitableEvent*> events;
+    for (size_t i = 0; i < webEvents.size(); ++i)
+        events.append((WaitableEvent*)(webEvents[i]));
+
+    size_t idx = WaitableEvent::waitMany(events.data(), events.size());
+    ASSERT(idx < webEvents.size());
+    return webEvents[idx];
+}
+
+size_t BlinkPlatformImpl::numberOfProcessors() { return m_numberOfProcessors; }
+void BlinkPlatformImpl::setNumberOfProcessors(size_t num) { m_numberOfProcessors = num; }
 
 } // namespace content

@@ -164,11 +164,10 @@ public:
     // Returns the effective sandbox flags which are inherited from their parent frame.
     virtual WebSandboxFlags effectiveSandboxFlags() const = 0;
 
+    virtual int topContentInset() const = 0;
+
 protected:
     explicit WebLocalFrame(WebTreeScopeType scope) : WebFrame(scope) { }
-
-public:
-    virtual int topContentInset() const = 0;
 };
 
 } // namespace blink

@@ -4,6 +4,59 @@
 
 namespace WTF {
 
+static Vector<UChar> iso88959ToUtf16(const char* str, int length)
+{
+    if (0 == length)
+        return Vector<UChar>();
+
+    // https://codereview.stackexchange.com/questions/40780/function-to-convert-iso-8859-1-to-utf-8
+    Vector<char, 1024> bufferVector(length * 3);
+    char* buffer = bufferVector.data();
+    const LChar* characters = (const LChar*)str;
+    Unicode::ConversionResult result = Unicode::convertLatin1ToUTF8(&characters, characters + length, &buffer, buffer + bufferVector.size());
+    if (Unicode::conversionOK != result)
+        return Vector<UChar>();
+
+    String retVal = String::fromUTF8(bufferVector.data(), buffer - bufferVector.data());
+    ASSERT(!retVal.is8Bit());
+    return retVal.charactersWithNullTermination();
+}
+    
+Vector<UChar> ensureUTF16UChar(const String& string, bool isNullTermination)
+{
+    if (string.isNull() || string.isEmpty())
+        return Vector<UChar>();
+
+    Vector<UChar> out;
+    if (!string.is8Bit()) {
+        if (isNullTermination)
+            return string.charactersWithNullTermination();
+        out.append(string.characters16(), string.length());
+        return out;
+    }
+
+    //RELEASE_ASSERT(isLegalUTF8(string.characters8(), string.length()));
+    if (string.containsOnlyASCII()) {
+        out = string.charactersWithNullTermination();
+        if (!isNullTermination)
+            out.removeLast();
+        return out;
+    }
+
+    String retVal = String::fromUTF8(string.characters8(), string.length());
+    if (retVal.isNull() || retVal.isEmpty()) {
+        std::vector<UChar> wbuf;
+        out = iso88959ToUtf16((LPCSTR)string.characters8(), string.length());
+    } else {
+        ASSERT(!retVal.is8Bit());
+        out = retVal.charactersWithNullTermination();
+    }
+
+    if (!isNullTermination)
+        out.removeLast();
+    return out;
+}
+
 String ensureUTF16String(const String& string)
 {
     if (string.isNull() || string.isEmpty())
@@ -30,54 +83,37 @@ String ensureUTF16String(const String& string)
     return StringImpl::create(bufferStart, utf16Length);
 }
 
-Vector<UChar> ensureUTF16UChar(const String& string)
-{
-    String out = ensureUTF16String(string);
-    return out.charactersWithNullTermination();
-}
-
-// 如果string里是8bit的话，必须是utf8编码
-Vector<UChar> ensureStringToUChars(const String& string)
-{
-    if (string.isNull() || string.isEmpty())
-        return Vector<UChar>();
-
-    if (!string.is8Bit())
-        return string.charactersWithNullTermination();
-
-    //ASSERT(WTF::Unicode::isLegalUTF8(string.characters8(), string.length()));
-    if (string.containsOnlyASCII())
-        return string.charactersWithNullTermination();
-
-    String retVal = String::fromUTF8(string.characters8(), string.length());
-    if (retVal.isNull() || retVal.isEmpty())
-        return Vector<UChar>();
-
-    ASSERT(!retVal.is8Bit());
-    return retVal.charactersWithNullTermination();
-}
-
-Vector<char> ensureStringToUTF8(const String& string)
+Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination)
 {
     Vector<char> out;
-    if (string.isNull() || string.isEmpty())
+    if (string.isNull() || string.isEmpty()) {
+        if (isNullTermination)
+            out.append('\0');
         return out;
+    }
+
     if (string.is8Bit()) {
         out.resize(string.length());
         memcpy(out.data(), string.characters8(), string.length());
-        out.append('\0');
     } else {
         CString utf8 = string.utf8();
-        out.resize(utf8.length());
-        memcpy(out.data(), utf8.data(), utf8.length());
+        size_t len = utf8.length();
+        if (0 == len)
+            return out;
+        
+        out.resize(len);
+        memcpy(out.data(), utf8.data(), len);
     }
+
+    if (isNullTermination && '\0' != out[out.size() - 1])
+        out.append('\0');
 
     return out;
 }
 
 String ensureStringToUTF8String(const String& string)
 {
-    Vector<char> out = ensureStringToUTF8(string);
+    Vector<char> out = ensureStringToUTF8(string, false);
     return String(out.data(), out.size());
 }
 
@@ -110,6 +146,58 @@ void stringTrim(String& stringInOut, bool leftTrim, bool rightTrim)
             stringInOut.remove(stringInOut.length() - 1);
         }
     }
+}
+
+void MByteToWChar(const char* lpcszStr, size_t cbMultiByte, std::vector<UChar>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, NULL, 0);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, &out->at(0), dwMinSize);
+}
+
+void WCharToMByte(const wchar_t* lpWideCharStr, size_t cchWideChar, std::vector<char>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, NULL, 0, NULL, FALSE);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, &out->at(0), dwMinSize, NULL, FALSE);
+}
+
+void Utf8ToMByte(const char* lpUtf8CharStr, size_t cchUtf8Char, std::vector<char>* out, UINT codePage)
+{
+    out->resize(0);
+
+    std::vector<UChar> tempBuf;
+    MByteToWChar(lpUtf8CharStr, cchUtf8Char, &tempBuf, CP_UTF8);
+    if (0 == tempBuf.size())
+        return;
+    WCharToMByte(&tempBuf[0], tempBuf.size(), out, codePage);
+}
+
+void MByteToUtf8(const char* lpMCharStr, size_t cchMChar, std::vector<char>* out, UINT codePage)
+{
+    out->resize(0);
+
+    std::vector<UChar> tempBuf;
+    MByteToWChar(lpMCharStr, cchMChar, &tempBuf, codePage);
+    if (0 == tempBuf.size())
+        return;
+    WCharToMByte(&tempBuf[0], tempBuf.size(), out, CP_UTF8);
 }
 
 bool splitStringToVector(const String& strData, const char strSplit, bool needTrim, WTF::Vector<String>& out)
@@ -161,46 +249,46 @@ std::string WTFStringToStdString(const WTF::String& str)
 
 bool isTextUTF8(const char *str, int length)
 {
-	int i = 0;
-	DWORD nBytes = 0; // UFT8可用1-6个字节编码,ASCII用一个字节
-	UCHAR chr = 0;
-	bool bAllAscii = true; // 如果全部都是ASCII, 说明不是UTF-8
-	for (i = 0; i < length; i++) {
-		chr = (UCHAR) * (str + i);
+    int i = 0;
+    DWORD nBytes = 0; // UFT8可用1-6个字节编码,ASCII用一个字节
+    UCHAR chr = 0;
+    bool bAllAscii = true; // 如果全部都是ASCII, 说明不是UTF-8
+    for (i = 0; i < length; i++) {
+        chr = (UCHAR)* (str + i);
 
-		if ((chr & 0x80) != 0) // 判断是否ASCII编码,如果不是,说明有可能是UTF-8,ASCII用7位编码,但用一个字节存,最高位标记为0,o0xxxxxxx
-			bAllAscii = false;
+        if ((chr & 0x80) != 0) // 判断是否ASCII编码,如果不是,说明有可能是UTF-8,ASCII用7位编码,但用一个字节存,最高位标记为0,o0xxxxxxx
+            bAllAscii = false;
 
-		if (nBytes == 0) { // 如果不是ASCII码,应该是多字节符,计算字节数
-		
-			if (chr >= 0x80) {
-				if (chr >= 0xFC && chr <= 0xFD)
-					nBytes = 6;
-				else if (chr >= 0xF8)
-					nBytes = 5;
-				else if (chr >= 0xF0)
-					nBytes = 4;
-				else if (chr >= 0xE0)
-					nBytes = 3;
-				else if (chr >= 0xC0)
-					nBytes = 2;
-				else {
-					return false;
-				}
-				nBytes--;
-			}
-		} else { // 多字节符的非首字节,应为 10xxxxxx
-			if ((chr & 0xC0) != 0x80)
-				return false;
-			nBytes--;
-		}
-	}
-	if (nBytes > 0) //违返规则
-		return false;
+        if (nBytes == 0) { // 如果不是ASCII码,应该是多字节符,计算字节数
 
-	if (bAllAscii) //如果全部都是ASCII, 说明不是UTF-8
-		return false;
-	return true;
+            if (chr >= 0x80) {
+                if (chr >= 0xFC && chr <= 0xFD)
+                    nBytes = 6;
+                else if (chr >= 0xF8)
+                    nBytes = 5;
+                else if (chr >= 0xF0)
+                    nBytes = 4;
+                else if (chr >= 0xE0)
+                    nBytes = 3;
+                else if (chr >= 0xC0)
+                    nBytes = 2;
+                else {
+                    return false;
+                }
+                nBytes--;
+            }
+        } else { // 多字节符的非首字节,应为 10xxxxxx
+            if ((chr & 0xC0) != 0x80)
+                return false;
+            nBytes--;
+        }
+    }
+    if (nBytes > 0) //违返规则
+        return false;
+
+    if (bAllAscii) //如果全部都是ASCII, 说明不是UTF-8
+        return false;
+    return true;
 }
 
 

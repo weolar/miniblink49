@@ -2672,8 +2672,13 @@ void FrameView::forceLayoutForPagination(const FloatSize& pageSize, const FloatS
 
             if (!horizontalWritingMode)
                 overflow = overflow.transposedRect();
+
+            // https://chromium.googlesource.com/chromium/src/+/593eebedc4013ea212b05c21dba300d41a6d7977%5E%21/#F2
+            adjustViewSize();
+
             layoutView->clearLayoutOverflow();
             layoutView->addLayoutOverflow(overflow); // This is how we clip in case we overflow again.
+            return;
         }
     }
 
@@ -3973,9 +3978,10 @@ IntSize FrameView::excludeScrollbars(const IntSize& size) const
         std::max(0, size.height() - m_topContentInset - horizontalScrollbarHeight));
 }
 
-void FrameView::setTopContentInset(int offset) {
+void FrameView::setTopContentInset(int offset)
+{
     if (!m_frame->isMainFrame())
-      return;
+        return;
 
     if (m_topContentInset != offset) {
         m_topContentInset = offset;

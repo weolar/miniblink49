@@ -319,7 +319,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_CALL', function (event, id, method, args) {
     let obj = objectsRegistry.get(id);
     callFunction(event, obj[method], obj, args);
   } catch (error) {
-  	console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + error);
+    console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + method + "," + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -347,8 +347,9 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_GET', function (event, id, name) {
 
 ipcMain.on('ELECTRON_BROWSER_DEREFERENCE', function (event, id) {
   objectsRegistry.remove(event.sender.getId(), id)
-})
-
+});
+	  
+/*
 ipcMain.on('ELECTRON_BROWSER_GUEST_WEB_CONTENTS', function (event, guestInstanceId) {
   try {
     let guestViewManager = require('./guest-view-manager')
@@ -374,7 +375,8 @@ ipcMain.on('ELECTRON_BROWSER_ASYNC_CALL_TO_GUEST_VIEW', function (event, request
   	console.log("ELECTRON_BROWSER_ASYNC_CALL_TO_GUEST_VIEW error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
-})
+});
+*/
 
 ipcMain.on('ELECTRON_BROWSER_SEND_TO', function (event, sendToAll, webContentsId, channel, ...args) {
   let contents = webContents.fromId(webContentsId)

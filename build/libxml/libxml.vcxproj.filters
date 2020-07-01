@@ -10,6 +10,9 @@
     <Filter Include="include\libxml">
       <UniqueIdentifier>{64f0bb85-a902-4fa9-b05f-d47439328649}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xslt">
+      <UniqueIdentifier>{4c62dd54-8657-4255-8727-99012aac99aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\libxml\src\c14n.c">
@@ -128,6 +131,75 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\libxml\src\SAX.c">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\extensions.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\extra.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\functions.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\imports.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\keys.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\namespaces.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\numbers.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\preproc.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\security.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\templates.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\transform.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\variables.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xslt.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xsltlocale.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xsltutils.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\attributes.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\attrvt.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\documents.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xpointer.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xpath.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxslt\libxslt\xpath_pattern.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\HTMLtree.c">
+      <Filter>xslt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\HTMLparser.c">
+      <Filter>xslt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +367,72 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xpointer.h">
       <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\extensions.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\extra.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\functions.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\imports.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\keys.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\libxslt.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\namespaces.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\numbersInternals.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\pattern.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\preproc.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\security.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\templates.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\transform.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\variables.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xslt.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltconfig.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltexports.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltInternals.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltlocale.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\xsltutils.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\attributes.h">
+      <Filter>xslt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxslt\libxslt\documents.h">
+      <Filter>xslt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

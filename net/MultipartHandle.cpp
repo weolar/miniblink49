@@ -315,7 +315,7 @@ void MultipartHandle::didReceiveData(size_t length)
 {
     WebURLLoaderInternal* d = m_resourceHandle;
 
-    if (d->m_cancelled) {
+    if (d->isCancelled()) {
         // Request has been canceled, so we'll go to the end state.
         m_state = End;
         return;

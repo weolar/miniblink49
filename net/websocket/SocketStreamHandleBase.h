@@ -64,6 +64,7 @@ protected:
 
     blink::KURL m_url;
     SocketStreamHandleClient* m_client;
+    unsigned long m_clientId;
     StreamBuffer<char, 1024 * 1024> m_buffer;
     SocketStreamState m_state;
 };

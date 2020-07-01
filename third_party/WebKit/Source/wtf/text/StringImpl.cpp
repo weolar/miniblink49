@@ -49,6 +49,9 @@
 #include "wtf/ThreadingPrimitives.h"
 #include <unistd.h>
 #endif
+#include <vector>
+#include "wtf/SpinLock.h"
+#include "wtf/ThreadingPrimitives.h"
 
 using namespace std;
 
@@ -263,15 +266,306 @@ void StringStats::printStats()
 }
 #endif
 
+#pragma optimize("", off)
+
+struct SlowHead {
+    int index;
+    int size;
+
+    void* freeAddr;
+    DWORD freeThreadId;
+    void* lastDoc;
+    DWORD freeCount;
+    DWORD freeCount2;
+};
+
+const int kBufLen = 36 * 4;
+const int kMaxAllowBufLen = 32 * 4;
+
+struct SlowBuf : public SlowHead {
+    char buf[kBufLen];
+    char dummyBuf[kBufLen];
+
+    static SlowBuf* create()
+    {
+        DWORD size = sizeof(SlowBuf);
+
+        SYSTEM_INFO SI = { 0 };
+        ::GetSystemInfo(&SI);
+        DWORD dwPageSize = SI.dwPageSize;
+        UINT byteSize = size * sizeof(char);
+        int nPageNum = byteSize / dwPageSize + 1;
+        kdwAllocSize = nPageNum * dwPageSize;
+
+        void* newAddress = ::VirtualAlloc(NULL, kdwAllocSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+        return (SlowBuf*)newAddress;
+    }
+
+    static DWORD kdwAllocSize;
+};
+
+DWORD SlowBuf::kdwAllocSize = 0;
+
+void* g_lastFreeAddr = nullptr;
+DWORD g_lastFreeThreadId = 0;
+void* g_lastDoc = nullptr;
+
+DWORD g_freeCount = 0;
+DWORD g_freeCount2 = 0;
+
+bool g_canCheck;
+
+class SlowBufMgr {
+public:
+    SlowBufMgr()
+    {
+        m_allMallocNum = 0;
+        m_buf.resize(kMaxSize);
+        for (int i = 0; i < kMaxSize; ++i) {
+            m_buf[i] = SlowBuf::create();
+            m_buf[i]->index = kIsIdleFlag; // kIsIdleFlag 表示空闲
+            m_buf[i]->size = 0;
+
+            m_buf[i]->freeAddr = nullptr;
+            m_buf[i]->freeThreadId = 0;
+            m_buf[i]->lastDoc = nullptr;
+            m_buf[i]->freeCount = 0;
+            m_buf[i]->freeCount2 = 0;
+
+            memset(&(m_buf[i]->buf), 0xE, kBufLen);
+        }
+    }
+
+    void checkOne(SlowBuf* head)
+    {
+        if (kNotIdleFlag == head->index ) {
+            for (int i = head->size; i < kBufLen; ++i) {
+                if (0xE != head->buf[i])
+                    DebugBreak();
+            }
+        } else if (kIsIdleFlag == head->index) {
+            for (int i = 0; i < kBufLen; ++i) {
+                if (0xE != head->buf[i])
+                    DebugBreak();
+            }
+        } else
+            DebugBreak();
+    }
+
+    void* doMalloc(size_t size)
+    {
+        if (size > kMaxAllowBufLen)
+            return nullptr;
+
+        Locker<Mutex> guard(m_lock);
+
+        if (rand() % 7 == 0) {
+            for (int i = 0; i < kMaxSize; ++i) {
+                SlowBuf* head = m_buf[i];
+                checkOne(head);
+            }
+        }
+
+        for (int i = 0; i < kMaxSize; ++i) {
+            SlowBuf* body = m_buf[i];
+            if (kIsIdleFlag == body->index) {
+
+                DWORD flOldProtect = 0;
+                ::VirtualProtect(body, SlowBuf::kdwAllocSize, PAGE_READWRITE, &flOldProtect);
+
+                m_allMallocNum++;
+                body->index = kNotIdleFlag; // i 表示被占用
+                body->size = size;
+                body->freeAddr = nullptr;
+                void* ret = &body->buf;
+                memset(ret, 0xE, kBufLen);
+                return ret;
+            } else if (kNotIdleFlag != body->index) {
+                DebugBreak();
+            }
+        }
+
+        return nullptr;
+    }
+
+    void doFree(SlowHead* head)
+    {
+        Locker<Mutex> guard(m_lock);
+
+        SlowBuf* body = (SlowBuf*)head;
+        checkOne(body);
+        body->index = kIsIdleFlag;
+        body->size = 0;
+
+        body->freeAddr = g_lastFreeAddr;
+        body->freeThreadId = g_lastFreeThreadId;
+        body->lastDoc = g_lastDoc;
+        body->freeCount = g_freeCount;
+        body->freeCount2 = g_freeCount2;
+
+        g_lastFreeAddr = nullptr;
+        g_lastFreeThreadId = 0;
+        //g_lastDoc = nullptr;
+        g_freeCount2++;
+
+        m_allMallocNum--;
+
+        memcpy(&body->dummyBuf, &body->buf, kBufLen);
+        
+        memset(&body->buf, 0xE, kBufLen);
+
+        DWORD flOldProtect = 0;
+        ::VirtualProtect(body, SlowBuf::kdwAllocSize, PAGE_READONLY, &flOldProtect);
+    }
+
+    void find(SlowHead* head)
+    {
+        for (int i = 0; i < kMaxSize; ++i) {
+            SlowBuf* body = m_buf[i];
+            if (head != body)
+                continue;
+            DebugBreak();
+            OutputDebugStringA("find err!\n");
+        }
+    }
+
+    static SlowBufMgr* inst()
+    {
+        if (!m_inst)
+            m_inst = new SlowBufMgr();
+        return m_inst;
+    }
+
+    size_t m_allMallocNum;
+
+    static const int kSysMallocFlag = -5;
+    static const int kIsIdleFlag = -6;
+    static const int kNotIdleFlag = -7;
+
+private:
+    static SlowBufMgr* m_inst;
+    Mutex m_lock;
+    std::vector<SlowBuf*> m_buf;
+    static const int kMaxSize = 4000;
+};
+SlowBufMgr* SlowBufMgr::m_inst = nullptr;
+
+void* slowMalloc(size_t size)
+{
+    void* result = SlowBufMgr::inst()->doMalloc(size);
+    if (result)
+        return result;
+
+    SlowHead* head = (SlowHead*)malloc(size + sizeof(SlowHead));
+    head->index = SlowBufMgr::kSysMallocFlag; // -5 表示系统分配
+    head->size = size; //
+    return head + 1;
+}
+
+void slowFree(void* addr)
+{
+    SlowHead* head = (SlowHead*)addr;
+    head -= 1;
+    if (SlowBufMgr::kSysMallocFlag == head->index)
+        free(head);
+    else
+        SlowBufMgr::inst()->doFree(head);
+}
+
+void* slowRealloc(void* addr, size_t newSize)
+{
+    if (!addr)
+        return slowMalloc(newSize);
+    if (!newSize) {
+        slowFree(addr);
+        return 0;
+    }
+
+    SlowHead* head = (SlowHead*)addr;
+    head -= 1;
+
+    size_t actualNewSize = newSize;
+    size_t actualOldSize = head->size;
+
+    if (actualNewSize == actualOldSize)
+        return addr;
+
+    // This realloc cannot be resized in-place. Sadness.
+    void* ret = slowMalloc(newSize);
+    size_t copySize = actualOldSize;
+    if (newSize < copySize)
+        copySize = newSize;
+
+    memcpy(ret, addr, copySize);
+    slowFree(addr);
+    return ret;
+}
+
+int StringImpl::getRef()
+{
+    return m_refCount;
+}
+
+bool StringImpl::hasHash() const
+{
+    return rawHash() != 0;
+}
+
+unsigned StringImpl::existingHash() const
+{
+    ASSERT(hasHash());
+    return rawHash();
+}
+
+unsigned StringImpl::hash() const
+{
+    if (hasHash())
+        return existingHash();
+    return hashSlowCase();
+}
+
+bool StringImpl::hasOneRef() const
+{
+    return m_refCount == 1;
+}
+
+void StringImpl::ref()
+{
+    ++m_refCount;
+}
+
+void StringImpl::deref()
+{
+    if (hasOneRef()) {
+        destroyIfNotStatic();
+        return;
+    }
+
+    --m_refCount;
+}
+
+#pragma optimize("", on)
+
+#define UNUSE_MALLOC_CHECK 1
+
 void* StringImpl::operator new(size_t size)
 {
     ASSERT(size == sizeof(StringImpl));
-    return partitionAllocGeneric(Partitions::bufferPartition(), size);
+#if UNUSE_MALLOC_CHECK
+    return partitionAllocGeneric(Partitions::bufferPartition(), size, "StringImpl new");
+#else
+    return slowMalloc(size);
+#endif
 }
 
 void StringImpl::operator delete(void* ptr)
 {
+#if UNUSE_MALLOC_CHECK
     partitionFreeGeneric(Partitions::bufferPartition(), ptr);
+#else
+    return slowFree(ptr);
+#endif
 }
 
 inline StringImpl::~StringImpl()
@@ -300,7 +594,11 @@ PassRefPtr<StringImpl> StringImpl::createUninitialized(unsigned length, LChar*& 
     // Allocate a single buffer large enough to contain the StringImpl
     // struct as well as the data which it contains. This removes one
     // heap allocation from this call.
-    StringImpl* string = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), allocationSize<LChar>(length)));
+#if UNUSE_MALLOC_CHECK
+    StringImpl* string = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), allocationSize<LChar>(length), "StringImpl new"));
+#else
+    StringImpl* string = static_cast<StringImpl*>(slowMalloc(allocationSize<LChar>(length)));
+#endif
 
     data = reinterpret_cast<LChar*>(string + 1);
 #ifdef _DEBUG
@@ -320,7 +618,11 @@ PassRefPtr<StringImpl> StringImpl::createUninitialized(unsigned length, UChar*& 
     // Allocate a single buffer large enough to contain the StringImpl
     // struct as well as the data which it contains. This removes one
     // heap allocation from this call.
-    StringImpl* string = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), allocationSize<UChar>(length)));
+#if UNUSE_MALLOC_CHECK
+    StringImpl* string = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), allocationSize<UChar>(length), "StringImpl::createUninitialized"));
+#else
+    StringImpl* string = static_cast<StringImpl*>(slowMalloc(allocationSize<UChar>(length)));
+#endif
 
     data = reinterpret_cast<UChar*>(string + 1);
 #ifdef _DEBUG
@@ -341,7 +643,12 @@ PassRefPtr<StringImpl> StringImpl::reallocate(PassRefPtr<StringImpl> originalStr
     // Same as createUninitialized() except here we use realloc.
     size_t size = is8Bit ? allocationSize<LChar>(length) : allocationSize<UChar>(length);
     originalString->~StringImpl();
-    StringImpl* string = static_cast<StringImpl*>(partitionReallocGeneric(Partitions::bufferPartition(), originalString.leakRef(), size));
+#if UNUSE_MALLOC_CHECK
+    StringImpl* string = static_cast<StringImpl*>(partitionReallocGeneric(Partitions::bufferPartition(), originalString.leakRef(), size, "StringImpl::reallocate"));
+#else
+    StringImpl* string = static_cast<StringImpl*>(slowRealloc(originalString.leakRef(), size));
+#endif
+
     if (is8Bit)
         return adoptRef(new (string) StringImpl(length, Force8BitConstructor));
     return adoptRef(new (string) StringImpl(length));
@@ -392,7 +699,11 @@ StringImpl* StringImpl::createStatic(const char* string, unsigned length, unsign
     size_t size = sizeof(StringImpl) + length * sizeof(LChar);
 
     WTF_ANNOTATE_SCOPED_MEMORY_LEAK;
-    StringImpl* impl = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), size));
+#if UNUSE_MALLOC_CHECK
+    StringImpl* impl = static_cast<StringImpl*>(partitionAllocGeneric(Partitions::bufferPartition(), size, "StringImpl::createStatic"));
+#else
+    StringImpl* impl = static_cast<StringImpl*>(slowMalloc(size));
+#endif
 
     LChar* data = reinterpret_cast<LChar*>(impl + 1);
     impl = new (impl) StringImpl(length, hash, StaticString);

@@ -24,13 +24,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\files\file.cc" />
     <ClCompile Include="..\..\base\files\file_path.cc" />
     <ClCompile Include="..\..\base\files\file_path_constants.cc" />
-    <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp" />
+    <ClCompile Include="..\..\base\files\file_win.cc" />
+    <ClCompile Include="..\..\base\files\scoped_file.cc" />
+    <ClCompile Include="..\..\base\files\scoped_platform_file_closer.cc" />
+    <ClCompile Include="..\..\base\json\json_parser.cc" />
+    <ClCompile Include="..\..\base\json\json_reader.cc" />
+    <ClCompile Include="..\..\base\json\json_util.cc" />
+    <ClCompile Include="..\..\base\json\json_writer.cc" />
+    <ClCompile Include="..\..\base\ostreamvc6.cpp" />
+    <ClCompile Include="..\..\base\pickle.cc" />
+    <ClCompile Include="..\..\base\platform_file.cc" />
+    <ClCompile Include="..\..\base\platform_file_win.cc" />
     <ClCompile Include="..\..\base\strings\string_piece.cc" />
     <ClCompile Include="..\..\base\strings\string_util.cc" />
     <ClCompile Include="..\..\base\thread.cc" />
+    <ClCompile Include="..\..\base\time\time.cc" />
+    <ClCompile Include="..\..\base\time\time_win.cc" />
     <ClCompile Include="..\..\base\values.cc" />
+    <ClCompile Include="..\..\base\windowsvc6.cpp" />
+    <ClCompile Include="..\..\base\win\scoped_handle.cc" />
     <ClCompile Include="..\..\base\win\shell.cc" />
     <ClCompile Include="..\..\base\win\shortcut.cc" />
     <ClCompile Include="..\..\base\win\windows_version.cc" />
@@ -46,13 +61,19 @@
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_checker_impl.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc" />
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp" />
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp" />
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiDialag.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiMenu.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiProtocol.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiTray.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiAsar.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiIntlCollator.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiOriginalFs.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiScreen.cpp" />
@@ -64,12 +85,16 @@
     <ClCompile Include="..\..\electron\common\api\ObjectLifeMonitor.cpp" />
     <ClCompile Include="..\..\electron\common\api\RemoteCallbackFreer.cpp" />
     <ClCompile Include="..\..\electron\common\api\RemoteObjectFreer.cpp" />
+    <ClCompile Include="..\..\electron\common\asar\Archive.cpp" />
+    <ClCompile Include="..\..\electron\common\asar\AsarUtil.cpp" />
+    <ClCompile Include="..\..\electron\common\asar\ScopedTemporaryFile.cpp" />
     <ClCompile Include="..\..\electron\common\AtomCommandLine.cpp" />
     <ClCompile Include="..\..\electron\common\IdLiveDetect.cpp" />
     <ClCompile Include="..\..\electron\common\NodeBinding.cpp" />
     <ClCompile Include="..\..\electron\common\NodeThread.cpp" />
     <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp" />
     <ClCompile Include="..\..\electron\common\PlatformUtilWin.cpp" />
+    <ClCompile Include="..\..\electron\common\SystemTray.cpp" />
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
     <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp" />
@@ -84,20 +109,36 @@
     <ClCompile Include="..\..\gin\wrapper_info.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base\files\file.h" />
     <ClInclude Include="..\..\base\files\file_path.h" />
+    <ClInclude Include="..\..\base\files\scoped_file.h" />
+    <ClInclude Include="..\..\base\files\scoped_platform_file_closer.h" />
+    <ClInclude Include="..\..\base\json\json_parser.h" />
+    <ClInclude Include="..\..\base\json\json_reader.h" />
+    <ClInclude Include="..\..\base\json\json_util.h" />
+    <ClInclude Include="..\..\base\json\json_writer.h" />
+    <ClInclude Include="..\..\base\pickle.h" />
+    <ClInclude Include="..\..\base\platform_file.h" />
     <ClInclude Include="..\..\base\strings\string_piece.h" />
     <ClInclude Include="..\..\base\strings\string_util.h" />
     <ClInclude Include="..\..\base\thread.h" />
+    <ClInclude Include="..\..\base\time\time.h" />
     <ClInclude Include="..\..\base\values.h" />
     <ClInclude Include="..\..\base\win\scoped_comptr.h" />
     <ClInclude Include="..\..\base\win\scoped_com_initializer.h" />
     <ClInclude Include="..\..\base\win\scoped_co_mem.h" />
+    <ClInclude Include="..\..\base\win\scoped_handle.h" />
     <ClInclude Include="..\..\base\win\scoped_propvariant.h" />
     <ClInclude Include="..\..\base\win\shell.h" />
     <ClInclude Include="..\..\base\win\shortcut.h" />
     <ClInclude Include="..\..\base\win\windows_version.h" />
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h" />
+    <ClInclude Include="..\..\content\ui\WCDataObject.h" />
+    <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
+    <ClInclude Include="..\..\electron\browser\api\MenuEventNotif.h" />
+    <ClInclude Include="..\..\electron\browser\api\ProtocolInterface.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowInterface.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
     <ClInclude Include="..\..\electron\common\api\ApiKeyWeakMap.h" />
@@ -108,9 +149,14 @@
     <ClInclude Include="..\..\electron\common\api\ObjectLifeMonitor.h" />
     <ClInclude Include="..\..\electron\common\api\RemoteCallbackFreer.h" />
     <ClInclude Include="..\..\electron\common\api\RemoteObjectFreer.h" />
+    <ClInclude Include="..\..\electron\common\asar\Archive.h" />
+    <ClInclude Include="..\..\electron\common\asar\AsarUtil.h" />
+    <ClInclude Include="..\..\electron\common\asar\ScopedTemporaryFile.h" />
     <ClInclude Include="..\..\electron\common\AtomCommandLine.h" />
     <ClInclude Include="..\..\electron\common\AtomVersion.h" />
     <ClInclude Include="..\..\electron\common\ChromeVersion.h" />
+    <ClInclude Include="..\..\electron\common\DragAction.h" />
+    <ClInclude Include="..\..\electron\common\HideWndHelp.h" />
     <ClInclude Include="..\..\electron\common\IdLiveDetect.h" />
     <ClInclude Include="..\..\electron\common\KeyWeakMap.h" />
     <ClInclude Include="..\..\electron\common\NodeBinding.h" />
@@ -119,10 +165,12 @@
     <ClInclude Include="..\..\electron\common\OptionsSwitches.h" />
     <ClInclude Include="..\..\electron\common\PlatformUtil.h" />
     <ClInclude Include="..\..\electron\common\StringUtil.h" />
+    <ClInclude Include="..\..\electron\common\SystemTray.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\common\WinUserMsg.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
     <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h" />
+    <ClInclude Include="..\..\electron\resource.h" />
     <ClInclude Include="..\..\gin\arguments.h" />
     <ClInclude Include="..\..\gin\converter.h" />
     <ClInclude Include="..\..\gin\dictionary.h" />
@@ -130,6 +178,9 @@
     <ClInclude Include="..\..\gin\object_template_builder.h" />
     <ClInclude Include="..\..\gin\per_isolate_data.h" />
     <ClInclude Include="..\..\gin\wrappable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\electron\electron.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -235,7 +286,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../../;$(SolutionDir)../electron/;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../../;$(SolutionDir)../electron/;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/uv/include;$(SolutionDir)../node/cares/include;$(SolutionDir)../node/src;$(SolutionDir)../v8_5_7;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
@@ -255,9 +306,9 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;ENABLE_CEF=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;ENABLE_CEF=1;USING_VC6RT=1;USING_CHROMIUM_BASE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/uv/include;$(SolutionDir)../node/cares/include;$(SolutionDir)../node/src;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -266,9 +317,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -317,7 +370,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imm32.lib;node.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;node.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -1,6 +1,7 @@
 #include "env.h"
 #include "env-inl.h"
 #include "v8.h"
+#include "net/ActivatingObjCheck.h"
 
 #if defined(_MSC_VER)
 #define getpid GetCurrentProcessId
@@ -11,8 +12,9 @@
 #include <stdio.h>
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include <list>
+#include <algorithm>
 #endif
 
 namespace node {
@@ -67,14 +69,88 @@ void Environment::PrintSyncTrace() const {
   fflush(stderr);
 }
 
+void Environment::AddCleanupHook(void(*fn)(void*), void* arg) {
+    CleanupHookCallback* cb = new CleanupHookCallback(fn, arg, cleanup_hook_counter_++);
+    if (!cleanup_hooks_)
+        cleanup_hooks_ = new std::vector<CleanupHookCallback*>();
+    cleanup_hooks_->push_back(cb);
+}
+
+void Environment::RemoveCleanupHook(void(*fn)(void*), void* arg) {   
+    for (size_t i = 0; i < cleanup_hooks_->size(); ++i) {
+        CleanupHookCallback* hook = cleanup_hooks_->at(i);
+        if (hook->fn_ == fn && hook->arg_ == arg) {
+            cleanup_hooks_->erase(cleanup_hooks_->begin() + i);
+            delete hook;
+            return;
+        }
+    }
+}
+
+void Environment::InitEnv() {
+    debugger_agent_ = new debugger::Agent(this);
+#if HAVE_INSPECTOR
+    inspector_agent_ = new debugger::Agent(this);
+#endif
+
+    destroy_ids_list_ = new std::vector<int64_t>();
+    destroy_ids_list_->reserve(512);
+}
+
+void Environment::CleanEnv() {
+    CleanupHandles();
+
+    delete debugger_agent_;
+#if HAVE_INSPECTOR
+    delete inspector_agent_;
+#endif
+
+    delete destroy_ids_list_;
+
+    while (get_cleanup_hooks() && !get_cleanup_hooks()->empty()) {
+        // Copy into a vector, since we can't sort an unordered_set in-place.
+        std::vector<Environment::CleanupHookCallback*> callbacks(get_cleanup_hooks()->begin(), get_cleanup_hooks()->end());
+        // We can't erase the copied elements from `cleanup_hooks_` yet, because we
+        // need to be able to check whether they were un-scheduled by another hook.
+        std::sort(callbacks.begin(), callbacks.end(), &Environment::CleanupHookCallback::CompareGT);
+
+        for (size_t i = 0; i < callbacks.size(); ++i) {
+            const Environment::CleanupHookCallback* cb = callbacks[i];
+
+            bool find = false;
+            for (size_t j = 0; j < get_cleanup_hooks()->size(); ++j) {
+                const Environment::CleanupHookCallback* cb2 = get_cleanup_hooks()->at(j);
+                if (cb2 != cb)
+                    continue;
+                find = true;
+                break;
+            }
+            if (!find) {
+                // This hook was removed from the `cleanup_hooks_` set during another
+                // hook that was run earlier. Nothing to do here.
+                continue;
+            }
+
+            cb->fn_(cb->arg_);
+            RemoveCleanupHook(cb->fn_, cb->arg_);
+        }
+        CleanupHandles();
+    }
+}
+
+void AddLiveSet(intptr_t obj) {
+    net::ActivatingObjCheck::inst()->add((intptr_t)obj);
+}
+
+void RemoveLiveSet(intptr_t obj) {
+    net::ActivatingObjCheck::inst()->remove((intptr_t)obj);
+}
+
+bool IsLiveObj(intptr_t obj) {
+    return net::ActivatingObjCheck::inst()->isActivating((intptr_t)obj);
+}
+
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-// Environment::MicrotaskSuppressionHandle Environment::BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
-//     return nodeBlinkMicrotaskSuppressionEnter(isolate);
-// }
-// 
-// void Environment::BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle) {
-//     nodeBlinkMicrotaskSuppressionLeave(handle);
-// }
 
 void BlinkMicrotaskSuppressionEnterFunc(Environment* self) {
     if (!self->blink_microtask_suppression_handle_)

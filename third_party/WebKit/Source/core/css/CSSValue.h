@@ -93,6 +93,8 @@ public:
     bool isContentDistributionValue() const { return m_classType == CSSContentDistributionClass; }
     bool isUnicodeRangeValue() const { return m_classType == UnicodeRangeClass; }
     bool isGridLineNamesValue() const { return m_classType == GridLineNamesClass; }
+	bool isCustomPropertyDeclaration() const { return m_classType == CustomPropertyDeclarationClass; }
+	bool isVariableReferenceValue() const { return m_classType == VariableReferenceClass; }
 
     bool hasFailedOrCanceledSubresources() const;
 
@@ -144,6 +146,9 @@ protected:
         CalculationClass,
         GridTemplateAreasClass,
         PathClass,
+
+		VariableReferenceClass,
+		CustomPropertyDeclarationClass,
 
         // SVG classes.
         CSSSVGDocumentClass,

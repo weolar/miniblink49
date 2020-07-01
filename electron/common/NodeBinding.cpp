@@ -1,7 +1,11 @@
-#include "common/NodeBinding.h"
+﻿#include "common/NodeBinding.h"
 
 #include "uv.h"
-#include "nodeblink.h"
+#include "node/nodeblink.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 #include "gin/dictionary.h"
 #include "base/file_path.h"
 #include "common/StringUtil.h"
@@ -80,9 +84,9 @@ void log(const v8::FunctionCallbackInfo<v8::Value>& info) {
 
 } // namespace
 
-NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
+NodeBindings::NodeBindings(bool isBrowser)
     : m_isBrowser(isBrowser)
-    , m_uvLoop(uvLoop)
+    , m_uvLoop(nullptr)
     , m_env(nullptr)
     , m_callNextTickAsync(new uv_async_t()) {
 
@@ -114,7 +118,7 @@ std::wstring getResourcesPath(const std::wstring& name) {
     std::wstring temp(out);
     temp += L"\\node.exp";
     if (!::PathFileExists(temp.c_str()))
-        out += L"\\electron.asar\\";
+        out += L"\\resources\\miniblink.asar\\";
     else
         out += L"\\..\\..\\electron\\lib\\";
     
@@ -142,7 +146,7 @@ void loadNodeScriptFromRes(void* path) {
     if (fileHandle == INVALID_HANDLE_VALUE)
         return;
 
-    std::vector<char>* buffer = new std::vector<char>(); // �ڴ�й©
+    std::vector<char>* buffer = new std::vector<char>(); // 内存泄漏
     buffer->resize(attrs.nFileSizeLow);
 
     DWORD bytesRead;
@@ -203,9 +207,70 @@ void NodeBindings::bindFunction(gin::Dictionary* dict) {
     }
 }
 
+struct MbConsoleLogInfo {
+    MbConsoleLogInfo(bool isMainNode)
+        : m_isMainNode(isMainNode) {
+    }
+
+    bool getIsMainNode() const {
+        return m_isMainNode;
+    };
+
+private:
+    bool m_isMainNode;
+};
+
+static void mbConsoleLog(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+    MbConsoleLogInfo* consoleLogInfo = static_cast<MbConsoleLogInfo*>(v8::External::Cast(*info.Data())->Value());
+
+    v8::Local<v8::Value> param0 = info[0];
+    v8::Local<v8::String> param0V8String = param0->ToString(isolate);
+
+    v8::String::Utf8Value param0String(param0V8String);
+    std::string str = "mbConsoleLog, ";
+    str += consoleLogInfo->getIsMainNode() ? ("MainNode :") : ("RenderNode: ");
+    str += *param0String;
+    str += "\n";
+
+    OutputDebugStringA(str.c_str());
+}
+
+static void addFunction(v8::Local<v8::Context> context, const char* name, v8::FunctionCallback callback, bool isMainNode) {
+    v8::Isolate* isolate = context->GetIsolate();
+    if (!isolate->InContext())
+        return;
+    v8::HandleScope handleScope(isolate);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Object> object = context->Global();
+    v8::Local<v8::FunctionTemplate> tmpl = v8::FunctionTemplate::New(isolate);
+    v8::Local<v8::Value> data = v8::External::New(isolate, new MbConsoleLogInfo(isMainNode));
+
+    // Set the function handler callback.
+    tmpl->SetCallHandler(callback, data);
+
+    // Retrieve the function object and set the name.
+    v8::Local<v8::Function> func = tmpl->GetFunction();
+    if (func.IsEmpty())
+        return;
+
+    v8::MaybeLocal<v8::String> nameV8 = v8::String::NewFromUtf8(isolate, name, v8::NewStringType::kNormal, -1);
+    if (nameV8.IsEmpty())
+        return;
+    v8::Local<v8::String> nameV8Local = nameV8.ToLocalChecked();
+    func->SetName(nameV8Local);
+
+    object->Set(nameV8Local, func);
+}
+
 node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> context) {
     uv_async_init(m_uvLoop, m_callNextTickAsync, onCallNextTick);
     m_callNextTickAsync->data = this;
+
+    addFunction(context, "mbConsoleLog", mbConsoleLog, m_isBrowser);
 
     std::vector<std::string> args = AtomCommandLine::argv();
 
@@ -215,6 +280,25 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     std::wstring scriptPath = resourcesPath // .append(FILE_PATH_LITERAL("electron.asar"))
         .append(processType)
         .append(FILE_PATH_LITERAL("\\init.js"));
+
+    // electron里的process.resourcesPath指的是xxx/resources目录。而main.js一般在xxx/resources/app下
+    if (args.size() > 1) {
+        resourcesPath = StringUtil::MultiByteToUTF16(/*CP_ACP*/(936), args[1]);
+        const wchar_t* resourcesPos = wcsstr(resourcesPath.c_str(), L"resources");
+        if (!resourcesPos) {
+            std::vector<wchar_t> wbuf(resourcesPath.size() + 1);
+            memset(&wbuf[0], 0, 2 * (resourcesPath.size() + 1));
+            wcsncpy(&wbuf[0], resourcesPath.c_str(), resourcesPath.size());
+            ::PathRemoveFileSpecW(&wbuf[0]);
+            resourcesPath = &wbuf[0];
+        } else {
+            resourcesPath = std::wstring(resourcesPath.c_str(), resourcesPos - resourcesPath.c_str() + 9);
+        }
+    }
+
+    if (scriptPath.length() > 0 && scriptPath[0] >= L'a' && scriptPath[0] <= L'z')
+        scriptPath[0] += L'A' - L'a';
+
     std::string scriptPathStr = StringUtil::UTF16ToUTF8(scriptPath);
     args.insert(args.begin() + 1, scriptPathStr.c_str());
 
@@ -225,11 +309,11 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 
 //     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
 //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
+//     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
 
     // Node turns off AutorunMicrotasks, but we need it in web pages to match the
     // behavior of Chrome.
 //     if (!m_isBrowser)
-//         context->GetIsolate()->SetAutorunMicrotasks(true);
 
     gin::Dictionary process(context->GetIsolate(), m_env->process_object());
     process.Set("type", StringUtil::UTF16ToUTF8(processType));
@@ -274,6 +358,8 @@ void NodeBindings::onCallNextTick(uv_async_t* handle) {
         node::Environment::AsyncCallbackScope callbackScope(env);
         if (callbackScope.in_makecallback())
             continue;
+
+        v8::Context::Scope contextScope(env->context());
 
         node::Environment::TickInfo* tickInfo = env->tick_info();
         if (tickInfo->length() == 0)

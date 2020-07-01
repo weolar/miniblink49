@@ -112,7 +112,8 @@ PassRefPtrWillBeRawPtr<NodeFilter> toNodeFilter(v8::Local<v8::Value> callback, v
 bool toBooleanSlow(v8::Isolate* isolate, v8::Local<v8::Value> value, ExceptionState& exceptionState)
 {
     ASSERT(!value->IsBoolean());
-    v8::TryCatch block;
+
+    v8::TryCatch block(isolate);
     bool result = false;
     if (!v8Call(value->BooleanValue(isolate->GetCurrentContext()), result, block))
         exceptionState.rethrowV8Exception(block.Exception());
@@ -644,16 +645,17 @@ String toUSVString(v8::Isolate* isolate, v8::Local<v8::Value> value, ExceptionSt
 
 XPathNSResolver* toXPathNSResolver(ScriptState* scriptState, v8::Local<v8::Value> value)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_XPATH
     XPathNSResolver* resolver = nullptr;
     if (V8XPathNSResolver::hasInstance(value, scriptState->isolate()))
         resolver = V8XPathNSResolver::toImpl(v8::Local<v8::Object>::Cast(value));
     else if (value->IsObject())
         resolver = V8CustomXPathNSResolver::create(scriptState, value.As<v8::Object>());
     return resolver;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
     notImplemented();
     return nullptr;
+#endif // MINIBLINK_NO_XPATH
 }
 
 DOMWindow* toDOMWindow(v8::Isolate* isolate, v8::Local<v8::Value> value)
@@ -713,13 +715,13 @@ ExecutionContext* toExecutionContext(v8::Local<v8::Context> context)
     v8::Local<v8::Object> windowWrapper = V8Window::findInstanceInPrototypeChain(global, context->GetIsolate());
     if (!windowWrapper.IsEmpty())
         return V8Window::toImpl(windowWrapper)->executionContext();
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
     v8::Local<v8::Object> workerWrapper = V8WorkerGlobalScope::findInstanceInPrototypeChain(global, context->GetIsolate());
     if (!workerWrapper.IsEmpty())
         return V8WorkerGlobalScope::toImpl(workerWrapper)->executionContext();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif
     // FIXME: Is this line of code reachable?
-    notImplemented();
     return 0;
 }
 
@@ -803,7 +805,7 @@ void crashIfV8IsDead()
     if (v8::V8::IsDead()) {
         // FIXME: We temporarily deal with V8 internal error situations
         // such as out-of-memory by crashing the renderer.
-        CRASH();
+        //CRASH(); // weolar
     }
 }
 

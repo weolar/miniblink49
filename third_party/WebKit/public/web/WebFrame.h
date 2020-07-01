@@ -662,6 +662,10 @@ public:
     // to support layout tests.
     virtual WebString layoutTreeAsText(LayoutAsTextControls toShow = LayoutAsTextNormal) const = 0;
 
+    // Draws the contents of the web frame at the specified region onto the
+    // specified canvas
+    virtual void drawInCanvas(const WebRect& rect, const WebString& customCSS, WebCanvas* canvas) const {};
+
     // Calls markerTextForListItem() defined in core/layout/LayoutTreeAsText.h.
     virtual WebString markerTextForListItem(const WebElement&) const = 0;
 

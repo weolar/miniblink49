@@ -662,13 +662,16 @@ SkScalerContext_GDI::SkScalerContext_GDI(SkTypeface* rawTypeface,
     }
 
     fSavefont = (HFONT)SelectObject(fDDC, fFont);
-
+    
     if (0 == GetTextMetrics(fDDC, &fTM)) {
         call_ensure_accessible(lf);
         if (0 == GetTextMetrics(fDDC, &fTM)) {
             fTM.tmPitchAndFamily = TMPF_TRUETYPE;
         }
     }
+
+    if (0 == fTM.tmMaxCharWidth)
+        fTM.tmMaxCharWidth = fTM.tmAveCharWidth;
 
     XFORM xform;
     if (fTM.tmPitchAndFamily & TMPF_VECTOR) {

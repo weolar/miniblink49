@@ -30,8 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/ScriptController.h"
+#include "config.h"
 
 #include "bindings/core/v8/BindingSecurity.h"
 #include "bindings/core/v8/NPV8Object.h"
@@ -83,7 +83,7 @@
 
 namespace blink {
 
-bool ScriptController::canAccessFromCurrentOrigin(LocalFrame *frame)
+bool ScriptController::canAccessFromCurrentOrigin(LocalFrame* frame)
 {
     if (!frame)
         return false;
@@ -172,7 +172,7 @@ v8::Local<v8::Value> ScriptController::executeScriptAndReturnValue(v8::Local<v8:
         // the code. These exceptions should not interfere with
         // javascript code we might evaluate from C++ when returning
         // from here.
-        v8::TryCatch tryCatch;
+        v8::TryCatch tryCatch(isolate());
         tryCatch.SetVerbose(true);
 
         v8::Local<v8::Script> script;
@@ -369,7 +369,7 @@ NPObject* ScriptController::windowScriptNPObject()
     if (canExecuteScripts(NotAboutToExecuteScript)) {
         // JavaScript is enabled, so there is a JavaScript window object.
         // Return an NPObject bound to the window object.
-		m_windowScriptNPObject = createScriptObject(frame(), isolate());
+        m_windowScriptNPObject = createScriptObject(frame(), isolate());
         _NPN_RegisterObject(m_windowScriptNPObject, 0);
     } else {
         // JavaScript is not enabled, so we cannot bind the NPObject to the
@@ -452,6 +452,8 @@ bool ScriptController::canExecuteScripts(ReasonForCallingCanExecuteScripts reaso
 {
     // For performance reasons, we check isInPrivateScriptIsolateWorld() only if
     // canExecuteScripts is going to return false.
+    if (!blink::RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
 
     if (frame()->document() && frame()->document()->isSandboxed(SandboxScripts)) {
         if (isInPrivateScriptIsolateWorld(isolate()))

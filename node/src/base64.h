@@ -75,7 +75,7 @@ size_t base64_decode_slow(char* dst, size_t dstlen,
     if (k >= dstlen)                                                          \
       return k;                                                               \
     hi = lo;
-    V(/* Nothing. */);
+    V(void/* Nothing. */);
     V(dst[k++] = ((hi & 0x3F) << 2) | ((lo & 0x30) >> 4));
     V(dst[k++] = ((hi & 0x0F) << 4) | ((lo & 0x3C) >> 2));
     V(dst[k++] = ((hi & 0x03) << 6) | ((lo & 0x3F) >> 0));

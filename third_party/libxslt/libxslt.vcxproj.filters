@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libxslt">
+      <UniqueIdentifier>{2879D67B-E855-2464-5A24-AC416F4D8A21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libxslt\attributes.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\attributes.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\attrvt.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClCompile Include="libxslt\documents.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\documents.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\extensions.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\extensions.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\extra.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\extra.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\functions.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\functions.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\imports.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\imports.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\keys.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\keys.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\libxslt.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\namespaces.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\namespaces.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\numbers.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\numbersInternals.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\pattern.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\pattern.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\preproc.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\preproc.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\security.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\security.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\templates.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\templates.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\transform.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\transform.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\trio.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\triodef.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\variables.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\variables.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\win32config.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\xslt.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\xslt.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\xsltconfig.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\xsltexports.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\xsltInternals.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\xsltlocale.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\xsltlocale.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClCompile Include="libxslt\xsltutils.c">
+      <Filter>libxslt</Filter>
+    </ClCompile>
+    <ClInclude Include="libxslt\xsltutils.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="libxslt\xsltwin32config.h">
+      <Filter>libxslt</Filter>
+    </ClInclude>
+    <ClInclude Include="linux\config.h">
+      <Filter>linux</Filter>
+    </ClInclude>
+    <ClInclude Include="mac\config.h">
+      <Filter>mac</Filter>
+    </ClInclude>
+    <None Include="libxslt.gyp"/>
+  </ItemGroup>
+</Project>

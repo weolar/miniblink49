@@ -33,7 +33,7 @@
 #include "core/xml/parser/XMLParserInput.h"
 #include "wtf/text/CString.h"
 #include <libxml/uri.h>
-#include <libxslt/xsltutils.h>
+#include "third_party/libxslt/libxslt/xsltutils.h"
 
 namespace blink {
 

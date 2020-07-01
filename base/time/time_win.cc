@@ -41,9 +41,7 @@
 #include <mmsystem.h>
 
 #include "base/basictypes.h"
-//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "include/base/cef_lock.h"
-//#endif
+#include "base/lock.h"
 
 using base::Time;
 using base::TimeDelta;
@@ -165,7 +163,8 @@ FILETIME Time::ToFileTime() const {
 void Time::EnableHighResolutionTimer(bool enable) {
     // Test for single-threaded access.
     static DWORD my_thread = ::GetCurrentThreadId();
-    ASSERT(::GetCurrentThreadId() == my_thread);
+    if (::GetCurrentThreadId() != my_thread)
+        DebugBreak();
 
     if (high_resolution_timer_enabled_ == enable)
         return;
@@ -369,11 +368,11 @@ public:
     }
 
     bool IsUsingHighResClock() {
-        return ticks_per_second_ != 0.0;
+        return ticks_per_second_ != 0;
     }
 
     void DisableHighResClock() {
-        ticks_per_second_ = 0.0;
+        ticks_per_second_ = 0;
     }
 
     TimeDelta Now() {
@@ -387,7 +386,10 @@ public:
     int64 GetQPCDriftMicroseconds() {
         if (!IsUsingHighResClock())
             return 0;
-        return std::abs((UnreliableNow() - ReliableNow()) - skew_);
+        int64 val = ((UnreliableNow() - ReliableNow()) - skew_);
+        if (val < 0)
+            return -val;
+        return val;
     }
 
     int64 QPCValueToMicroseconds(LONGLONG qpc_value) {

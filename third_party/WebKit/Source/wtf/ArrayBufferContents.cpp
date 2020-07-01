@@ -115,7 +115,7 @@ void ArrayBufferContents::allocateMemory(size_t size, InitializationPolicy polic
     if (s_adjustAmountOfExternalAllocatedMemoryFunction)
         s_adjustAmountOfExternalAllocatedMemoryFunction(static_cast<int>(size));
 #if 1
-    MemoryHead* head = (MemoryHead*)partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size + sizeof(MemoryHead));
+    MemoryHead* head = (MemoryHead*)partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size + sizeof(MemoryHead), "ArrayBufferContents::allocateMemory");
     head->magicNum = MemoryHead::kMagicNum0;
     head->size = size;
     data = MemoryHead::getHeadToMemBegin(head);

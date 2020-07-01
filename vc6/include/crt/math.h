@@ -188,6 +188,8 @@ _CRTIMP double  __cdecl _jn(int, double);
 _CRTIMP double  __cdecl ldexp(double, int);
         int     __cdecl _matherr(struct _exception *);
 _CRTIMP double  __cdecl modf(double, double *);
+        float   __cdecl fmaxf(float _X, float _Y);
+        float   __cdecl fmax(float _X, float _Y);
 
 _CRTIMP double  __cdecl _y0(double);
 _CRTIMP double  __cdecl _y1(double);

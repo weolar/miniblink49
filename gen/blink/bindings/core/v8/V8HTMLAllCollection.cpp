@@ -131,7 +131,7 @@ static void namedPropertyQuery(v8::Local<v8::Name> name, const v8::PropertyCallb
 {
     HTMLAllCollection* impl = V8HTMLAllCollection::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(name.As<v8::String>());
-    v8::String::Utf8Value namedProperty(name);
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), name);
     ExceptionState exceptionState(ExceptionState::GetterContext, *namedProperty, "HTMLAllCollection", info.Holder(), info.GetIsolate());
     bool result = impl->namedPropertyQuery(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())

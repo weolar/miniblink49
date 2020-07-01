@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/CustomElementConstructorBuilder.h"
+#include "config.h"
 
 #include "bindings/core/v8/CustomElementBinding.h"
 #include "bindings/core/v8/DOMWrapperWorld.h"
@@ -69,9 +69,7 @@ bool CustomElementConstructorBuilder::isFeatureAllowed() const
 bool CustomElementConstructorBuilder::validateOptions(const AtomicString& type, QualifiedName& tagName, ExceptionState& exceptionState)
 {
     ASSERT(m_prototype.IsEmpty());
-
-    v8::TryCatch tryCatch;
-
+    v8::TryCatch tryCatch(m_scriptState->isolate());
     if (!m_scriptState->perContextData()) {
         // FIXME: This should generate an InvalidContext exception at a later point.
         CustomElementException::throwException(CustomElementException::ContextDestroyedCheckingPrototype, type, exceptionState);
@@ -129,8 +127,7 @@ bool CustomElementConstructorBuilder::validateOptions(const AtomicString& type, 
 PassRefPtrWillBeRawPtr<CustomElementLifecycleCallbacks> CustomElementConstructorBuilder::createCallbacks()
 {
     ASSERT(!m_prototype.IsEmpty());
-
-    v8::TryCatch exceptionCatcher;
+    v8::TryCatch exceptionCatcher(m_scriptState->isolate());
     exceptionCatcher.SetVerbose(true);
 
     v8::MaybeLocal<v8::Function> created = retrieveCallback("createdCallback");

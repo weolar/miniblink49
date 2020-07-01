@@ -254,9 +254,9 @@ public:
 	basic_ifstream()
 		: basic_istream<_E, _Tr>(&_Fb) {}
 	explicit basic_ifstream(const char *_S,
-		ios_base::openmode _M = in)
+		ios_base::openmode _M = ios_base::in)
 		: basic_istream<_E, _Tr>(&_Fb)
-		{if (_Fb.open(_S, _M | in) == 0)
+		{if (_Fb.open(_S, _M | ios_base::in) == 0)
 			setstate(failbit); }
 	virtual ~basic_ifstream()
 		{}
@@ -264,8 +264,8 @@ public:
 		{return ((_Myfb *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = in)
-		{if (_Fb.open(_S, _M | in) == 0)
+	void open(const char *_S, ios_base::openmode _M = ios_base::in)
+		{if (_Fb.open(_S, _M | ios_base::in) == 0)
 		 	setstate(failbit); }
 	void open(const char *_S, ios_base::open_mode _M)
 		{open(_S, (openmode)_M); }
@@ -292,9 +292,9 @@ public:
 	basic_ofstream()
 		: basic_ostream<_E, _Tr>(&_Fb) {}
 	explicit basic_ofstream(const char *_S,
-		ios_base::openmode _M = out | trunc)
+		ios_base::openmode _M = ios_base::out | ios_base::trunc)
 		: basic_ostream<_E, _Tr>(&_Fb)
-		{if (_Fb.open(_S, _M | out) == 0)
+		{if (_Fb.open(_S, _M | ios_base::out) == 0)
 			setstate(failbit); }
 	virtual ~basic_ofstream()
 		{}
@@ -302,8 +302,8 @@ public:
 		{return ((_Myfb *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = out | trunc)
-		{if (_Fb.open(_S, _M | out) == 0)
+	void open(const char *_S, ios_base::openmode _M = ios_base::out | ios_base::trunc)
+		{if (_Fb.open(_S, _M | ios_base::out) == 0)
 		 	setstate(failbit); }
 	void open(const char *_S, ios_base::open_mode _M)
 		{open(_S, (openmode)_M); }
@@ -329,7 +329,7 @@ public:
 	basic_fstream()
 		: basic_iostream<_E, _Tr>(&_Fb) {}
 	explicit basic_fstream(const char *_S,
-		ios_base::openmode _M = in | out)
+		ios_base::openmode _M = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Fb)
 		{if (_Fb.open(_S, _M) == 0)
 			setstate(failbit); }
@@ -339,7 +339,7 @@ public:
 		{return ((basic_filebuf<_E, _Tr> *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = in | out)
+	void open(const char *_S, ios_base::openmode _M = ios_base::in | ios_base::out)
 		{if (_Fb.open(_S, _M) == 0)
 		 	setstate(failbit); }
 	void open(const char *_S, ios_base::open_mode _M)

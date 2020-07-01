@@ -15,24 +15,30 @@ namespace cc {
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, tileCounter, ("ccTile"));
 #endif
 
-Tile::Tile(TileGrid* tileGrid, int xIndex, int yIndex)
+Tile::Tile()
+    : TileBase()
+{
+
+}
+
+TileBase* Tile::init(void* parent, int xIndex, int yIndex)
 {
     m_isNotInit = true;
-	m_refCnt = 1;
+    m_refCnt = 1;
     m_xIndex = xIndex;
     m_yIndex = yIndex;
     m_priority = TilePriorityNormal;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
-    //m_bitmap = nullptr;
     m_useingRate = 0;
-    m_tileGrid = tileGrid;
+    m_tileGrid = (TileGrid*)parent;
     m_tileGrid->registerTile(this);
     setAllBoundDirty();
-
 #ifndef NDEBUG
     tileCounter.increment();
 #endif
+    return this;
 }
+
 
 Tile::~Tile()
 {

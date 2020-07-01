@@ -35,8 +35,10 @@
 #include "platform/fonts/GlyphBuffer.h"
 #include "platform/fonts/GlyphPageTreeNode.h"
 #include "platform/fonts/SimpleFontData.h"
-// #include "platform/fonts/shaping/HarfBuzzFace.h"
-// #include "platform/fonts/shaping/HarfBuzzShaper.h"
+#ifndef MINIBLINK_NO_HARFBUZZ
+#include "platform/fonts/shaping/HarfBuzzFace.h"
+#include "platform/fonts/shaping/HarfBuzzShaper.h"
+#endif
 #include "platform/fonts/shaping/SimpleShaper.h"
 #include "platform/geometry/FloatRect.h"
 #include "platform/graphics/skia/SkiaUtils.h"
@@ -154,7 +156,7 @@ float Font::buildGlyphBuffer(const TextRunPaintInfo& runInfo, GlyphBuffer& glyph
 {
     if (codePath(runInfo) == ComplexPath) {
         float width;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
         CachingWordShaper& shaper = m_fontFallbackList->cachingWordShaper();
         if (emphasisData) {
             width = shaper.fillGlyphBufferForTextEmphasis(this, runInfo.run,
@@ -299,14 +301,14 @@ float Font::width(const TextRun& run, HashSet<const SimpleFontData*>* fallbackFo
     FontCachePurgePreventer purgePreventer;
 
     if (codePath(TextRunPaintInfo(run)) == ComplexPath) {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
         return floatWidthForComplexText(run, fallbackFonts, glyphBounds);
 #else
         Vector<UChar> dummy;
         dummy.fill(L'?', run.length());
         TextRun runDummy(dummy.data(), run.length(), run.xPos(), run.expansion(), TextRun::AllowTrailingExpansion | TextRun::ForbidLeadingExpansion, run.direction(), run.directionalOverride());
         floatWidthForSimpleText(runDummy, fallbackFonts, glyphBounds);
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
     }
     return floatWidthForSimpleText(run, fallbackFonts, glyphBounds);
 }
@@ -380,7 +382,7 @@ int Font::offsetForPosition(const TextRun& run, float x, bool includePartialGlyp
     FontCachePurgePreventer purgePreventer;
 
     if (codePath(TextRunPaintInfo(run)) != ComplexPath
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
 		&& !fontDescription().typesettingFeatures()
 #endif
 		)
@@ -395,7 +397,7 @@ CodePath Font::codePath(const TextRunPaintInfo& runInfo) const
         return ComplexPath;
 
     const TextRun& run = runInfo.run;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     if (fontDescription().typesettingFeatures() && (runInfo.from || runInfo.to != run.length()))
         return ComplexPath;
 
@@ -788,15 +790,16 @@ float Font::floatWidthForComplexText(const TextRun& run, HashSet<const SimpleFon
 int Font::offsetForPositionForComplexText(const TextRun& run, float xFloat,
     bool includePartialGlyphs) const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     HarfBuzzShaper shaper(this, run);
     RefPtr<ShapeResult> shapeResult = shaper.shapeResult();
     if (!shapeResult)
         return 0;
     return shapeResult->offsetForPosition(xFloat);
+#else
+	  notImplemented();
+	  return 0;
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
-	return 0;
 }
 
 // Return the rectangle for selecting the given range of code-points in the TextRun.

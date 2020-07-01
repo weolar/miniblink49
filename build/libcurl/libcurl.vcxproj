@@ -5,6 +5,14 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_NoNode|Win32">
+      <Configuration>Release_NoNode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_NoNode|x64">
+      <Configuration>Release_NoNode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release_vc6|Win32">
       <Configuration>Release_vc6</Configuration>
       <Platform>Win32</Platform>
@@ -29,6 +37,305 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\curl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\curlver.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\easy.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\mprintf.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\multi.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\stdcheaders.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\system.h" />
+    <ClInclude Include="..\..\third_party\libcurl\include\curl\typecheck-gcc.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\amigaos.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\arpa_telnet.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\asyn.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-amigaos.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-dos.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-mac.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-os400.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-riscos.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-symbian.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-tpf.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-vxworks.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-win32.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\config-win32ce.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\conncache.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\connect.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\content_encoding.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\cookie.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curlx.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_addrinfo.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_base64.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_des.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_endian.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_fnmatch.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_gethostname.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_gssapi.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_hmac.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_ldap.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_md4.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_md5.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_memory.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_memrchr.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_multibyte.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_ntlm_core.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_ntlm_wb.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_printf.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_rtmp.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_sasl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_sec.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_setup.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_setup_once.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_sha256.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_sspi.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\curl_threads.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\dict.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\dotdot.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\easyif.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\escape.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\file.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\fileinfo.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\formdata.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\ftp.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\ftplistparser.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\getinfo.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\gopher.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\hash.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\hostcheck.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\hostip.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http2.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http_chunks.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http_digest.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http_negotiate.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http_ntlm.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\http_proxy.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\if2ip.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\imap.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\inet_ntop.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\inet_pton.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\llist.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\memdebug.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\mime.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\multihandle.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\multiif.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\netrc.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\non-ascii.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\nonblock.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\parsedate.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\pingpong.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\pipeline.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\pop3.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\progress.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\rand.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\rtsp.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\select.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\sendf.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\setopt.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\setup-os400.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\setup-vms.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\share.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\sigpipe.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\slist.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\smb.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\smtp.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\sockaddr.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\socks.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\speedcheck.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\splay.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\ssh.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\strcase.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\strdup.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\strerror.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\strtok.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\strtoofft.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\system_win32.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\telnet.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\tftp.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\timeval.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\transfer.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\url.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\urldata.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vauth\digest.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vauth\ntlm.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vauth\vauth.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\axtls.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\cyassl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\darwinssl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gskit.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gtls.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\mbedtls.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\nssg.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\openssl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\schannel.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\vtls.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\warnless.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\wildcard.h" />
+    <ClInclude Include="..\..\third_party\libcurl\src\x509asn1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\third_party\libcurl\src\amigaos.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\asyn-ares.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\asyn-thread.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\base64.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\conncache.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\connect.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\content_encoding.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\cookie.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_addrinfo.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_ctype.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_des.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_endian.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_fnmatch.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_gethostname.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_gssapi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_memrchr.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_multibyte.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_ntlm_core.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_ntlm_wb.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_range.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_rtmp.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_sasl.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_threads.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\dict.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\dotdot.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\easy.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\escape.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\file.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\fileinfo.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\formdata.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\ftp.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\ftplistparser.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\getenv.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\getinfo.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\gopher.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hash.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hmac.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostasyn.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostcheck.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostip.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostip4.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostip6.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\hostsyn.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http2.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http_chunks.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http_digest.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http_negotiate.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http_ntlm.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\http_proxy.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\idn_win32.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\if2ip.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\imap.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\inet_ntop.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\inet_pton.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\krb5.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\ldap.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\llist.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\md4.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\md5.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\memdebug.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\mime.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\mprintf.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\multi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\netrc.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\non-ascii.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\nonblock.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\nwlib.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\nwos.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\openldap.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\parsedate.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\pingpong.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\pipeline.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\pop3.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\progress.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\rand.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\rtsp.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\security.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\select.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\sendf.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\setopt.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\sha256.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\share.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\slist.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\smb.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\smtp.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\socks.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\socks_gssapi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\socks_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\speedcheck.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\splay.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\ssh.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\strcase.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\strdup.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\strerror.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\strtok.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\strtoofft.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\system_win32.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\telnet.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\tftp.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\timeval.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\transfer.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\url.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\cleartext.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\cram.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\digest.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\digest_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\krb5_gssapi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\krb5_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\ntlm.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\ntlm_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\oauth2.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\spnego_gssapi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\spnego_sspi.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vauth\vauth.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\version.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\axtls.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\cyassl.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\darwinssl.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gskit.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gtls.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\mbedtls.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\nss.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\openssl.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\vtls.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\warnless.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\wildcard.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\x509asn1.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\third_party\libcurl\src\checksrc.pl" />
+    <None Include="..\..\third_party\libcurl\src\curl_config.h.cmake" />
+    <None Include="..\..\third_party\libcurl\src\firefox-db2pem.sh" />
+    <None Include="..\..\third_party\libcurl\src\libcurl.plist" />
+    <None Include="..\..\third_party\libcurl\src\libcurl.vers.in" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.am" />
+    <None Include="..\..\third_party\libcurl\src\makefile.amiga" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.b32" />
+    <None Include="..\..\third_party\libcurl\src\makefile.dj" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.inc" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.m32" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.netware" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.vxworks" />
+    <None Include="..\..\third_party\libcurl\src\Makefile.Watcom" />
+    <None Include="..\..\third_party\libcurl\src\mk-ca-bundle.pl" />
+    <None Include="..\..\third_party\libcurl\src\mk-ca-bundle.vbs" />
+    <None Include="..\..\third_party\libcurl\src\objnames-test08.sh" />
+    <None Include="..\..\third_party\libcurl\src\objnames-test10.sh" />
+    <None Include="..\..\third_party\libcurl\src\objnames.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\third_party\libcurl\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\third_party\libcurl\src\libcurl.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}</ProjectGuid>
@@ -58,6 +365,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -78,6 +392,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -92,6 +413,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -99,6 +423,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -120,11 +447,28 @@
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">
     <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -137,9 +481,9 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;USE_OPENSSL=1;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -148,6 +492,7 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Lib />
   </ItemDefinitionGroup>
@@ -155,11 +500,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,9 +514,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <Optimization>Custom</Optimization>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../node/openssl/openssl/include;../../third_party/wolfssl/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -188,6 +533,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -196,9 +544,9 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USE_OPENSSL=1;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
@@ -206,6 +554,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -213,6 +563,39 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;HAVE_CYASSL_ERROR_SSL_H;HAVE_SNI=1;USE_CYASSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">
     <ClCompile>
@@ -221,8 +604,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -235,12 +619,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;NDEBUG;_LIB;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -249,781 +633,24 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\third_party\libcurl\amigaos.h" />
-    <ClInclude Include="..\..\third_party\libcurl\arpa_telnet.h" />
-    <ClInclude Include="..\..\third_party\libcurl\asyn.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-amigaos.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-dos.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-mac.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-os400.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-riscos.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-symbian.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-tpf.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-vxworks.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-win32.h" />
-    <ClInclude Include="..\..\third_party\libcurl\config-win32ce.h" />
-    <ClInclude Include="..\..\third_party\libcurl\conncache.h" />
-    <ClInclude Include="..\..\third_party\libcurl\connect.h" />
-    <ClInclude Include="..\..\third_party\libcurl\content_encoding.h" />
-    <ClInclude Include="..\..\third_party\libcurl\cookie.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curlx.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_addrinfo.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_base64.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_config.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_des.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_endian.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_fnmatch.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_gethostname.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_gssapi.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_hmac.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_ldap.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_md4.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_md5.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_memory.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_memrchr.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_multibyte.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_ntlm_core.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_ntlm_wb.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_printf.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_rtmp.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_sasl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_sec.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_setup.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_setup_once.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_sspi.h" />
-    <ClInclude Include="..\..\third_party\libcurl\curl_threads.h" />
-    <ClInclude Include="..\..\third_party\libcurl\dict.h" />
-    <ClInclude Include="..\..\third_party\libcurl\dotdot.h" />
-    <ClInclude Include="..\..\third_party\libcurl\easyif.h" />
-    <ClInclude Include="..\..\third_party\libcurl\escape.h" />
-    <ClInclude Include="..\..\third_party\libcurl\file.h" />
-    <ClInclude Include="..\..\third_party\libcurl\fileinfo.h" />
-    <ClInclude Include="..\..\third_party\libcurl\formdata.h" />
-    <ClInclude Include="..\..\third_party\libcurl\ftp.h" />
-    <ClInclude Include="..\..\third_party\libcurl\ftplistparser.h" />
-    <ClInclude Include="..\..\third_party\libcurl\getinfo.h" />
-    <ClInclude Include="..\..\third_party\libcurl\gopher.h" />
-    <ClInclude Include="..\..\third_party\libcurl\hash.h" />
-    <ClInclude Include="..\..\third_party\libcurl\hostcheck.h" />
-    <ClInclude Include="..\..\third_party\libcurl\hostip.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http2.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http_chunks.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http_digest.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http_negotiate.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http_ntlm.h" />
-    <ClInclude Include="..\..\third_party\libcurl\http_proxy.h" />
-    <ClInclude Include="..\..\third_party\libcurl\if2ip.h" />
-    <ClInclude Include="..\..\third_party\libcurl\imap.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\curl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\curlbuild.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\curlrules.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\curlver.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\easy.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\mprintf.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\multi.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\stdcheaders.h" />
-    <ClInclude Include="..\..\third_party\libcurl\include\curl\typecheck-gcc.h" />
-    <ClInclude Include="..\..\third_party\libcurl\inet_ntop.h" />
-    <ClInclude Include="..\..\third_party\libcurl\inet_pton.h" />
-    <ClInclude Include="..\..\third_party\libcurl\llist.h" />
-    <ClInclude Include="..\..\third_party\libcurl\memdebug.h" />
-    <ClInclude Include="..\..\third_party\libcurl\multihandle.h" />
-    <ClInclude Include="..\..\third_party\libcurl\multiif.h" />
-    <ClInclude Include="..\..\third_party\libcurl\netrc.h" />
-    <ClInclude Include="..\..\third_party\libcurl\non-ascii.h" />
-    <ClInclude Include="..\..\third_party\libcurl\nonblock.h" />
-    <ClInclude Include="..\..\third_party\libcurl\parsedate.h" />
-    <ClInclude Include="..\..\third_party\libcurl\pingpong.h" />
-    <ClInclude Include="..\..\third_party\libcurl\pipeline.h" />
-    <ClInclude Include="..\..\third_party\libcurl\pop3.h" />
-    <ClInclude Include="..\..\third_party\libcurl\progress.h" />
-    <ClInclude Include="..\..\third_party\libcurl\rawstr.h" />
-    <ClInclude Include="..\..\third_party\libcurl\rtsp.h" />
-    <ClInclude Include="..\..\third_party\libcurl\select.h" />
-    <ClInclude Include="..\..\third_party\libcurl\sendf.h" />
-    <ClInclude Include="..\..\third_party\libcurl\setup-os400.h" />
-    <ClInclude Include="..\..\third_party\libcurl\setup-vms.h" />
-    <ClInclude Include="..\..\third_party\libcurl\share.h" />
-    <ClInclude Include="..\..\third_party\libcurl\sigpipe.h" />
-    <ClInclude Include="..\..\third_party\libcurl\slist.h" />
-    <ClInclude Include="..\..\third_party\libcurl\smb.h" />
-    <ClInclude Include="..\..\third_party\libcurl\smtp.h" />
-    <ClInclude Include="..\..\third_party\libcurl\sockaddr.h" />
-    <ClInclude Include="..\..\third_party\libcurl\socks.h" />
-    <ClInclude Include="..\..\third_party\libcurl\speedcheck.h" />
-    <ClInclude Include="..\..\third_party\libcurl\splay.h" />
-    <ClInclude Include="..\..\third_party\libcurl\ssh.h" />
-    <ClInclude Include="..\..\third_party\libcurl\strdup.h" />
-    <ClInclude Include="..\..\third_party\libcurl\strequal.h" />
-    <ClInclude Include="..\..\third_party\libcurl\strerror.h" />
-    <ClInclude Include="..\..\third_party\libcurl\strtok.h" />
-    <ClInclude Include="..\..\third_party\libcurl\strtoofft.h" />
-    <ClInclude Include="..\..\third_party\libcurl\system_win32.h" />
-    <ClInclude Include="..\..\third_party\libcurl\telnet.h" />
-    <ClInclude Include="..\..\third_party\libcurl\tftp.h" />
-    <ClInclude Include="..\..\third_party\libcurl\timeval.h" />
-    <ClInclude Include="..\..\third_party\libcurl\transfer.h" />
-    <ClInclude Include="..\..\third_party\libcurl\url.h" />
-    <ClInclude Include="..\..\third_party\libcurl\urldata.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vauth\digest.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vauth\ntlm.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vauth\vauth.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\axtls.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\cyassl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\darwinssl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\gskit.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\gtls.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\mbedtls.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\nssg.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\openssl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\polarssl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\polarssl_threadlock.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\schannel.h" />
-    <ClInclude Include="..\..\third_party\libcurl\vtls\vtls.h" />
-    <ClInclude Include="..\..\third_party\libcurl\warnless.h" />
-    <ClInclude Include="..\..\third_party\libcurl\wildcard.h" />
-    <ClInclude Include="..\..\third_party\libcurl\x509asn1.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\third_party\libcurl\amigaos.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\asyn-ares.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\asyn-thread.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\base64.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\conncache.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\connect.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\content_encoding.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\cookie.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_addrinfo.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_des.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_endian.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_fnmatch.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_gethostname.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_gssapi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_memrchr.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_multibyte.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_ntlm_core.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_ntlm_wb.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_rtmp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_sasl.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\curl_threads.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\dict.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\dotdot.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\easy.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\escape.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\file.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\fileinfo.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\formdata.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\ftp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\ftplistparser.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\getenv.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\getinfo.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\gopher.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hash.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hmac.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostasyn.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostcheck.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostip.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostip4.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostip6.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\hostsyn.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http2.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http_chunks.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http_digest.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http_negotiate.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http_ntlm.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\http_proxy.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\idn_win32.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\if2ip.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\imap.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\inet_ntop.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\inet_pton.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\krb5.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\ldap.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\llist.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\md4.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\md5.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\memdebug.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\mprintf.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\multi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\netrc.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\non-ascii.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\nonblock.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\nwlib.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\nwos.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\parsedate.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\pingpong.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\pipeline.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\pop3.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\progress.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\rawstr.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\rtsp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\security.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\select.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\sendf.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\share.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\slist.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\smb.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\smtp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\socks.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\socks_gssapi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\socks_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\speedcheck.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\splay.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\ssh.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\strdup.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\strequal.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\strerror.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\strtok.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\strtoofft.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\system_win32.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\telnet.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\tftp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\timeval.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\transfer.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\url.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\cleartext.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\cram.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\digest.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\digest_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\krb5_gssapi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\krb5_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\ntlm.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\ntlm_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\oauth2.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\spnego_gssapi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\spnego_sspi.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vauth\vauth.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\version.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\axtls.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\cyassl.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\darwinssl.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\gskit.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\gtls.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\mbedtls.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\nss.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\openssl.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\polarssl.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\polarssl_threadlock.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\schannel.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\vtls\vtls.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\warnless.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\wildcard.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\x509asn1.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\third_party\libcurl\build.bat" />
-  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;HAVE_CYASSL_ERROR_SSL_H;USE_CYASSL=1;HAVE_SNI=1;NDEBUG;_LIB;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

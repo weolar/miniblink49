@@ -8,12 +8,10 @@
 #include <cassert>
 #include <cstdlib>
 #include <vector>
-#ifdef MINIBLINK_NOT_IMPLEMENTED
 #include <zlib.h>
-#endif
-#include "third_party/brotli/src/brotli/dec/decode.h"
+#include "dec/decode.h"
 
-#include "opentype-sanitiser.h"
+// #include "opentype-sanitiser.h"
 #include "ots-memory-stream.h"
 #include "ots.h"
 #include "woff2.h"
@@ -487,7 +485,7 @@ bool ProcessComposite(ots::Buffer* composite_stream, uint8_t* dst,
     return OTS_FAILURE();
   }
   Store16(dst, 0, 0xffff);  // nContours = -1 for composite glyph
-  std::memcpy(dst + kCompositeGlyphBegin,
+  /*std::*/memcpy(dst + kCompositeGlyphBegin,
       composite_stream->buffer() + start_offset,
       composite_glyph_size);
   *glyph_size = kCompositeGlyphBegin + composite_glyph_size;
@@ -876,7 +874,7 @@ bool ConvertWOFF2ToTTF(uint8_t* result, size_t result_length,
     return OTS_FAILURE();
   }
 
-  if (!IsValidVersionTag(ntohl(flavor))) {
+  if (!IsValidVersionTag(/*ntohl*/(flavor))) {
     return OTS_FAILURE();
   }
 
@@ -1020,7 +1018,7 @@ bool ConvertWOFF2ToTTF(uint8_t* result, size_t result_length,
           result_length) {
         return OTS_FAILURE();
       }
-      std::memcpy(result + table->dst_offset, transform_buf,
+      /*std::*/memcpy(result + table->dst_offset, transform_buf,
           transform_length);
     } else {
       if (!ReconstructTransformed(tables, table->tag,

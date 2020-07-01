@@ -256,6 +256,9 @@ bool CSSProperty::isAffectedByAllProperty(CSSPropertyID propertyID)
     if (!CSSPropertyMetadata::isEnabledProperty(propertyID))
         return false;
 
+	if (propertyID == CSSPropertyVariable)
+		return false;
+
     // all shorthand spec says:
     // The all property is a shorthand that resets all CSS properties except
     // direction and unicode-bidi. It only accepts the CSS-wide keywords.

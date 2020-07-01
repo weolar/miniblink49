@@ -119,7 +119,8 @@ public:
     const String& string() const { return m_url.string(); }
     URLString urlString() const { return URLString(m_url.string()); }
 #else
-    const String& string() const { return m_string; }
+    const String& string() const;
+    String getUTF8String() const;
     //URLString urlString() const { return URLString(m_string); }
 #endif
 
@@ -250,6 +251,7 @@ private:
     void parse(const char* url, const String* originalString);
 
     String m_string;
+    mutable String m_utf16String;
     bool m_isValid : 1;
     bool m_protocolIsInHTTPFamily : 1;
 

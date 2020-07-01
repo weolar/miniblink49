@@ -3,6 +3,10 @@
 
 #if USING_VC6RT == 1
 
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT (0x0501)
+#endif
+
 #include <commctrl.h>
 
 #undef min

@@ -22,6 +22,7 @@ namespace std {
  //    return os;
  //}
 
+template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char const * str)
 {
     if (!str)
@@ -31,12 +32,14 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
     return os;
 }
 
+template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char c)
 {
     os << ((char)c);
     return os;
 }
 
+template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b)
 {
     ostringstream aCopy;
@@ -47,6 +50,7 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char
     return a;
 }
 
+template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b)
 {
     ostringstream aCopy;
@@ -57,6 +61,7 @@ basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<cha
     return a;
 }
 
+template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b)
 {
     ostringstream aCopy;
@@ -66,6 +71,7 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
     return a;
 }
 
+template<>
 basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char> >(
     basic_ostream<char, char_traits<char> > & os, char const * b) // weolar 多重定义
 {
@@ -75,6 +81,31 @@ basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<
     os << aCopy;
     return os;
 }
+
+template<>
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char>, allocator<char> >(
+    basic_ostream<char, char_traits<char> > & a, basic_string<char, char_traits<char>, allocator<char> > const & b) // weolar 无定义
+{
+    ostringstream aCopy;
+    aCopy.write(b.c_str(), b.size());
+    a << aCopy;
+    return a;
+}
+
+// basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, struct std::char_traits<char> >(
+//     basic_ostream<char, char_traits<char> > & a, char const * b) {
+//     ostringstream aCopy;
+//     aCopy.write(b, strlen(b));
+//     a << aCopy;
+//     return a;
+// }
+
+// basic_istream<char, char_traits<char> > & __cdecl getline<char, char_traits<char>, allocator<char> >(
+//     basic_istream<char, struct char_traits<char> > &,
+//     basic_string<char, struct char_traits<char>, allocator<char> > &, char)
+// {
+// 
+// }
 
 }
 

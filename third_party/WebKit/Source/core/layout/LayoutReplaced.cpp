@@ -34,6 +34,10 @@
 #include "core/paint/ReplacedPainter.h"
 #include "platform/LengthFunctions.h"
 
+#ifndef MINIBLINK_NO_CHANGE
+#include "wke/wkeGlobalVar.h"
+#endif
+
 namespace blink {
 
 const int LayoutReplaced::defaultWidth = 300;
@@ -227,6 +231,12 @@ LayoutRect LayoutReplaced::replacedContentRect(const LayoutSize* overriddenIntri
     if (objectFit == ObjectFitFill && style()->objectPosition() == ComputedStyle::initialObjectPosition()) {
         return contentRect;
     }
+
+#ifndef MINIBLINK_NO_CHANGE
+    String layoutName = name();
+    if (wke::g_wkeMediaPlayerFactory && layoutName == "LayoutVideo")
+        objectFit = ObjectFitFill;
+#endif
 
     // TODO(davve): intrinsicSize doubles as both intrinsic size and intrinsic ratio. In the case of
     // SVG images this isn't correct since they can have intrinsic ratio but no intrinsic size. In

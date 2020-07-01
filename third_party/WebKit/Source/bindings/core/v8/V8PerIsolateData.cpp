@@ -45,6 +45,10 @@ static V8PerIsolateData* mainThreadPerIsolateData = 0;
 #if ENABLE(ASSERT)
 static void assertV8RecursionScope()
 {
+    int level = V8RecursionScope::recursionLevel(v8::Isolate::GetCurrent());
+    int internalLevel = V8PerIsolateData::from(v8::Isolate::GetCurrent())->internalScriptRecursionLevel();
+    if (level <= 0 && internalLevel <= 0)
+        DebugBreak();
     ASSERT(V8RecursionScope::properlyUsed(v8::Isolate::GetCurrent()));
 }
 

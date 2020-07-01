@@ -7645,6 +7645,10 @@ void Isolate::VisitWeakHandles(PersistentHandleVisitor* visitor) {
 }
 
 
+String::Utf8Value::Utf8Value(Isolate* isolate, v8::Local<v8::Value> obj)
+    : Utf8Value(obj) {
+}
+
 String::Utf8Value::Utf8Value(v8::Local<v8::Value> obj)
     : str_(NULL), length_(0) {
   if (obj.IsEmpty()) return;

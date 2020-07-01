@@ -404,6 +404,8 @@ static LHASH_NODE **getrn(_LHASH *lh, const void *data, unsigned long *rhash)
     cf = lh->comp;
     ret = &(lh->b[(int)nn]);
     for (n1 = *ret; n1 != NULL; n1 = n1->next) {
+        if (!n1)
+            continue;
 #ifndef OPENSSL_NO_HASH_COMP
         lh->num_hash_comps++;
         if (n1->hash != hash) {

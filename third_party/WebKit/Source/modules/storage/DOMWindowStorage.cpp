@@ -134,11 +134,13 @@ Storage* DOMWindowStorage::localStorage(ExceptionState& exceptionState) const
     FrameHost* host = document->frameHost();
     if (!host || !host->settings().localStorageEnabled())
         return nullptr;
+
     StorageArea* storageArea = StorageNamespace::localStorageArea(document->securityOrigin());
     if (!storageArea->canAccessStorage(m_window->frame())) {
         exceptionState.throwSecurityError(accessDeniedMessage);
         return nullptr;
     }
+
     m_localStorage = Storage::create(m_window->frame(), storageArea);
     return m_localStorage;
 }

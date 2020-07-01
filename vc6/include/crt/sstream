@@ -197,11 +197,11 @@ template<class _E,
 public:
 	typedef basic_stringbuf<_E, _Tr, _A> _Mysb;
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_istringstream(openmode _M = in)
-		: basic_istream<_E, _Tr>(&_Sb), _Sb(_M | in) {}
+	explicit basic_istringstream(openmode _M = ios_base::in)
+		: basic_istream<_E, _Tr>(&_Sb), _Sb(_M | ios_base::in) {}
 	explicit basic_istringstream(const _Mystr& _S,
-		openmode _M = in)
-		: basic_istream<_E, _Tr>(&_Sb), _Sb(_S, _M | in) {}
+		openmode _M = ios_base::in)
+		: basic_istream<_E, _Tr>(&_Sb), _Sb(_S, _M | ios_base::in) {}
 	virtual ~basic_istringstream()
 		{}
 	_Mysb *rdbuf() const
@@ -221,11 +221,11 @@ template<class _E,
 public:
 	typedef basic_stringbuf<_E, _Tr, _A> _Mysb;
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_ostringstream(openmode _M = out)
-		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_M | out) {}
+	explicit basic_ostringstream(openmode _M = ios_base::out)
+		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_M | ios_base::out) {}
 	explicit basic_ostringstream(const _Mystr& _S,
-		openmode _M = out)
-		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_S, _M | out) {}
+		openmode _M = ios_base::out)
+		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_S, _M | ios_base::out) {}
 	virtual ~basic_ostringstream()
 		{}
 	_Mysb *rdbuf() const
@@ -244,10 +244,10 @@ template<class _E,
 	class basic_stringstream : public basic_iostream<_E, _Tr> {
 public:
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_stringstream(openmode _W = in | out)
+	explicit basic_stringstream(openmode _W = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Sb), _Sb(_W) {}
 	explicit basic_stringstream(const _Mystr& _S,
-		openmode _W = in | out)
+		openmode _W = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Sb), _Sb(_S, _W) {}
 	virtual ~basic_stringstream()
 		{}

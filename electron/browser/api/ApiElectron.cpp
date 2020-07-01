@@ -1,9 +1,14 @@
 ﻿
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "wke.h"
+
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 
 namespace atom {
 
@@ -53,7 +58,7 @@ static void initializeElectronApi(v8::Local<v8::Object> target, v8::Local<v8::Va
 
 static const char BrowserElectronNative[] =
 "var Module = require('module');"
-"console.log('BrowserElectronNative:' + module);"
+"//console.log('BrowserElectronNative:' + module);"
 "//require('./../browser/browser-window');"
 "//var electron = Module._load('./common/electron', null, false);"
 "//const App = process.binding('atom_browser_app').App;"

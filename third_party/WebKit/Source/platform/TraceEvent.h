@@ -512,7 +512,11 @@
 // for best performance when tracing is disabled.
 // const unsigned char*
 //     TRACE_EVENT_API_GET_CATEGORY_ENABLED(const char* category_name)
-#define TRACE_EVENT_API_GET_CATEGORY_ENABLED 
+
+inline const unsigned char* TRACE_EVENT_API_GET_CATEGORY_ENABLED(const char* category_name)
+{
+    return nullptr;
+}
 
 // Add a trace event to the platform tracing system.
 // blink::TraceEvent::TraceEventHandle TRACE_EVENT_API_ADD_TRACE_EVENT(
@@ -525,7 +529,11 @@
 //                    const unsigned long long* arg_values,
 //                    PassRefPtr<ConvertableToTraceFormat> convertableValues[],
 //                    unsigned char flags)
-#define TRACE_EVENT_API_ADD_TRACE_EVENT 
+
+inline blink::TraceEvent::TraceEventHandle TRACE_EVENT_API_ADD_TRACE_EVENT(...)
+{
+    return 0;
+}
 
 // Set the duration field of a COMPLETE trace event.
 // void TRACE_EVENT_API_UPDATE_TRACE_EVENT_DURATION(
@@ -654,7 +662,7 @@ public:
     typedef MangleBehavior<true> ForceMangle;
 
     TraceID(const void* id, unsigned char* flags) :
-        m_data(static_cast<unsigned long long>(reinterpret_cast<unsigned long>(id)))
+        m_data(static_cast<unsigned long long>(reinterpret_cast<unsigned long long>(id)))
     {
         *flags |= TRACE_EVENT_FLAG_MANGLE_ID;
     }
@@ -901,8 +909,8 @@ public:
     ScopedTracer() : m_pdata(0) { }
     ~ScopedTracer()
     {
-        if (m_pdata && *m_pdata->categoryGroupEnabled)
-            TRACE_EVENT_API_UPDATE_TRACE_EVENT_DURATION(m_data.categoryGroupEnabled, m_data.name, m_data.eventHandle);
+//         if (m_pdata && *m_pdata->categoryGroupEnabled)
+//             TRACE_EVENT_API_UPDATE_TRACE_EVENT_DURATION(m_data.categoryGroupEnabled, m_data.name, m_data.eventHandle);
     }
 
     void initialize(const unsigned char* categoryGroupEnabled, const char* name, TraceEventHandle eventHandle)

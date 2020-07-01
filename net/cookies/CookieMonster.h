@@ -95,7 +95,7 @@ public:
 		DELETE_COOKIE_LAST_ENTRY
 	};
 	
-	std::string CookieMonster::GetKey(const std::string& domain) const;
+	std::string GetKey(const std::string& domain) const;
 
 	void FindCookiesForHostAndDomain(const blink::KURL& url,
 		const CookieOptions& options,

@@ -573,6 +573,10 @@ void FlagList::EnforceFlagImplications() {
 #include "src/flag-definitions.h"  // NOLINT(build/include)
 #undef FLAG_MODE_DEFINE_IMPLICATIONS
   ComputeFlagListHash();
+
+  FLAG_harmony_sloppy = true; // TODO weolar
+  //FLAG_harmony_sloppy_function = true;
+  FLAG_harmony_sloppy_let = true;
 }
 
 

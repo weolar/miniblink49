@@ -38,7 +38,9 @@ namespace blink {
 
 Navigator::Navigator(LocalFrame* frame)
     : DOMWindowProperty(frame)
+    , NavigatorLanguage(frame)
 {
+
 }
 
 Navigator::~Navigator()
@@ -47,7 +49,14 @@ Navigator::~Navigator()
 
 String Navigator::productSub() const
 {
-    return "20030107";
+    if (!m_frame)
+        return "20030107";
+
+    Settings* settings = m_frame->settings();
+    if (!settings)
+        return "20030107";
+
+    return settings->productSub();
 }
 
 String Navigator::vendor() const
@@ -56,7 +65,14 @@ String Navigator::vendor() const
     // https://code.google.com/p/chromium/issues/detail?id=276813
     // https://www.w3.org/Bugs/Public/show_bug.cgi?id=27786
     // https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/QrgyulnqvmE
-    return "Google Inc.";
+    if (!m_frame)
+        return "Google Inc.";
+
+    Settings* settings = m_frame->settings();
+    if (!settings)
+        return "Google Inc.";
+
+    return settings->Vendor();
 }
 
 String Navigator::vendorSub() const

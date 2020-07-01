@@ -200,6 +200,21 @@ bool WebNode::isTextNode() const
     return m_private->isTextNode();
 }
 
+bool WebNode::isDraggable() const
+{
+    Node* n = m_private.get();
+
+    LayoutObject* obj = m_private->layoutObject();
+    if (!obj)
+        return false;
+
+    const ComputedStyle* style = obj->style();
+    if (!style)
+        return false;
+
+    return DraggableRegionDrag == style->getDraggableRegionMode();
+}
+
 bool WebNode::isFocusable() const
 {
     if (!m_private->isElementNode())

@@ -191,17 +191,17 @@ void ConsoleMessage::frameWindowDiscarded(LocalDOMWindow* window)
 
 unsigned ConsoleMessage::argumentCount()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (m_scriptArguments)
         return m_scriptArguments->argumentCount();
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+//#endif // MINIBLINK_NOT_IMPLEMENTED
+    //notImplemented();
     return 0;
 }
 
 void ConsoleMessage::collectCallStack()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (m_type == EndGroupMessageType)
         return;
 
@@ -218,7 +218,7 @@ void ConsoleMessage::collectCallStack()
 
     if (m_callStack && !m_callStack->size())
         m_callStack.clear();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 	// notImplemented(); //weolar
 }
 

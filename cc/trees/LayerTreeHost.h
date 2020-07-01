@@ -1,14 +1,15 @@
 #ifndef LayerTreeHost_h
 #define LayerTreeHost_h
 
-#include "cc/trees/LayerTreeHost.h"
 #include "third_party/WebKit/public/platform/WebLayerTreeView.h"
+#include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
-#include "wtf/HashMap.h"
-#include "wtf/Vector.h"
-#include "wtf/ThreadingPrimitives.h"
-#include <set>
+#include "third_party/WebKit/Source/wtf/HashMap.h"
+#include "third_party/WebKit/Source/wtf/Vector.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
+#include "third_party/WebKit/Source/wtf/HashSet.h"
+#include "third_party/skia/include/core/SkRect.h"
 
 namespace blink {
 class WebViewClient;
@@ -16,6 +17,7 @@ class WebGestureCurveTarget;
 class IntRect;
 struct WebFloatSize;
 class WebThread;
+class WebThreadSupportingGC;
 }
 
 namespace cc_blink {
@@ -56,11 +58,13 @@ public:
     void unregisterLayer(cc_blink::WebLayerImpl* layer);
     cc_blink::WebLayerImpl* getLayerById(int id);
 
+    void gc();
+
     bool isDestroying() const;
 
     //void updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync);
     void recordDraw();
-    void drawToCanvas(SkCanvas* canvas, const blink::IntRect& clip);
+    bool drawToCanvas(SkCanvas* canvas, const SkRect& clip);
     void updateLayersDrawProperties();
 
     //void setNeedsCommit();
@@ -96,9 +100,11 @@ public:
 
     // Sets the background color for the viewport.
     virtual void setBackgroundColor(blink::WebColor) override;
+    blink::WebColor getBackgroundColor() const;
 
     // Sets the background transparency for the viewport. The default is 'false'.
     virtual void setHasTransparentBackground(bool) override;
+    bool getHasTransparentBackground() const;
 
     virtual void registerForAnimations(blink::WebLayer* layer) override;
 
@@ -139,7 +145,7 @@ public:
     void popRasteringIndex();
 
     bool canRecordActions() const;
-    void beginRecordActions();
+    void beginRecordActions(bool isComefromMainframe);
     void endRecordActions();
 
     int64 genActionId();
@@ -154,24 +160,47 @@ public:
 
     bool isDrawDirty();
     void paintToBit(void* bits, int pitch);
+
+    struct BitInfo {
+        uint32_t* pixels;
+        SkCanvas* tempCanvas;
+        int width;
+        int height;
+    };
+    BitInfo* getBitBegin();
+    void getBitEnd(const BitInfo* bitInfo);
+
     void requestDrawFrameToRunIntoCompositeThread();
     void requestApplyActionsToRunIntoCompositeThread(bool needCheck);
-    void setUseLayeredBuffer(bool b);
-    static void clearCanvas(SkCanvas* canvas, const blink::IntRect& rect, bool useLayeredBuffer);
+    //void setUseLayeredBuffer(bool b);
+    //bool getIsUseLayeredBuffer() const { return m_useLayeredBuffer; }
+    static void clearCanvas(SkCanvas* canvas, const SkRect& rect, bool useLayeredBuffer);
+
+    void setDrawMinInterval(double drawMinInterval);
     
-    void postPaintMessage(const blink::IntRect& paintRect);
+    void postPaintMessage(const SkRect& paintRect);
     void firePaintEvent(HDC hdc, const RECT* paintRect);
     blink::IntRect getClientRect();
 
     void setLayerTreeDirty();
     bool isLayerTreeDirty() const;
 
+    void disablePaint();
+    void enablePaint();
+
+    cc_blink::WebLayerImpl* getRootLayer() { return m_rootLayer; }
+    const cc_blink::WebLayerImpl* getConstRootLayer() { return m_rootLayer; }
+
+    void appendPendingRepaintRect(const SkRect& r);
+
 private:
-    void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
-    void applyActionsInCompositeThread(bool needCheck);
+    void requestPaintToMemoryCanvasToUiThread(const SkRect& r);
+    void onApplyActionsInCompositeThread(bool needCheck);
+    void waitForApplyActions();
+    void waitForDrawFrame();
     void drawFrameInCompositeThread();
-    void paintToMemoryCanvasInUiThread(const blink::IntRect& paintRect);
-    void paintToMemoryCanvas(const blink::IntRect& r);
+    void paintToMemoryCanvasInUiThread(const SkRect& paintRect);
+    void paintToMemoryCanvasInCompositeThread(const SkRect& r);
     
     bool m_isDestroying;
 
@@ -191,8 +220,6 @@ private:
     float m_pageScaleFactor;
     float m_minimum;
     float m_maximum;
-
-    //bool m_needsFullTreeSync;
     bool m_needTileRender;
     bool m_layerTreeDirty; // ÐèÒªWebPageImpl.recordDraw
 
@@ -214,37 +241,44 @@ private:
     WTF::Vector<LayerChangeAction*> m_actions;
     WTF::HashMap<int, CompositingLayer*> m_liveCCLayers;
     //////////////////////////////////////////////////////////////////////////
-    blink::WebThread* m_compositeThread;
+    WTF::OwnPtr<blink::WebThreadSupportingGC> m_compositeThread;
     WTF::Mutex m_compositeMutex;
+    WTF::Mutex m_rootCCLayerMutex;
     SkCanvas* m_memoryCanvas;
 
     double m_lastCompositeTime;
     double m_lastPaintTime;
     mutable double m_lastRecordTime;
+    double m_drawMinInterval;
 
     static const int m_paintMessageQueueSize = 200;
-    Vector<blink::IntRect> m_dirtyRectsForComposite;
-    Vector<blink::IntRect> m_dirtyRectsForUi;
+    Vector<SkRect> m_dirtyRectsForComposite;
+    Vector<SkRect> m_dirtyRectsForUi;
     int m_postpaintMessageCount;
     int m_drawFrameCount;
     int m_drawFrameFinishCount;
     int m_requestApplyActionsCount;
     int m_requestApplyActionsFinishCount;
-    bool m_useLayeredBuffer;
 
-    struct WrapSelfForUiThread {
+    struct WrapSelfForUiThread : public blink::WebThread::TaskObserver {
         WrapSelfForUiThread(LayerTreeHost* host)
             : m_host(host) { }
         LayerTreeHost* m_host;
         void paintInUiThread();
         void endPaint();
+
+        virtual ~WrapSelfForUiThread() override;
+        virtual void willProcessTask() override;
+        virtual void didProcessTask() override;
     };
     friend WrapSelfForUiThread;
-    std::set<WrapSelfForUiThread*> m_wrapSelfForUiThreads;
+    WTF::HashSet<WrapSelfForUiThread*> m_wrapSelfForUiThreads;
     int m_paintToMemoryCanvasInUiThreadTaskCount;
 
     bool m_isDrawDirty;
     bool m_hasResize;
+
+    WTF::Vector<SkRect> m_pendingRepaintRectsInRootLayerCoordinate;
 };
 
 } // cc

@@ -10,9 +10,14 @@
 #include "bindings/core/v8/V8HTMLVideoElement.h"
 #include "bindings/core/v8/V8ImageBitmap.h"
 #include "bindings/core/v8/V8DOMStringList.h"
+#include "bindings/core/v8/V8Blob.h"
+#include "bindings/core/v8/V8FormData.h"
+#include "bindings/core/v8/V8ArrayBuffer.h"
+#include "bindings/core/v8/V8ArrayBufferView.h"
 #include "bindings/modules/v8/UnionTypesModules.h"
 #include "bindings/modules/v8/V8CanvasGradient.h"
 #include "bindings/modules/v8/V8CanvasPattern.h"
+#include "bindings/modules/v8/V8Request.h"
 #include "third_party/WebKit/Source/modules/fetch/Request.h"
 
 namespace blink {
@@ -299,59 +304,104 @@ HTMLImageElementOrHTMLVideoElementOrHTMLCanvasElementOrImageBitmap NativeValueTr
     return impl;
 }
 
-// RequestOrUSVString::RequestOrUSVString()
-//     : m_type(SpecificTypeNone)
-// {
-// }
-// 
-// Request* RequestOrUSVString::getAsRequest() const
-// {
-//     ASSERT(isRequest());
-//     return m_request;
-// }
-// 
-// void RequestOrUSVString::setRequest(Request* value)
-// {
-//     ASSERT(isNull());
-//     m_request = value;
-//     m_type = SpecificTypeRequest;
-// }
-// 
-// RequestOrUSVString RequestOrUSVString::fromRequest(Request* value)
-// {
-//     RequestOrUSVString container;
-//     container.setRequest(value);
-//     return container;
-// }
-// 
-// String RequestOrUSVString::getAsUSVString() const
-// {
-//     ASSERT(isUSVString());
-//     return m_uSVString;
-// }
-// 
-// void RequestOrUSVString::setUSVString(String value)
-// {
-//     ASSERT(isNull());
-//     m_uSVString = value;
-//     m_type = SpecificTypeUSVString;
-// }
-// 
-// RequestOrUSVString RequestOrUSVString::fromUSVString(String value)
-// {
-//     RequestOrUSVString container;
-//     container.setUSVString(value);
-//     return container;
-// }
-// 
-// RequestOrUSVString::RequestOrUSVString(const RequestOrUSVString&) = default;
-// RequestOrUSVString::~RequestOrUSVString() = default;
-// RequestOrUSVString& RequestOrUSVString::operator=(const RequestOrUSVString&) = default;
-// 
-// DEFINE_TRACE(RequestOrUSVString)
-// {
-//     visitor->trace(m_request);
-// }
+RequestOrUSVString::RequestOrUSVString()
+    : m_type(SpecificTypeNone)
+{
+}
+
+Request* RequestOrUSVString::getAsRequest() const
+{
+    ASSERT(isRequest());
+    return m_request;
+}
+
+void RequestOrUSVString::setRequest(Request* value)
+{
+    ASSERT(isNull());
+    m_request = value;
+    m_type = SpecificTypeRequest;
+}
+
+RequestOrUSVString RequestOrUSVString::fromRequest(Request* value)
+{
+    RequestOrUSVString container;
+    container.setRequest(value);
+    return container;
+}
+
+String RequestOrUSVString::getAsUSVString() const
+{
+    ASSERT(isUSVString());
+    return m_uSVString;
+}
+
+void RequestOrUSVString::setUSVString(String value)
+{
+    ASSERT(isNull());
+    m_uSVString = value;
+    m_type = SpecificTypeUSVString;
+}
+
+RequestOrUSVString RequestOrUSVString::fromUSVString(String value)
+{
+    RequestOrUSVString container;
+    container.setUSVString(value);
+    return container;
+}
+
+RequestOrUSVString::RequestOrUSVString(const RequestOrUSVString&) = default;
+RequestOrUSVString::~RequestOrUSVString() = default;
+RequestOrUSVString& RequestOrUSVString::operator=(const RequestOrUSVString&) = default;
+
+
+DEFINE_TRACE(RequestOrUSVString)
+{
+    visitor->trace(m_request);
+}
+
+
+void V8RequestOrUSVString::toImpl(v8::Isolate* isolate, v8::Local<v8::Value> v8Value, RequestOrUSVString& impl, ExceptionState& exceptionState)
+{
+    if (v8Value.IsEmpty())
+        return;
+
+    if (V8Request::hasInstance(v8Value, isolate)) {
+        RawPtr<Request> cppValue = V8Request::toImpl(v8::Local<v8::Object>::Cast(v8Value));
+        impl.setRequest(cppValue);
+        return;
+    }
+
+    {
+        V8StringResource<> cppValue = toUSVString(isolate, v8Value, exceptionState);
+        if (exceptionState.hadException())
+            return;
+        impl.setUSVString(cppValue);
+        return;
+    }
+
+}
+
+v8::Local<v8::Value> toV8(const RequestOrUSVString& impl, v8::Local<v8::Object> creationContext, v8::Isolate* isolate)
+{
+    switch (impl.m_type) {
+    case RequestOrUSVString::SpecificTypeNone:
+        return v8::Null(isolate);
+    case RequestOrUSVString::SpecificTypeRequest:
+        return toV8(impl.getAsRequest(), creationContext, isolate);
+    case RequestOrUSVString::SpecificTypeUSVString:
+        return v8String(isolate, impl.getAsUSVString());
+    default:
+        ASSERT_NOT_REACHED();
+    }
+    return v8::Local<v8::Value>();
+}
+
+RequestOrUSVString NativeValueTraits<RequestOrUSVString>::nativeValue(v8::Isolate* isolate, v8::Local<v8::Value> value, ExceptionState& exceptionState)
+{
+    RequestOrUSVString impl;
+    V8RequestOrUSVString::toImpl(isolate, value, impl, exceptionState);
+    return impl;
+}
 
 StringOrStringSequence::StringOrStringSequence()
     : m_type(SpecificTypeNone)
@@ -575,6 +625,188 @@ StringOrStringSequenceOrDOMStringList NativeValueTraits<StringOrStringSequenceOr
 {
     StringOrStringSequenceOrDOMStringList impl;
     V8StringOrStringSequenceOrDOMStringList::toImpl(isolate, value, impl, exceptionState);
+    return impl;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString()
+    : m_type(SpecificTypeNone)
+{
+}
+
+Blob* BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::getAsBlob() const
+{
+    ASSERT(isBlob());
+    return m_blob;
+}
+
+void BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::setBlob(Blob* value)
+{
+    ASSERT(isNull());
+    m_blob = value;
+    m_type = SpecificTypeBlob;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::fromBlob(Blob* value)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString container;
+    container.setBlob(value);
+    return container;
+}
+
+PassRefPtr<DOMArrayBuffer> BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::getAsArrayBuffer() const
+{
+    ASSERT(isArrayBuffer());
+    return m_arrayBuffer;
+}
+
+void BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::setArrayBuffer(PassRefPtr<DOMArrayBuffer> value)
+{
+    ASSERT(isNull());
+    m_arrayBuffer = value;
+    m_type = SpecificTypeArrayBuffer;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::fromArrayBuffer(PassRefPtr<DOMArrayBuffer> value)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString container;
+    container.setArrayBuffer(value);
+    return container;
+}
+
+PassRefPtr<DOMArrayBufferView> BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::getAsArrayBufferView() const
+{
+    ASSERT(isArrayBufferView());
+    return m_arrayBufferView;
+}
+
+void BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::setArrayBufferView(PassRefPtr<DOMArrayBufferView> value)
+{
+    ASSERT(isNull());
+    m_arrayBufferView = value;
+    m_type = SpecificTypeArrayBufferView;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::fromArrayBufferView(PassRefPtr<DOMArrayBufferView> value)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString container;
+    container.setArrayBufferView(value);
+    return container;
+}
+
+DOMFormData* BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::getAsFormData() const
+{
+    ASSERT(isFormData());
+    return m_formData;
+}
+
+void BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::setFormData(DOMFormData* value)
+{
+    ASSERT(isNull());
+    m_formData = value;
+    m_type = SpecificTypeFormData;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::fromFormData(DOMFormData* value)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString container;
+    container.setFormData(value);
+    return container;
+}
+
+String BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::getAsUSVString() const
+{
+    ASSERT(isUSVString());
+    return m_uSVString;
+}
+
+void BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::setUSVString(String value)
+{
+    ASSERT(isNull());
+    m_uSVString = value;
+    m_type = SpecificTypeUSVString;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::fromUSVString(String value)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString container;
+    container.setUSVString(value);
+    return container;
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString(const BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString&) = default;
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::~BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString() = default;
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString& BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::operator=(const BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString&) = default;
+
+DEFINE_TRACE(BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString)
+{
+    visitor->trace(m_blob);
+    visitor->trace(m_formData);
+}
+
+void V8BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::toImpl(v8::Isolate* isolate, v8::Local<v8::Value> v8Value, BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString& impl, ExceptionState& exceptionState)
+{
+    if (v8Value.IsEmpty())
+        return;
+
+    if (V8Blob::hasInstance(v8Value, isolate)) {
+        RawPtr<Blob> cppValue = V8Blob::toImpl(v8::Local<v8::Object>::Cast(v8Value));
+        impl.setBlob(cppValue);
+        return;
+    }
+
+    if (V8FormData::hasInstance(v8Value, isolate)) {
+        RawPtr<DOMFormData> cppValue = V8FormData::toImpl(v8::Local<v8::Object>::Cast(v8Value));
+        impl.setFormData(cppValue);
+        return;
+    }
+
+    if (V8ArrayBuffer::hasInstance(v8Value, isolate)) {
+        RefPtr<DOMArrayBuffer> cppValue = V8ArrayBuffer::toImpl(v8::Local<v8::Object>::Cast(v8Value));
+        impl.setArrayBuffer(cppValue);
+        return;
+    }
+
+    if (V8ArrayBufferView::hasInstance(v8Value, isolate)) {
+        RefPtr<DOMArrayBufferView> cppValue = V8ArrayBufferView::toImpl(v8::Local<v8::Object>::Cast(v8Value));
+        impl.setArrayBufferView(cppValue);
+        return;
+    }
+
+    {
+        V8StringResource<> cppValue = toUSVString(isolate, v8Value, exceptionState);
+        if (exceptionState.hadException())
+            return;
+        impl.setUSVString(cppValue);
+        return;
+    }
+
+}
+
+v8::Local<v8::Value> toV8(const BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString& impl, v8::Local<v8::Object> creationContext, v8::Isolate* isolate)
+{
+    switch (impl.m_type) {
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeNone:
+        return v8::Null(isolate);
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeBlob:
+        return toV8(impl.getAsBlob(), creationContext, isolate);
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeArrayBuffer:
+        return toV8(impl.getAsArrayBuffer(), creationContext, isolate);
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeArrayBufferView:
+        return toV8(impl.getAsArrayBufferView(), creationContext, isolate);
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeFormData:
+        return toV8(impl.getAsFormData(), creationContext, isolate);
+    case BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::SpecificTypeUSVString:
+        return v8String(isolate, impl.getAsUSVString());
+    default:
+        ASSERT_NOT_REACHED();
+    }
+    return v8::Local<v8::Value>();
+}
+
+BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString NativeValueTraits<BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString>::nativeValue(v8::Isolate* isolate, v8::Local<v8::Value> value, ExceptionState& exceptionState)
+{
+    BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString impl;
+    V8BlobOrArrayBufferOrArrayBufferViewOrFormDataOrUSVString::toImpl(isolate, value, impl, exceptionState);
     return impl;
 }
 

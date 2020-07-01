@@ -59,6 +59,7 @@
 #include "core/css/StyleRuleImport.h"
 #include "core/css/StyleSheetContents.h"
 #include "core/css/resolver/AnimatedStyleBuilder.h"
+#include "core/css/resolver/CSSVariableResolver.h"
 #include "core/css/resolver/MatchResult.h"
 #include "core/css/resolver/MediaQueryResult.h"
 #include "core/css/resolver/ScopedStyleResolver.h"
@@ -1076,7 +1077,7 @@ static inline bool isValidFirstLetterStyleProperty(CSSPropertyID id)
     case CSSPropertyTextTransform:
     case CSSPropertyVerticalAlign:
     case CSSPropertyWebkitBackgroundClip:
-    case CSSPropertyWebkitBackgroundComposite:
+    //case CSSPropertyBackgroundComposite:
     case CSSPropertyWebkitBackgroundOrigin:
     case CSSPropertyWebkitBorderAfter:
     case CSSPropertyWebkitBorderAfterColor:
@@ -1125,7 +1126,7 @@ static inline bool isValidFirstLetterStyleProperty(CSSPropertyID id)
     // http://www.w3.org/TR/css3-background/#placement
     case CSSPropertyBoxShadow:
     // Properties that we currently support outside of spec.
-    case CSSPropertyWebkitLineBoxContain:
+    //case CSSPropertyWebkitLineBoxContain:
     case CSSPropertyVisibility:
         return true;
 
@@ -1156,6 +1157,11 @@ static bool shouldIgnoreTextTrackAuthorStyle(Document& document)
 template <CSSPropertyPriority priority>
 void StyleResolver::applyAllProperty(StyleResolverState& state, CSSValue* allValue, bool inheritedOnly)
 {
+    // The 'all' property doesn't apply to variables:
+    // https://drafts.csswg.org/css-variables/#defining-variables
+    if (priority == ResolveVariables)
+        return;
+
     unsigned startCSSProperty = CSSPropertyPriorityData<priority>::first();
     unsigned endCSSProperty = CSSPropertyPriorityData<priority>::last();
 
@@ -1190,10 +1196,11 @@ void StyleResolver::applyProperties(StyleResolverState& state, const StyleProper
     unsigned propertyCount = properties->propertyCount();
     for (unsigned i = 0; i < propertyCount; ++i) {
         StylePropertySet::PropertyReference current = properties->propertyAt(i);
+        CSSPropertyID property = current.id();
+
         if (isImportant != current.isImportant())
             continue;
-
-        CSSPropertyID property = current.id();
+        
         if (property == CSSPropertyAll) {
             applyAllProperty<priority>(state, current.value(), inheritedOnly);
             continue;
@@ -1215,6 +1222,14 @@ void StyleResolver::applyProperties(StyleResolverState& state, const StyleProper
 
         if (!CSSPropertyPriorityData<priority>::propertyHasPriority(property))
             continue;
+
+        if (m_document->printing() && (
+            CSSPropertyTransitionDelay == current.id() ||
+            CSSPropertyTransitionDuration == current.id() ||
+            CSSPropertyTransitionProperty == current.id() ||
+            CSSPropertyTransitionTimingFunction == current.id() ||
+            CSSPropertyTransitionDuration == current.id()))
+            continue; // weolar
 
         StyleBuilder::applyProperty(current.id(), state, current.value());
     }
@@ -1298,6 +1313,14 @@ void StyleResolver::applyMatchedProperties(StyleResolverState& state, const Matc
             return;
         }
         applyInheritedOnly = true;
+    }
+
+    // TODO(leviw): We need the proper bit for tracking whether we need to do this work.
+    if (RuntimeEnabledFeatures::cssVariablesEnabled()) {
+        applyMatchedProperties<ResolveVariables>(state, matchResult, false, matchResult.beginAuthor(), matchResult.endAuthor(), applyInheritedOnly);
+        applyMatchedProperties<ResolveVariables>(state, matchResult, true, matchResult.beginAuthor(), matchResult.endAuthor(), applyInheritedOnly);
+        // TODO(leviw): stop recalculating every time
+        CSSVariableResolver::resolveVariableDefinitions(state.style()->variables());
     }
 
     // Now we have all of the matched rules in the appropriate order. Walk the rules and apply
@@ -1397,7 +1420,9 @@ void StyleResolver::computeFont(ComputedStyle* style, const StylePropertySet& pr
     };
 
     // TODO(timloh): This is weird, the style is being used as its own parent
-    StyleResolverState state(document(), document().documentElement(), style);
+    // https://chromium.googlesource.com/chromium/src/+/0a340869532dfb0739d87a963905839c24baff21%5E%21/#F2
+    // Fix assert when resolving font on canvas with dirty shadow distribution
+    StyleResolverState state(document(), /*document().documentElement()*/nullptr, style);
     state.setStyle(style);
 
     for (CSSPropertyID property : properties) {

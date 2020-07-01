@@ -3952,6 +3952,8 @@ void InspectorBackendDispatcherImpl::CSS_getMatchedStylesForNode(int callId, JSO
     bool excludeInherited_valueFound = false;
     bool in_excludeInherited = getBoolean(paramsContainerPtr, "excludeInherited", &excludeInherited_valueFound, protocolErrors);
 
+    RefPtr<TypeBuilder::CSS::CSSStyle> out_inlineStyle;
+    RefPtr<TypeBuilder::CSS::CSSStyle> out_attributesStyle;
     RefPtr<TypeBuilder::Array<TypeBuilder::CSS::RuleMatch> > out_matchedCSSRules;
     RefPtr<TypeBuilder::Array<TypeBuilder::CSS::PseudoIdMatches> > out_pseudoElements;
     RefPtr<TypeBuilder::Array<TypeBuilder::CSS::InheritedStyleEntry> > out_inherited;
@@ -3962,8 +3964,12 @@ void InspectorBackendDispatcherImpl::CSS_getMatchedStylesForNode(int callId, JSO
     }
     ErrorString error;
     RefPtr<JSONObject> result = JSONObject::create();
-    m_cssAgent->getMatchedStylesForNode(&error, in_nodeId, excludePseudo_valueFound ? &in_excludePseudo : 0, excludeInherited_valueFound ? &in_excludeInherited : 0, out_matchedCSSRules, out_pseudoElements, out_inherited);
+    m_cssAgent->getMatchedStylesForNode(&error, in_nodeId, excludePseudo_valueFound ? &in_excludePseudo : 0, excludeInherited_valueFound ? &in_excludeInherited : 0, out_inlineStyle, out_attributesStyle, out_matchedCSSRules, out_pseudoElements, out_inherited);
     if (!error.length()) {
+//         if (out_inlineStyle)
+//             result->setValue("inlineStyle", out_inlineStyle);
+//         if (out_attributesStyle)
+//             result->setValue("attributesStyle", out_attributesStyle);
         if (out_matchedCSSRules)
             result->setValue("matchedCSSRules", out_matchedCSSRules);
         if (out_pseudoElements)

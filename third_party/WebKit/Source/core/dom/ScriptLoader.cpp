@@ -180,6 +180,8 @@ bool ScriptLoader::isScriptTypeSupported(LegacyTypeSupport supportLegacyTypes) c
     return false;
 }
 
+bool isBlacklistWebsiteToUseUtf8(const String& url);
+
 // http://dev.w3.org/html5/spec/Overview.html#prepare-a-script
 bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, LegacyTypeSupport supportLegacyTypes)
 {
@@ -235,7 +237,13 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
         FetchRequest::DeferOption defer = FetchRequest::NoDefer;
         if (!m_parserInserted || client->asyncAttributeValue() || client->deferAttributeValue())
             defer = FetchRequest::LazyLoad;
-        if (!fetchScript(client->sourceAttributeValue(), defer))
+
+        const String& sourceUrl = client->sourceAttributeValue();
+#ifndef MINIBLINK_NO_CHANGE
+        if (isBlacklistWebsiteToUseUtf8(sourceUrl))
+            m_characterEncoding = "UTF-8";
+#endif
+        if (!fetchScript(sourceUrl, defer))
             return false;
     }
 

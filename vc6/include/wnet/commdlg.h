@@ -887,17 +887,20 @@ WINCOMMDLGAPI BOOL APIENTRY PrintDlgW(LPPRINTDLGW);
 #undef  INTERFACE
 #define INTERFACE   IPrintDialogCallback
 
+
+#ifdef __cplusplus
+
 DECLARE_INTERFACE_(IPrintDialogCallback, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID *ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID *ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IPrintDialogCallback methods ***
-    STDMETHOD(InitDone) (THIS) PURE;
-    STDMETHOD(SelectionChange) (THIS) PURE;
-    STDMETHOD(HandleMessage) (THIS_ HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult) PURE;
+    STDMETHOD(InitDone) (THIS) = 0;
+    STDMETHOD(SelectionChange) (THIS) = 0;
+    STDMETHOD(HandleMessage) (THIS_ HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult) = 0;
 };
 
 
@@ -922,18 +925,19 @@ DECLARE_INTERFACE_(IPrintDialogCallback, IUnknown)
 DECLARE_INTERFACE_(IPrintDialogServices, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID *ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID *ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IPrintDialogServices methods ***
-    STDMETHOD(GetCurrentDevMode) (THIS_ LPDEVMODE pDevMode, UINT *pcbSize) PURE;
-    STDMETHOD(GetCurrentPrinterName) (THIS_ LPTSTR pPrinterName, UINT *pcchSize) PURE;
-    STDMETHOD(GetCurrentPortName) (THIS_ LPTSTR pPortName, UINT *pcchSize) PURE;
+    STDMETHOD(GetCurrentDevMode) (THIS_ LPDEVMODE pDevMode, UINT *pcbSize) = 0;
+    STDMETHOD(GetCurrentPrinterName) (THIS_ LPTSTR pPrinterName, UINT *pcchSize) = 0;
+    STDMETHOD(GetCurrentPortName) (THIS_ LPTSTR pPortName, UINT *pcchSize) = 0;
 };
 
+#endif // __cplusplus
 
-//
+
 //  Page Range structure for PrintDlgEx.
 //
 typedef struct tagPRINTPAGERANGE {

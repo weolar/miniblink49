@@ -24,16 +24,14 @@
 #include "platform/PlatformInstrumentation.h"
 #include "platform/graphics/DeferredImageDecoder.h"
 #include "platform/image-decoders/bmp/BMPImageDecoder.h"
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#include "platform/image-decoders/gif/GIFImageDecoder.h"
 #include "platform/image-decoders/ico/ICOImageDecoder.h"
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "platform/image-decoders/webp/WEBPImageDecoder.h"
-#else
+#endif // MINIBLINK_NOT_IMPLEMENTED
 #include "platform/image-decoders/png/PNGImageDecoder.h"
 #include "platform/image-decoders/jpeg/JPEGImageDecoder.h"
 #include "platform/image-decoders/GDIPlus/ImageGDIPlusDecoder.h"
 #include "platform/image-decoders/gif/GIFImageDecoder.h"
-#endif // MINIBLINK_NOT_IMPLEMENTED
 
 #include "wtf/PassOwnPtr.h"
 
@@ -103,15 +101,15 @@ PassOwnPtr<ImageDecoder> ImageDecoder::create(const SharedBuffer& data, ImageSou
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     if (matchesWebPSignature(contents))
         return adoptPtr(new WEBPImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-
+#else
     if (matchesICOSignature(contents) || matchesCURSignature(contents))
         return adoptPtr(new ICOImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-#else
-	if (matchesPNGSignature(contents))
-		return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
-	if (matchesJPEGSignature(contents))
-		return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
+    if (matchesPNGSignature(contents))
+        return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
+
+    if (matchesJPEGSignature(contents))
+        return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
     //if (matchesPNGSignature(contents))
     //    return adoptPtr(new ImageGDIPlusDecoder(alphaOption, gammaAndColorProfileOption, ImageGDIPlusDecoder::GDIPlusDecoderPNG, maxDecodedBytes));

@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/ScriptCallStackFactory.h"
+#include "config.h"
 
 #include "bindings/core/v8/ScriptValue.h"
 #include "bindings/core/v8/V8Binding.h"
@@ -73,7 +73,7 @@ static void toScriptCallFramesVector(v8::Local<v8::StackTrace> stackTrace, Vecto
     if (frameCount > static_cast<int>(maxStackSize))
         frameCount = maxStackSize;
     for (int i = 0; i < frameCount; i++) {
-        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(isolate, i);
         scriptCallFrames.append(toScriptCallFrame(stackFrame));
     }
     if (!frameCount && !emptyStackIsAllowed) {

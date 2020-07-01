@@ -2,7 +2,6 @@
 #include "cc/blink/WebScrollbarLayerImpl.h"
 #include "cc/blink/WebLayerImpl.h"
 
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "cc/raster/RasterResouce.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/tiles/TileGrid.h"

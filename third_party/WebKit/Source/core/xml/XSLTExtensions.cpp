@@ -30,9 +30,9 @@
 #include "platform/RuntimeEnabledFeatures.h"
 #include "wtf/Assertions.h"
 #include <libxml/xpathInternals.h>
-#include <libxslt/extensions.h>
-#include <libxslt/extra.h>
-#include <libxslt/xsltutils.h>
+#include "third_party/libxslt/libxslt/extensions.h"
+#include "third_party/libxslt/libxslt/extra.h"
+#include "third_party/libxslt/libxslt/xsltutils.h"
 
 namespace blink {
 
