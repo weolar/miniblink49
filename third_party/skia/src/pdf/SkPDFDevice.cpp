@@ -60,7 +60,7 @@ static void emit_pdf_color(SkColor color, SkWStream* result) {
 
 static SkPaint calculate_text_paint(const SkPaint& paint) {
     SkPaint result = paint;
-    if (result.isFakeBoldText()) {
+    if (result.isFakeBoldText() || (result.getTypeface() && result.getTypeface()->isBold())) {
         SkScalar fakeBoldScale = SkScalarInterpFunc(result.getTextSize(),
                                                     kStdFakeBoldInterpKeys,
                                                     kStdFakeBoldInterpValues,
