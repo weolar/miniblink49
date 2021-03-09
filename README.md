@@ -56,7 +56,7 @@ miniblink是一个开源的、单文件、且目前已知的最小的基于chrom
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
 
-API文档见：https://miniblink.net/doc-main.html 
+API文档见：https://miniblink.net/views/doc/index.html 
 
 ----
 
