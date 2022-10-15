@@ -14,6 +14,8 @@
 
 Q群：738349226、94093808（已满勿加）
 
+Telegram群：https://t.me/miniblink
+
 QQ（weolar）：93527630
 
 email：weolar@miniblink.net
