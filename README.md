@@ -98,13 +98,13 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 大家有问题可以选择：
 
-- 加Q群94093808
-
 - 加微信群：![wx_group](https://miniblink.net/images/wx_group.png)
 
 - 邮箱weolar@miniblink.net
 
 - github里留言issue讨论
+
+- 加Q群94093808
 
 - 关注知乎专栏：https://zhuanlan.zhihu.com/chrome
 
