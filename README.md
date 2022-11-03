@@ -12,9 +12,11 @@
 
 如需获得后续支持，请使用以下联系方式：
 
-Q群：738349226、94093808（已满勿加）
+加微信群：![wx_group](https://miniblink.net/images/wx_group.png)
 
 Telegram群：https://t.me/miniblink
+
+Q群：738349226、94093808（已满勿加）
 
 QQ（weolar）：93527630
 
