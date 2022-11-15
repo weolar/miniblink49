@@ -10,11 +10,11 @@
 
 希望大家尊重开源，尊重作者全职几年持续更新付出的劳动。
 
-（2022.11.3更新：本项目即将再次完全开源，大家敬请期待）
-
 **且用且珍惜**
 
 如需获得后续支持，请使用以下联系方式：
+
+开发者论坛：https://bbs.miniblink.com/
 
 加微信群：![wx_group](https://miniblink.net/images/wx_group.png)
 
