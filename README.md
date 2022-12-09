@@ -14,7 +14,7 @@
 
 如需获得后续支持，请使用以下联系方式：
 
-开发者论坛：https://bbs.miniblink.com/
+开发者论坛：https://bbs.miniblink.com/ （注册后，需要加我QQ告诉我，我才能验证通过）
 
 加微信群：![wx_group](https://miniblink.net/images/wx_group.png)
 
@@ -25,6 +25,8 @@ Q群：738349226（可加）、94093808（已满勿加）
 QQ（weolar）：93527630
 
 email：weolar@miniblink.net
+
+微信：可发邮箱咨询我微信号。暂时不放到github了
 
 
 # 简介 Abstract
