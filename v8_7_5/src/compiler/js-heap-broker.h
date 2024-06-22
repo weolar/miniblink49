@@ -21,8 +21,9 @@ namespace v8 {
 namespace internal {
 
 class BytecodeArray;
-class VectorSlotPair;
+class CallHandlerInfo;
 class FixedDoubleArray;
+class FunctionTemplateInfo;
 class HeapNumber;
 class InternalizedString;
 class JSBoundFunction;
@@ -32,6 +33,7 @@ class JSRegExp;
 class JSTypedArray;
 class NativeContext;
 class ScriptContextTable;
+class VectorSlotPair;
 
 namespace compiler {
 
@@ -72,11 +74,13 @@ enum class OddballType : uint8_t {
   V(Symbol)                        \
   /* Subtypes of HeapObject */     \
   V(AllocationSite)                \
+  V(CallHandlerInfo)               \
   V(Cell)                          \
   V(Code)                          \
   V(DescriptorArray)               \
   V(FeedbackVector)                \
   V(FixedArrayBase)                \
+  V(FunctionTemplateInfo)          \
   V(HeapNumber)                    \
   V(JSObject)                      \
   V(Map)                           \
@@ -96,7 +100,7 @@ class PerIsolateCompilerCache;
 HEAP_BROKER_OBJECT_LIST(FORWARD_DECL)
 #undef FORWARD_DECL
 
-class ObjectRef {
+class V8_EXPORT_PRIVATE ObjectRef {
  public:
   ObjectRef(JSHeapBroker* broker, Handle<Object> object);
   ObjectRef(JSHeapBroker* broker, ObjectData* data)
@@ -124,6 +128,11 @@ class ObjectRef {
   bool BooleanValue() const;
   Maybe<double> OddballToNumber() const;
 
+  // Return the element at key {index} if {index} is known to be an own data
+  // property of the object that is non-writable and non-configurable.
+  base::Optional<ObjectRef> GetOwnConstantElement(uint32_t index,
+                                                  bool serialize = false) const;
+
   Isolate* isolate() const;
 
  protected:
@@ -132,10 +141,18 @@ class ObjectRef {
   ObjectData* data_;  // Should be used only by object() getters.
 
  private:
+  friend class JSArrayData;
   friend class JSGlobalProxyRef;
   friend class JSGlobalProxyData;
+  friend class JSObjectData;
+  friend class StringData;
+
+  friend std::ostream& operator<<(std::ostream& os, const ObjectRef& ref);
+
   JSHeapBroker* broker_;
 };
+
+std::ostream& operator<<(std::ostream& os, const ObjectRef& ref);
 
 // Temporary class that carries information from a Map. We'd like to remove
 // this class and use MapRef instead, but we can't as long as we support the
@@ -148,7 +165,7 @@ class HeapObjectType {
  public:
   enum Flag : uint8_t { kUndetectable = 1 << 0, kCallable = 1 << 1 };
 
-  typedef base::Flags<Flag> Flags;
+  using Flags = base::Flags<Flag>;
 
   HeapObjectType(InstanceType instance_type, Flags flags,
                  OddballType oddball_type)
@@ -232,7 +249,7 @@ class JSBoundFunctionRef : public JSObjectRef {
   FixedArrayRef bound_arguments() const;
 };
 
-class JSFunctionRef : public JSObjectRef {
+class V8_EXPORT_PRIVATE JSFunctionRef : public JSObjectRef {
  public:
   using JSObjectRef::JSObjectRef;
   Handle<JSFunction> object() const;
@@ -243,7 +260,7 @@ class JSFunctionRef : public JSObjectRef {
   bool PrototypeRequiresRuntimeLookup() const;
 
   void Serialize();
-  bool IsSerializedForCompilation() const;
+  bool serialized() const;
 
   // The following are available only after calling Serialize().
   ObjectRef prototype() const;
@@ -253,6 +270,8 @@ class JSFunctionRef : public JSObjectRef {
   SharedFunctionInfoRef shared() const;
   FeedbackVectorRef feedback_vector() const;
   int InitialMapInstanceSizeWithMinSlack() const;
+
+  bool IsSerializedForCompilation() const;
 };
 
 class JSRegExpRef : public JSObjectRef {
@@ -362,6 +381,8 @@ class NameRef : public HeapObjectRef {
  public:
   using HeapObjectRef::HeapObjectRef;
   Handle<Name> object() const;
+
+  bool IsUniqueName() const;
 };
 
 class ScriptContextTableRef : public HeapObjectRef {
@@ -394,6 +415,26 @@ class FeedbackVectorRef : public HeapObjectRef {
   void SerializeSlots();
 };
 
+class FunctionTemplateInfoRef : public HeapObjectRef {
+ public:
+  using HeapObjectRef::HeapObjectRef;
+  Handle<FunctionTemplateInfo> object() const;
+
+  void Serialize();
+  ObjectRef call_code() const;
+};
+
+class CallHandlerInfoRef : public HeapObjectRef {
+ public:
+  using HeapObjectRef::HeapObjectRef;
+  Handle<CallHandlerInfo> object() const;
+
+  Address callback() const;
+
+  void Serialize();
+  ObjectRef data() const;
+};
+
 class AllocationSiteRef : public HeapObjectRef {
  public:
   using HeapObjectRef::HeapObjectRef;
@@ -416,7 +457,7 @@ class AllocationSiteRef : public HeapObjectRef {
   bool CanInlineCall() const;
 };
 
-class MapRef : public HeapObjectRef {
+class V8_EXPORT_PRIVATE MapRef : public HeapObjectRef {
  public:
   using HeapObjectRef::HeapObjectRef;
   Handle<Map> object() const;
@@ -452,17 +493,18 @@ class MapRef : public HeapObjectRef {
   bool supports_fast_array_resize() const;
   bool IsMapOfCurrentGlobalProxy() const;
 
+  OddballType oddball_type() const;
+
 #define DEF_TESTER(Type, ...) bool Is##Type##Map() const;
   INSTANCE_TYPE_CHECKERS(DEF_TESTER)
 #undef DEF_TESTER
 
-  ObjectRef GetConstructor() const;
-  OddballType oddball_type() const;
-  base::Optional<MapRef> AsElementsKind(ElementsKind kind) const;
+  void SerializeBackPointer();
+  HeapObjectRef GetBackPointer() const;
 
   void SerializePrototype();
   bool serialized_prototype() const;
-  ObjectRef prototype() const;
+  HeapObjectRef prototype() const;
 
   void SerializeForElementLoad();
 
@@ -478,6 +520,11 @@ class MapRef : public HeapObjectRef {
   FieldIndex GetFieldIndexFor(int descriptor_index) const;
   ObjectRef GetFieldType(int descriptor_index) const;
   bool IsUnboxedDoubleField(int descriptor_index) const;
+
+  // Available after calling JSFunctionRef::Serialize on a function that has
+  // this map as initial map.
+  ObjectRef GetConstructor() const;
+  base::Optional<MapRef> AsElementsKind(ElementsKind kind) const;
 };
 
 class FixedArrayBaseRef : public HeapObjectRef {
@@ -519,6 +566,11 @@ class JSArrayRef : public JSObjectRef {
   Handle<JSArray> object() const;
 
   ObjectRef length() const;
+
+  // Return the element at key {index} if the array has a copy-on-write elements
+  // storage and {index} is known to be an own data property.
+  base::Optional<ObjectRef> GetOwnCowElement(uint32_t index,
+                                             bool serialize = false) const;
 };
 
 class ScopeInfoRef : public HeapObjectRef {
@@ -543,7 +595,7 @@ class ScopeInfoRef : public HeapObjectRef {
   V(bool, is_safe_to_skip_arguments_adaptor) \
   V(bool, IsInlineable)
 
-class SharedFunctionInfoRef : public HeapObjectRef {
+class V8_EXPORT_PRIVATE SharedFunctionInfoRef : public HeapObjectRef {
  public:
   using HeapObjectRef::HeapObjectRef;
   Handle<SharedFunctionInfo> object() const;
@@ -636,9 +688,6 @@ class InternalizedStringRef : public StringRef {
  public:
   using StringRef::StringRef;
   Handle<InternalizedString> object() const;
-
-  uint32_t array_index() const;
-  static const uint32_t kNotAnArrayIndex = -1;  // 2^32-1 is not a valid index.
 };
 
 class ProcessedFeedback : public ZoneObject {
@@ -823,9 +872,15 @@ Reduction NoChangeBecauseOfMissingData(JSHeapBroker* broker,
 // compilation is finished.
 bool CanInlineElementAccess(MapRef const& map);
 
-#define TRACE_BROKER(broker, x)                               \
-  do {                                                        \
-    if (FLAG_trace_heap_broker) broker->Trace() << x << '\n'; \
+#define TRACE_BROKER(broker, x)                                       \
+  do {                                                                \
+    if (FLAG_trace_heap_broker_verbose) broker->Trace() << x << '\n'; \
+  } while (false)
+
+#define TRACE_BROKER_MISSING(broker, x)                             \
+  do {                                                              \
+    if (FLAG_trace_heap_broker)                                     \
+      broker->Trace() << __FUNCTION__ << ": missing " << x << '\n'; \
   } while (false)
 
 }  // namespace compiler

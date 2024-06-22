@@ -58,6 +58,9 @@
 #include "wtf/text/Base64.h"
 #include "wtf/text/WTFString.h"
 
+#include "wke/wkeString.h"
+#include "wke/wkeGlobalVar.h"
+
 namespace blink {
 
 PassOwnPtr<ImageBuffer> ImageBuffer::create(PassOwnPtr<ImageBufferSurface> surface)
@@ -203,9 +206,10 @@ bool ImageBuffer::copyToPlatformTexture(WebGraphicsContext3D* context, Platform3
     sharedContext->produceTextureDirectCHROMIUM(textureId, GL_TEXTURE_2D, mailbox->name);
     sharedContext->flush();
 
-    mailbox->syncPoint = sharedContext->insertSyncPoint();
+    mailbox->validSyncToken = sharedContext->insertSyncPoint(mailbox->syncToken);
+    if (mailbox->validSyncToken)
+        context->waitSyncToken(mailbox->syncToken);
 
-    context->waitSyncPoint(mailbox->syncPoint);
     Platform3DObject sourceTexture = context->createAndConsumeTextureCHROMIUM(GL_TEXTURE_2D, mailbox->name);
 
     // The canvas is stored in a premultiplied format, so unpremultiply if necessary.
@@ -367,15 +371,48 @@ static bool encodeImage(T& source, const String& mimeType, const double* quality
     return true;
 }
 
+static void hookToDataUrl(String* result)
+{
+    if (!wke::g_wkeImageBufferToDataUrlCallback)
+        return;
+
+    void* param = wke::g_wkeImageBufferToDataUrlCallbackParam;
+    wkeString newResult = wke::g_wkeImageBufferToDataUrlCallback(nullptr, param, (const char*)result->characters8(), result->length());
+    if (!newResult)
+        return;
+
+    size_t length = newResult->length();
+
+    if (0 == length) {
+        wkeDeleteString(newResult);
+        return;
+    }
+
+    if ('\0' == newResult->string()[newResult->length() - 1] && 0 == length)
+        length -= 1;
+
+    if (0 == length) {
+        wkeDeleteString(newResult);
+        return;
+    }
+
+    *result = String((const char*)newResult->string(), length);
+    wkeDeleteString(newResult);
+}
+
 String ImageBuffer::toDataURL(const String& mimeType, const double* quality) const
 {
     ASSERT(MIMETypeRegistry::isSupportedImageMIMETypeForEncoding(mimeType));
 
+    String result;
     Vector<char> encodedImage;
     if (!isSurfaceValid() || !encodeImage(m_surface->bitmap(), mimeType, quality, &encodedImage))
-        return "data:,";
-
-    return "data:" + mimeType + ";base64," + base64Encode(encodedImage);
+        result = "data:,";
+    else
+        result = "data:" + mimeType + ";base64," + base64Encode(encodedImage);
+    
+    hookToDataUrl(&result);
+    return result;
 }
 
 String ImageDataBuffer::toDataURL(const String& mimeType, const double* quality) const

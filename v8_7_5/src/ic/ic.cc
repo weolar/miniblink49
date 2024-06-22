@@ -870,8 +870,10 @@ Handle<Object> LoadIC::ComputeHandler(LookupIterator* lookup) {
           return slow_stub();
         }
 
-        if (getter->IsFunctionTemplateInfo() &&
-            FunctionTemplateInfo::cast(*getter)->BreakAtEntry()) {
+        if ((getter->IsFunctionTemplateInfo() &&
+             FunctionTemplateInfo::cast(*getter)->BreakAtEntry()) ||
+            (getter->IsJSFunction() &&
+             JSFunction::cast(*getter)->shared()->BreakAtEntry())) {
           // Do not install an IC if the api function has a breakpoint.
           TRACE_HANDLER_STATS(isolate(), LoadIC_SlowStub);
           return slow_stub();
@@ -1189,6 +1191,7 @@ Handle<Object> KeyedLoadIC::LoadElementHandler(Handle<Map> receiver_map,
                                     is_js_array, load_mode);
   }
   DCHECK(IsFastElementsKind(elements_kind) ||
+         IsPackedFrozenOrSealedElementsKind(elements_kind) ||
          IsFixedTypedArrayElementsKind(elements_kind));
   bool convert_hole_to_undefined =
       (elements_kind == HOLEY_SMI_ELEMENTS ||
@@ -1652,8 +1655,10 @@ MaybeObjectHandle StoreIC::ComputeHandler(LookupIterator* lookup) {
           return MaybeObjectHandle(slow_stub());
         }
 
-        if (setter->IsFunctionTemplateInfo() &&
-            FunctionTemplateInfo::cast(*setter)->BreakAtEntry()) {
+        if ((setter->IsFunctionTemplateInfo() &&
+             FunctionTemplateInfo::cast(*setter)->BreakAtEntry()) ||
+            (setter->IsJSFunction() &&
+             JSFunction::cast(*setter)->shared()->BreakAtEntry())) {
           // Do not install an IC if the api function has a breakpoint.
           TRACE_HANDLER_STATS(isolate(), StoreIC_SlowStub);
           return MaybeObjectHandle(slow_stub());
@@ -1941,6 +1946,7 @@ Handle<Object> KeyedStoreIC::StoreElementHandler(
     code =
         CodeFactory::KeyedStoreIC_SloppyArguments(isolate(), store_mode).code();
   } else if (receiver_map->has_fast_elements() ||
+             receiver_map->has_sealed_elements() ||
              receiver_map->has_fixed_typed_array_elements()) {
     TRACE_HANDLER_STATS(isolate(), KeyedStoreIC_StoreFastElementStub);
     code = CodeFactory::StoreFastElementIC(isolate(), store_mode).code();
@@ -1953,7 +1959,8 @@ Handle<Object> KeyedStoreIC::StoreElementHandler(
   } else {
     // TODO(jgruber): Update counter name.
     TRACE_HANDLER_STATS(isolate(), KeyedStoreIC_StoreElementStub);
-    DCHECK_EQ(DICTIONARY_ELEMENTS, receiver_map->elements_kind());
+    DCHECK(DICTIONARY_ELEMENTS == receiver_map->elements_kind() ||
+           receiver_map->has_frozen_elements());
     code = CodeFactory::KeyedStoreIC_Slow(isolate(), store_mode).code();
   }
 
@@ -2170,6 +2177,18 @@ MaybeHandle<Object> KeyedStoreIC::Store(Handle<Object> object,
           set_slow_stub_reason("receiver with prototype map");
         } else if (!old_receiver_map->DictionaryElementsInPrototypeChainOnly(
                        isolate())) {
+          // If the SetObjectProperty call did not transition, avoid adding
+          // a transition just for the ICs. We want to avoid making
+          // the receiver map unnecessarily non-stable (crbug.com/950328).
+          //
+          // TODO(jarin) We should make this more robust so that the IC system
+          // does not duplicate the logic implemented in runtime
+          // (Runtime::SetObjectProperty).
+          if (old_receiver_map->elements_kind() ==
+              Handle<HeapObject>::cast(object)->map()->elements_kind()) {
+            store_mode =
+                GetNonTransitioningStoreMode(store_mode, receiver_was_cow);
+          }
           // We should go generic if receiver isn't a dictionary, but our
           // prototype chain does have dictionary elements. This ensures that
           // other non-dictionary receivers in the polymorphic case benefit

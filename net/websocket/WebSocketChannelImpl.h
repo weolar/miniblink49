@@ -133,12 +133,34 @@ public:
     void ref();
     void deref();
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    //hook
-    bool(WKE_CALL_TYPE* m_onConnect)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
-    bool(WKE_CALL_TYPE* m_onReceive)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
-    bool(WKE_CALL_TYPE* m_onSend)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
-    void(WKE_CALL_TYPE* m_onError)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
-    void* m_hookUserParam;
+//     //hook
+//     bool(WKE_CALL_TYPE* m_onConnected)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
+//     bool(WKE_CALL_TYPE* m_onReceive)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
+//     bool(WKE_CALL_TYPE* m_onSend)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
+//     void(WKE_CALL_TYPE* m_onError)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
+//     void* m_hookUserParam;
+    struct WebsocketHookInfo {
+        WebsocketHookInfo()
+        {
+            param = nullptr;
+            onConnected = nullptr;
+            onReceive = nullptr;
+            onSend = nullptr;
+            onError = nullptr;
+        }
+        void* param;
+        bool(WKE_CALL_TYPE* onConnected)(wkeWebView webView, void* param, WebSocketChannelImpl* channel);
+        bool(WKE_CALL_TYPE* onReceive)(wkeWebView webView, void* param, WebSocketChannelImpl* channel, int opCode, const char* buf, size_t len, wkeString newData);
+        bool(WKE_CALL_TYPE* onSend)(wkeWebView webView, void* param, WebSocketChannelImpl* channel, int opCode, const char* buf, size_t len, wkeString newData);
+        void(WKE_CALL_TYPE* onError)(wkeWebView webView, void* param, WebSocketChannelImpl* channel);
+    };
+private:
+    WebsocketHookInfo m_hookInfo;
+public:
+    void setHookInfo(const WebsocketHookInfo& info)
+    {
+        m_hookInfo = info;
+    }
 #endif
 protected:
 
@@ -174,10 +196,10 @@ private:
         CString stringData;
         Vector<char> vectorData;
         RefPtr<blink::BlobDataHandle> blobData;
-        bool isHook;
+        bool isFromHook;
     };
-    void enqueueTextFrame(const CString&, bool isHook);
-    void enqueueRawFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isHook);
+    void enqueueTextFrame(const CString&, bool isFromHook);
+    void enqueueRawFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isFromHook);
     void enqueueBlobFrame(WebSocketOneFrame::OpCode, PassRefPtr<blink::BlobDataHandle>);
 
     void processOutgoingFrameQueue();
@@ -197,7 +219,7 @@ private:
 
     // If you are going to send a hybi-10 frame, you need to use the outgoing frame queue
     // instead of call sendFrame() directly.
-    bool sendFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isHook);
+    bool sendFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isFromHook);
 
     enum BlobLoaderStatus {
         BlobLoaderNotStarted,

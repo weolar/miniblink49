@@ -87,7 +87,7 @@ ResourcePtr<RawResource> RawResource::fetchMainResource(FetchRequest& request, R
 
     if (substituteData.isValid())
         preCacheSubstituteDataForMainResource(request, fetcher, substituteData);
-    return toRawResource(fetcher->requestResource(request, RawResourceFactory(Resource::MainResource)));
+    return toRawResource(fetcher->requestResource(request, RawResourceFactory(Resource::MainResource), substituteData));
 }
 
 ResourcePtr<RawResource> RawResource::fetchMedia(FetchRequest& request, ResourceFetcher* fetcher)

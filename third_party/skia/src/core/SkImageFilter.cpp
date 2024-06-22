@@ -385,6 +385,23 @@ SkImageFilter* SkImageFilter::CreateMatrixFilter(const SkMatrix& matrix,
     return SkMatrixImageFilter::Create(matrix, filterQuality, input);
 }
 
+bool SkImageFilter::canComputeFastBounds() const {
+    if (this->affectsTransparentBlack()) {
+        return false;
+    }
+    for (int i = 0; i < fInputCount; i++) {
+        SkImageFilter* input = this->getInput(i);
+        if (input && !input->canComputeFastBounds()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool SkImageFilter::affectsTransparentBlack() const {
+    return false;
+}
+
 #if SK_SUPPORT_GPU
 
 void SkImageFilter::WrapTexture(GrTexture* texture, int width, int height, SkBitmap* result) {

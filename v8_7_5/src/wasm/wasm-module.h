@@ -72,7 +72,7 @@ struct WasmGlobal {
 
 // Note: An exception signature only uses the params portion of a
 // function signature.
-typedef FunctionSig WasmExceptionSig;
+using WasmExceptionSig = FunctionSig;
 
 // Static representation of a wasm exception type.
 struct WasmException {
@@ -120,7 +120,7 @@ struct WasmElemSegment {
 
   // Used in the {entries} vector to represent a `ref.null` entry in a passive
   // segment.
-  static const uint32_t kNullIndex = ~0u;
+  V8_EXPORT_PRIVATE static const uint32_t kNullIndex = ~0u;
 
   uint32_t table_index;
   WasmInitExpr offset;
@@ -159,8 +159,8 @@ enum class WasmCompilationHintTier : uint8_t {
 // Static representation of a wasm compilation hint
 struct WasmCompilationHint {
   WasmCompilationHintStrategy strategy;
-  WasmCompilationHintTier first_tier;
-  WasmCompilationHintTier second_tier;
+  WasmCompilationHintTier baseline_tier;
+  WasmCompilationHintTier top_tier;
 };
 
 enum ModuleOrigin : uint8_t { kWasmOrigin, kAsmJsOrigin };
@@ -195,6 +195,7 @@ struct V8_EXPORT_PRIVATE WasmModule {
   uint32_t num_declared_functions = 0;  // excluding imported
   uint32_t num_exported_functions = 0;
   uint32_t num_declared_data_segments = 0;  // From the DataCount section.
+  uint32_t num_lazy_compilation_hints = 0;  // From compilation hints section.
   WireBytesRef name = {0, 0};
   std::vector<FunctionSig*> signatures;  // by signature index
   std::vector<uint32_t> signature_ids;   // by signature index

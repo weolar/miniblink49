@@ -224,7 +224,9 @@ static void installV8WheelEventTemplate(v8::Local<v8::FunctionTemplate> function
     static_assert(0x02 == WheelEvent::DOM_DELTA_PAGE, "the value of WheelEvent_DOM_DELTA_PAGE does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WheelEvent::domTemplate(v8::Isolate* isolate)

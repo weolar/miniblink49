@@ -42,6 +42,9 @@
  */
 #define XSLTCALL
 
+
+#define LIBXSLT_STATIC 
+
 /** DOC_DISABLE */
 
 /* Windows platform with MS compiler */

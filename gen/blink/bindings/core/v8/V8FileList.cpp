@@ -122,7 +122,9 @@ static void installV8FileListTemplate(v8::Local<v8::FunctionTemplate> functionTe
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8FileList::domTemplate(v8::Isolate* isolate)

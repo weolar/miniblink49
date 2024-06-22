@@ -390,16 +390,20 @@ static bool fastParseColorInternal(RGBA32& rgb, const CharacterType* characters,
         int red;
         int green;
         int blue;
-        int alpha;
+        int alpha = 255;
 
         if (!parseColorIntOrPercentage(current, end, ',', expect, red))
             return false;
         if (!parseColorIntOrPercentage(current, end, ',', expect, green))
             return false;
-        if (!parseColorIntOrPercentage(current, end, ',', expect, blue))
-            return false;
-        if (!parseAlphaValue(current, end, ')', alpha))
-            return false;
+        if (!parseColorIntOrPercentage(current, end, ',', expect, blue)) {
+            if (!parseColorIntOrPercentage(current, end, ')', expect, blue)) {
+                return false;
+            }
+        } else {
+            if (!parseAlphaValue(current, end, ')', alpha))
+                return false;
+        }
         if (current != end)
             return false;
         rgb = makeRGBA(red, green, blue, alpha);

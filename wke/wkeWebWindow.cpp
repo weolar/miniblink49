@@ -4,9 +4,9 @@
 #include "wke/wkeWebWindow.h"
 #include "wke/wkeGlobalVar.h"
 #include "content/browser/WebPage.h"
-#include "cc/base/BdColor.h"
+#include "mc/base/BdColor.h"
 #include "base/strings/string_util.h"
-////////////////////////////////////////////////////////////////////////////
+#include "content/browser/TouchStruct.h"
 
 namespace wke {
 
@@ -44,7 +44,7 @@ bool CWebWindow::createWindow(HWND parent, wkeWindowType type, int x, int y, int
     unsigned styleEx = 0;
     switch (type) {
     case WKE_WINDOW_TYPE_CONTROL:
-        styles = WS_CHILD;
+        styles = WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
         styleEx = 0;
         wkeSetTransparent(this, false);
         break;
@@ -71,7 +71,7 @@ bool CWebWindow::createWindow(HWND parent, wkeWindowType type, int x, int y, int
     info.y = y;
     info.width = width;
     info.height = height;
-    info.color = cc::s_kBgColor;
+    info.color = mc::s_kBgColor;
     return createWindow(&info);
 }
 
@@ -160,6 +160,8 @@ bool CWebWindow::_createWindow(const wkeWindowCreateInfo* info)
     if (!IsWindow(m_hWnd))
         return FALSE;
 
+    ::RegisterTouchWindowXp(m_hWnd, 0);
+
     CWebView::resize(info->width, info->height);
     return TRUE;
 }
@@ -207,11 +209,11 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         break;
 
     case WM_ERASEBKGND:
-        break;
+        return 1;
 
     case WM_CREATE:
         ::DragAcceptFiles(hwnd, TRUE);
-        SetTimer(hwnd, (UINT_PTR)this, 20, NULL);
+        SetTimer(hwnd, (UINT_PTR)this, 2, NULL);
         return 0;
 
     case WM_CLOSE:
@@ -227,6 +229,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_NCDESTROY:
         ::KillTimer(hwnd, (UINT_PTR)this);
         ::RemovePropW(hwnd, L"wkeWebWindow");
+        ::RevokeDragDrop(hwnd);
         m_hWnd = NULL;
         wkeDestroyWebView(this);
         return 0;
@@ -263,8 +266,10 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             int width = rcInvalid.right - rcInvalid.left;
             int height = rcInvalid.bottom - rcInvalid.top;
 
-            if (0 != width && 0 != height)
+            if (0 != width && 0 != height) {
                 ::BitBlt(hdc, destX, destY, width, height, wkeGetViewDC(this), srcX, srcY, SRCCOPY);
+                wkeUnlockViewDC(this);
+            }
 
             ::EndPaint(hwnd, &ps);
         }
@@ -440,6 +445,20 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             return 0;
         break;
     }
+    case WM_IME_CHAR:
+    {
+        unsigned int charCode = wParam;
+        unsigned int flags = 0;
+        if (HIWORD(lParam) & KF_REPEAT)
+            flags |= WKE_REPEAT;
+        if (HIWORD(lParam) & KF_EXTENDED)
+            flags |= WKE_EXTENDED;
+
+        if (wkeFireKeyPressEvent(this, charCode, flags, true))
+            return 0;
+
+        break;
+    }
     case WM_LBUTTONDOWN:
     case WM_MBUTTONDOWN:
     case WM_RBUTTONDOWN:
@@ -450,15 +469,6 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_MBUTTONUP:
     case WM_RBUTTONUP:
     case WM_MOUSEMOVE: {
-//         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-//             if (::GetFocus() != hwnd)
-//                 ::SetFocus(hwnd);
-//             ::SetCapture(hwnd);
-//         }
-//         else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
-//             ReleaseCapture();
-//         }
-
         int x = LOWORD(lParam);
         int y = HIWORD(lParam);
 
@@ -477,6 +487,12 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             flags |= WKE_RBUTTON;
 
         if (wkeFireMouseEvent(this, message, x, y, flags))
+            return 0;
+        break;
+    }
+    case WM_TOUCH: {
+        LRESULT result = 0;
+        if (wkeFireWindowsMessage(this, hwnd, message, wParam, lParam, &result))
             return 0;
         break;
     }
@@ -560,6 +576,17 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         ::ImmReleaseContext(hwnd, hIMC);
     }
         return 0;
+    case WM_IME_COMPOSITION: { // 台湾版windows，如果不响应这消息，输入法会没有预览的字体
+        std::vector<WCHAR> buffer;
+        HIMC hIMC = ::ImmGetContext(hwnd);
+        buffer.resize(ImmGetCompositionStringW(hIMC, GCS_COMPSTR, NULL, 0) + 2);
+        memset(&buffer[0], 0, buffer.size());
+        ImmGetCompositionStringW(hIMC, GCS_COMPSTR, &buffer[0], buffer.size() - 2);
+        ImmReleaseContext(hwnd, hIMC);
+        //buffer.append(L"\n");
+        //OutputDebugStringW(buffer.c_str());
+        break;
+    }
     case WM_GETDLGCODE: // 使得MB控件作为对话框子窗口时可接收到键盘消息
         return DLGC_WANTARROWS | DLGC_WANTALLKEYS | DLGC_WANTCHARS;
     }

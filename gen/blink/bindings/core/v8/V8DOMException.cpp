@@ -92,7 +92,47 @@ static void toStringMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& in
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    V8StringResource<> message;
+    V8StringResource<> name;
+    if (!info[0]->IsUndefined()) {
+        message = info[0];
+        if (!message.prepare())
+            return;
+    } else {
+        message = String("");
+    }
+    if (!info[1]->IsUndefined()) {
+        name = info[1];
+        if (!name.prepare())
+            return;
+    } else {
+        name = String("Error");
+    }
+
+    DOMException* impl = DOMException::create(message, name);
+    v8::Local<v8::Object> wrapper = info.Holder();
+    wrapper = impl->associateWithWrapper(info.GetIsolate(), &V8DOMException::wrapperTypeInfo, wrapper);
+    v8SetReturnValue(info, wrapper);
+}
+
 } // namespace DOMExceptionV8Internal
+
+void V8DOMException::constructorCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    if (!info.IsConstructCall()) {
+        V8ThrowException::throwTypeError(info.GetIsolate(), ExceptionMessages::constructorNotCallableAsFunction("DOMException"));
+        return;
+    }
+
+    if (ConstructorMode::current(info.GetIsolate()) == ConstructorMode::WrapExistingObject) {
+        v8SetReturnValue(info, info.Holder());
+        return;
+    }
+
+    DOMExceptionV8Internal::constructor(info);
+}
 
 static const V8DOMConfiguration::AccessorConfiguration V8DOMExceptionAccessors[] = {
     {"code", DOMExceptionV8Internal::codeAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
@@ -103,6 +143,9 @@ static const V8DOMConfiguration::AccessorConfiguration V8DOMExceptionAccessors[]
 static void installV8DOMExceptionTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
 {
     functionTemplate->ReadOnlyPrototype();
+
+    functionTemplate->SetCallHandler(V8DOMException::constructorCallback);
+    functionTemplate->SetLength(0);
 
     v8::Local<v8::Signature> defaultSignature;
     defaultSignature = V8DOMConfiguration::installDOMClassTemplate(isolate, functionTemplate, "DOMException", v8::Local<v8::FunctionTemplate>(), V8DOMException::internalFieldCount,
@@ -147,7 +190,9 @@ static void installV8DOMExceptionTemplate(v8::Local<v8::FunctionTemplate> functi
     V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, static_cast<v8::PropertyAttribute>(v8::DontDelete | v8::DontEnum), toStringMethodConfiguration);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8DOMException::domTemplate(v8::Isolate* isolate)

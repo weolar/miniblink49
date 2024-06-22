@@ -128,12 +128,13 @@ DOMWindow* createWindow(const String& urlString, const AtomicString& frameName, 
     ASSERT(activeFrame);
 
     KURL completedURL = urlString.isEmpty() ? KURL(ParsedURLString, emptyString()) : firstFrame.document()->completeURL(urlString);
+#if 0 // test: <input type="button" value="sssss" onclick="window.open('xxxx://command=open')"/>
     if (!completedURL.isEmpty() && !completedURL.isValid()) {
         // Don't expose client code to invalid URLs.
         callingWindow.printErrorMessage("Unable to open a window with invalid URL '" + completedURL.string() + "'.\n");
         return nullptr;
     }
-
+#endif
     FrameLoadRequest frameRequest(callingWindow.document(), completedURL, frameName);
     frameRequest.resourceRequest().setFrameType(WebURLRequest::FrameTypeAuxiliary);
     frameRequest.resourceRequest().setRequestorOrigin(SecurityOrigin::create(activeFrame->document()->url()));

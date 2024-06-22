@@ -18,14 +18,16 @@ namespace atom {
 
 class WebFrame : public mate::EventEmitter<WebFrame> {
 public:
-    explicit WebFrame(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    explicit WebFrame(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+    {
         gin::Wrappable<WebFrame>::InitWith(isolate, wrapper);
 
         m_zoomLevel = 0;
         m_zoomFactor = 1;
     }
 
-    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+    {
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "WebFrame"));
@@ -34,7 +36,7 @@ public:
         builder.SetMethod("setZoomFactor", &WebFrame::setZoomFactorApi);
         builder.SetMethod("getZoomFactor", &WebFrame::getZoomFactorApi);
         builder.SetMethod("getZoomLevel", &WebFrame::getZoomLevelApi);
-        builder.SetMethod("setZoomLevel", &WebFrame::setZoomLevelApi);        
+        builder.SetMethod("setZoomLevel", &WebFrame::setZoomLevelApi);
         builder.SetMethod("setZoomLevelLimits", &WebFrame::setZoomLevelLimitsApi);
         builder.SetMethod("setSpellCheckProvider", &WebFrame::setSpellCheckProviderApi);
         builder.SetMethod("registerURLSchemeAsSecure", &WebFrame::registerURLSchemeAsSecureApi);
@@ -46,78 +48,90 @@ public:
         builder.SetMethod("setMaxListeners", &WebFrame::setMaxListenersApi);
         builder.SetMethod("setVisualZoomLevelLimits", &WebFrame::setVisualZoomLevelLimitsApi);
         builder.SetMethod("setLayoutZoomLevelLimits", &WebFrame::setLayoutZoomLevelLimitsApi);
-        
+
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "WebFrame"), prototype->GetFunction());
     }
 
-    v8::Local<v8::Value> registerEmbedderCustomElementApi(const std::string& name, v8::Local<v8::Object> options) {
-        wkeWebView webview = wkeGetWebViewForCurrentContext();
-        wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
+    v8::Local<v8::Value> registerEmbedderCustomElementApi(const std::string& name, v8::Local<v8::Object> options)
+    {
+        mbWebView webview = mbGetWebViewForCurrentContext();
+        mbWebFrameHandle mainFrame = mbWebFrameGetMainFrame(webview);
 
         v8::Persistent<v8::Value> result;
-        wkeRegisterEmbedderCustomElement(webview, mainFrame, name.c_str(), &options, &result);
+        mbRegisterEmbedderCustomElement(webview, mainFrame, name.c_str(), &options, &result);
         v8::Local<v8::Value> elementConstructor = result.Get(isolate());
         result.Reset();
         return elementConstructor;
     }
 
-    void registerElementResizeCallbackApi(/*int element_instance_id, const GuestViewContainer::ResizeCallback& callback*/) {
-//         auto guest_view_container = GuestViewContainer::FromID(element_instance_id);
-//         if (guest_view_container)
-//             guest_view_container->RegisterElementResizeCallback(callback);
+    void registerElementResizeCallbackApi(/*int element_instance_id, const GuestViewContainer::ResizeCallback& callback*/)
+    {
+        //         auto guest_view_container = GuestViewContainer::FromID(element_instance_id);
+        //         if (guest_view_container)
+        //             guest_view_container->RegisterElementResizeCallback(callback);
     }
 
-
-    void setVisualZoomLevelLimitsApi(int Level1, int Level2) {
-
+    void setVisualZoomLevelLimitsApi(int Level1, int Level2)
+    {
     }
 
-    void setLayoutZoomLevelLimitsApi(int Level1, int Level2) {
-
+    void setLayoutZoomLevelLimitsApi(int Level1, int Level2)
+    {
     }
 
-    void setZoomFactorApi(float factor) {
+    void setZoomFactorApi(float factor)
+    {
         m_zoomFactor = factor;
     }
 
-    float getZoomFactorApi() const {
+    float getZoomFactorApi() const
+    {
         return m_zoomFactor;
     }
 
-    void setZoomLevelLimitsApi(float minimumLevel, float maximumLevel) {
+    void setZoomLevelLimitsApi(float minimumLevel, float maximumLevel)
+    {
         OutputDebugStringA("setZoomLevelLimitsApi\n");
     }
 
-    void setZoomLevelApi(float level) {
+    void setZoomLevelApi(float level)
+    {
         m_zoomLevel = level;
     }
 
-    float getZoomLevelApi() const {
+    float getZoomLevelApi() const
+    {
         return m_zoomLevel;
     }
 
-    void setSpellCheckProviderApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setSpellCheckProviderApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         OutputDebugStringA("setSpellCheckProviderApi\n");
     }
 
-    void registerURLSchemeAsSecureApi(const std::string& scheme) {
+    void registerURLSchemeAsSecureApi(const std::string& scheme)
+    {
         OutputDebugStringA("registerURLSchemeAsSecureApi\n");
     }
 
-    void registerURLSchemeAsBypassingCSPApi(const std::string& scheme) {
+    void registerURLSchemeAsBypassingCSPApi(const std::string& scheme)
+    {
         OutputDebugStringA("registerURLSchemeAsBypassingCSPApi\n");
     }
-    void registerURLSchemeAsPrivilegedApi(const std::string& scheme) {
+    void registerURLSchemeAsPrivilegedApi(const std::string& scheme)
+    {
         OutputDebugStringA("registerURLSchemeAsPrivilegedApi\n");
     }
 
-    void insertTextApi(const std::string& text) {
+    void insertTextApi(const std::string& text)
+    {
         OutputDebugStringA("insertTextApi\n");
     }
 
     // callback, code, hasUserGesture
-    void executeJavaScriptApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void executeJavaScriptApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         if (3 != args.Length())
             return;
 
@@ -149,18 +163,18 @@ public:
             return;
         }
 
-        wkeWebView webview = wkeGetWebViewForCurrentContext();
-        wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
-        jsValue ret = wkeRunJsByFrame(webview, mainFrame, codeString.c_str(), false);
+        mbWebView webview = mbGetWebViewForCurrentContext();
+        mbWebFrameHandle mainFrame = mbWebFrameGetMainFrame(webview);
+        mbJsValue ret = mbRunJsSync(webview, mainFrame, codeString.c_str(), false);
         if (executeJavaScriptCallback.IsEmpty())
             return;
-        
+
         v8::Local<v8::Value> argv[1];
         f = executeJavaScriptCallback.Get(isolate());
         callback = v8::Function::Cast(*(f));
         callback->Call(v8::Undefined(isolate()), 0, nullptr);
 
-        v8::Persistent<v8::Value>* v = (v8::Persistent<v8::Value>*)jsToV8Value(wkeGetGlobalExecByFrame(webview, mainFrame), ret);
+        v8::Persistent<v8::Value>* v = (v8::Persistent<v8::Value>*)mbJsToV8Value(mbGetGlobalExecByFrame(webview, mainFrame), ret);
         v8::Local<v8::Value> value = v8::Undefined(isolate());
         if (v)
             value = v8::Local<v8::Value>::New(isolate(), *v);
@@ -168,11 +182,13 @@ public:
         callback->Call(v8::Undefined(isolate()), 1, argv);
     }
 
-    void setMaxListenersApi(int number) {
+    void setMaxListenersApi(int number)
+    {
         //OutputDebugStringA("setMaxListenersApi\n");
     }
-        
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         v8::Isolate* isolate = args.GetIsolate();
         if (args.IsConstructCall()) {
             new WebFrame(isolate, args.This());
@@ -192,14 +208,15 @@ public:
 v8::Persistent<v8::Function> WebFrame::constructor;
 gin::WrapperInfo WebFrame::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-void initializeWebFrameApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> target, v8::Local<v8::Context> context, void* priv) {
+void initializeWebFrameApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> target, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     WebFrame::init(env->isolate(), exports);
 }
 
-}  // namespace
+} // namespace
 
 static const char RenererWebFrameNative[] = "console.log('RenererWebFrameNative');;";
-static NodeNative nativeRenererWebFrameNative{ "WebFrame", RenererWebFrameNative, sizeof(RenererWebFrameNative) - 1 };
+static NodeNative nativeRenererWebFrameNative { "WebFrame", RenererWebFrameNative, sizeof(RenererWebFrameNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_renerer_webframe, atom::initializeWebFrameApi, &nativeRenererWebFrameNative)

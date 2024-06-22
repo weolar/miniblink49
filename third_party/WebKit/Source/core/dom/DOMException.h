@@ -42,6 +42,7 @@ class CORE_EXPORT DOMException final : public GarbageCollectedFinalized<DOMExcep
     DEFINE_WRAPPERTYPEINFO();
 public:
     static DOMException* create(ExceptionCode, const String& sanitizedMessage = String(), const String& unsanitizedMessage = String());
+    static DOMException* create(const String& message, const String& name);
 
     unsigned short code() const { return m_code; }
     String name() const { return m_name; }

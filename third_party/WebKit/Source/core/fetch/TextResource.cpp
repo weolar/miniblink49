@@ -12,7 +12,7 @@ namespace blink {
 
 TextResource::TextResource(const ResourceRequest& resourceRequest, Resource::Type type, const String& mimeType, const String& charset)
     : Resource(resourceRequest, type)
-    , m_decoder(TextResourceDecoder::create(mimeType, charset))
+    , m_decoder(TextResourceDecoder::create(mimeType, charset, true)) // trun on usesEncodingDetector, weolar
 {
 }
 

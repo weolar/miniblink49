@@ -51,10 +51,10 @@ public:
         return !equalIgnoringFragmentIdentifier(url, document.url());
     }
 
-    const String& hrefString() const { return m_href->currentValue()->value(); }
+    const String& hrefString() const;
 
     // JS API
-    SVGAnimatedString* href() const { return m_href.get(); }
+    SVGAnimatedString* href() const;
 
     DECLARE_VIRTUAL_TRACE();
 
@@ -62,7 +62,8 @@ protected:
     explicit SVGURIReference(SVGElement*);
 
 private:
-    RefPtrWillBeMember<SVGAnimatedString> m_href;
+    RefPtrWillBeMember<SVGAnimatedString> m_xlinkHref;
+    RefPtrWillBeMember<SVGAnimatedString> m_svgHref;
 };
 
 } // namespace blink

@@ -188,7 +188,7 @@ Vector<PluginPackage*> PluginDatabase::plugins() const
     return result;
 }
 
-int PluginDatabase::preferredPluginCompare(const void* a, const void* b)
+int __cdecl PluginDatabase::preferredPluginCompare(const void* a, const void* b)
 {
     PluginPackage* pluginA = *static_cast<PluginPackage* const*>(a);
     PluginPackage* pluginB = *static_cast<PluginPackage* const*>(b);

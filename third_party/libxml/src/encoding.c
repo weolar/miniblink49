@@ -300,7 +300,7 @@ UTF8Toascii(unsigned char* out, int *outlen,
  *     if the return value is positive, else unpredictable.
  * The value of @outlen after return is the number of octets consumed.
  */
-int
+int XMLCALL
 isolat1ToUTF8(unsigned char* out, int *outlen,
               const unsigned char* in, int *inlen) {
     unsigned char* outstart = out;
@@ -389,7 +389,7 @@ UTF8ToUTF8(unsigned char* out, int *outlen,
  *     if the return value is positive, else unpredictable.
  * The value of @outlen after return is the number of octets consumed.
  */
-int
+int XMLCALL
 UTF8Toisolat1(unsigned char* out, int *outlen,
               const unsigned char* in, int *inlen) {
     const unsigned char* processed = in;
@@ -919,7 +919,7 @@ UTF8ToUTF16BE(unsigned char* outb, int *outlen,
  * 
  * Returns one of the XML_CHAR_ENCODING_... values.
  */
-xmlCharEncoding
+xmlCharEncoding XMLCALL
 xmlDetectCharEncoding(const unsigned char* in, int len)
 {
     if (in == NULL) 
@@ -979,7 +979,7 @@ xmlDetectCharEncoding(const unsigned char* in, int len)
  *
  * Unregisters all aliases
  */
-void
+void XMLCALL
 xmlCleanupEncodingAliases(void) {
     int i;
 
@@ -1006,7 +1006,7 @@ xmlCleanupEncodingAliases(void) {
  * 
  * Returns NULL if not found, otherwise the original name
  */
-const char *
+const char * XMLCALL
 xmlGetEncodingAlias(const char *alias) {
     int i;
     char upper[100];
@@ -1044,7 +1044,7 @@ xmlGetEncodingAlias(const char *alias) {
  * 
  * Returns 0 in case of success, -1 in case of error
  */
-int
+int XMLCALL
 xmlAddEncodingAlias(const char *name, const char *alias) {
     int i;
     char upper[100];
@@ -1101,7 +1101,7 @@ xmlAddEncodingAlias(const char *name, const char *alias) {
  * 
  * Returns 0 in case of success, -1 in case of error
  */
-int
+int XMLCALL
 xmlDelEncodingAlias(const char *alias) {
     int i;
 
@@ -1137,7 +1137,7 @@ xmlDelEncodingAlias(const char *alias) {
  * Returns one of the XML_CHAR_ENCODING_... values or XML_CHAR_ENCODING_NONE
  * if not recognized.
  */
-xmlCharEncoding
+xmlCharEncoding XMLCALL
 xmlParseCharEncoding(const char* name)
 {
     const char *alias;
@@ -1221,7 +1221,7 @@ xmlParseCharEncoding(const char* name)
  * Returns the canonical name for the given encoding
  */
 
-const char*
+const char* XMLCALL
 xmlGetCharEncodingName(xmlCharEncoding enc) {
     switch (enc) {
         case XML_CHAR_ENCODING_ERROR:
@@ -1305,7 +1305,7 @@ static xmlCharEncodingHandlerPtr xmlDefaultCharEncodingHandler = NULL;
  *
  * Returns the xmlCharEncodingHandlerPtr created (or NULL in case of error).
  */
-xmlCharEncodingHandlerPtr
+xmlCharEncodingHandlerPtr XMLCALL
 xmlNewCharEncodingHandler(const char *name, 
                           xmlCharEncodingInputFunc input,
                           xmlCharEncodingOutputFunc output) {
@@ -1383,7 +1383,7 @@ xmlNewCharEncodingHandler(const char *name,
  * NOTE: while public, this function usually doesn't need to be called
  *       in normal processing.
  */
-void
+void XMLCALL
 xmlInitCharEncodingHandlers(void) {
     unsigned short int tst = 0x1234;
     unsigned char *ptr = (unsigned char *) &tst; 
@@ -1417,6 +1417,7 @@ xmlInitCharEncodingHandlers(void) {
 #ifdef LIBXML_HTML_ENABLED
     xmlNewCharEncodingHandler("HTML", NULL, UTF8ToHtml);
 #endif
+    xmlNewCharEncodingHandler("GBK", gbkToUTF8, NULL);
 #else
     xmlUTF16LEHandler = 
           xmlNewCharEncodingHandler("UTF-16LE", UTF16LEToUTF8, NULL);
@@ -1426,7 +1427,6 @@ xmlInitCharEncodingHandlers(void) {
     xmlNewCharEncodingHandler("ISO-8859-1", isolat1ToUTF8, NULL);
     xmlNewCharEncodingHandler("ASCII", asciiToUTF8, NULL);
     xmlNewCharEncodingHandler("US-ASCII", asciiToUTF8, NULL);
-    xmlNewCharEncodingHandler("GBK", gbkToUTF8, NULL);
 #endif /* LIBXML_OUTPUT_ENABLED */
 #if !defined(LIBXML_ICONV_ENABLED) && !defined(LIBXML_ICU_ENABLED)
 #ifdef LIBXML_ISO8859X_ENABLED
@@ -1442,7 +1442,7 @@ xmlInitCharEncodingHandlers(void) {
  * Cleanup the memory allocated for the char encoding support, it
  * unregisters all the encoding handlers and the aliases.
  */
-void
+void XMLCALL
 xmlCleanupCharEncodingHandlers(void) {
     xmlCleanupEncodingAliases();
 
@@ -1468,7 +1468,7 @@ xmlCleanupCharEncodingHandlers(void) {
  *
  * Register the char encoding handler, surprising, isn't it ?
  */
-void
+void XMLCALL
 xmlRegisterCharEncodingHandler(xmlCharEncodingHandlerPtr handler) {
     if (handlers == NULL) xmlInitCharEncodingHandlers();
     if ((handler == NULL) || (handlers == NULL)) {
@@ -1494,7 +1494,7 @@ xmlRegisterCharEncodingHandler(xmlCharEncodingHandlerPtr handler) {
  *
  * Returns the handler or NULL if not found
  */
-xmlCharEncodingHandlerPtr
+xmlCharEncodingHandlerPtr XMLCALL
 xmlGetCharEncodingHandler(xmlCharEncoding enc) {
     xmlCharEncodingHandlerPtr handler;
 
@@ -1626,7 +1626,7 @@ xmlGetCharEncodingHandler(xmlCharEncoding enc) {
  *
  * Returns the handler or NULL if not found
  */
-xmlCharEncodingHandlerPtr
+xmlCharEncodingHandlerPtr XMLCALL
 xmlFindCharEncodingHandler(const char *name) {
     const char *nalias;
     const char *norig;
@@ -2024,7 +2024,7 @@ xmlCharEncFirstLineInt(xmlCharEncodingHandler *handler, xmlBufferPtr out,
  *     -2 if the transcoding fails (for *in is not valid utf8 string or
  *        the result of transformation can't fit into the encoding we want), or
  */
-int
+int XMLCALL
 xmlCharEncFirstLine(xmlCharEncodingHandler *handler, xmlBufferPtr out,
                  xmlBufferPtr in) {
     return(xmlCharEncFirstLineInt(handler, out, in, -1));
@@ -2043,7 +2043,7 @@ xmlCharEncFirstLine(xmlCharEncodingHandler *handler, xmlBufferPtr out,
  *     -2 if the transcoding fails (for *in is not valid utf8 string or
  *        the result of transformation can't fit into the encoding we want), or
  */
-int
+int XMLCALL
 xmlCharEncInFunc(xmlCharEncodingHandler * handler, xmlBufferPtr out,
                  xmlBufferPtr in)
 {
@@ -2155,7 +2155,7 @@ xmlCharEncInFunc(xmlCharEncodingHandler * handler, xmlBufferPtr out,
  *     -2 if the transcoding fails (for *in is not valid utf8 string or
  *        the result of transformation can't fit into the encoding we want), or
  */
-int
+int XMLCALL
 xmlCharEncOutFunc(xmlCharEncodingHandler *handler, xmlBufferPtr out,
                   xmlBufferPtr in) {
     int ret = -2;
@@ -2355,7 +2355,7 @@ retry:
  *
  * Returns 0 if success, or -1 in case of error
  */
-int
+int XMLCALL
 xmlCharEncCloseFunc(xmlCharEncodingHandler *handler) {
     int ret = 0;
     if (handler == NULL) return(-1);
@@ -2424,7 +2424,7 @@ xmlCharEncCloseFunc(xmlCharEncodingHandler *handler) {
  * Returns the index in bytes from the beginning of the entity or -1
  *         in case the index could not be computed.
  */
-long
+long XMLCALL
 xmlByteConsumed(xmlParserCtxtPtr ctxt) {
     xmlParserInputPtr in;
     

@@ -10,6 +10,10 @@
 #include "src/compiler/node-matchers.h"
 #include "src/compiler/node-properties.h"
 #include "src/roots-inl.h"
+#include "src/property-details.h"
+#include "src/objects-inl.h"
+#include "src/objects/fixed-array.h"
+#include "src/objects/fixed-array-inl.h"
 
 namespace v8 {
 namespace internal {

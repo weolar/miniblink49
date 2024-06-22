@@ -57,7 +57,7 @@ private:
     const char* m_characters;
 };
 
-static bool getFindData(String path, WIN32_FIND_DATAW& findData)
+static bool getFindData(const String& path, WIN32_FIND_DATAW& findData)
 {
     Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
     HANDLE handle = FindFirstFileW(buffer.data(), &findData);
@@ -404,6 +404,28 @@ PlatformFileHandle openFile(const String& path, FileOpenMode mode)
     case OpenForWrite:
         desiredAccess = GENERIC_WRITE;
         creationDisposition = CREATE_ALWAYS;
+        break;
+    default:
+        ASSERT_NOT_REACHED();
+    }
+
+    Vector<UChar> pathBuffer = WTF::ensureUTF16UChar(path, true);
+    PlatformFileHandle handle = CreateFile(pathBuffer.data(), desiredAccess, FILE_SHARE_READ, 0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
+    return handle;
+}
+
+PlatformFileHandle openFileEx(const String& path, FileOpenMode mode, FileCreateMode crateMode)
+{
+    DWORD desiredAccess = 0;
+    DWORD creationDisposition = 0;
+    switch (mode) {
+    case OpenForRead:
+        desiredAccess = GENERIC_READ;
+        creationDisposition = OPEN_EXISTING;
+        break;
+    case OpenForWrite:
+        desiredAccess = GENERIC_WRITE;
+        creationDisposition = (DWORD)crateMode;
         break;
     default:
         ASSERT_NOT_REACHED();

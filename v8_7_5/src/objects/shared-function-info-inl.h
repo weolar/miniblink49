@@ -223,8 +223,9 @@ BIT_FIELD_ACCESSORS(SharedFunctionInfo, flags, is_named_expression,
                     SharedFunctionInfo::IsNamedExpressionBit)
 BIT_FIELD_ACCESSORS(SharedFunctionInfo, flags, is_toplevel,
                     SharedFunctionInfo::IsTopLevelBit)
-BIT_FIELD_ACCESSORS(SharedFunctionInfo, flags, is_oneshot_iife,
-                    SharedFunctionInfo::IsOneshotIIFEBit)
+BIT_FIELD_ACCESSORS(SharedFunctionInfo, flags,
+                    is_oneshot_iife_or_properties_are_final,
+                    SharedFunctionInfo::IsOneshotIIFEOrPropertiesAreFinalBit)
 BIT_FIELD_ACCESSORS(SharedFunctionInfo, flags,
                     is_safe_to_skip_arguments_adaptor,
                     SharedFunctionInfo::IsSafeToSkipArgumentsAdaptorBit)
@@ -427,16 +428,6 @@ IsCompiledScope::IsCompiledScope(const SharedFunctionInfo shared,
   DCHECK_IMPLIES(!retain_bytecode_.is_null(), is_compiled());
 }
 
-uint16_t SharedFunctionInfo::GetLength() const {
-  DCHECK(is_compiled());
-  DCHECK(HasLength());
-  return length();
-}
-
-bool SharedFunctionInfo::HasLength() const {
-  return length() != kInvalidLength;
-}
-
 bool SharedFunctionInfo::has_simple_parameters() {
   return scope_info()->HasSimpleParameters();
 }
@@ -494,8 +485,8 @@ void SharedFunctionInfo::set_bytecode_array(BytecodeArray bytecode) {
   set_function_data(bytecode);
 }
 
-bool SharedFunctionInfo::ShouldFlushBytecode() {
-  if (!FLAG_flush_bytecode) return false;
+bool SharedFunctionInfo::ShouldFlushBytecode(BytecodeFlushMode mode) {
+  if (mode == BytecodeFlushMode::kDoNotFlushBytecode) return false;
 
   // TODO(rmcilroy): Enable bytecode flushing for resumable functions.
   if (IsResumableFunction(kind()) || !allows_lazy_compilation()) {
@@ -508,7 +499,7 @@ bool SharedFunctionInfo::ShouldFlushBytecode() {
   Object data = function_data();
   if (!data->IsBytecodeArray()) return false;
 
-  if (FLAG_stress_flush_bytecode) return true;
+  if (mode == BytecodeFlushMode::kStressFlushBytecode) return true;
 
   BytecodeArray bytecode = BytecodeArray::cast(data);
 
@@ -719,7 +710,7 @@ String SharedFunctionInfo::inferred_name() {
   if (maybe_scope_info->IsScopeInfo()) {
     ScopeInfo scope_info = ScopeInfo::cast(maybe_scope_info);
     if (scope_info->HasInferredFunctionName()) {
-      Object name = ScopeInfo::cast(maybe_scope_info)->InferredFunctionName();
+      Object name = scope_info->InferredFunctionName();
       if (name->IsString()) return String::cast(name);
     }
   } else if (HasUncompiledData()) {
@@ -743,6 +734,33 @@ bool SharedFunctionInfo::CanDiscardCompiled() const {
   bool can_decompile = (HasBytecodeArray() || HasAsmWasmData() ||
                         HasUncompiledDataWithPreparseData());
   return can_decompile;
+}
+
+bool SharedFunctionInfo::is_class_constructor() const {
+  return IsClassConstructorBit::decode(flags());
+}
+
+bool SharedFunctionInfo::is_oneshot_iife() const {
+  bool bit = is_oneshot_iife_or_properties_are_final();
+  return bit && !is_class_constructor();
+}
+
+void SharedFunctionInfo::set_is_oneshot_iife(bool value) {
+  DCHECK(!value || !is_class_constructor());
+  if (!is_class_constructor()) {
+    set_is_oneshot_iife_or_properties_are_final(value);
+  }
+}
+
+void SharedFunctionInfo::set_are_properties_final(bool value) {
+  if (is_class_constructor()) {
+    set_is_oneshot_iife_or_properties_are_final(value);
+  }
+}
+
+bool SharedFunctionInfo::are_properties_final() const {
+  bool bit = is_oneshot_iife_or_properties_are_final();
+  return bit && is_class_constructor();
 }
 
 }  // namespace internal

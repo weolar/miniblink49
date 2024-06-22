@@ -248,6 +248,7 @@
                 logFDs[asarPath] = fs.openSync(logPath, 'a');
                 console.log('Logging ' + asarPath + ' access to ' + logPath);
             }
+            console.log("exports.wrapFsWithAsar------------");
             fs.writeSync(logFDs[asarPath], offset + ': ' + filePath + '\n');
         }
 
@@ -357,35 +358,41 @@
             return path.join(realpathSync(asarPath), real);
         }
 
-        const realpath = fs.realpath
-        fs.realpath = function (p, cache, callback) {
-            const paths = splitPath(p);
-            const isAsar = paths[0];
-            const asarPath = paths[1];
-            const filePath = paths[2];
-            if (!isAsar) {
-                return realpath.apply(this, arguments);
-            }
-            if (typeof cache === 'function') {
-                callback = cache;
-                cache = void 0;
-            }
-            const archive = getOrCreateArchive(asarPath);
-            if (!archive) {
-                return invalidArchiveError(asarPath, callback);
-            }
-            const real = archive.realpath(filePath);
-            if (real === false) {
-                return notFoundError(asarPath, filePath, callback);
-            }
-            return realpath(asarPath, function (err, p) {
-                if (err) {
-                    return callback(err);
+        const realpathNative = fs.realpath.native;
+        const realpath = fs.realpath;
+        const wrapRealpath = function(func) {
+            var result = function (p, cache, callback) {
+                const paths = splitPath(p);
+                const isAsar = paths[0];
+                const asarPath = paths[1];
+                const filePath = paths[2];
+                if (!isAsar) {
+                    return func.apply(this, arguments);
                 }
-                return callback(null, path.join(p, real));
-            })
-        }
-
+                if (typeof cache === 'function') {
+                    callback = cache;
+                    cache = void 0;
+                }
+                const archive = getOrCreateArchive(asarPath);
+                if (!archive) {
+                    return invalidArchiveError(asarPath, callback);
+                }
+                const real = archive.realpath(filePath);
+                if (real === false) {
+                    return notFoundError(asarPath, filePath, callback);
+                }
+                return func(asarPath, function (err, p) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    return callback(null, path.join(p, real));
+                })
+            };
+            return result;
+        };
+        fs.realpath = wrapRealpath(realpath);
+        fs.realpath.native = wrapRealpath(realpathNative);
+        
         const exists = fs.exists;
         fs.exists = function (p, callback) {
             const paths = splitPath(p);
@@ -554,6 +561,7 @@
             if (!isAsar) {
                 return readFileSync.apply(this, arguments);
             }
+            
             const archive = getOrCreateArchive(asarPath);
             if (!archive) {
                 invalidArchiveError(asarPath);
@@ -562,6 +570,7 @@
             if (!info) {
                 notFoundError(asarPath, filePath);
             }
+            
             if (info.size === 0) {
                 if (options) {
                     return '';
@@ -586,11 +595,14 @@
             }
             const encoding = options.encoding;
             const buffer = new Buffer(info.size);
+            console.log("fs.readFileSync 1: " + info.size);
             const fd = archive.getFd();
+            
             if (!(fd >= 0)) {
                 notFoundError(asarPath, filePath);
             }
-            logASARAccess(asarPath, filePath, info.offset);
+            
+            logASARAccess(asarPath, filePath, info.offset);            
             fs.readSync(fd, buffer, 0, info.size, info.offset);
             if (encoding) {
                 return buffer.toString(encoding);

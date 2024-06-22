@@ -63,7 +63,7 @@ private:
     HWND getClipboardWindow();
     void readAvailableTypes(ClipboardType type, Vector<blink::WebString>* types, bool* containsFilenames) const;
     void writeToClipboardInternal(unsigned int format, HANDLE handle);
-    void writeTextInternal(String string);
+    void writeTextInternal(const String& string);
 
     HWND m_clipboardOwner;
 };

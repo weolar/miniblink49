@@ -11,7 +11,7 @@
 #include "src/roots.h"
 #include "src/thread-local-top.h"
 #include "src/utils.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"
+//#include "testing/gtest/include/gtest/gtest_prod.h"
 
 namespace v8 {
 namespace internal {
@@ -186,8 +186,8 @@ class IsolateData final {
 
   friend class Isolate;
   friend class Heap;
-  FRIEND_TEST(HeapTest, ExternalLimitDefault);
-  FRIEND_TEST(HeapTest, ExternalLimitStaysAboveDefaultForExplicitHandling);
+//   FRIEND_TEST(HeapTest, ExternalLimitDefault);
+//   FRIEND_TEST(HeapTest, ExternalLimitStaysAboveDefaultForExplicitHandling);
 
   DISALLOW_COPY_AND_ASSIGN(IsolateData);
 };

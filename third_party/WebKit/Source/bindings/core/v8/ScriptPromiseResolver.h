@@ -87,6 +87,7 @@ public:
     void suspend() override;
     void resume() override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
     // Once this function is called this resolver stays alive while the
     // promise is pending and the associated ExecutionContext isn't stopped.

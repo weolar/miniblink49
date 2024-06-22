@@ -86,6 +86,11 @@ public:
         return m_location;
     }
 
+    const blink::WebThread::Task* getTask() const
+    {
+        return m_task;
+    }
+
 private:
     WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task, int priority);
 

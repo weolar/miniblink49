@@ -106,6 +106,7 @@ Storage* DOMWindowStorage::sessionStorage(ExceptionState& exceptionState) const
     return m_sessionStorage;
 }
 
+// https://source.chromium.org/chromium/chromium/src/+/2d30a81551490c945914c2ca87ba8044ea79bd13
 Storage* DOMWindowStorage::localStorage(ExceptionState& exceptionState) const
 {
     if (!m_window->isCurrentlyDisplayedInFrame())
@@ -114,6 +115,7 @@ Storage* DOMWindowStorage::localStorage(ExceptionState& exceptionState) const
     if (!document)
         return nullptr;
     String accessDeniedMessage = "Access is denied for this document.";
+    SecurityOrigin* ori = document->securityOrigin();
     if (!document->securityOrigin()->canAccessLocalStorage()) {
         if (document->isSandboxed(SandboxOrigin))
             exceptionState.throwSecurityError("The document is sandboxed and lacks the 'allow-same-origin' flag.");
@@ -134,13 +136,18 @@ Storage* DOMWindowStorage::localStorage(ExceptionState& exceptionState) const
     FrameHost* host = document->frameHost();
     if (!host || !host->settings().localStorageEnabled())
         return nullptr;
-
+#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
+    Page* page = document->page();
+    if (!page)
+        return nullptr;
+    StorageArea* storageArea = StorageNamespaceController::from(page)->localStorage()->storageArea(document->securityOrigin());
+#else
     StorageArea* storageArea = StorageNamespace::localStorageArea(document->securityOrigin());
     if (!storageArea->canAccessStorage(m_window->frame())) {
         exceptionState.throwSecurityError(accessDeniedMessage);
         return nullptr;
     }
-
+#endif
     m_localStorage = Storage::create(m_window->frame(), storageArea);
     return m_localStorage;
 }

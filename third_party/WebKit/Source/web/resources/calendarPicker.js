@@ -353,12 +353,15 @@ Day.prototype.toString = function() {
  * @return {!string}
  */
 Day.prototype.format = function() {
+	/*
     if (!Day.formatter) {
         Day.formatter = new Intl.DateTimeFormat(getLocale(), {
             weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC"
         });
     }
     return Day.formatter.format(this.startDate());
+     */
+	this.startDate().toLocaleString(getLocale(), { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 };
 
 // See WebCore/platform/DateComponents.h.

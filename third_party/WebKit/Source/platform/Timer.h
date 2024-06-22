@@ -108,10 +108,7 @@ private:
             }
         }
 
-        void cancel()
-        {
-            m_timer = nullptr;
-        }
+        void cancel(WebScheduler* webSchedule);
 
     private:
         TimerBase* m_timer; // NOT OWNED

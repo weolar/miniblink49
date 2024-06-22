@@ -329,11 +329,12 @@ CORE_EXPORT extern const blink::QualifiedName& y2Attr;
 CORE_EXPORT extern const blink::QualifiedName& yChannelSelectorAttr;
 CORE_EXPORT extern const blink::QualifiedName& zAttr;
 CORE_EXPORT extern const blink::QualifiedName& zoomAndPanAttr;
+CORE_EXPORT extern const blink::QualifiedName& hrefAttr;
 
 const unsigned SVGTagsCount = 66;
 CORE_EXPORT PassOwnPtr<const SVGQualifiedName*[]> getSVGTags();
 
-const unsigned SVGAttrsCount = 242;
+const unsigned SVGAttrsCount = 243;
 PassOwnPtr<const QualifiedName*[]> getSVGAttrs();
 
 void init();

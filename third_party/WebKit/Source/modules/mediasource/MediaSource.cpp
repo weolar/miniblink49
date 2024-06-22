@@ -517,6 +517,11 @@ void MediaSource::setSourceBufferActive(SourceBuffer* sourceBuffer)
     m_activeSourceBuffers->insert(insertPosition, sourceBuffer);
 }
 
+HTMLMediaElement* MediaSource::mediaElement() const
+{
+    return m_attachedElement.get();
+}
+
 bool MediaSource::isClosed() const
 {
     return readyState() == closedKeyword();

@@ -159,11 +159,11 @@ HRESULT STDMETHODCALLTYPE SkDWriteFontFileStreamWrapper::QueryInterface(REFIID i
 }
 
 ULONG STDMETHODCALLTYPE SkDWriteFontFileStreamWrapper::AddRef() {
-    return InterlockedIncrement(&fRefCount);
+    return InterlockedIncrement((volatile LONG *)&fRefCount);
 }
 
 ULONG STDMETHODCALLTYPE SkDWriteFontFileStreamWrapper::Release() {
-    ULONG newCount = InterlockedDecrement(&fRefCount);
+    ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
     if (0 == newCount) {
         delete this;
     }

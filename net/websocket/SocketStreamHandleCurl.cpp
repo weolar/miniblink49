@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2009 Brent Fulgham.  All rights reserved.
  * Copyright (C) 2009 Google Inc.  All rights reserved.
  *
@@ -33,12 +33,16 @@
 #include "net/websocket/SocketStreamHandle.h"
 
 #include "net/websocket/SocketStreamHandleClient.h"
+#include "net/websocket/SocketStreamError.h"
 #include "net/ActivatingObjCheck.h"
+#include "net/CheckNetOnline.h"
 #include "third_party/WebKit/Source/platform/Logging.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/wtf/MainThread.h"
+#include "wke/wkeGlobalVar.h"
 #include "base/thread.h"
 #include <process.h>
+#include <Netlistmgr.h>
 
 using namespace blink;
 
@@ -98,6 +102,21 @@ static void s_mainThreadReadData(void* param)
     hanlde->mainThreadReadData();
 }
 
+static void s_mainThreadFail(void* param)
+{
+    SocketStreamHandle* hanlde = (SocketStreamHandle*)param;
+    hanlde->mainThreadFail();
+}
+
+void SocketStreamHandle::mainThreadFail()
+{
+    stopThread();
+    SocketStreamError err(-2);
+    if (m_client && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
+        m_client->didFailSocketStream(this, err);
+    deref();
+}
+
 void SocketStreamHandle::mainThreadReadData()
 {
     atomicDecrement(&m_readDataTaskCount);
@@ -109,7 +128,7 @@ bool SocketStreamHandle::readData(CURL* curlHandle)
 {
     ASSERT(!isMainThread());
 
-    const int bufferSize = 1024 * 30;
+    const int bufferSize = 1024 * 300;
     char* data = new char[bufferSize];
     size_t bytesRead = 0;
 
@@ -178,7 +197,7 @@ bool SocketStreamHandle::sendData(CURL* curlHandle)
 }
 
 // in microseconds
-bool SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long selectTimeout)
+int SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long selectTimeout)
 {
     ASSERT(!isMainThread());
 
@@ -194,8 +213,15 @@ bool SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long select
     }
 
     long socket;
-    if (curl_easy_getinfo(curlHandle, CURLINFO_LASTSOCKET, &socket) != CURLE_OK)
-        return false;
+    CURLcode err = curl_easy_getinfo(curlHandle, CURLINFO_LASTSOCKET, &socket);
+    if (err != CURLE_OK) {
+        char* output = (char*)malloc(0x100);
+        sprintf(output, "SocketStreamHandle::waitForAvailableData fail 1: %d\n", err);
+        OutputDebugStringA(output);
+        free(output);
+
+        return -1;
+    }
 
     ::Sleep(50);
 
@@ -203,7 +229,15 @@ bool SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long select
     FD_ZERO(&fdread);
     FD_SET(socket, &fdread);
     int rc = ::select(0, &fdread, nullptr, nullptr, &timeout);
-    return rc == 1;
+
+    if (rc != 1 && rc != 0) {
+        char* output = (char*)malloc(0x100);
+        sprintf(output, "SocketStreamHandle::waitForAvailableData fail 2: %d\n", err);
+        OutputDebugStringA(output);
+        free(output);
+        return -1;
+    }
+    return rc == 1 ? 1 : 0;
 }
 
 static unsigned __stdcall webSocketThread(void* param)
@@ -247,6 +281,8 @@ void SocketStreamHandle::threadFunction()
     
     if (isSSL)
         url = "https://" + url;
+    else
+        url = "http://" + url;
 
     //curl_easy_setopt(curlHandle, CURLOPT_URL, m_url.host().utf8().data());
     curl_easy_setopt(curlHandle, CURLOPT_URL, url.utf8().data());
@@ -262,32 +298,63 @@ void SocketStreamHandle::threadFunction()
     curl_easy_setopt(curlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
     curl_easy_setopt(curlHandle, CURLOPT_PROTOCOLS, kAllowedProtocols);
     curl_easy_setopt(curlHandle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
+
+    if (wke::g_DNS)
+        curl_easy_setopt(curlHandle, CURLOPT_DNS_SERVERS, wke::g_DNS->c_str());
+
+    if (wke::g_curlSetoptCallback)
+        wke::g_curlSetoptCallback(curlHandle, wke::curlSetopt);
    
     // Connect to host
-    const int retryCount = 5;
+    const int kRetryCount = 5;
     CURLcode curlCode = CURLE_FAILED_INIT;
-    for (int i = 0; i < retryCount; ++i) {
+    for (int i = 0; i < kRetryCount; ++i) {
         if (0 != m_stopThread)
             break;
         curlCode = curl_easy_perform(curlHandle);
     }
-	if (CURLE_OK != curlCode)
-		return;
+    if (CURLE_OK != curlCode) {
+        ref();
+        WTF::internal::callOnMainThread(s_mainThreadFail, this);
+        return;
+    }
+
+    IUnknown* pUnknown = nullptr;
+    INetworkListManager* pNetworkListManager = getNetworkList(&pUnknown);
 
     ref();
 
     WTF::internal::callOnMainThread(s_mainThreadRun, this);
 
+    int retryCount = 0;
     while (0 == m_stopThread) {
         // Send queued data
         sendData(curlHandle);
 
         // Wait until socket has available data
-        if (waitForAvailableData(curlHandle, 50))
+        int waitResult = waitForAvailableData(curlHandle, 50);
+
+        if (1 == waitResult) {
             readData(curlHandle);
+            continue;
+        } else if (-1 == waitResult) {
+            ++retryCount;
+        }
+
+        int checkNetwork = checkIsNetwork(pNetworkListManager);
+        if (retryCount > 3 || FALSE == checkNetwork) {
+            ref();
+            WTF::internal::callOnMainThread(s_mainThreadFail, this);
+            break;
+        }
     }
 
     curl_easy_cleanup(curlHandle);
+
+    if (pNetworkListManager)
+        pNetworkListManager->Release();
+    if (pUnknown)
+        pUnknown->Release();
 }
 
 void SocketStreamHandle::startThread()
@@ -346,8 +413,10 @@ void SocketStreamHandle::didReceiveData()
         if (socketData->size > 0) {
             if (m_client && state() == Open && ActivatingObjCheck::inst()->isActivating((intptr_t)m_clientId))
                 m_client->didReceiveSocketStreamData(this, socketData->data, socketData->size);
-        } else
-            platformClose();
+        } else {
+            //platformClose();
+            //OutputDebugStringA("SocketStreamHandle::didReceiveData, receiveData is 0\n");
+        }
     }
 }
 

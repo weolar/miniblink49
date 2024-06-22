@@ -18,6 +18,7 @@
 #if defined(OS_WIN)
 #include <io.h>
 //#include "atom/node/osfhandle.h"
+#include "mbvip/core/mb.h"
 #endif
 
 namespace asar {
@@ -25,114 +26,125 @@ namespace asar {
 namespace {
 
 #if defined(OS_WIN)
-const char kSeparators[] = "\\/";
+    const char kSeparators[] = "\\/";
 #else
-const char kSeparators[] = "/";
+    const char kSeparators[] = "/";
 #endif
 
-bool GetNodeFromPath(std::string path,
-    const base::DictionaryValue* root,
-    const base::DictionaryValue** out);
+    bool GetNodeFromPath(std::string path,
+        const base::DictionaryValue* root,
+        const base::DictionaryValue** out);
 
-// Gets the "files" from "dir".
-bool GetFilesNode(const base::DictionaryValue* root,
-    const base::DictionaryValue* dir,
-    const base::DictionaryValue** out) {
-    // Test for symbol linked directory.
-    std::string link;
-    if (dir->GetStringWithoutPathExpansion("link", &link)) {
-        const base::DictionaryValue* linked_node = nullptr;
-        if (!GetNodeFromPath(link, root, &linked_node))
+    // Gets the "files" from "dir".
+    bool GetFilesNode(const base::DictionaryValue* root,
+        const base::DictionaryValue* dir,
+        const base::DictionaryValue** out)
+    {
+        // Test for symbol linked directory.
+        std::string link;
+        if (dir->GetStringWithoutPathExpansion("link", &link)) {
+            const base::DictionaryValue* linked_node = nullptr;
+            if (!GetNodeFromPath(link, root, &linked_node))
+                return false;
+            dir = linked_node;
+        }
+
+        return dir->GetDictionaryWithoutPathExpansion("files", out);
+    }
+
+    // Gets sub-file "name" from "dir".
+    bool GetChildNode(const base::DictionaryValue* root,
+        const std::string& name,
+        const base::DictionaryValue* dir,
+        const base::DictionaryValue** out)
+    {
+        if (name == "") {
+            *out = root;
+            return true;
+        }
+
+        const base::DictionaryValue* files = nullptr;
+        return GetFilesNode(root, dir, &files) && files->GetDictionaryWithoutPathExpansion(name, out);
+    }
+
+    // Gets the node of "path" from "root".
+    bool GetNodeFromPath(std::string path,
+        const base::DictionaryValue* root,
+        const base::DictionaryValue** out)
+    {
+        if (path == "") {
+            *out = root;
+            return true;
+        }
+
+        const base::DictionaryValue* dir = root;
+        for (size_t delimiter_position = path.find_first_of(kSeparators);
+             delimiter_position != std::string::npos;
+             delimiter_position = path.find_first_of(kSeparators)) {
+            const base::DictionaryValue* child = nullptr;
+            if (!GetChildNode(root, path.substr(0, delimiter_position), dir, &child))
+                return false;
+
+            dir = child;
+            path.erase(0, delimiter_position + 1);
+        }
+
+        return GetChildNode(root, path, dir, out);
+    }
+
+    bool FillFileInfoWithNode(Archive::FileInfo* info,
+        uint32_t header_size,
+        const base::DictionaryValue* node)
+    {
+        int size;
+        if (!node->GetInteger("size", &size))
             return false;
-        dir = linked_node;
-    }
+        info->size = static_cast<uint32_t>(size);
 
-    return dir->GetDictionaryWithoutPathExpansion("files", out);
-}
+        if (node->GetBoolean("unpacked", &info->unpacked) && info->unpacked)
+            return true;
 
-// Gets sub-file "name" from "dir".
-bool GetChildNode(const base::DictionaryValue* root,
-    const std::string& name,
-    const base::DictionaryValue* dir,
-    const base::DictionaryValue** out) {
-    if (name == "") {
-        *out = root;
-        return true;
-    }
-
-    const base::DictionaryValue* files = nullptr;
-    return GetFilesNode(root, dir, &files) &&
-        files->GetDictionaryWithoutPathExpansion(name, out);
-}
-
-// Gets the node of "path" from "root".
-bool GetNodeFromPath(std::string path,
-    const base::DictionaryValue* root,
-    const base::DictionaryValue** out) {
-    if (path == "") {
-        *out = root;
-        return true;
-    }
-
-    const base::DictionaryValue* dir = root;
-    for (size_t delimiter_position = path.find_first_of(kSeparators);
-    delimiter_position != std::string::npos;
-        delimiter_position = path.find_first_of(kSeparators)) {
-        const base::DictionaryValue* child = nullptr;
-        if (!GetChildNode(root, path.substr(0, delimiter_position), dir, &child))
+        std::string offset;
+        if (!node->GetString("offset", &offset))
             return false;
 
-        dir = child;
-        path.erase(0, delimiter_position + 1);
+        //   if (!base::StringToUint64(offset, &info->offset))
+        //     return false;
+
+        char* endptr = nullptr;
+        info->offset = _strtoui64(offset.c_str(), &endptr, 10);
+
+        info->offset += header_size;
+
+        node->GetBoolean("executable", &info->executable);
+
+        return true;
     }
 
-    return GetChildNode(root, path, dir, out);
-}
+} // namespace
 
-bool FillFileInfoWithNode(Archive::FileInfo* info,
-    uint32_t header_size,
-    const base::DictionaryValue* node) {
-    int size;
-    if (!node->GetInteger("size", &size))
-        return false;
-    info->size = static_cast<uint32_t>(size);
-
-    if (node->GetBoolean("unpacked", &info->unpacked) && info->unpacked)
-        return true;
-
-    std::string offset;
-    if (!node->GetString("offset", &offset))
-        return false;
-
-    //   if (!base::StringToUint64(offset, &info->offset))
-    //     return false;
-
-    char* endptr = nullptr;
-    info->offset = _strtoui64(offset.c_str(), &endptr, 10);
-
-    info->offset += header_size;
-
-    node->GetBoolean("executable", &info->executable);
-
-    return true;
-}
-
-}  // namespace
+typedef int (MB_CALL_TYPE* mb_open_osfhandle_pfn)(intptr_t osfhandle, int sourceFlags);
+static mb_open_osfhandle_pfn mb_open_osfhandle = nullptr;
 
 Archive::Archive(const base::FilePath& path)
-    : path_(path),
-    file_(path_, base::File::FLAG_OPEN | base::File::FLAG_READ),
+    : path_(path)
+    , file_(path_, base::File::FLAG_OPEN | base::File::FLAG_READ)    
 #if defined(OS_WIN)
-    fd_(_open_osfhandle(reinterpret_cast<intptr_t>(file_.GetPlatformFile()), 0)),
+    //fd_(_open_osfhandle(reinterpret_cast<intptr_t>(file_.GetPlatformFile()), 0))
 #elif defined(OS_POSIX)
-    fd_(file_.GetPlatformFile()),
+    , fd_(file_.GetPlatformFile())
 #else
-    fd_(-1),
+    , fd_(-1)
 #endif
-    header_size_(0) {
+    , header_size_(0)
+{
+    if (!mb_open_osfhandle)
+        mb_open_osfhandle = (mb_open_osfhandle_pfn)mbGetProcAddr("mb_open_osfhandle");
+    fd_ = mb_open_osfhandle(reinterpret_cast<intptr_t>(file_.GetPlatformFile()), 0);
 }
 
-Archive::~Archive() {
+Archive::~Archive()
+{
 #if defined(OS_WIN)
     if (fd_ != -1) {
         _close(fd_);
@@ -146,7 +158,8 @@ Archive::~Archive() {
     }
 }
 
-bool Archive::Init() {
+bool Archive::Init()
+{
     if (!file_.IsValid()) {
         if (file_.error_details() != base::File::FILE_ERROR_NOT_FOUND) {
             // LOG(WARNING) << "Opening " << path_.value() << ": " << base::File::ErrorToString(file_.error_details());
@@ -196,7 +209,8 @@ bool Archive::Init() {
     return true;
 }
 
-bool Archive::GetFileInfo(const base::FilePath& path, FileInfo* info) {
+bool Archive::GetFileInfo(const base::FilePath& path, FileInfo* info)
+{
     if (!header_)
         return false;
 
@@ -212,7 +226,8 @@ bool Archive::GetFileInfo(const base::FilePath& path, FileInfo* info) {
     return b;
 }
 
-bool Archive::Stat(const base::FilePath& path, Stats* stats) {
+bool Archive::Stat(const base::FilePath& path, Stats* stats)
+{
     if (!header_)
         return false;
 
@@ -236,7 +251,8 @@ bool Archive::Stat(const base::FilePath& path, Stats* stats) {
 }
 
 bool Archive::Readdir(const base::FilePath& path,
-    std::vector<base::FilePath>* list) {
+    std::vector<base::FilePath>* list)
+{
     if (!header_)
         return false;
 
@@ -256,7 +272,8 @@ bool Archive::Readdir(const base::FilePath& path,
     return true;
 }
 
-bool Archive::Realpath(const base::FilePath& path, base::FilePath* realpath) {
+bool Archive::Realpath(const base::FilePath& path, base::FilePath* realpath)
+{
     if (!header_)
         return false;
 
@@ -274,7 +291,8 @@ bool Archive::Realpath(const base::FilePath& path, base::FilePath* realpath) {
     return true;
 }
 
-bool Archive::CopyFileOut(const base::FilePath& path, base::FilePath* out) {
+bool Archive::CopyFileOut(const base::FilePath& path, base::FilePath* out)
+{
     std::map<base::FilePath, ScopedTemporaryFile*>::iterator it = external_files_.find(path);
     if (it != external_files_.end()) {
         *out = (*it).second->path();
@@ -307,8 +325,9 @@ bool Archive::CopyFileOut(const base::FilePath& path, base::FilePath* out) {
     return true;
 }
 
-int Archive::GetFD() const {
+int Archive::GetFD() const
+{
     return fd_;
 }
 
-}  // namespace asar
+} // namespace asar

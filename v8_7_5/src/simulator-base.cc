@@ -7,6 +7,9 @@
 #include "src/isolate.h"
 #include "src/simulator.h"
 
+#include "src/objects/dictionary-inl.h" // weolar
+#include "src/objects/smi-inl.h" // weolar
+
 #if defined(USE_SIMULATOR)
 
 namespace v8 {

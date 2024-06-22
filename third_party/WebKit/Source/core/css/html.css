@@ -537,6 +537,7 @@ textarea {
 }
 
 input::-webkit-input-placeholder {
+    /*line-height: initial;*/
     white-space: pre;
     word-wrap: normal;
     overflow: hidden;

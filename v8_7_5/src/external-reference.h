@@ -109,6 +109,8 @@ class StatsCounter;
     "copy_typed_array_elements_to_typed_array")                               \
   V(cpu_features, "cpu_features")                                             \
   V(delete_handle_scope_extensions, "HandleScope::DeleteExtensions")          \
+  V(ephemeron_key_write_barrier_function,                                     \
+    "Heap::EphemeronKeyWriteBarrierFromCode")                                 \
   V(f64_acos_wrapper_function, "f64_acos_wrapper")                            \
   V(f64_asin_wrapper_function, "f64_asin_wrapper")                            \
   V(f64_mod_wrapper_function, "f64_mod_wrapper")                              \
@@ -286,9 +288,10 @@ class ExternalReference {
   template <typename SubjectChar, typename PatternChar>
   static ExternalReference search_string_raw();
 
-  static ExternalReference FromRawAddress(Address address);
+  V8_EXPORT_PRIVATE static ExternalReference FromRawAddress(Address address);
 
-#define DECL_EXTERNAL_REFERENCE(name, desc) static ExternalReference name();
+#define DECL_EXTERNAL_REFERENCE(name, desc) \
+  V8_EXPORT_PRIVATE static ExternalReference name();
   EXTERNAL_REFERENCE_LIST(DECL_EXTERNAL_REFERENCE)
 #undef DECL_EXTERNAL_REFERENCE
 

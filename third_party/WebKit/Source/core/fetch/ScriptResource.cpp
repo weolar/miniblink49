@@ -33,11 +33,15 @@
 #include "platform/MIMETypeRegistry.h"
 #include "platform/SharedBuffer.h"
 #include "platform/network/HTTPParsers.h"
+#include "wke/wkeGlobalVar.h"
 
 namespace blink {
 
 ResourcePtr<ScriptResource> ScriptResource::fetch(FetchRequest& request, ResourceFetcher* fetcher)
 {
+    if (0 != (wke::g_disableDownloadMask & wke::kDisableScriptDownload))
+        return nullptr;
+
     ASSERT(request.resourceRequest().frameType() == WebURLRequest::FrameTypeNone);
     request.mutableResourceRequest().setRequestContext(WebURLRequest::RequestContextScript);
     return toScriptResource(fetcher->requestResource(request, ScriptResourceFactory()));

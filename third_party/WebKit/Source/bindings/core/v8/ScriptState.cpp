@@ -6,6 +6,7 @@
 #include "bindings/core/v8/ScriptState.h"
 
 #include "bindings/core/v8/V8Binding.h"
+#include "bindings/core/v8/Modulator.h"
 #include "core/dom/ExecutionContext.h"
 #include "core/frame/LocalDOMWindow.h"
 #include "core/frame/LocalFrame.h"
@@ -37,6 +38,7 @@ ScriptState::ScriptState(v8::Local<v8::Context> context, PassRefPtr<DOMWrapperWo
     , m_context(m_isolate, context)
     , m_world(world)
     , m_perContextData(V8PerContextData::create(context))
+    , m_modulator(Modulator::create())
 #if ENABLE(ASSERT)
     , m_globalObjectDetached(false)
 #endif
@@ -55,6 +57,9 @@ ScriptState::~ScriptState()
 void ScriptState::detachGlobalObject()
 {
     ASSERT(!m_context.isEmpty());
+    if (m_modulator.get())
+        m_modulator->shutdown();
+    m_modulator.clear();
     context()->DetachGlobal();
 #if ENABLE(ASSERT)
     m_globalObjectDetached = true;

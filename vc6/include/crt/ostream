@@ -210,18 +210,18 @@ public:
 			_CATCH_IO_END }
 		setstate(_St);
 		return (*this); }
-	_Myt& operator<<(const void *_X)
-		{iostate _St = goodbit;
-		const sentry _Ok(*this);
-		if (_Ok)
-			{const _Nput& _Fac = _USE(getloc(), _Nput);
-			_TRY_IO_BEGIN
-			if (_Fac.put(_Iter(rdbuf()), *this,
-				fill(), _X).failed())
-				_St |= badbit;
-			_CATCH_IO_END }
-		setstate(_St);
-		return (*this); }
+// 	_Myt& operator<<(const void *_X)
+// 		{iostate _St = goodbit;
+// 		const sentry _Ok(*this);
+// 		if (_Ok)
+// 			{const _Nput& _Fac = _USE(getloc(), _Nput);
+// 			_TRY_IO_BEGIN
+// 			if (_Fac.put(_Iter(rdbuf()), *this,
+// 				fill(), _X).failed())
+// 				_St |= badbit;
+// 			_CATCH_IO_END }
+// 		setstate(_St);
+// 		return (*this); }
 	_Myt& operator<<(_Mysb *_Pb)
 		{iostate _St = goodbit;
 		bool _Copied = false;

@@ -955,7 +955,9 @@ void V8WorkerGlobalScope::installV8WorkerGlobalScopeTemplate(v8::Local<v8::Funct
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WorkerGlobalScope::domTemplate(v8::Isolate* isolate)

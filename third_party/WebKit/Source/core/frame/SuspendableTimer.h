@@ -43,6 +43,7 @@ public:
     virtual void stop() override;
     virtual void suspend() override final;
     virtual void resume() override final;
+    virtual ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
 private:
     virtual void fired() override = 0;

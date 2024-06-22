@@ -9,6 +9,8 @@
 #include "src/tracing/trace-event.h"
 #include "src/v8.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace tracing {
 

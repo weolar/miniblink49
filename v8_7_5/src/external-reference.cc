@@ -55,6 +55,8 @@
 #include "src/objects/intl-objects.h"
 #endif  // V8_INTL_SUPPORT
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -243,6 +245,9 @@ ExternalReference ExternalReference::store_buffer_overflow_function() {
 
 FUNCTION_REFERENCE(delete_handle_scope_extensions,
                    HandleScope::DeleteExtensions)
+
+FUNCTION_REFERENCE(ephemeron_key_write_barrier_function,
+                   Heap::EphemeronKeyWriteBarrierFromCode)
 
 FUNCTION_REFERENCE(get_date_field_function, JSDate::GetField)
 

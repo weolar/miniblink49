@@ -8,14 +8,15 @@
 namespace atom {
 
 ObjectLifeMonitor::ObjectLifeMonitor(v8::Isolate* isolate, v8::Local<v8::Object> target)
-    : isolate_(isolate),
-    context_(isolate, isolate->GetCurrentContext()),
-    target_(isolate, target)
-    /*weak_ptr_factory_(this)*/ {
+    : isolate_(isolate)
+    , context_(isolate, isolate->GetCurrentContext())
+    , target_(isolate, target)
+/*weak_ptr_factory_(this)*/ {
     target_.SetWeak(this, onObjectGC, v8::WeakCallbackType::kParameter);
 }
 
-ObjectLifeMonitor::~ObjectLifeMonitor() {
+ObjectLifeMonitor::~ObjectLifeMonitor()
+{
     if (target_.IsEmpty())
         return;
     target_.ClearWeak();
@@ -23,7 +24,8 @@ ObjectLifeMonitor::~ObjectLifeMonitor() {
 }
 
 // static
-void ObjectLifeMonitor::onObjectGC(const v8::WeakCallbackInfo<ObjectLifeMonitor>& data) {
+void ObjectLifeMonitor::onObjectGC(const v8::WeakCallbackInfo<ObjectLifeMonitor>& data)
+{
     ObjectLifeMonitor* self = data.GetParameter();
     self->target_.Reset();
     self->onRunDestructor();
@@ -31,8 +33,9 @@ void ObjectLifeMonitor::onObjectGC(const v8::WeakCallbackInfo<ObjectLifeMonitor>
 }
 
 // static
-void ObjectLifeMonitor::freeMe(const v8::WeakCallbackInfo<ObjectLifeMonitor>& data) {
+void ObjectLifeMonitor::freeMe(const v8::WeakCallbackInfo<ObjectLifeMonitor>& data)
+{
     delete data.GetParameter();
 }
 
-}  // namespace atom
+} // namespace atom

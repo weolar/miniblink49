@@ -31,6 +31,7 @@
 #ifndef FileSystem_h
 #define FileSystem_h
 
+#include <cmath>
 #include <time.h>
 #include <wtf/Forward.h>
 #include <wtf/Vector.h>
@@ -116,6 +117,14 @@ enum FileOpenMode {
     OpenForWrite
 };
 
+enum FileCreateMode {
+    kCreateNew = 1,
+    kCreateAlways,
+    kOpenExisting,
+    kOpenAlways,
+    kTruncateExisting,
+};
+
 enum FileSeekOrigin {
     SeekFromBeginning = 0,
     SeekFromCurrent,
@@ -165,11 +174,15 @@ std::vector<char> fileSystemRepresentation(const String&);
 inline bool isHandleValid(const PlatformFileHandle& handle) { return handle != invalidPlatformFileHandle; }
 
 inline double invalidFileTime() { return std::numeric_limits<double>::quiet_NaN(); }
-inline bool isValidFileTime(double time) { return std::isfinite(time); }
+inline bool isValidFileTime(double time) 
+{
+    return  time == time && time != std::numeric_limits<double>::infinity() && time != -std::numeric_limits<double>::infinity();
+}
 
 // Prefix is what the filename should be prefixed with, not the full path.
 String openTemporaryFile(const String& prefix, PlatformFileHandle&);
 PlatformFileHandle openFile(const String& path, FileOpenMode);
+PlatformFileHandle openFileEx(const String& path, FileOpenMode mode, FileCreateMode crateMode);
 void closeFile(PlatformFileHandle&);
 // Returns the resulting offset from the beginning of the file if successful, -1 otherwise.
 long long seekFile(PlatformFileHandle, long long offset, FileSeekOrigin);

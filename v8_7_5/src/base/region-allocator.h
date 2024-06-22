@@ -9,7 +9,7 @@
 
 #include "src/base/address-region.h"
 #include "src/base/utils/random-number-generator.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+//#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
 
 namespace v8 {
 namespace base {
@@ -25,7 +25,7 @@ namespace base {
 // Not thread-safe.
 class V8_BASE_EXPORT RegionAllocator final {
  public:
-  typedef uintptr_t Address;
+  using Address = uintptr_t;
 
   static constexpr Address kAllocationFailure = static_cast<Address>(-1);
 
@@ -121,7 +121,7 @@ class V8_BASE_EXPORT RegionAllocator final {
     }
   };
   // All regions ordered by addresses.
-  typedef std::set<Region*, AddressEndOrder> AllRegionsSet;
+  using AllRegionsSet = std::set<Region*, AddressEndOrder>;
   AllRegionsSet all_regions_;
 
   struct SizeAddressOrder {
@@ -153,10 +153,10 @@ class V8_BASE_EXPORT RegionAllocator final {
   void Merge(AllRegionsSet::iterator prev_iter,
              AllRegionsSet::iterator next_iter);
 
-  FRIEND_TEST(RegionAllocatorTest, AllocateRegionRandom);
-  FRIEND_TEST(RegionAllocatorTest, Fragmentation);
-  FRIEND_TEST(RegionAllocatorTest, FindRegion);
-  FRIEND_TEST(RegionAllocatorTest, Contains);
+//   FRIEND_TEST(RegionAllocatorTest, AllocateRegionRandom);
+//   FRIEND_TEST(RegionAllocatorTest, Fragmentation);
+//   FRIEND_TEST(RegionAllocatorTest, FindRegion);
+//   FRIEND_TEST(RegionAllocatorTest, Contains);
 
   DISALLOW_COPY_AND_ASSIGN(RegionAllocator);
 };

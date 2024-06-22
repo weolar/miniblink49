@@ -116,10 +116,16 @@
 #endif
 
 #if V8_OS_WIN
+//#include <versionhelpers.h>
 #include <windows.h>
 #include "include/v8-wasm-trap-handler-win.h"
 #include "src/trap-handler/handler-inside-win.h"
-#endif
+#if V8_TARGET_ARCH_X64
+#include "src/unwinding-info-win64.h"
+#endif  // V8_TARGET_ARCH_X64
+#endif  // V8_OS_WIN
+
+#include "v8-debug.h"
 
 namespace v8 {
 
@@ -185,10 +191,11 @@ namespace v8 {
                                      MaybeLocal<T>(), InternalEscapableScope, \
                                      false)
 
+// weolar: do_callback change to false
 #define ENTER_V8(isolate, context, class_name, function_name, bailout_value, \
                  HandleScopeClass)                                           \
   ENTER_V8_HELPER_DO_NOT_USE(isolate, context, class_name, function_name,    \
-                             bailout_value, HandleScopeClass, true)
+                             bailout_value, HandleScopeClass, false)
 
 #ifdef DEBUG
 #define ENTER_V8_NO_SCRIPT(isolate, context, class_name, function_name,   \
@@ -1050,6 +1057,10 @@ void V8::MakeWeak(i::Address** location_addr) {
 
 void* V8::ClearWeak(i::Address* location) {
   return i::GlobalHandles::ClearWeakness(location);
+}
+
+void* V8::GetWeak(i::Address* location) {
+  return i::GlobalHandles::GetWeakness(location);
 }
 
 void V8::AnnotateStrongRetainer(i::Address* location, const char* label) {
@@ -2948,6 +2959,17 @@ int StackTrace::GetFrameCount() const {
   return Utils::OpenHandle(this)->length();
 }
 
+Local<Array> StackTrace::AsArray() {
+  Isolate* isolate = Isolate::GetCurrent();
+  internal::Handle<internal::FixedArray> arrays = (Utils::OpenHandle(this));
+  Local<Array> ret = Array::New(isolate, arrays->length());
+
+  for (int i = 0; i < arrays->length(); ++i) {
+    i::Handle<i::Object> obj = internal::FixedArray::get(*arrays, i, (internal::Isolate*)isolate);
+    ret->Set(i, Utils::ToLocal(obj));
+  }
+  return ret;
+}
 
 Local<StackTrace> StackTrace::CurrentStackTrace(
     Isolate* isolate,
@@ -3037,12 +3059,7 @@ MaybeLocal<Value> JSON::Parse(Local<Context> context,
   RETURN_ON_FAILED_EXECUTION(Value);
   RETURN_ESCAPED(result);
 }
-//zero
-MaybeLocal<Value> JSON::Parse(
-    Isolate *isolate, Local<String> json_string) {
-    return Parse(isolate->GetCurrentContext(), json_string);
-}
-//zero end
+
 MaybeLocal<String> JSON::Stringify(Local<Context> context,
                                    Local<Value> json_object,
                                    Local<String> gap) {
@@ -4257,7 +4274,13 @@ Maybe<bool> v8::Object::DefineProperty(v8::Local<v8::Context> context,
 
 Maybe<bool> v8::Object::SetPrivate(Local<Context> context, Local<Private> key,
                                    Local<Value> value) {
-  auto isolate = reinterpret_cast<i::Isolate*>(context->GetIsolate());
+  //auto isolate = reinterpret_cast<i::Isolate*>(context->GetIsolate());
+  i::Isolate* isolate = nullptr;
+  if (context.IsEmpty())
+    isolate = reinterpret_cast<i::Isolate*>(Isolate::GetCurrent());
+  else
+    isolate = reinterpret_cast<i::Isolate*>(context->GetIsolate());
+
   ENTER_V8_NO_SCRIPT(isolate, context, Object, SetPrivate, Nothing<bool>(),
                      i::HandleScope);
   auto self = Utils::OpenHandle(this);
@@ -4508,15 +4531,29 @@ Maybe<bool> v8::Object::Delete(Local<Context> context, Local<Value> key) {
 
 Maybe<bool> v8::Object::DeletePrivate(Local<Context> context,
                                       Local<Private> key) {
-  auto isolate = reinterpret_cast<i::Isolate*>(context->GetIsolate());
+
+  i::Isolate* isolate = nullptr;
+  if (context.IsEmpty())
+    isolate = reinterpret_cast<i::Isolate*>(Isolate::GetCurrent());
+  else
+    isolate = reinterpret_cast<i::Isolate*>(context->GetIsolate());
   // In case of private symbols, i::Runtime::DeleteObjectProperty does not run
   // any author script.
   ENTER_V8_NO_SCRIPT(isolate, context, Object, Delete, Nothing<bool>(),
                      i::HandleScope);
+
+//   if (IsExecutionTerminatingCheck(isolate))
+//       return Nothing<bool>();
+//                                                                
+//   i::HandleScope handle_scope(isolate);
+//   CallDepthScope<false> call_depth_scope(isolate, context);
+//   LOG_API(isolate, Object, Delete);
+//   i::VMState<v8::OTHER> __state__((isolate));
+//   bool has_pending_exception = false;
+
   auto self = Utils::OpenHandle(this);
   auto key_obj = Utils::OpenHandle(*key);
-  Maybe<bool> result = i::Runtime::DeleteObjectProperty(
-      isolate, self, key_obj, i::LanguageMode::kSloppy);
+  Maybe<bool> result = i::Runtime::DeleteObjectProperty(isolate, self, key_obj, i::LanguageMode::kSloppy);
   has_pending_exception = result.IsNothing();
   RETURN_ON_FAILED_EXECUTION_PRIMITIVE(bool);
   return result;
@@ -4605,6 +4642,16 @@ static Maybe<bool> ObjectSetAccessor(
     i::JSObject::MigrateSlowToFast(obj, 0, "APISetAccessor");
   }
   return Just(true);
+}
+
+bool Object::SetAccessor(Local<Name> name,
+                      AccessorNameGetterCallback getter,
+                      AccessorNameSetterCallback setter,
+                      Local<Value> data,
+                      AccessControl settings,
+                      PropertyAttribute attribute) { // weolar
+  DebugBreak();
+  return false;
 }
 
 Maybe<bool> Object::SetAccessor(Local<Context> context, Local<Name> name,
@@ -4916,15 +4963,6 @@ MaybeLocal<Function> Function::New(Local<Context> context,
   if (behavior == ConstructorBehavior::kThrow) templ->RemovePrototype();
   return templ->GetFunction(context);
 }
-
-//zero
-Local<Function> Function::New(Isolate* isolate,
-    FunctionCallback callback,
-    Local<Value> data = Local<Value>(),
-    int length = 0) {
-    return New(isolate->GetCurrentContext(), callback, data, length).FromMaybe(Local<Function>());
-};
-//zero end
 
 MaybeLocal<Object> Function::NewInstance(Local<Context> context, int argc,
                                          v8::Local<v8::Value> argv[]) const {
@@ -5801,6 +5839,17 @@ bool V8::EnableWebAssemblyTrapHandler(bool use_v8_signal_handler) {
   return v8::internal::trap_handler::EnableTrapHandler(use_v8_signal_handler);
 }
 
+#if defined(V8_OS_WIN)
+// void V8::SetUnhandledExceptionCallback(UnhandledExceptionCallback unhandled_exception_callback) {
+// #if defined(V8_TARGET_ARCH_X64)
+//   v8::internal::win64_unwindinfo::SetUnhandledExceptionCallback(
+//       unhandled_exception_callback);
+// #else
+//   // Not implemented on ARM64.
+// #endif
+// }
+#endif
+
 void v8::V8::SetEntropySource(EntropySource entropy_source) {
   base::RandomNumberGenerator::SetEntropySource(entropy_source);
 }
@@ -6641,7 +6690,7 @@ Local<v8::Object> v8::Object::New(Isolate* isolate,
   }
   i::Handle<i::JSObject> obj =
       i_isolate->factory()->NewSlowJSObjectWithPropertiesAndElements(
-          proto, properties, elements);
+          i::Handle<i::HeapObject>::cast(proto), properties, elements);
   return Utils::ToLocal(obj);
 }
 
@@ -7746,8 +7795,7 @@ v8::SharedArrayBuffer::Contents::Contents(
       allocation_length_(allocation_length),
       allocation_mode_(allocation_mode),
       deleter_(deleter),
-      deleter_data_(deleter_data),
-      is_growable_(is_growable) {
+      deleter_data_(deleter_data) {
   DCHECK_LE(allocation_base_, data_);
   DCHECK_LE(byte_length_, allocation_length_);
 }
@@ -7766,7 +7814,8 @@ v8::SharedArrayBuffer::Contents v8::SharedArrayBuffer::GetContents() {
       self->is_wasm_memory()
           ? static_cast<void*>(self->GetIsolate()->wasm_engine())
           : static_cast<void*>(self->GetIsolate()->array_buffer_allocator()),
-      self->is_growable());
+      false
+    );
   return contents;
 }
 
@@ -7806,7 +7855,6 @@ Local<SharedArrayBuffer> v8::SharedArrayBuffer::New(
     ArrayBufferCreationMode mode) {
   i::Handle<i::JSArrayBuffer> buffer = SetupSharedArrayBuffer(
       isolate, contents.Data(), contents.ByteLength(), mode);
-  buffer->set_is_growable(contents.IsGrowable());
   return Utils::ToLocalShared(buffer);
 }
 
@@ -8414,7 +8462,8 @@ bool Isolate::GetHeapSpaceStatistics(HeapSpaceStatistics* space_statistics,
   i::Heap* heap = isolate->heap();
   i::Space* space = heap->space(static_cast<int>(index));
 
-  space_statistics->space_name_ = heap->GetSpaceName(static_cast<int>(index));
+  space_statistics->space_name_ =
+      i::Heap::GetSpaceName(static_cast<i::AllocationSpace>(index));
   space_statistics->space_size_ = space->CommittedMemory();
   space_statistics->space_used_size_ = space->SizeOfObjects();
   space_statistics->space_available_size_ = space->Available();
@@ -8557,7 +8606,8 @@ void Isolate::EnqueueMicrotask(Local<Function> v8_function) {
   if (!i::JSReceiver::GetContextForMicrotask(function).ToHandle(
           &handler_context))
     handler_context = isolate->native_context();
-  handler_context->microtask_queue()->EnqueueMicrotask(this, v8_function);
+  MicrotaskQueue* microtask_queue = handler_context->microtask_queue();
+  if (microtask_queue) microtask_queue->EnqueueMicrotask(this, v8_function);
 }
 
 void Isolate::EnqueueMicrotask(MicrotaskCallback callback, void* data) {
@@ -8934,21 +8984,24 @@ void v8::Isolate::LocaleConfigurationChangeNotification() {
 }
 
 // static
-std::unique_ptr<MicrotaskQueue> MicrotaskQueue::New(Isolate* isolate) {
-  return i::MicrotaskQueue::New(reinterpret_cast<i::Isolate*>(isolate));
+std::unique_ptr<MicrotaskQueue> MicrotaskQueue::New(Isolate* isolate/*, MicrotasksPolicy policy*/) {
+  MicrotasksPolicy policy = MicrotasksPolicy::kExplicit;
+  auto microtask_queue =
+      i::MicrotaskQueue::New(reinterpret_cast<i::Isolate*>(isolate));
+  microtask_queue->set_microtasks_policy(policy);
+  return microtask_queue;
 }
 
 MicrotasksScope::MicrotasksScope(Isolate* isolate, MicrotasksScope::Type type)
-    : MicrotasksScope(
-          isolate,
-          reinterpret_cast<i::Isolate*>(isolate)->default_microtask_queue(),
-          type) {}
+    : MicrotasksScope(isolate, nullptr, type) {}
 
 MicrotasksScope::MicrotasksScope(Isolate* isolate,
                                  MicrotaskQueue* microtask_queue,
                                  MicrotasksScope::Type type)
     : isolate_(reinterpret_cast<i::Isolate*>(isolate)),
-      microtask_queue_(static_cast<i::MicrotaskQueue*>(microtask_queue)),
+      microtask_queue_(microtask_queue
+                           ? static_cast<i::MicrotaskQueue*>(microtask_queue)
+                           : isolate_->default_microtask_queue()),
       run_(type == MicrotasksScope::kRunMicrotasks) {
   if (run_) microtask_queue_->IncrementMicrotasksScopeDepth();
 #ifdef DEBUG
@@ -8960,7 +9013,7 @@ MicrotasksScope::~MicrotasksScope() {
   if (run_) {
     microtask_queue_->DecrementMicrotasksScopeDepth();
     if (MicrotasksPolicy::kScoped == microtask_queue_->microtasks_policy()) {
-      PerformCheckpoint(reinterpret_cast<Isolate*>(isolate_));
+      microtask_queue_->PerformCheckpoint(reinterpret_cast<Isolate*>(isolate_));
     }
   }
 #ifdef DEBUG
@@ -10039,6 +10092,9 @@ unsigned CpuProfileNode::GetNodeId() const {
   return reinterpret_cast<const i::ProfileNode*>(this)->id();
 }
 
+CpuProfileNode::SourceType CpuProfileNode::GetSourceType() const {
+  return reinterpret_cast<const i::ProfileNode*>(this)->source_type();
+}
 
 int CpuProfileNode::GetChildrenCount() const {
   return static_cast<int>(
@@ -10131,6 +10187,11 @@ void CpuProfiler::SetSamplingInterval(int us) {
   DCHECK_GE(us, 0);
   return reinterpret_cast<i::CpuProfiler*>(this)->set_sampling_interval(
       base::TimeDelta::FromMicroseconds(us));
+}
+
+void CpuProfiler::SetUsePreciseSampling(bool use_precise_sampling) {
+  reinterpret_cast<i::CpuProfiler*>(this)->set_use_precise_sampling(
+      use_precise_sampling);
 }
 
 void CpuProfiler::CollectSample() {
@@ -10761,24 +10822,264 @@ void InvokeFunctionCallback(const v8::FunctionCallbackInfo<v8::Value>& info,
 }
 
 // Undefine macros for jumbo build.
-#undef LOG_API
-#undef ENTER_V8_DO_NOT_USE
-#undef ENTER_V8_HELPER_DO_NOT_USE
-#undef PREPARE_FOR_DEBUG_INTERFACE_EXECUTION_WITH_ISOLATE
-#undef PREPARE_FOR_EXECUTION_WITH_CONTEXT
-#undef PREPARE_FOR_EXECUTION
-#undef ENTER_V8
-#undef ENTER_V8_NO_SCRIPT
-#undef ENTER_V8_NO_SCRIPT_NO_EXCEPTION
-#undef ENTER_V8_FOR_NEW_CONTEXT
-#undef EXCEPTION_BAILOUT_CHECK_SCOPED_DO_NOT_USE
-#undef RETURN_ON_FAILED_EXECUTION
-#undef RETURN_ON_FAILED_EXECUTION_PRIMITIVE
-#undef RETURN_TO_LOCAL_UNCHECKED
-#undef RETURN_ESCAPED
-#undef SET_FIELD_WRAPPED
-#undef NEW_STRING
-#undef CALLBACK_SETTER
+// #undef LOG_API
+// #undef ENTER_V8_DO_NOT_USE
+// #undef ENTER_V8_HELPER_DO_NOT_USE
+// #undef PREPARE_FOR_DEBUG_INTERFACE_EXECUTION_WITH_ISOLATE
+// #undef PREPARE_FOR_EXECUTION_WITH_CONTEXT
+// #undef PREPARE_FOR_EXECUTION
+// #undef ENTER_V8
+// #undef ENTER_V8_NO_SCRIPT
+// #undef ENTER_V8_NO_SCRIPT_NO_EXCEPTION
+// #undef ENTER_V8_FOR_NEW_CONTEXT
+// #undef EXCEPTION_BAILOUT_CHECK_SCOPED_DO_NOT_USE
+// #undef RETURN_ON_FAILED_EXECUTION
+// #undef RETURN_ON_FAILED_EXECUTION_PRIMITIVE
+// #undef RETURN_TO_LOCAL_UNCHECKED
+// #undef RETURN_ESCAPED
+// #undef SET_FIELD_WRAPPED
+// #undef NEW_STRING
+// #undef CALLBACK_SETTER
 
 }  // namespace internal
+
+CpuProfiler* Isolate::GetCpuProfiler() {
+  //   i::CpuProfiler* cpu_profiler =
+  //     reinterpret_cast<i::Isolate*>(this)->cpu_profiler();
+  //   return reinterpret_cast<CpuProfiler*>(cpu_profiler);
+  return nullptr;
+}
+
+void NativeWeakMap::Set(Local<Value> v8_key, Local<Value> v8_value) {
+  ::DebugBreak();
+}
+
+Local<Value> NativeWeakMap::Get(Local<Value> v8_key) {
+  ::DebugBreak();
+  return Local<Value>();
+}
+
+Local<NativeWeakMap> NativeWeakMap::New(Isolate* v8_isolate) {
+  ::DebugBreak();
+  return Local<NativeWeakMap>();
+}
+
+void Debug::SetLiveEditEnabled(Isolate* isolate, bool enable) {}
+
+MaybeLocal<Value> Debug::Call(Local<Context> context,
+                              v8::Local<v8::Function> fun,
+                              v8::Local<v8::Value> data) {
+//   ::DebugBreak();
+//   return MaybeLocal<Value>();
+  PREPARE_FOR_EXECUTION(context, Debug, Call, Value);
+  i::Handle<i::Object> data_obj;
+  if (data.IsEmpty()) {
+    data_obj = isolate->factory()->undefined_value();
+  } else {
+    data_obj = Utils::OpenHandle(*data);
+  }
+  Local<Value> result;
+  has_pending_exception =
+    !ToLocal<Value>(isolate->debug()->Call(Utils::OpenHandle(*fun), data_obj),
+      &result);
+  RETURN_ON_FAILED_EXECUTION(Value);
+  RETURN_ESCAPED(result);
+}
+
+bool Debug::CheckDebugBreak(Isolate* isolate) {
+  ::DebugBreak();
+  return false;
+}
+
+void Debug::CancelDebugBreak(Isolate* isolate) { ::DebugBreak(); }
+
+void Debug::DebugBreak(Isolate* isolate) { ::DebugBreak(); }
+
+bool Debug::SetDebugEventListener(Isolate* isolate, EventCallback that,
+                                  Local<Value> data) {
+  return true;
+}
+
+Local<Context> Debug::GetDebugContext(Isolate* isolate) {
+  return Local<Context>();
+}
+
+String::Utf8Value::Utf8Value(v8::Local<v8::Value> obj)
+    : Utf8Value(Isolate::GetCurrent(), obj) {}
+
+int String::Write(uint16_t* buffer, int start, int length, int options) const {
+  Isolate* isolate = Isolate::GetCurrent();
+  return Write(isolate, buffer, start, length, options);
+}
+
+int String::WriteUtf8(char* buffer, int length, int* nchars_ref,
+                      int options) const {
+  Isolate* isolate = Isolate::GetCurrent();
+  return WriteUtf8(isolate, buffer, length, nchars_ref, options);
+}
+
+int String::Utf8Length() const {
+  Isolate* isolate = Isolate::GetCurrent();
+  return Utf8Length(isolate);
+}
+
+int String::WriteOneByte(uint8_t* buffer, int start, int length,
+                         int options) const {
+  Isolate* isolate = Isolate::GetCurrent();
+  return WriteOneByte(isolate, buffer, start, length, options);
+}
+
+void Isolate::SetAutorunMicrotasks(bool autorun) {
+  SetMicrotasksPolicy(autorun ? MicrotasksPolicy::kAuto
+                              : MicrotasksPolicy::kExplicit);
+}
+
+const ScriptCompiler::CachedData*
+ScriptCompiler::StreamedSource::GetCachedData() const {
+  // return impl_->cached_data.get();
+  return nullptr;
+}
+
+void Isolate::SetReferenceFromGroup(UniqueId id, internal::Object** object) {
+//   i::Isolate* internal_isolate = reinterpret_cast<i::Isolate*>(this);
+//   internal_isolate->global_handles()->SetReferenceFromGroup(id, i::Handle<i::Object>(object).location());
+}
+
+// void Isolate::AddCallCompletedCallback(void(__cdecl*)(void)) {
+// }
+// 
+// void Isolate::RemoveCallCompletedCallback(void(__cdecl*)(void)) {
+// }
+
+bool Isolate::WillAutorunMicrotasks(void) const {
+  return false;
+}
+
+int32_t Value::Int32Value() const {
+  auto obj = Utils::OpenHandle(this);
+  if (obj->IsNumber()) return NumberToInt32(*obj);
+
+  auto context = reinterpret_cast<v8::Isolate*>(Isolate::GetCurrent())->GetCurrentContext();
+  return Int32Value((context)).FromMaybe(0);
+}
+
+uint32_t Value::Uint32Value() const {
+  auto obj = Utils::OpenHandle(this);
+  if (obj->IsNumber()) return NumberToInt32(*obj);
+
+  auto context = reinterpret_cast<v8::Isolate*>(Isolate::GetCurrent())->GetCurrentContext();
+  return Uint32Value((context)).FromMaybe(0);
+}
+
+Local<v8::Function> FunctionTemplate::GetFunction() {
+  auto context = reinterpret_cast<v8::Isolate*>(Isolate::GetCurrent())->GetCurrentContext();
+  return GetFunction(context).FromMaybe(Local<Function>());
+}
+
+MaybeLocal<Value> JSON::Parse(Isolate* isolate, Local<String> json_string) {
+  return Parse(isolate->GetCurrentContext(), json_string);
+}
+
+bool v8::Object::Delete(v8::Local<Value> key) {
+  auto context = ContextFromNeverReadOnlySpaceObject(Utils::OpenHandle(this));
+  return Delete(context, key).FromMaybe(false);
+}
+
+Local<Function> Function::New(Isolate* isolate, FunctionCallback callback,
+                              Local<Value> data, int length) {
+  return New(isolate->GetCurrentContext(), callback, data, length)
+      .FromMaybe(Local<Function>());
+}
+
+Local<String> v8::String::Concat(Local<String> left, Local<String> right) {
+  Isolate* v8_isolate = reinterpret_cast<v8::Isolate*>(Isolate::GetCurrent());
+  return Concat(v8_isolate, left, right);
+}
+
+#define PREPARE_FOR_EXECUTION_PRIMITIVE(context, class_name, function_name, T) \
+  PREPARE_FOR_EXECUTION_WITH_CONTEXT(context, class_name, function_name,       \
+                                     Nothing<T>(), i::HandleScope, false)
+
+static i::MaybeHandle<i::Object> DefineObjectProperty(
+    i::Handle<i::JSObject> js_object, i::Handle<i::Object> key,
+    i::Handle<i::Object> value, i::PropertyAttributes attrs) {
+  i::Isolate* isolate = js_object->GetIsolate();
+  bool success = false;
+  i::LookupIterator it = i::LookupIterator::PropertyOrElement(isolate, js_object, key, &success, i::LookupIterator::OWN);
+  if (!success) return i::MaybeHandle<i::Object>();
+
+  return i::JSObject::DefineOwnPropertyIgnoreAttributes(&it, value, attrs, i::JSObject::FORCE_FIELD);
+}
+
+Maybe<bool> v8::Object::ForceSet(v8::Local<v8::Context> context,
+                                 v8::Local<Value> key, v8::Local<Value> value,
+                                 v8::PropertyAttribute attribs) {
+  PREPARE_FOR_EXECUTION_PRIMITIVE(context, Object, ForceSet, bool);
+  auto self = i::Handle<i::JSObject>::cast(Utils::OpenHandle(this));
+  auto key_obj = Utils::OpenHandle(*key);
+  auto value_obj = Utils::OpenHandle(*value);
+  has_pending_exception = DefineObjectProperty(self, key_obj, value_obj, static_cast<i::PropertyAttributes>(attribs)).is_null();
+  RETURN_ON_FAILED_EXECUTION_PRIMITIVE(bool);
+  return Just(true);
+}
+
+Local<Value> Function::Call(Local<Value> recv, int argc, Local<Value> argv[]) {
+  Isolate* isolate = Isolate::GetCurrent();
+  MaybeLocal<Value> result = Call(isolate->GetCurrentContext(), recv, argc, argv);
+  if (result.IsEmpty())
+    return Local<Value>();
+  return result.ToLocalChecked();
+}
+
+MaybeLocal<Array> Debug::GetInternalProperties(Isolate* v8_isolate, Local<Value> value) {
+  return debug::GetInternalProperties(v8_isolate, value);
+}
+
+void HeapProfiler::SetWrapperClassInfoProvider(uint16_t class_id,
+                                               WrapperInfoCallback callback) {
+  //   reinterpret_cast<i::HeapProfiler*>(this)->DefineWrapperClass(class_id,
+  //     callback);
+}
+
+bool Value::BooleanValue() const {
+  bool ret = BooleanValue(Isolate::GetCurrent());
+//   if (ret.IsNothing())
+//     return false;
+//   return ret.ToChecked();
+  return ret;
+}
+
+int64_t Value::IntegerValue() const {
+  Local<Context> ctx = Isolate::GetCurrent()->GetCurrentContext();
+  Maybe<int64_t> result = IntegerValue(ctx);
+  if (result.IsNothing())
+    return 0;
+  return result.FromJust();
+}
+
+double Value::NumberValue() const {
+  Local<Context> ctx = Isolate::GetCurrent()->GetCurrentContext();
+  Maybe<double> result = NumberValue(ctx);
+  if (result.IsNothing())
+    return 0;
+  return result.FromJust();
+}
+
+void Debug::ProcessDebugMessages(Isolate*) {
+  ::DebugBreak();
+}
+
+void Debug::SetMessageHandler(Isolate *, void (__cdecl*)(Debug::Message const &)) {
+  ::DebugBreak();
+}
+
+void Debug::SendCommand(Isolate*, unsigned short const*, int, Debug::ClientData*) {
+  ::DebugBreak();
+}
+
+MaybeLocal<Value> Debug::GetMirror(Local<Context>, Local<Value>) {
+  ::DebugBreak();
+  return MaybeLocal<Value>();
+}
+
 }  // namespace v8

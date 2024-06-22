@@ -518,7 +518,7 @@ void SkResourceCache::checkMessages() {
 
 SK_DECLARE_STATIC_MUTEX(gMutex);
 static SkResourceCache* gResourceCache = NULL;
-static void cleanup_gResourceCache() {
+static void __cdecl cleanup_gResourceCache() {
     // We'll clean this up in our own tests, but disable for clients.
     // Chrome seems to have funky multi-process things going on in unit tests that
     // makes this unsafe to delete when the main process atexit()s.

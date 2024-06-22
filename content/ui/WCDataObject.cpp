@@ -25,8 +25,10 @@
 
 #include "content/ui/WCDataObject.h"
 #include "content/ui/ClipboardUtil.h"
+#include "third_party/skia/include/core/SkBitmap.h"
 
 #include "base/strings/string_util.h"
+#include <Shlwapi.h>
 
 namespace content {
 
@@ -211,6 +213,7 @@ HRESULT WCDataObject::GetData(FORMATETC* pformatetcIn, STGMEDIUM* pmedium)
             pformatetcIn->lindex == m_formats[i]->lindex &&
             pformatetcIn->dwAspect == m_formats[i]->dwAspect &&
             pformatetcIn->cfFormat == m_formats[i]->cfFormat) {
+
             CopyMedium(pmedium, m_medium[i], m_formats[i]);
             return S_OK;
         }
@@ -383,15 +386,14 @@ WCDataObject::ClipboardDataType WCDataObject::clipboardTypeFromMIMEType(const st
     return kClipboardDataTypeNone;
 }
 
-static bool writeURL(WCDataObject *data, const std::string& url, std::string title, bool withPlainText, bool withHTML)
+static bool writeURL(WCDataObject* data, const std::string& url, std::string title, bool withPlainText, bool withHTML)
 {
     //ASSERT(data);
     if (url.empty())
         return false;
 
-    if (title.empty()) {
+    if (title.empty())
         title = url;
-    }
 
     STGMEDIUM medium = { 0 };
     medium.tymed = TYMED_HGLOBAL;
@@ -404,13 +406,12 @@ static bool writeURL(WCDataObject *data, const std::string& url, std::string tit
         success = true;
 
     if (withHTML) {
-//         Vector<char> cfhtmlData;
-//         ClipboardUtil::HtmlToCFHtml(ClipboardUtil::HtmlToCFHtml(title.utf8().data(), url.getUTF8String().utf8().data()), "", cfhtmlData);
-//         medium.hGlobal = ClipboardUtil::createGlobalData(cfhtmlData);
-//         if (medium.hGlobal && FAILED(data->SetData(ClipboardUtil::getHtmlFormatType(), &medium, TRUE)))
-//             ::GlobalFree(medium.hGlobal);
-//         else
-//             success = true;
+        std::string cfhtmlData = ClipboardUtil::htmlToCFHtml(url, "");
+        medium.hGlobal = ClipboardUtil::createGlobalData(cfhtmlData);
+        if (medium.hGlobal && FAILED(data->SetData(ClipboardUtil::htmlFormat(), &medium, TRUE)))
+            ::GlobalFree(medium.hGlobal);
+        else
+            success = true;
     }
 
     if (withPlainText) {
@@ -429,14 +430,15 @@ void WCDataObject::writeString(const std::string& type, const std::string& data)
     ClipboardDataType winType = clipboardTypeFromMIMEType(type);
 
     if (winType == kClipboardDataTypeURL) {
-        writeURL(this, data, std::string(), false, true);
+        writeURL(this, data, std::string(), false, false);
         return;
-    }
-
-    if (winType == kClipboardDataTypeText) {
+    } else if (winType == kClipboardDataTypeTextHTML) {
+        writeURL(this, data, std::string(), false, true);
+    } else if (winType == kClipboardDataTypeText) {
+        std::wstring dataW = base::UTF8ToWide(data);
         STGMEDIUM medium = { 0 };
         medium.tymed = TYMED_HGLOBAL;
-        medium.hGlobal = ClipboardUtil::createGlobalData(data);
+        medium.hGlobal = ClipboardUtil::createGlobalData(dataW);
         if (!medium.hGlobal)
             return;
 
@@ -455,6 +457,245 @@ void WCDataObject::writeCustomPlainText(const std::string& customPlainText)
 
     if ((SetData(ClipboardUtil::getCustomTextsType(), &medium, 1)) < 0)
         ::GlobalFree(medium.hGlobal);
+}
+
+// FORMATETC* GetFileDescriptorFormatType()
+// {
+//     static FORMATETC* type = nullptr;
+//     if (!type) {
+//         type = new FORMATETC();
+//         type->cfFormat = static_cast<CLIPFORMAT>(::RegisterClipboardFormat(CFSTR_FILEDESCRIPTOR));
+//         type->dwAspect = DVASPECT_CONTENT;
+//         type->lindex = -1;
+//         type->tymed = TYMED_HGLOBAL;
+//     }
+//     return type;
+// }
+// 
+// FORMATETC* GetFileContentZeroFormatType()
+// {
+//     static FORMATETC* type = nullptr;
+//     if (!type) {
+//         type = new FORMATETC();
+//         type->cfFormat = static_cast<CLIPFORMAT>(::RegisterClipboardFormat(CFSTR_FILECONTENTS));
+//         type->dwAspect = DVASPECT_CONTENT;
+//         type->lindex = 0;
+//         type->tymed = TYMED_HGLOBAL;
+//     }
+//     return type;
+// }
+// 
+// static HGLOBAL createGlobalImageFileDescriptor(const std::wstring& title, size_t size)
+// {
+//     HRESULT hr = S_OK;
+//     HGLOBAL memObj = GlobalAlloc(GPTR, sizeof(FILEGROUPDESCRIPTOR));
+//     if (!memObj)
+//         return 0;
+// 
+//     FILEGROUPDESCRIPTOR* fgd = (FILEGROUPDESCRIPTOR*)GlobalLock(memObj);
+//     if (!fgd) {
+//         GlobalFree(memObj);
+//         return 0;
+//     }
+// 
+//     memset(fgd, 0, sizeof(FILEGROUPDESCRIPTOR));
+//     fgd->cItems = 1;
+//     fgd->fgd[0].dwFlags = FD_FILESIZE;
+//     fgd->fgd[0].nFileSizeLow = size;
+// 
+//     wcscpy(fgd->fgd[0].cFileName, title.c_str());
+//     GlobalUnlock(memObj);
+// 
+//     return memObj;
+// }
+// 
+// static HGLOBAL createGlobalImageFileContent(const char* data, size_t size)
+// {
+//     HGLOBAL memObj = GlobalAlloc(GPTR, size);
+//     if (!memObj)
+//         return 0;
+// 
+//     char* fileContents = (PSTR)GlobalLock(memObj);
+//     if (!fileContents) {
+//         GlobalFree(memObj);
+//         return 0;
+//     }
+// 
+//     if (data)
+//         CopyMemory(fileContents, data, size);
+// 
+//     ::GlobalUnlock(memObj);
+// 
+//     return memObj;
+// }
+// 
+// static HGLOBAL createGlobalHDropContent(const char* data, size_t size)
+// {
+//     if (!data)
+//         return nullptr;
+// 
+//     WCHAR filePath[MAX_PATH];
+//     WCHAR tempPath[MAX_PATH];
+// 
+//     if (!::GetTempPath(MAX_PATH, tempPath))
+//         return nullptr;
+//     if (!::PathAppend(tempPath, L"miniblink_drag_temp.jpg"))
+//         return nullptr;
+// 
+// //     for (int i = 1; i < 10000; i++) {
+// //         if (swprintf_s(filePath, MAX_PATH, TEXT("%s-%d%s"), tempPath, i, extension) == -1)
+// //             return 0;
+// //         if (!::PathFileExists(filePath))
+// //             break;
+// //     }
+//     wcscpy(filePath, L"d:\\2.jpg");
+// 
+//     HANDLE tempFileHandle = ::CreateFile(filePath, GENERIC_READ | GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+//     if (tempFileHandle == INVALID_HANDLE_VALUE)
+//         return nullptr;
+// 
+//     // Write the data to this temp file.
+//     DWORD written;
+//     BOOL tempWriteSucceeded = FALSE;
+//     if (data)
+//         tempWriteSucceeded = ::WriteFile(tempFileHandle, data, size, &written, 0);
+//     ::CloseHandle(tempFileHandle);
+//     if (!tempWriteSucceeded)
+//         return nullptr;
+// 
+//     SIZE_T dropFilesSize = sizeof(DROPFILES) + (sizeof(WCHAR) * (wcslen(filePath) + 2));
+//     HGLOBAL memObj = ::GlobalAlloc(GHND | GMEM_SHARE, dropFilesSize);
+//     if (!memObj)
+//         return nullptr;
+// 
+//     DROPFILES* dropFiles = (DROPFILES*)GlobalLock(memObj);
+//     if (!dropFiles) {
+//         ::GlobalFree(memObj);
+//         return nullptr;
+//     }
+// 
+//     dropFiles->pFiles = sizeof(DROPFILES);
+//     dropFiles->fWide = TRUE;
+//     wcscpy((LPWSTR)(dropFiles + 1), filePath);
+//     ::GlobalUnlock(memObj);
+// 
+//     return memObj;
+// }
+// 
+// FORMATETC* fileDescriptorFormat()
+// {
+//     static UINT cf = RegisterClipboardFormat(CFSTR_FILEDESCRIPTOR);
+// 
+//     static FORMATETC fileDescriptorFormat = { cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+//     return &fileDescriptorFormat;
+// }
+// 
+// FORMATETC* fileContentFormatZero()
+// {
+//     static UINT cf = RegisterClipboardFormat(CFSTR_FILECONTENTS);
+// 
+//     static FORMATETC fileContentFormat = { cf, 0, DVASPECT_CONTENT, 0, TYMED_HGLOBAL };
+//     return &fileContentFormat;
+// }
+// 
+// // writeFileToDataObject takes ownership of fileDescriptor and fileContent
+// static HRESULT writeFileToDataObject(IDataObject* dataObject, HGLOBAL fileDescriptor, HGLOBAL fileContent, HGLOBAL hDropContent)
+// {
+//     HRESULT hr = S_OK;
+//     FORMATETC* fe;
+//     STGMEDIUM medium = { 0 };
+//     medium.tymed = TYMED_HGLOBAL;
+// 
+//     if (!fileDescriptor || !fileContent)
+//         goto exit;
+// 
+//     // Descriptor
+//     fe = fileDescriptorFormat();
+// 
+//     medium.hGlobal = fileDescriptor;
+// 
+//     if (FAILED(hr = dataObject->SetData(fe, &medium, TRUE)))
+//         goto exit;
+// 
+//     // Contents
+//     fe = fileContentFormatZero();
+//     medium.hGlobal = fileContent;
+//     
+//     hr = dataObject->SetData(fe, &medium, TRUE);
+// 
+// exit:
+//     if (FAILED(hr)) {
+//         if (fileDescriptor)
+//             GlobalFree(fileDescriptor);
+//         if (fileContent)
+//             GlobalFree(fileContent);
+//         if (hDropContent)
+//             GlobalFree(hDropContent);
+//     }
+//     return hr;
+// }
+
+void WCDataObject::writeBitmap(const char* data, size_t size)
+{
+//     HGLOBAL imageFileDescriptor = createGlobalImageFileDescriptor(L"test", size);
+//     if (!imageFileDescriptor)
+//         return;
+// 
+//     HGLOBAL imageFileContent = createGlobalImageFileContent(data, size);
+//     if (!imageFileContent) {
+//         GlobalFree(imageFileDescriptor);
+//         return;
+//     }
+// 
+//     HGLOBAL hDropContent = nullptr;// createGlobalHDropContent(data, size);
+//     writeFileToDataObject(this, imageFileDescriptor, imageFileContent, hDropContent);
+
+//     HANDLE handle = GlobalAlloc(GPTR, static_cast<int>(size));
+//     if (!handle)
+//         return;
+// 
+//     char* scopedData = static_cast<char*>(::GlobalLock(handle));
+//     memcpy(scopedData, data, size);
+//     ::GlobalUnlock(handle);
+// 
+//     STGMEDIUM medium = { 0 };
+//     medium.tymed = TYMED_HGLOBAL;
+//     medium.hGlobal = handle;
+// 
+//     if ((SetData(GetFileContentZeroFormatType(), &medium, 1)) < 0)
+//         ::GlobalFree(medium.hGlobal);
+
+//     HDC dc = ::GetDC(NULL);
+// 
+//     BITMAPINFO bm_info = {};
+//     bm_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+//     bm_info.bmiHeader.biWidth = bitmap.width();
+//     bm_info.bmiHeader.biHeight = -bitmap.height();  // sets vertical orientation
+//     bm_info.bmiHeader.biPlanes = 1;
+//     bm_info.bmiHeader.biBitCount = 32;
+//     bm_info.bmiHeader.biCompression = BI_RGB;
+// 
+//     // ::CreateDIBSection allocates memory for us to copy our bitmap into.
+//     // Unfortunately, we can't write the created bitmap to the clipboard,
+//     // (see http://msdn2.microsoft.com/en-us/library/ms532292.aspx)
+//     void* bits;
+//     HBITMAP hBitmap = ::CreateDIBSection(dc, &bm_info, DIB_RGB_COLORS, &bits, NULL, 0);
+// 
+//     if (!bits || !hBitmap)
+//         ::ReleaseDC(NULL, dc);
+//     
+//     {
+//         SkAutoLockPixels bitmapLock(bitmap);
+//         // Copy the bitmap out of shared memory and into GDI
+//         memcpy(bits, bitmap.getPixels(), bitmap.getSize());
+//     }
+// 
+//     STGMEDIUM medium = { 0 };
+//     medium.tymed = TYMED_GDI;
+//     medium.hBitmap = hBitmap;
+//     if ((SetData(ClipboardUtil::getCustomTextsType(), &medium, 1)) < 0)
+//         ::DeleteObject(hBitmap);
+//     ::ReleaseDC(NULL, dc);
 }
 
 }

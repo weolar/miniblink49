@@ -451,13 +451,12 @@ static PassRefPtrWillBeRawPtr<CSSValueList> valuesForBackgroundShorthand(const C
     return ret.release();
 }
 
-static ContentPosition resolveContentAlignmentAuto(ContentPosition position, ContentDistributionType distribution, Node* element)
+static ContentPosition resolveContentAlignmentNormal(ContentPosition position, ContentDistributionType distribution, Node* element)
 {
-    if (position != ContentPositionAuto || distribution != ContentDistributionDefault)
+    if (position != ContentPositionNormal || distribution != ContentDistributionDefault)
         return position;
 
-    bool isFlex = element && element->ensureComputedStyle()
-        && element->ensureComputedStyle()->isDisplayFlexibleBox();
+    bool isFlex = element && element->ensureComputedStyle() && element->ensureComputedStyle()->isDisplayFlexibleBox();
 
     return isFlex ? ContentPositionFlexStart : ContentPositionStart;
 }
@@ -467,7 +466,7 @@ static PassRefPtrWillBeRawPtr<CSSValueList> valueForContentPositionAndDistributi
     RefPtrWillBeRawPtr<CSSValueList> result = CSSValueList::createSpaceSeparated();
     if (distribution != ContentDistributionDefault)
         result->append(CSSPrimitiveValue::create(distribution));
-    if (distribution == ContentDistributionDefault || position != ContentPositionAuto)
+    if (distribution == ContentDistributionDefault || position != ContentPositionNormal)
         result->append(CSSPrimitiveValue::create(position));
     if ((position >= ContentPositionCenter || distribution != ContentDistributionDefault) && overflowAlignment != OverflowAlignmentDefault)
         result->append(CSSPrimitiveValue::create(overflowAlignment));
@@ -1608,11 +1607,21 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
     case CSSPropertyEmptyCells:
         return cssValuePool().createValue(style.emptyCells());
     case CSSPropertyAlignContent:
-        return valueForContentPositionAndDistributionWithOverflowAlignment(resolveContentAlignmentAuto(style.alignContentPosition(), style.alignContentDistribution(), styledNode), style.alignContentOverflowAlignment(), style.alignContentDistribution());
+        return valueForContentPositionAndDistributionWithOverflowAlignment(resolveContentAlignmentNormal(style.alignContentPosition(), style.alignContentDistribution(), styledNode), style.alignContentOverflowAlignment(), style.alignContentDistribution());
     case CSSPropertyAlignItems:
         return valueForItemPositionWithOverflowAlignment(resolveAlignmentAuto(style.alignItemsPosition(), styledNode), style.alignItemsOverflowAlignment(), NonLegacyPosition);
-    case CSSPropertyAlignSelf:
-        return valueForItemPositionWithOverflowAlignment(resolveAlignmentAuto(style.alignSelfPosition(), styledNode->parentNode()), style.alignSelfOverflowAlignment(), NonLegacyPosition);
+    case CSSPropertyAlignSelf: {
+        //return valueForItemPositionWithOverflowAlignment(resolveAlignmentAuto(style.alignSelfPosition(), styledNode->parentNode()), style.alignSelfOverflowAlignment(), NonLegacyPosition);
+        ItemPosition position = style.alignSelfPosition();
+        if (position == ItemPositionAuto) {
+            // TODO(lajava): This code doesn't work for ShadowDOM (see Node::parentComputedStyle)
+            const ComputedStyle* parentStyle = styledNode->parentNode() ? styledNode->parentNode()->ensureComputedStyle() : nullptr;
+            position = styledNode->parentNode() && parentStyle ?
+                ComputedStyle::resolveAlignment(*parentStyle, style, resolveAlignmentAuto(parentStyle->alignItemsPosition(), styledNode->parentNode())) : ItemPositionStart;
+
+        }
+        return valueForItemPositionWithOverflowAlignment(position, style.alignSelfOverflowAlignment(), NonLegacyPosition);
+    }
     case CSSPropertyFlex:
         return valuesForShorthandProperty(flexShorthand(), style, layoutObject, styledNode, allowVisitedStyle);
     case CSSPropertyFlexBasis:
@@ -1628,7 +1637,7 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
     case CSSPropertyFlexWrap:
         return cssValuePool().createValue(style.flexWrap());
     case CSSPropertyJustifyContent:
-        return valueForContentPositionAndDistributionWithOverflowAlignment(resolveContentAlignmentAuto(style.justifyContentPosition(), style.justifyContentDistribution(), styledNode), style.justifyContentOverflowAlignment(), style.justifyContentDistribution());
+        return valueForContentPositionAndDistributionWithOverflowAlignment(resolveContentAlignmentNormal(style.justifyContentPosition(), style.justifyContentDistribution(), styledNode), style.justifyContentOverflowAlignment(), style.justifyContentDistribution());
     case CSSPropertyOrder:
         return cssValuePool().createValue(style.order(), CSSPrimitiveValue::CSS_NUMBER);
     case CSSPropertyFloat:
@@ -2627,7 +2636,7 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
     case CSSPropertyMarker:
 //     case CSSPropertyEnableBackground:
 //         // the above properties are not yet implemented in the engine
-//         return nullptr;
+        return nullptr;
     case CSSPropertyCx:
         return zoomAdjustedPixelValueForLength(svgStyle.cx(), style);
     case CSSPropertyCy:
@@ -2702,11 +2711,15 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
             list->append(cssValuePool().createValue(style.scale()->z(), CSSPrimitiveValue::CSS_NUMBER));
         return list.release();
     }
-	case CSSPropertyVariable:
-		// TODO(leviw): We should have a way to retrive variables here.
-		ASSERT_NOT_REACHED();
-		return nullptr;
+    case CSSPropertyVariable:
+        // TODO(leviw): We should have a way to retrive variables here.
+        ASSERT_NOT_REACHED();
+        return nullptr;
 
+    case CSSPropertyBackdropFilter:
+    case CSSPropertyImageOrientation:
+    case CSSPropertyFontFeatureSettings:
+    case CSSPropertyWebkitLineBoxContain:
     case CSSPropertyAll:
         return nullptr;
     default:

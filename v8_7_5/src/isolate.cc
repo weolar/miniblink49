@@ -85,6 +85,10 @@
 #include "unicode/uobject.h"
 #endif  // V8_INTL_SUPPORT
 
+#if defined(V8_OS_WIN_X64)
+#include "src/unwinding-info-win64.h"
+#endif
+
 extern "C" const uint8_t* v8_Default_embedded_blob_;
 extern "C" uint32_t v8_Default_embedded_blob_size_;
 
@@ -316,6 +320,7 @@ Isolate::PerIsolateThreadData*
     base::MutexGuard lock_guard(&thread_data_table_mutex_);
     per_thread = thread_data_table_.Lookup(thread_id);
     if (per_thread == nullptr) {
+      base::OS::AdjustSchedulingParams();
       per_thread = new PerIsolateThreadData(this, thread_id);
       thread_data_table_.Insert(per_thread);
     }
@@ -405,6 +410,7 @@ void Isolate::Iterate(RootVisitor* v, ThreadLocalTop* thread) {
   }
 
   // Iterate over pointers on native execution stack.
+  wasm::WasmCodeRefScope wasm_code_ref_scope;
   for (StackFrameIterator it(this, thread); !it.done(); it.Advance()) {
     it.frame()->Iterate(v);
   }
@@ -525,7 +531,6 @@ StackTraceFailureMessage::StackTraceFailureMessage(Isolate* isolate, void* ptr1,
   size_t i = 0;
   StackFrameIterator it(isolate);
   for (; !it.done() && i < code_objects_length; it.Advance()) {
-    if (it.frame()->type() == StackFrame::INTERNAL) continue;
     code_objects_[i++] =
         reinterpret_cast<void*>(it.frame()->unchecked_code().ptr());
   }
@@ -981,6 +986,7 @@ Handle<Object> CaptureStackTrace(Isolate* isolate, Handle<Object> caller,
                                  CaptureStackTraceOptions options) {
   DisallowJavascriptExecution no_js(isolate);
 
+  wasm::WasmCodeRefScope code_ref_scope;
   FrameArrayBuilder builder(isolate, options.skip_mode, options.limit, caller,
                             options.filter_mode);
 
@@ -1003,7 +1009,7 @@ Handle<Object> CaptureStackTrace(Isolate* isolate, Handle<Object> caller,
         std::vector<FrameSummary> frames;
         StandardFrame::cast(frame)->Summarize(&frames);
         for (size_t i = frames.size(); i-- != 0 && !builder.full();) {
-          const auto& summary = frames[i];
+          auto& summary = frames[i];
           if (options.capture_only_frames_subject_to_debugging &&
               !summary.is_subject_to_debugging()) {
             continue;
@@ -1104,7 +1110,7 @@ Handle<Object> CaptureStackTrace(Isolate* isolate, Handle<Object> caller,
 
   // TODO(yangguo): Queue this structured stack trace for preprocessing on GC.
   if (options.capture_result == CaptureStackTraceOptions::RAW_FRAME_ARRAY) {
-    return isolate->factory()->NewJSArrayWithElements(builder.GetElements());
+    return builder.GetElements();
   }
   return builder.GetElementsAsStackTraceFrameArray();
 }
@@ -1181,6 +1187,9 @@ Address Isolate::GetAbstractPC(int* line, int* column) {
   }
   JavaScriptFrame* frame = it.frame();
   DCHECK(!frame->is_builtin());
+
+  Handle<SharedFunctionInfo> shared = handle(frame->function()->shared(), this);
+  SharedFunctionInfo::EnsureSourcePositionsAvailable(this, shared);
   int position = frame->position();
 
   Object maybe_script = frame->function()->shared()->script();
@@ -1258,6 +1267,7 @@ static void PrintFrames(Isolate* isolate,
 
 void Isolate::PrintStack(StringStream* accumulator, PrintStackMode mode) {
   HandleScope scope(this);
+  wasm::WasmCodeRefScope wasm_code_ref_scope;
   DCHECK(accumulator->IsMentionedObjectCacheClear(this));
 
   // Avoid printing anything if there are no frames.
@@ -1491,6 +1501,19 @@ void ReportBootstrappingException(Handle<Object> exception,
 #endif
 }
 
+void PrintDebug(const char* format, ...) { // printf
+
+  va_list argList;
+  va_start(argList, format);
+
+  char* output = (char*)malloc(0x100);
+  vsprintf_s(output, 0x99, format, argList);
+  OutputDebugStringA(output);
+  free(output);
+
+  va_end(argList);
+}
+
 Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
   DCHECK(!has_pending_exception());
 
@@ -1498,16 +1521,16 @@ Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
   Handle<Object> exception(raw_exception, this);
 
   if (FLAG_print_all_exceptions) {
-    printf("=========================================================\n");
-    printf("Exception thrown:\n");
+    PrintDebug("=========================================================\n");
+    PrintDebug("Exception thrown:\n");
     if (location) {
       Handle<Script> script = location->script();
       Handle<Object> name(script->GetNameOrSourceURL(), this);
-      printf("at ");
+      PrintDebug("at ");
       if (name->IsString() && String::cast(*name)->length() > 0)
         String::cast(*name)->PrintOn(stdout);
       else
-        printf("<anonymous>");
+        PrintDebug("<anonymous>");
 // Script::GetLineNumber and Script::GetColumnNumber can allocate on the heap to
 // initialize the line_ends array, so be careful when calling them.
 #ifdef DEBUG
@@ -1515,7 +1538,7 @@ Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
 #else
       if ((false)) {
 #endif
-        printf(", %d:%d - %d:%d\n",
+        PrintDebug(", %d:%d - %d:%d\n",
                Script::GetLineNumber(script, location->start_pos()) + 1,
                Script::GetColumnNumber(script, location->start_pos()),
                Script::GetLineNumber(script, location->end_pos()) + 1,
@@ -1523,13 +1546,13 @@ Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
         // Make sure to update the raw exception pointer in case it moved.
         raw_exception = *exception;
       } else {
-        printf(", line %d\n", script->GetLineNumber(location->start_pos()) + 1);
+        PrintDebug(", line %d\n", script->GetLineNumber(location->start_pos()) + 1);
       }
     }
     raw_exception->Print();
-    printf("Stack Trace:\n");
+    PrintDebug("Stack Trace:\n");
     PrintStack(stdout);
-    printf("=========================================================\n");
+    PrintDebug("=========================================================\n");
   }
 
   // Determine whether a message needs to be created for the given exception
@@ -1569,6 +1592,24 @@ Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
       Handle<Object> message_obj = CreateMessage(exception, location);
       thread_local_top()->pending_message_obj_ = *message_obj;
 
+//       if (0) {
+//         Handle<Script> script = location->script();
+//         PrintDebug(", %d:%d - %d:%d\n",
+//           Script::GetLineNumber(script, location->start_pos()) + 1,
+//           Script::GetColumnNumber(script, location->start_pos()),
+//           Script::GetLineNumber(script, location->end_pos()) + 1,
+//           Script::GetColumnNumber(script, location->end_pos()));
+// 
+//         Handle<Object> name(script->GetNameOrSourceURL(), this);
+//         PrintDebug("at ");
+//         if (name->IsString() && String::cast(*name)->length() > 0)
+//           String::cast(*name)->PrintOn(stdout);
+//         else
+//           PrintDebug("<anonymous>");
+// 
+//         PrintDebug("%s\n\nFROM\n", MessageHandler::GetLocalizedMessage(this, message_obj).get()); // weolar: 强制打印
+//       }
+
       // For any exception not caught by JavaScript, even when an external
       // handler is present:
       // If the abort-on-uncaught-exception flag is specified, and if the
@@ -1585,7 +1626,7 @@ Object Isolate::Throw(Object raw_exception, MessageLocation* location) {
           FLAG_abort_on_uncaught_exception = false;
           // This flag is intended for use by JavaScript developers, so
           // print a user-friendly stack trace (not an internal one).
-          PrintF(stderr, "%s\n\nFROM\n",
+          PrintDebug(/*stderr,*/ "%s\n\nFROM\n",
                  MessageHandler::GetLocalizedMessage(this, message_obj).get());
           PrintCurrentStackTrace(stderr);
           base::OS::Abort();
@@ -1664,6 +1705,10 @@ Object Isolate::UnwindAndFindHandler() {
 
         // For WebAssembly frames we perform a lookup in the handler table.
         if (!catchable_by_js) break;
+        // This code ref scope is here to avoid a check failure when looking up
+        // the code. It's not actually necessary to keep the code alive as it's
+        // currently being executed.
+        wasm::WasmCodeRefScope code_ref_scope;
         WasmCompiledFrame* wasm_frame = static_cast<WasmCompiledFrame*>(frame);
         int stack_slots = 0;  // Will contain stack slot count of frame.
         int offset = wasm_frame->LookupExceptionHandlerInTable(&stack_slots);
@@ -1721,6 +1766,7 @@ Object Isolate::UnwindAndFindHandler() {
         // Some stubs are able to handle exceptions.
         if (!catchable_by_js) break;
         StubFrame* stub_frame = static_cast<StubFrame*>(frame);
+        wasm::WasmCodeRefScope code_ref_scope;
         wasm::WasmCode* wasm_code =
             wasm_engine()->code_manager()->LookupCode(frame->pc());
         if (wasm_code != nullptr) {
@@ -2042,8 +2088,10 @@ bool Isolate::ComputeLocation(MessageLocation* target) {
   // baseline code. For optimized code this will use the deoptimization
   // information to get canonical location information.
   std::vector<FrameSummary> frames;
+  wasm::WasmCodeRefScope code_ref_scope;
   frame->Summarize(&frames);
   FrameSummary& summary = frames.back();
+  summary.EnsureSourcePositionsAvailable();
   int pos = summary.SourcePosition();
   Handle<SharedFunctionInfo> shared;
   Handle<Object> script = summary.script();
@@ -2092,11 +2140,9 @@ bool Isolate::ComputeLocationFromStackTrace(MessageLocation* target,
   Handle<Name> key = factory()->stack_trace_symbol();
   Handle<Object> property =
       JSReceiver::GetDataProperty(Handle<JSObject>::cast(exception), key);
-  if (!property->IsJSArray()) return false;
-  Handle<JSArray> simple_stack_trace = Handle<JSArray>::cast(property);
+  if (!property->IsFixedArray()) return false;
 
-  Handle<FrameArray> elements(FrameArray::cast(simple_stack_trace->elements()),
-                              this);
+  Handle<FrameArray> elements = Handle<FrameArray>::cast(property);
 
   const int frame_count = elements->FrameCount();
   for (int i = 0; i < frame_count; i++) {
@@ -2131,6 +2177,8 @@ bool Isolate::ComputeLocationFromStackTrace(MessageLocation* target,
     Object script = fun->shared()->script();
     if (script->IsScript() &&
         !(Script::cast(script)->source()->IsUndefined(this))) {
+      Handle<SharedFunctionInfo> shared = handle(fun->shared(), this);
+      SharedFunctionInfo::EnsureSourcePositionsAvailable(this, shared);
       AbstractCode abstract_code = elements->Code(i);
       const int code_offset = elements->Offset(i)->value();
       const int pos = abstract_code->SourcePosition(code_offset);
@@ -2336,23 +2384,6 @@ void Isolate::ReportPendingMessagesFromJavaScript() {
   if (!PropagateToExternalHandler()) return;
 
   ReportPendingMessagesImpl(true);
-}
-
-MessageLocation Isolate::GetMessageLocation() {
-  DCHECK(has_pending_exception());
-
-  if (thread_local_top()->pending_exception_ !=
-          ReadOnlyRoots(heap()).termination_exception() &&
-      !thread_local_top()->pending_message_obj_->IsTheHole(this)) {
-    Handle<JSMessageObject> message_obj(
-        JSMessageObject::cast(thread_local_top()->pending_message_obj_), this);
-    Handle<Script> script(message_obj->script(), this);
-    int start_pos = message_obj->start_position();
-    int end_pos = message_obj->end_position();
-    return MessageLocation(script, start_pos, end_pos);
-  }
-
-  return MessageLocation();
 }
 
 bool Isolate::OptionalRescheduleException(bool clear_exception) {
@@ -2933,6 +2964,16 @@ void Isolate::Deinit() {
     heap_profiler()->StopSamplingHeapProfiler();
   }
 
+#if defined(V8_OS_WIN_X64)
+  if (win64_unwindinfo::CanRegisterUnwindInfoForNonABICompliantCodeRange() &&
+      heap()->memory_allocator()) {
+    const base::AddressRegion& code_range =
+        heap()->memory_allocator()->code_range();
+    void* start = reinterpret_cast<void*>(code_range.begin());
+    win64_unwindinfo::UnregisterNonABICompliantCodeRange(start);
+  }
+#endif
+
   debug()->Unload();
 
   wasm_engine()->DeleteCompileJobsOnIsolate(this);
@@ -3502,6 +3543,16 @@ bool Isolate::Init(ReadOnlyDeserializer* read_only_deserializer,
     heap_profiler()->StartSamplingHeapProfiler(sample_interval, stack_depth,
                                                sampling_flags);
   }
+
+#if defined(V8_OS_WIN_X64)
+  if (win64_unwindinfo::CanRegisterUnwindInfoForNonABICompliantCodeRange()) {
+    const base::AddressRegion& code_range =
+        heap()->memory_allocator()->code_range();
+    void* start = reinterpret_cast<void*>(code_range.begin());
+    size_t size_in_bytes = code_range.size();
+    win64_unwindinfo::RegisterNonABICompliantCodeRange(start, size_in_bytes);
+  }
+#endif
 
   if (create_heap_objects && FLAG_profile_deserialization) {
     double ms = timer.Elapsed().InMillisecondsF();
@@ -4310,6 +4361,16 @@ void Isolate::PrepareBuiltinSourcePositionMap() {
         this->builtins());
   }
 }
+
+#if defined(V8_OS_WIN_X64)
+void Isolate::SetBuiltinUnwindData(
+    int builtin_index,
+    const win64_unwindinfo::BuiltinUnwindInfo& unwinding_info) {
+  if (embedded_file_writer_ != nullptr) {
+    embedded_file_writer_->SetBuiltinUnwindData(builtin_index, unwinding_info);
+  }
+}
+#endif
 
 void Isolate::SetPrepareStackTraceCallback(PrepareStackTraceCallback callback) {
   prepare_stack_trace_callback_ = callback;

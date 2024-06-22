@@ -46,7 +46,7 @@
 #include "platform/MIMETypeRegistry.h"
 #include "platform/RuntimeEnabledFeatures.h"
 #include "platform/graphics/BitmapImage.h"
-//#include "platform/graphics/Canvas2DImageBufferSurface.h"
+#include "platform/graphics/Canvas2DImageBufferSurface.h"
 #include "platform/graphics/ExpensiveCanvasHeuristicParameters.h"
 #include "platform/graphics/ImageBuffer.h"
 #include "platform/graphics/RecordingImageBufferSurface.h"
@@ -592,12 +592,11 @@ PassOwnPtr<ImageBufferSurface> HTMLCanvasElement::createImageBufferSurface(const
         // pixel readback, but that is unavoidable in this case.
         // FIXME: Actually, avoid setting m_accelerationDisabled at all when
         // doing GPU-based rasterization.
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 //def MINIBLINK_NOT_IMPLEMENTED
         if (m_accelerationDisabled)
             return adoptPtr(new UnacceleratedImageBufferSurface(deviceSize, opacityMode));
         return adoptPtr(new AcceleratedImageBufferSurface(deviceSize, opacityMode));
 #endif // MINIBLINK_NOT_IMPLEMENTED
-        notImplemented();
         return nullptr;
     }
 
@@ -609,7 +608,7 @@ PassOwnPtr<ImageBufferSurface> HTMLCanvasElement::createImageBufferSurface(const
         if (surface->isValid())
             return surface.release();
 #endif // MINIBLINK_NOT_IMPLEMENTED
-        notImplemented();
+        DebugBreak();
         return nullptr;
     }
 

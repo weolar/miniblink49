@@ -56,7 +56,10 @@ class CSSProperties(in_generator.Writer):
         assert len(properties) < 512, 'Property aliasing expects there are under 512 properties.'
 
         # We currently assign 0 to CSSPropertyInvalid
-        self._first_enum_value = 1
+        # 0: CSSPropertyInvalid
+        # 1: CSSPropertyApplyAtRule
+        # 2: CSSPropertyVariable
+        self._first_enum_value = 3
         for offset, property in enumerate(properties):
             property['property_id'] = css_name_to_enum(property['name'])
             property['upper_camel_name'] = camelcase_css_name(property['name'])

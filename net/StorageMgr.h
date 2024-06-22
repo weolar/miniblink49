@@ -26,7 +26,6 @@ public:
 
 private:
     static StorageMgr* m_inst;
-    int64 m_storageNamespaceIdCount;
     HashMap<String, DOMStorageMap*> m_pathToStorageNamespace;
 };
 

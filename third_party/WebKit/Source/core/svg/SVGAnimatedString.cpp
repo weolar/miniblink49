@@ -13,21 +13,21 @@ namespace blink {
 
 String SVGAnimatedString::baseVal()
 {
-    if (this->attributeName() == XLinkNames::hrefAttr)
+    if (this->attributeName() == XLinkNames::hrefAttr || this->attributeName() == SVGNames::hrefAttr)
         UseCounter::count(this->contextElement()->document(), UseCounter::SVGHrefBaseVal);
     return SVGAnimatedProperty<SVGString>::baseVal();
 }
 
 void SVGAnimatedString::setBaseVal(String value, ExceptionState& exceptionState)
 {
-    if (this->attributeName() == XLinkNames::hrefAttr)
+    if (this->attributeName() == XLinkNames::hrefAttr || this->attributeName() == SVGNames::hrefAttr)
         UseCounter::count(this->contextElement()->document(), UseCounter::SVGHrefBaseVal);
     return SVGAnimatedProperty<SVGString>::setBaseVal(value, exceptionState);
 }
 
 String SVGAnimatedString::animVal()
 {
-    if (this->attributeName() == XLinkNames::hrefAttr)
+    if (this->attributeName() == XLinkNames::hrefAttr || this->attributeName() == SVGNames::hrefAttr)
         UseCounter::count(this->contextElement()->document(), UseCounter::SVGHrefAnimVal);
     return SVGAnimatedProperty<SVGString>::animVal();
 }

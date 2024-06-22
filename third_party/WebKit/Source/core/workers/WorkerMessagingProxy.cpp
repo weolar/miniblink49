@@ -232,8 +232,13 @@ void WorkerMessagingProxy::terminateWorkerGlobalScope()
         return;
     m_askedToTerminate = true;
 
-    if (m_workerThread)
+    if (m_workerThread) {
+#ifdef _DEBUG
+        m_workerThread->terminateAndWait();
+#else
         m_workerThread->terminate();
+#endif        
+    }
 
     terminateInternally();
 }

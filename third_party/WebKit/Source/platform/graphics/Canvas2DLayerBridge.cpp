@@ -27,7 +27,7 @@
 
 #include "platform/graphics/Canvas2DLayerBridge.h"
 
-//#include "GrContext.h"
+#include "GrContext.h"
 #include "SkDevice.h"
 #include "SkSurface.h"
 

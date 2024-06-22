@@ -467,7 +467,7 @@ bool EndsWith(StringPiece16 str,
 // use the ones already defined for string and string16 directly because it
 // would require the string constructors to be called, which we don't want.
 #define HASH_STRING_PIECE(StringPieceType, string_piece)                \
-  std::size_t result = 0;                                               \
+  size_t result = 0;                                               \
   for (StringPieceType::const_iterator i = string_piece.begin();        \
        i != string_piece.end(); ++i)                                    \
     result = (result * 131) + *i;                                       \

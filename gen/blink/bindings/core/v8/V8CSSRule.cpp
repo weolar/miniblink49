@@ -182,7 +182,9 @@ static void installV8CSSRuleTemplate(v8::Local<v8::FunctionTemplate> functionTem
     static_assert(8 == CSSRule::WEBKIT_KEYFRAME_RULE, "the value of CSSRule_WEBKIT_KEYFRAME_RULE does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8CSSRule::domTemplate(v8::Isolate* isolate)

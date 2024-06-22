@@ -6,20 +6,20 @@ const protocol = new Protocol(onLoadUrlBegin);
 var handlerToIdMap = {};
 var idGen = 0;
 
-function onLoadUrlBegin(id, request, jobPtr, isCallOnHandlerFinishPtr, typePtr) {
+function onLoadUrlBegin(id, request, nativeCallbackInfo) {
     var handler = handlerToIdMap[id];
     if (!handler)
         return;
 
-    handler(request, function(filePath) {
-        var filePathTrim = filePath
-        if ("string" != (typeof filePathTrim)) {
-            filePathTrim = filePath.path;
-        }
-        if ("string" != (typeof filePathTrim))
-            return;
+    handler(request, function(request) {
+//        var filePath；
+//        if ("string" != (typeof redirectRequest)) {
+//            filePath = redirectRequest.path;
+//        }
+//        if ("string" != (typeof filePathTrim))
+//            return;
         
-        protocol.onHandlerFinish(filePathTrim, jobPtr, isCallOnHandlerFinishPtr, typePtr);
+        protocol.onHandlerFinish(request, nativeCallbackInfo);
     });
 }
 
@@ -38,7 +38,6 @@ Protocol.prototype.registerFileProtocol = function(scheme, handler, completion) 
 Protocol.prototype.registerBufferProtocol = function(scheme, handler, completion) {
     this.registerProtocol(scheme, handler, completion, "buffer");
 }
-
 
 Protocol.prototype.registerStringProtocol = function(scheme, handler, completion) {
     this.registerProtocol(scheme, handler, completion, "string");

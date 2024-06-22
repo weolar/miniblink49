@@ -14,16 +14,19 @@ public:
         std::function<LRESULT(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)>&& messageCallback)
         : m_messageCallback(messageCallback)
         , m_className(className)
-        , m_hHideWindow(nullptr) {
+        , m_hHideWindow(nullptr)
+    {
         createWindow();
     }
 
-    HWND getWnd() const {
+    HWND getWnd() const
+    {
         return m_hHideWindow;
     }
 
 private:
-    static LRESULT APIENTRY staticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    static LRESULT APIENTRY staticWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
         const WCHAR* kPropW = L"HideWindow";
         HideWndHelp* self = (HideWndHelp*)::GetPropW(hWnd, kPropW);
         if (!self && uMsg == WM_CREATE) {
@@ -38,11 +41,13 @@ private:
         return self->wndProc(hWnd, uMsg, wParam, lParam);
     }
 
-    LRESULT wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    LRESULT wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
         return m_messageCallback(hWnd, uMsg, wParam, lParam);
     }
 
-    void createWindow() {
+    void createWindow()
+    {
         if (m_hHideWindow)
             return;
 
@@ -67,7 +72,6 @@ private:
     std::function<LRESULT(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)> m_messageCallback;
     std::wstring m_className;
     HWND m_hHideWindow;
-
 };
 
 }

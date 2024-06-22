@@ -147,7 +147,7 @@ public:
     void grantUniversalAccess();
 
     bool canAccessDatabase() const { return !isUnique(); }
-    bool canAccessLocalStorage() const { return !isUnique(); }
+    bool canAccessLocalStorage() const { return true/*!isUnique()*/; }
     bool canAccessSharedWorkers() const { return !isUnique(); }
     bool canAccessServiceWorkers() const { return !isUnique(); }
     bool canAccessCookies() const { return !isUnique(); }
@@ -155,10 +155,12 @@ public:
     bool canAccessFileSystem() const { return !isUnique(); }
     bool canAccessCacheStorage() const { return !isUnique(); }
 
+    // https://source.chromium.org/chromium/chromium/src/+/2d30a81551490c945914c2ca87ba8044ea79bd13
+    // 
     // Technically, we should always allow access to sessionStorage, but we
     // currently don't handle creating a sessionStorage area for unique
     // origins.
-    bool canAccessSessionStorage() const { return !isUnique(); }
+    bool canAccessSessionStorage() const { return true/*!isUnique()*/; }
 
     // The local SecurityOrigin is the most privileged SecurityOrigin.
     // The local SecurityOrigin can script any document, navigate to local

@@ -87,6 +87,10 @@ constexpr int kStackSpaceRequiredForCompilation = 40;
 #define V8_SFI_HAS_UNIQUE_ID true
 #endif
 
+#if defined(V8_OS_WIN) && defined(V8_TARGET_ARCH_X64)
+#define V8_OS_WIN_X64 true
+#endif
+
 // Superclass for classes only using static method functions.
 // The subclass of AllStatic cannot be instantiated at all.
 class AllStatic {
@@ -312,7 +316,8 @@ F FUNCTION_CAST(Address addr) {
 // which provide a level of indirection between the function pointer
 // and the function entrypoint.
 #if V8_HOST_ARCH_PPC && \
-    (V8_OS_AIX || (V8_TARGET_ARCH_PPC64 && V8_TARGET_BIG_ENDIAN))
+    (V8_OS_AIX || (V8_TARGET_ARCH_PPC64 && V8_TARGET_BIG_ENDIAN && \
+    (!defined(_CALL_ELF) || _CALL_ELF == 1)))
 #define USES_FUNCTION_DESCRIPTORS 1
 #define FUNCTION_ENTRYPOINT_ADDRESS(f)       \
   (reinterpret_cast<v8::internal::Address*>( \
@@ -547,6 +552,7 @@ constexpr uint32_t kQuietNaNHighBitsMask = 0xfff << (51 - 32);
 class AccessorInfo;
 class Arguments;
 class Assembler;
+class ClassScope;
 class Code;
 class CodeSpace;
 class Context;
@@ -731,6 +737,7 @@ enum WriteBarrierKind : uint8_t {
   kNoWriteBarrier,
   kMapWriteBarrier,
   kPointerWriteBarrier,
+  kEphemeronKeyWriteBarrier,
   kFullWriteBarrier
 };
 
@@ -746,6 +753,8 @@ inline std::ostream& operator<<(std::ostream& os, WriteBarrierKind kind) {
       return os << "MapWriteBarrier";
     case kPointerWriteBarrier:
       return os << "PointerWriteBarrier";
+    case kEphemeronKeyWriteBarrier:
+      return os << "EphemeronKeyWriteBarrier";
     case kFullWriteBarrier:
       return os << "FullWriteBarrier";
   }
@@ -771,6 +780,12 @@ enum VisitMode {
   VISIT_ALL_IN_SWEEP_NEWSPACE,
   VISIT_ONLY_STRONG,
   VISIT_FOR_SERIALIZATION,
+};
+
+enum class BytecodeFlushMode {
+  kDoNotFlushBytecode,
+  kFlushBytecode,
+  kStressFlushBytecode,
 };
 
 // Flag indicating whether code is built into the VM (one of the natives files).
@@ -980,6 +995,7 @@ inline std::ostream& operator<<(std::ostream& os, CreateArgumentsType type) {
 }
 
 enum ScopeType : uint8_t {
+  CLASS_SCOPE,     // The scope introduced by a class.
   EVAL_SCOPE,      // The top-level scope for an eval source.
   FUNCTION_SCOPE,  // The top-level scope for a function.
   MODULE_SCOPE,    // The scope introduced by a module literal
@@ -1003,6 +1019,8 @@ inline std::ostream& operator<<(std::ostream& os, ScopeType type) {
       return os << "CATCH_SCOPE";
     case ScopeType::BLOCK_SCOPE:
       return os << "BLOCK_SCOPE";
+    case ScopeType::CLASS_SCOPE:
+      return os << "CLASS_SCOPE";
     case ScopeType::WITH_SCOPE:
       return os << "WITH_SCOPE";
   }
@@ -1207,7 +1225,7 @@ inline uint32_t ObjectHash(Address address) {
 // to a more generic type when we combine feedback.
 //
 //   kSignedSmall -> kSignedSmallInputs -> kNumber  -> kNumberOrOddball -> kAny
-//                   kConsString                    -> kString          -> kAny
+//                                                     kString          -> kAny
 //                                                     kBigInt          -> kAny
 //
 // Technically we wouldn't need the separation between the kNumber and the
@@ -1224,12 +1242,9 @@ class BinaryOperationFeedback {
     kSignedSmallInputs = 0x3,
     kNumber = 0x7,
     kNumberOrOddball = 0xF,
-    kConsOneByteString = 0x10,
-    kConsTwoByteString = 0x20,
-    kConsString = kConsOneByteString | kConsTwoByteString,
-    kString = 0x70,
-    kBigInt = 0x100,
-    kAny = 0x3FF
+    kString = 0x10,
+    kBigInt = 0x20,
+    kAny = 0x7F
   };
 };
 

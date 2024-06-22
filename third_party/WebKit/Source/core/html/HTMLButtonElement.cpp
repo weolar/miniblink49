@@ -51,6 +51,11 @@ PassRefPtrWillBeRawPtr<HTMLButtonElement> HTMLButtonElement::create(Document& do
     return adoptRefWillBeNoop(new HTMLButtonElement(document, form));
 }
 
+HTMLButtonElement::~HTMLButtonElement()
+{
+
+}
+
 void HTMLButtonElement::setType(const AtomicString& type)
 {
     setAttribute(typeAttr, type);

@@ -72,6 +72,8 @@ ExecutionContext::ExecutionContext()
     , m_inDispatchErrorEvent(false)
     , m_activeDOMObjectsAreSuspended(false)
     , m_activeDOMObjectsAreStopped(false)
+    , m_isContextSuspended(false)
+    , m_isContextDestroyed(false)
     , m_strictMixedContentCheckingEnforced(false)
     , m_windowInteractionTokens(0)
     , m_isRunSuspendableTasksScheduled(false)
@@ -112,6 +114,7 @@ void ExecutionContext::postSuspendableTask(PassOwnPtr<SuspendableTask> task)
 
 void ExecutionContext::notifyContextDestroyed()
 {
+    m_isContextDestroyed = true;
     Deque<OwnPtr<SuspendableTask>> suspendedTasks;
     suspendedTasks.swap(m_suspendedTasks);
     for (Deque<OwnPtr<SuspendableTask>>::iterator it = suspendedTasks.begin(); it != suspendedTasks.end(); ++it)

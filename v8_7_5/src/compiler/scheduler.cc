@@ -16,6 +16,8 @@
 #include "src/compiler/node.h"
 #include "src/zone/zone-containers.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -698,7 +700,7 @@ class SpecialRPONumberer : public ZoneObject {
   }
 
  private:
-  typedef std::pair<BasicBlock*, size_t> Backedge;
+  using Backedge = std::pair<BasicBlock*, size_t>;
 
   // Numbering for BasicBlock::rpo_number for this block traversal:
   static const int kBlockOnStack = -2;

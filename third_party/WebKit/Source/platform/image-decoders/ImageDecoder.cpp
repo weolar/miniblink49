@@ -25,7 +25,7 @@
 #include "platform/graphics/DeferredImageDecoder.h"
 #include "platform/image-decoders/bmp/BMPImageDecoder.h"
 #include "platform/image-decoders/ico/ICOImageDecoder.h"
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
 #include "platform/image-decoders/webp/WEBPImageDecoder.h"
 #endif // MINIBLINK_NOT_IMPLEMENTED
 #include "platform/image-decoders/png/PNGImageDecoder.h"
@@ -98,10 +98,9 @@ PassOwnPtr<ImageDecoder> ImageDecoder::create(const SharedBuffer& data, ImageSou
     if (copyFromSharedBuffer(contents, longestSignatureLength, data, 0) < longestSignatureLength)
         return nullptr;
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 //def MINIBLINK_NOT_IMPLEMENTED
     if (matchesWebPSignature(contents))
         return adoptPtr(new WEBPImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-#else
     if (matchesICOSignature(contents) || matchesCURSignature(contents))
         return adoptPtr(new ICOImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 

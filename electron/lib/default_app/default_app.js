@@ -17,8 +17,13 @@ exports.load = (appUrl) => {
       height: 600,
       autoHideMenuBar: true,
       backgroundColor: '#FFFFFF',
-      useContentSize: true
-    }
+      useContentSize: true,
+      
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    };
     if (process.platform === 'linux') {
       options.icon = path.join(__dirname, 'icon.png')
     }

@@ -42,7 +42,7 @@ public:
     WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink::WebURL& url, blink::WebMediaPlayerClient* client);
     virtual ~WebMediaPlayerImpl();
 
-    virtual void load(blink::WebMediaPlayer::LoadType, const blink::WebURL&, blink::WebMediaPlayer::CORSMode) override;
+    virtual void load(blink::WebMediaPlayer::LoadType, const blink::WebURL&, blink::WebMediaPlayer::CORSMode mode, bool isAudio) override;
 
     // Playback controls.
     virtual void play() override;

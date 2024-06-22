@@ -14,6 +14,8 @@ Revision History:
 
 --*/
 
+#include "windows.h"
+
 // Define the following to skip definitions
 //
 // NOMMIDS      Multimedia IDs are not defined

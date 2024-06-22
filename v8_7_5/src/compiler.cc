@@ -174,6 +174,7 @@ void UnoptimizedCompilationJob::RecordCompilationStats(Isolate* isolate) const {
   counters->total_baseline_compile_count()->Increment(1);
 
   // TODO(5203): Add timers for each phase of compilation.
+  // Also add total time (there's now already timer_ on the base class).
 }
 
 void UnoptimizedCompilationJob::RecordFunctionCompilation(
@@ -249,7 +250,8 @@ CompilationJob::Status OptimizedCompilationJob::AbortOptimization(
   return UpdateState(FAILED, State::kFailed);
 }
 
-void OptimizedCompilationJob::RecordCompilationStats() const {
+void OptimizedCompilationJob::RecordCompilationStats(CompilationMode mode,
+                                                     Isolate* isolate) const {
   DCHECK(compilation_info()->IsOptimizing());
   Handle<JSFunction> function = compilation_info()->closure();
   double ms_creategraph = time_taken_to_prepare_.InMillisecondsF();
@@ -271,6 +273,48 @@ void OptimizedCompilationJob::RecordCompilationStats() const {
     code_size += function->shared()->SourceSize();
     PrintF("Compiled: %d functions with %d byte source size in %fms.\n",
            compiled_functions, code_size, compilation_time);
+  }
+  // Don't record samples from machines without high-resolution timers,
+  // as that can cause serious reporting issues. See the thread at
+  // http://g/chrome-metrics-team/NwwJEyL8odU/discussion for more details.
+  if (base::TimeTicks::IsHighResolution()) {
+    Counters* const counters = isolate->counters();
+    if (compilation_info()->is_osr()) {
+      counters->turbofan_osr_prepare()->AddSample(
+          static_cast<int>(time_taken_to_prepare_.InMicroseconds()));
+      counters->turbofan_osr_execute()->AddSample(
+          static_cast<int>(time_taken_to_execute_.InMicroseconds()));
+      counters->turbofan_osr_finalize()->AddSample(
+          static_cast<int>(time_taken_to_finalize_.InMicroseconds()));
+      counters->turbofan_osr_total_time()->AddSample(
+          static_cast<int>(ElapsedTime().InMicroseconds()));
+    } else {
+      counters->turbofan_optimize_prepare()->AddSample(
+          static_cast<int>(time_taken_to_prepare_.InMicroseconds()));
+      counters->turbofan_optimize_execute()->AddSample(
+          static_cast<int>(time_taken_to_execute_.InMicroseconds()));
+      counters->turbofan_optimize_finalize()->AddSample(
+          static_cast<int>(time_taken_to_finalize_.InMicroseconds()));
+      counters->turbofan_optimize_total_time()->AddSample(
+          static_cast<int>(ElapsedTime().InMicroseconds()));
+
+      // Compute foreground / background time.
+      base::TimeDelta time_background;
+      base::TimeDelta time_foreground =
+          time_taken_to_prepare_ + time_taken_to_finalize_;
+      switch (mode) {
+        case OptimizedCompilationJob::kConcurrent:
+          time_background += time_taken_to_execute_;
+          break;
+        case OptimizedCompilationJob::kSynchronous:
+          time_foreground += time_taken_to_execute_;
+          break;
+      }
+      counters->turbofan_optimize_total_background()->AddSample(
+          static_cast<int>(time_background.InMicroseconds()));
+      counters->turbofan_optimize_total_foreground()->AddSample(
+          static_cast<int>(time_foreground.InMicroseconds()));
+    }
   }
 }
 
@@ -397,14 +441,10 @@ void EnsureSharedFunctionInfosArrayOnScript(ParseInfo* parse_info,
 
 void SetSharedFunctionFlagsFromLiteral(FunctionLiteral* literal,
                                        Handle<SharedFunctionInfo> shared_info) {
-  // Don't overwrite values set by the bootstrapper.
-  if (!shared_info->HasLength()) {
-    shared_info->set_length(literal->function_length());
-  }
   shared_info->set_has_duplicate_parameters(
       literal->has_duplicate_parameters());
   shared_info->set_is_oneshot_iife(literal->is_oneshot_iife());
-  shared_info->SetExpectedNofPropertiesFromEstimate(literal);
+  shared_info->UpdateAndFinalizeExpectedNofPropertiesFromEstimate(literal);
   if (literal->dont_optimize_reason() != BailoutReason::kNoReason) {
     shared_info->DisableOptimization(literal->dont_optimize_reason());
   }
@@ -686,7 +726,7 @@ bool GetOptimizedCodeNow(OptimizedCompilationJob* job, Isolate* isolate) {
   }
 
   // Success!
-  job->RecordCompilationStats();
+  job->RecordCompilationStats(OptimizedCompilationJob::kSynchronous, isolate);
   DCHECK(!isolate->has_pending_exception());
   InsertCodeIntoOptimizedCodeCache(compilation_info);
   job->RecordFunctionCompilation(CodeEventListener::LAZY_COMPILE_TAG, isolate);
@@ -756,10 +796,15 @@ MaybeHandle<Code> GetOptimizedCode(Handle<JSFunction> function,
   // If code was pending optimization for testing, delete remove the strong root
   // that was preventing the bytecode from being flushed between marking and
   // optimization.
-  if (isolate->heap()->pending_optimize_for_test_bytecode() ==
-      shared->GetBytecodeArray()) {
-    isolate->heap()->SetPendingOptimizeForTestBytecode(
-        ReadOnlyRoots(isolate).undefined_value());
+  if (!isolate->heap()->pending_optimize_for_test_bytecode()->IsUndefined()) {
+    Handle<ObjectHashTable> table =
+        handle(ObjectHashTable::cast(
+                   isolate->heap()->pending_optimize_for_test_bytecode()),
+               isolate);
+    bool was_present;
+    table = table->Remove(isolate, table, handle(function->shared(), isolate),
+                          &was_present);
+    isolate->heap()->SetPendingOptimizeForTestBytecode(*table);
   }
 
   Handle<Code> cached_code;
@@ -1132,12 +1177,22 @@ bool Compiler::CollectSourcePositions(Isolate* isolate,
   DCHECK(shared_info->HasBytecodeArray());
   DCHECK(!shared_info->GetBytecodeArray()->HasSourcePositionTable());
 
+  // Collecting source positions requires allocating a new source position
+  // table.
+  DCHECK(AllowHeapAllocation::IsAllowed());
+
+  Handle<BytecodeArray> bytecode =
+      handle(shared_info->GetBytecodeArray(), isolate);
+
   // TODO(v8:8510): Push the CLEAR_EXCEPTION flag or something like it down into
   // the parser so it aborts without setting a pending exception, which then
   // gets thrown. This would avoid the situation where potentially we'd reparse
   // several times (running out of stack each time) before hitting this limit.
-  if (GetCurrentStackPosition() < isolate->stack_guard()->real_climit())
+  if (GetCurrentStackPosition() < isolate->stack_guard()->real_climit()) {
+    // Stack is already exhausted.
+    bytecode->SetSourcePositionsFailedToCollect();
     return false;
+  }
 
   DCHECK(AllowCompilation::IsAllowed(isolate));
   DCHECK_EQ(ThreadId::Current(), isolate->thread_id());
@@ -1158,6 +1213,8 @@ bool Compiler::CollectSourcePositions(Isolate* isolate,
 
   // Parse and update ParseInfo with the results.
   if (!parsing::ParseAny(&parse_info, shared_info, isolate)) {
+    // Parsing failed probably as a result of stack exhaustion.
+    bytecode->SetSourcePositionsFailedToCollect();
     return FailWithPendingException(
         isolate, &parse_info, Compiler::ClearExceptionFlag::CLEAR_EXCEPTION);
   }
@@ -1170,6 +1227,8 @@ bool Compiler::CollectSourcePositions(Isolate* isolate,
       GenerateUnoptimizedCode(&parse_info, isolate->allocator(),
                               &inner_function_jobs));
   if (!outer_function_job) {
+    // Recompiling failed probably as a result of stack exhaustion.
+    bytecode->SetSourcePositionsFailedToCollect();
     return FailWithPendingException(
         isolate, &parse_info, Compiler::ClearExceptionFlag::CLEAR_EXCEPTION);
   }
@@ -1194,14 +1253,20 @@ bool Compiler::CollectSourcePositions(Isolate* isolate,
   }
 
   // Update the source position table on the original bytecode.
-  Handle<BytecodeArray> bytecode =
-      handle(shared_info->GetBytecodeArray(), isolate);
   DCHECK(bytecode->IsBytecodeEqual(
       *outer_function_job->compilation_info()->bytecode_array()));
   DCHECK(outer_function_job->compilation_info()->has_bytecode_array());
-  bytecode->set_source_position_table(outer_function_job->compilation_info()
-                                          ->bytecode_array()
-                                          ->SourcePositionTable());
+  ByteArray source_position_table = outer_function_job->compilation_info()
+                                        ->bytecode_array()
+                                        ->SourcePositionTable();
+  bytecode->set_source_position_table(source_position_table);
+  // If debugging, make sure that instrumented bytecode has the source position
+  // table set on it as well.
+  if (shared_info->HasDebugInfo() &&
+      shared_info->GetDebugInfo()->HasInstrumentedBytecodeArray()) {
+    shared_info->GetDebugBytecodeArray()->set_source_position_table(
+        source_position_table);
+  }
 
   DCHECK(!isolate->has_pending_exception());
   DCHECK(shared_info->is_compiled_scope().is_compiled());
@@ -2107,7 +2172,8 @@ bool Compiler::FinalizeOptimizedCompilationJob(OptimizedCompilationJob* job,
     if (shared->optimization_disabled()) {
       job->RetryOptimization(BailoutReason::kOptimizationDisabled);
     } else if (job->FinalizeJob(isolate) == CompilationJob::SUCCEEDED) {
-      job->RecordCompilationStats();
+      job->RecordCompilationStats(OptimizedCompilationJob::kConcurrent,
+                                  isolate);
       job->RecordFunctionCompilation(CodeEventListener::LAZY_COMPILE_TAG,
                                      isolate);
       InsertCodeIntoOptimizedCodeCache(compilation_info);

@@ -231,8 +231,10 @@ StorageArea* InspectorDOMStorageAgent::findStorageArea(ErrorString* errorString,
     }
     targetFrame = frame;
 
-    if (isLocalStorage)
-        return StorageNamespace::localStorageArea(frame->document()->securityOrigin());
+    if (isLocalStorage) {
+        //return StorageNamespace::localStorageArea(frame->document()->securityOrigin());
+        return StorageNamespaceController::from(m_page)->localStorage()->storageArea(frame->document()->securityOrigin());
+    }
     return StorageNamespaceController::from(m_page)->sessionStorage()->storageArea(frame->document()->securityOrigin());
 }
 

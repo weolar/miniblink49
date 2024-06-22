@@ -26,39 +26,39 @@
 
 namespace blink {
 
-    class Event;
-    class ExecutionContext;
+class Event;
+class ExecutionContext;
 
-    class CORE_EXPORT EventListener : public RefCounted<EventListener> {
-    public:
-        enum Type {
-            JSEventListenerType,
-            ImageEventListenerType,
-            CPPEventListenerType,
-            ConditionEventListenerType,
-            NativeEventListenerType,
-        };
-
-        virtual ~EventListener() { }
-        virtual bool operator==(const EventListener&) = 0;
-        virtual void handleEvent(ExecutionContext*, Event*) = 0;
-        virtual bool wasCreatedFromMarkup() const { return false; }
-        virtual bool belongsToTheCurrentWorld() const { return false; }
-
-        bool isAttribute() const { return virtualisAttribute(); }
-        Type type() const { return m_type; }
-
-    protected:
-        explicit EventListener(Type type)
-            : m_type(type)
-        {
-        }
-
-    private:
-        virtual bool virtualisAttribute() const { return false; }
-
-        Type m_type;
+class CORE_EXPORT EventListener : public RefCounted<EventListener> {
+public:
+    enum Type {
+        JSEventListenerType,
+        ImageEventListenerType,
+        CPPEventListenerType,
+        ConditionEventListenerType,
+        NativeEventListenerType,
     };
+
+    virtual ~EventListener() {}
+    virtual bool operator==(const EventListener&) = 0;
+    virtual void handleEvent(ExecutionContext*, Event*) = 0;
+    virtual bool wasCreatedFromMarkup() const { return false; }
+    virtual bool belongsToTheCurrentWorld() const { return false; }
+
+    bool isAttribute() const { return virtualisAttribute(); }
+    Type type() const { return m_type; }
+
+protected:
+    explicit EventListener(Type type)
+        : m_type(type)
+    {
+    }
+
+private:
+    virtual bool virtualisAttribute() const { return false; }
+
+    Type m_type;
+};
 
 }
 

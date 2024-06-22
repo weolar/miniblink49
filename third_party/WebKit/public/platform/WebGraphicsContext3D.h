@@ -159,8 +159,8 @@ public:
     virtual void discardBackbufferCHROMIUM() { }
     virtual void ensureBackbufferCHROMIUM() { }
 
-    virtual unsigned insertSyncPoint() { return 0; }
-    virtual void waitSyncPoint(unsigned) { }
+    virtual bool insertSyncPoint(WGC3Dbyte*) { return false; }
+    virtual void waitSyncToken(const WGC3Dbyte*) {}
 
     // Copies the contents of the off-screen render target used by the WebGL
     // context to the corresponding texture used by the compositor.
@@ -376,6 +376,9 @@ public:
 
     virtual WebString getTranslatedShaderSourceANGLE(WebGLId shader) = 0;
 
+    // GL_CHROMIUM_screen_space_antialiasing
+    virtual void applyScreenSpaceAntialiasingCHROMIUM() { } // weolar
+
     // GL_CHROMIUM_iosurface
     virtual void texImageIOSurface2DCHROMIUM(WGC3Denum target, WGC3Dint width, WGC3Dint height, WGC3Duint ioSurfaceId, WGC3Duint plane) { }
 
@@ -391,6 +394,10 @@ public:
     virtual void endQueryEXT(WGC3Denum target) { }
     virtual void getQueryivEXT(WGC3Denum target, WGC3Denum pname, WGC3Dint* params) { }
     virtual void getQueryObjectuivEXT(WebGLId query, WGC3Denum pname, WGC3Duint* params) { }
+
+    // GL_EXT_disjoint_timer_query
+    virtual void queryCounterEXT(WebGLId query, WGC3Denum target) {}
+    virtual void getQueryObjectui64vEXT(WebGLId query, WGC3Denum pname, WGC3Duint64* params) {}
 
     // GL_CHROMIUM_bind_uniform_location
     virtual void bindUniformLocationCHROMIUM(WebGLId program, WGC3Dint location, const WGC3Dchar* uniform) { }

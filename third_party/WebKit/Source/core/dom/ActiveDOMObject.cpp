@@ -29,6 +29,7 @@
 
 #include "core/dom/ExecutionContext.h"
 #include "core/inspector/InstanceCounters.h"
+#include "bindings/core/v8/V8PerIsolateData.h"
 
 namespace blink {
 
@@ -39,6 +40,10 @@ ActiveDOMObject::ActiveDOMObject(ExecutionContext* executionContext)
 #endif
 {
     ASSERT(!executionContext || executionContext->isContextThread());
+    v8::Isolate* isolate = ThreadState::current()->isolate();
+    V8PerIsolateData* isolateData = V8PerIsolateData::from(isolate);
+    isolateData->addActiveScriptWrappable(this);
+
     // TODO(hajimehoshi): Now the leak detector can't treat vaious threads other
     // than the main thread and worker threads. After fixing the leak detector,
     // let's count objects on other threads as many as possible.

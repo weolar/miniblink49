@@ -991,6 +991,7 @@ bool SVGElement::isAnimatableAttribute(const QualifiedName& name) const
     if (animatableAttributes.isEmpty()) {
         const QualifiedName* const animatableAttrs[] = {
             &XLinkNames::hrefAttr,
+            &SVGNames::hrefAttr,
             &SVGNames::amplitudeAttr,
             &SVGNames::azimuthAttr,
             &SVGNames::baseFrequencyAttr,

@@ -713,6 +713,7 @@ void SVGUseElement::transferUseAttributesToReplacedElement(SVGElement* from, SVG
     to->removeAttribute(SVGNames::yAttr);
     to->removeAttribute(SVGNames::widthAttr);
     to->removeAttribute(SVGNames::heightAttr);
+    to->removeAttribute(SVGNames::hrefAttr);
     to->removeAttribute(XLinkNames::hrefAttr);
 }
 

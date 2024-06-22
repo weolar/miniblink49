@@ -238,6 +238,9 @@ public:
     // Get the security origin for this audio context.
     SecurityOrigin* securityOrigin() const;
 
+    // ActiveDOMObject
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const override;
+
 protected:
     explicit AudioContext(Document*);
     AudioContext(Document*, unsigned numberOfChannels, size_t numberOfFrames, float sampleRate);

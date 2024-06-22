@@ -9,6 +9,8 @@
 #include "src/code-factory.h"
 #include "src/code-stub-assembler.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -420,9 +422,9 @@ TF_BUILTIN(MathRandom, CodeStubAssembler) {
   MachineType type_tagged = MachineType::AnyTagged();
   MachineType type_ptr = MachineType::Pointer();
 
-  smi_index =
-      CAST(CallCFunction2(type_tagged, type_ptr, type_tagged,
-                          refill_math_random, isolate_ptr, native_context));
+  smi_index = CAST(CallCFunction(refill_math_random, type_tagged,
+                                 std::make_pair(type_ptr, isolate_ptr),
+                                 std::make_pair(type_tagged, native_context)));
   Goto(&if_cached);
 
   // Compute next index by decrement.

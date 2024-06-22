@@ -1741,8 +1741,14 @@ void CanvasRenderingContext2D::setFont(const String& newFontOrgi)
     // pdf.js显示这个new FontFace出来的自定义字体有显示错误，暂时规避一下。可能是ots的库比较老
 //     if (WTF::kNotFound != newFont.find("g_d0_f1"))
 //         newFont.replace("g_d0_f1", "Arial");
-//     OutputDebugStringA(newFont.utf8().data());
-//     OutputDebugStringA("\n");
+
+//     std::string temp("CanvasRenderingContext2D:  ");
+//     temp += newFont.utf8().data();
+//     temp += "\n";
+//     OutputDebugStringA(temp.c_str());
+
+//     if (WTF::kNotFound != newFont.find("g_d0_f1"))
+//         newFont.replace("g_d0_f1", "sans-serif");
 
     CanvasFontCache* canvasFontCache = canvas()->document().canvasFontCache();
 

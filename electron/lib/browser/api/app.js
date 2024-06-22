@@ -9,6 +9,16 @@ App.prototype.commandLine = {
 	}
 };
 
+App.prototype.whenReady = function() {
+	var self = this;
+	var promise = new Promise(function(resolve, reject) {
+		self.on('ready', function() {
+			resolve();
+		});
+	});
+	return promise;
+}
+
 let appPath = null;
 
 App.prototype.getAppPath = function() {

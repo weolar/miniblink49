@@ -40,7 +40,8 @@ namespace blink {
 
 class CORE_EXPORT AnimatableValue : public RefCountedWillBeGarbageCollectedFinalized<AnimatableValue> {
 public:
-    virtual ~AnimatableValue() { }
+    AnimatableValue();
+    virtual ~AnimatableValue();
 
     static const AnimatableValue* neutralValue();
 

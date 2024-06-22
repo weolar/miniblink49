@@ -849,6 +849,11 @@ void GraphicsLayer::setDrawsContent(bool drawsContent)
     updateLayerIsDrawable();
 }
 
+bool GraphicsLayer::drawsContent() const
+{
+    return m_drawsContent;
+}
+
 void GraphicsLayer::setContentsVisible(bool contentsVisible)
 {
     // Note carefully this early-exit is only correct because we also properly call

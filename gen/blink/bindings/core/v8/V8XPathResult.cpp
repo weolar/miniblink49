@@ -260,7 +260,9 @@ static void installV8XPathResultTemplate(v8::Local<v8::FunctionTemplate> functio
     static_assert(9 == XPathResult::FIRST_ORDERED_NODE_TYPE, "the value of XPathResult_FIRST_ORDERED_NODE_TYPE does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8XPathResult::domTemplate(v8::Isolate* isolate)

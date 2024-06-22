@@ -26,6 +26,7 @@
 
 #include <atomic>
 #include <limits>
+#include <windows.h>
 
 #include "src/trap-handler/trap-handler-internal.h"
 #include "src/trap-handler/trap-handler.h"
@@ -234,7 +235,50 @@ void ReleaseHandlerData(int index) {
   free(data);
 }
 
+#ifdef SUPPORT_XP_CODE
+
+DISABLE_ASAN bool IsThreadInWasm() {
+  int* thread_in_wasm_code_ptr = (int*)::TlsGetValue(g_thread_in_wasm_code_tls);
+  return *thread_in_wasm_code_ptr != 0;
+}
+
+void SetThreadInWasm() {
+  if (IsTrapHandlerEnabled()) {
+    DCHECK(!IsThreadInWasm());
+    
+    int* thread_in_wasm_code_ptr = (int*)::TlsGetValue(g_thread_in_wasm_code_tls);
+    *thread_in_wasm_code_ptr = 1;
+  }
+}
+
+void ClearThreadInWasm() {
+  if (IsTrapHandlerEnabled()) {
+    DCHECK(IsThreadInWasm());
+
+    int* thread_in_wasm_code_ptr = (int*)::TlsGetValue(g_thread_in_wasm_code_tls);
+    *thread_in_wasm_code_ptr = 0;
+  }
+}
+
+int* GetThreadInWasmThreadLocalAddress() {
+  int* thread_in_wasm_code_ptr = nullptr;
+  if (0 == g_thread_in_wasm_code_tls) {
+    g_thread_in_wasm_code_tls = ::TlsAlloc();
+
+    thread_in_wasm_code_ptr = (int*)malloc(sizeof(int));
+    *thread_in_wasm_code_ptr = 0;
+    ::TlsSetValue(g_thread_in_wasm_code_tls, thread_in_wasm_code_ptr);
+  } else
+    thread_in_wasm_code_ptr = (int*)::TlsGetValue(g_thread_in_wasm_code_tls);
+
+  return thread_in_wasm_code_ptr;
+}
+
+#else
+
 int* GetThreadInWasmThreadLocalAddress() { return &g_thread_in_wasm_code; }
+
+#endif
 
 size_t GetRecoveredTrapCount() {
   return gRecoveredTrapCount.load(std::memory_order_relaxed);

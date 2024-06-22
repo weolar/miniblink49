@@ -121,6 +121,7 @@ public:
     void suspend() override;
     void resume() override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<DOMWebSocket*>(object); }
 
     // WebSocketChannelClient functions.
     void didConnect(const String& subprotocol, const String& extensions) override;

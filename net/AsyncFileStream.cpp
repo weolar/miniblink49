@@ -35,6 +35,7 @@
 #include "net/FileStream.h"
 #include "net/FileStreamClient.h"
 #include "net/LambdaTask.h"
+#include "net/WebURLLoaderManager.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
@@ -72,9 +73,11 @@ AsyncFileStream::AsyncFileStream(FileStreamClient* client)
 {
     ASSERT(isMainThread());
 
-    content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
-    m_blinkThread = platformImpl->currentThread();
-    m_fileThread = platformImpl->ioThread();
+//     content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
+//     m_blinkThread = platformImpl->currentThread();
+    WebURLLoaderManager* netManager = WebURLLoaderManager::sharedInstance();
+    m_fileThread = netManager->getIoThread(WebURLLoaderManager::kIoThreadTypeOther);
+    //m_fileThread = nullptr; //platformImpl->ioThread();
 
     m_asyncTaskInfo = new AsyncTaskInfo(m_stream, m_blinkThread, m_fileThread, m_client);
 }
@@ -108,39 +111,39 @@ AsyncFileStream::~AsyncFileStream()
     });
 }
 
-static void getSizeOnFileThread(AsyncTaskInfo* info, const Vector<UChar>* path, double expectedModificationTime)
-{
-    if (info->destroyed) {
-        delete path;
-        return;
-    }
-
-    long long size = info->stream->getSize(String(path->data(), path->size()), expectedModificationTime);
-    callOnBlinkThread(info, [info, size] {
-        if (info->destroyed)
-            return;
-
-        info->client->didGetSize(size);
-    });
-
-    delete path;
-}
-
-void AsyncFileStream::getSize(const String& path, double expectedModificationTime)
-{
-//     StringCapture capturedPath(path);
-//     // FIXME: Explicit return type here and in all the other cases like this below is a workaround for a deficiency
-//     // in the Windows compiler at the time of this writing. Could remove it if that is resolved.
-//     perform([capturedPath, expectedModificationTime](FileStream& stream) -> std::function<void(FileStreamClient&)> {
-//         long long size = stream.getSize(capturedPath.string(), expectedModificationTime);
-//         return [size](FileStreamClient& client) {
-//             client.didGetSize(size);
-//         };
+// static void getSizeOnFileThread(AsyncTaskInfo* info, const Vector<UChar>* path, double expectedModificationTime)
+// {
+//     if (info->destroyed) {
+//         delete path;
+//         return;
+//     }
+// 
+//     long long size = info->stream->getSize(String(path->data(), path->size()), expectedModificationTime);
+//     callOnBlinkThread(info, [info, size] {
+//         if (info->destroyed)
+//             return;
+// 
+//         info->client->didGetSize(size);
 //     });
+// 
+//     delete path;
+// }
 
-    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path, false));
-    m_fileThread->postTask(FROM_HERE, WTF::bind(getSizeOnFileThread, m_asyncTaskInfo, capturedPath, expectedModificationTime));
-}
+// void AsyncFileStream::getSize(const String& path, double expectedModificationTime)
+// {
+// //     StringCapture capturedPath(path);
+// //     // FIXME: Explicit return type here and in all the other cases like this below is a workaround for a deficiency
+// //     // in the Windows compiler at the time of this writing. Could remove it if that is resolved.
+// //     perform([capturedPath, expectedModificationTime](FileStream& stream) -> std::function<void(FileStreamClient&)> {
+// //         long long size = stream.getSize(capturedPath.string(), expectedModificationTime);
+// //         return [size](FileStreamClient& client) {
+// //             client.didGetSize(size);
+// //         };
+// //     });
+// 
+//     Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path, false));
+//     m_fileThread->postTask(FROM_HERE, WTF::bind(getSizeOnFileThread, m_asyncTaskInfo, capturedPath, expectedModificationTime));
+// }
 
 static void openForReadOnFileThread(AsyncTaskInfo* info, const Vector<UChar>* path, long long offset, long long length)
 {

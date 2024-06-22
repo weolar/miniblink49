@@ -12,7 +12,7 @@ namespace internal {
 class ArrayShiftBuiltinsFromDSLAssembler {
  public:
   explicit ArrayShiftBuiltinsFromDSLAssembler(compiler::CodeAssemblerState* state) : state_(state), ca_(state) { USE(state_, ca_); }
-  compiler::TNode<Object> TryFastArrayShift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, CodeStubArguments* p_arguments, compiler::CodeAssemblerLabel* label_Slow);
+  compiler::TNode<Object> TryFastArrayShift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, BaseBuiltinsFromDSLAssembler::Arguments p_arguments, compiler::CodeAssemblerLabel* label_Slow);
   compiler::TNode<Object> GenericArrayShift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver);
  private:
   compiler::CodeAssemblerState* const state_;

@@ -59,8 +59,7 @@ extern const char kScrollBounce[];
 extern const char kBlinkFeatures[];
 extern const char kDisableBlinkFeatures[];
 
-}   // namespace options
-
+} // namespace options
 
 // Following are actually command line switches, should be moved to other files.
 
@@ -90,7 +89,6 @@ extern const char kScrollBounce[];
 extern const char kWidevineCdmPath[];
 extern const char kWidevineCdmVersion[];
 
-}  // namespace switches
+} // namespace switches
 
-
-#endif  // ATOM_COMMON_OPTIONS_SWITCHES_H_
+#endif // ATOM_COMMON_OPTIONS_SWITCHES_H_

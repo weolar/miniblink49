@@ -71,7 +71,9 @@ static void installV8OESTextureHalfFloatTemplate(v8::Local<v8::FunctionTemplate>
     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8OESTextureHalfFloatConstants, WTF_ARRAY_LENGTH(V8OESTextureHalfFloatConstants));
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8OESTextureHalfFloat::domTemplate(v8::Isolate* isolate)

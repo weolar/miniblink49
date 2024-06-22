@@ -30,13 +30,14 @@
 
 #include "wtf/PassRefPtr.h"
 #include "wtf/RefCounted.h"
+#include "wtf/ThreadSafeRefCounted.h"
 #include "wtf/RefPtr.h"
 #include "wtf/WTFExport.h"
 #include <limits.h>
 
 namespace WTF {
 
-class WTF_EXPORT ArrayBufferView : public RefCounted<ArrayBufferView> {
+class WTF_EXPORT ArrayBufferView : public ThreadSafeRefCounted<ArrayBufferView> {
   public:
     enum ViewType {
         TypeInt8,

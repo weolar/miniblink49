@@ -4,6 +4,7 @@
 
 #include "node/uv/include/uv.h"
 #include "v8.h"
+#include "mbvip/core/mb.h"
 #include <functional>
 #include <list>
 
@@ -11,7 +12,7 @@ namespace atom {
 
 class ThreadCall {
 private:
-    typedef void (*CoreMainTask)(void *data);
+    typedef void (*CoreMainTask)(void* data);
     struct TaskAsyncData {
         CoreMainTask call;
         void* data;
@@ -22,7 +23,7 @@ private:
         DWORD toThreadId;
         DWORD destroyThreadId;
     };
-    
+
 public:
     static void init(uv_loop_t* loop);
     static void initTaskQueue();
@@ -52,13 +53,21 @@ public:
 
     static void setMainThread();
 
-    static v8::Platform* getBlinkThreadV8Platform() { return m_v8platform; }
+    static v8::Platform* getBlinkThreadV8Platform() { return m_v8platformOfBlink; }
 
+    static void runUiThread(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate);
+    static void runMainThread();
 private:
-    static void callSyncAndWait(TaskAsyncData* asyncData);
-    static void callThreadAsync(std::function<void(void)> closure);
-    static void threadCallbackWrap(void* data);
-    static void asynThreadCallbackWrap(void* data);
+    static void MB_CALL_TYPE onBlinkThreadInited(void* param1, void* param2);
+
+    static void MB_CALL_TYPE OnBlinkThreadIdle(ThreadCall* self, v8::Isolate* isolate);
+    static void MB_CALL_TYPE OnUiThreadIdle(ThreadCall* self, v8::Isolate* isolate);
+
+    /// <summary>
+//     static void callSyncAndWait(TaskAsyncData* asyncData);
+//     static void callThreadAsync(std::function<void(void)> closure);
+//     static void threadCallbackWrap(void* data);
+//     static void asynThreadCallbackWrap(void* data);
 
     static DWORD m_blinkThreadId;
     static DWORD m_uiThreadId;
@@ -75,10 +84,12 @@ private:
 
     static void blinkThread(void* created);
 
-    static v8::Platform* m_v8platform;
+    static v8::Platform* m_v8platformOfBlink;
+    static v8::Platform* m_v8platformOfUi;
 
     struct TaskItem {
-        TaskItem(DWORD idThread, UINT msg, WPARAM wParam, LPARAM lParam) {
+        TaskItem(DWORD idThread, UINT msg, WPARAM wParam, LPARAM lParam)
+        {
             this->idThread = idThread;
             this->msg = msg;
             this->wParam = wParam;
@@ -96,7 +107,7 @@ private:
 
         kMaxTaskQueue,
     };
-    
+
     static TaskQueueType getWhichTypeByThreadId(DWORD idThread);
     static bool doTaskQueue(DWORD threadId);
     static bool runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam);

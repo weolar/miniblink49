@@ -3,6 +3,7 @@
 
 #include "v8.h"
 #include <list>
+#include <windows.h>
 
 namespace node {
 class Environment;
@@ -23,14 +24,13 @@ public:
     NodeBindings(bool isBrowser);
     ~NodeBindings();
 
-    void setUvLoop(uv_loop_t* uvLoop)
-    {
-        m_uvLoop = uvLoop;
-    }
+    void setUvLoop(uv_loop_t* uvLoop) { m_uvLoop = uvLoop; }
 
     static void initNodeEnv();
 
     void bindFunction(gin::Dictionary* dict);
+
+    static void bindMbConsoleLog(v8::Local<v8::Context> context, bool isBrowserProcess);
 
     node::Environment* createEnvironment(v8::Local<v8::Context> context);
     void loadEnvironment();

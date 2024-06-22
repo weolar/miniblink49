@@ -297,25 +297,30 @@ bool BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
     SkMatrix identity;
     identity.reset();
 
+    HWND hWnd = ::WindowFromDC(dc);
+
     BOOL b = FALSE;
-    //LoadTransformToDC(source_dc, identity);
-    {
+
 #define ULW_COLORKEY            0x00000001
 #define ULW_ALPHA               0x00000002
 #define ULW_OPAQUE              0x00000004
-        BLENDFUNCTION blend_function = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
-        typedef BOOL(WINAPI* PFN_UpdateLayeredWindow) (
-            __in HWND hWnd,
-            __in_opt HDC hdcDst,
-            __in_opt POINT *pptDst,
-            __in_opt SIZE *psize,
-            __in_opt HDC hdcSrc,
-            __in_opt POINT *pptSrc,
-            __in COLORREF crKey,
-            __in_opt BLENDFUNCTION *pblend,
-            __in DWORD dwFlags
-            );
-        static PFN_UpdateLayeredWindow s_pUpdateLayeredWindow = NULL;
+    BLENDFUNCTION blend_function = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
+    typedef BOOL(WINAPI* PFN_UpdateLayeredWindow) (
+        __in HWND hWnd,
+        __in_opt HDC hdcDst,
+        __in_opt POINT *pptDst,
+        __in_opt SIZE *psize,
+        __in_opt HDC hdcSrc,
+        __in_opt POINT *pptSrc,
+        __in COLORREF crKey,
+        __in_opt BLENDFUNCTION *pblend,
+        __in DWORD dwFlags
+        );
+    static PFN_UpdateLayeredWindow s_pUpdateLayeredWindow = NULL;
+
+    //LoadTransformToDC(source_dc, identity);
+    {
+
         if (NULL == s_pUpdateLayeredWindow) {
             s_pUpdateLayeredWindow = reinterpret_cast<PFN_UpdateLayeredWindow>(
                 GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindow"));
@@ -346,8 +351,7 @@ bool BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
             s_bHaveCheckUpdateLayeredWindowIndirect = TRUE;
 
             if (NULL == s_pUpdateLayeredWindowIndirect) {
-                s_pUpdateLayeredWindowIndirect = reinterpret_cast<PFN_UpdateLayeredWindowIndirect>(
-                    GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindowIndirect"));
+                s_pUpdateLayeredWindowIndirect = reinterpret_cast<PFN_UpdateLayeredWindowIndirect>(::GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindowIndirect"));
             }
         }
 
@@ -363,9 +367,14 @@ bool BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
             info.pblend = &blend_function;
             info.dwFlags = ULW_ALPHA;
             info.prcDirty = src_rect;
-            b = s_pUpdateLayeredWindowIndirect(::WindowFromDC(dc), &info);
+            b = s_pUpdateLayeredWindowIndirect(hWnd, &info);
+
+            if (!b) {
+                DWORD er = ::GetLastError();
+                er = er;
+            }
         } else {
-            b = s_pUpdateLayeredWindow(::WindowFromDC(dc),
+            b = s_pUpdateLayeredWindow(hWnd,
                 dc,
                 0, // &position,
                 &client_size,
@@ -373,6 +382,35 @@ bool BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
                 &zero,
                 RGB(0xFF, 0xFF, 0xFF), &blend_function, ULW_ALPHA);
         }
+    }
+
+    if (!b) { // hMemoryDC和hScreenDC大小不一致时候会出现
+        RECT rt_wnd;
+        ::GetWindowRect(hWnd, &rt_wnd);
+
+        BITMAP bmp = { 0 };
+        HBITMAP hbmp = (HBITMAP)::GetCurrentObject(source_dc, OBJ_BITMAP);
+        ::GetObject(hbmp, sizeof(BITMAP), (LPSTR)&bmp);
+
+        POINT point_source = { 0, 0 };
+        SIZE size_dest = { 0 };
+        size_dest.cx = rt_wnd.right - rt_wnd.left;
+        size_dest.cy = rt_wnd.bottom - rt_wnd.top;
+
+        HDC copy_dc = ::CreateCompatibleDC(dc);
+        HBITMAP new_bitmap = ::CreateCompatibleBitmap(dc, size_dest.cx, size_dest.cy);
+        HBITMAP old_bitmap = (HBITMAP)::SelectObject(copy_dc, new_bitmap);
+
+        BLENDFUNCTION blend = { 0 };
+        blend.BlendOp = AC_SRC_OVER;
+        blend.SourceConstantAlpha = 255;
+        blend.AlphaFormat = AC_SRC_ALPHA;
+        BOOL b = ::BitBlt(copy_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, dc, 0, 0, SRCCOPY | CAPTUREBLT);
+        b = s_pUpdateLayeredWindow(hWnd, dc, nullptr, &size_dest, copy_dc, &point_source, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+
+        ::SelectObject(copy_dc, (HGDIOBJ)old_bitmap);
+        ::DeleteObject((HGDIOBJ)new_bitmap);
+        ::DeleteDC(copy_dc);
     }
 
     //LoadTransformToDC(source_dc, data_->transform());

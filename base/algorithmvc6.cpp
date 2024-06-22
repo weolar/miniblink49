@@ -18,6 +18,20 @@ void __cdecl operator delete(void* pv, const std::nothrow_t&)
 }
 #endif
 
+float fmaxf(float _X, float _Y)
+{
+    if (_X > _Y)
+        return _X;
+    return _Y;
+}
+
+float fmax(float _X, float _Y)
+{
+    if (_X > _Y)
+        return _X;
+     return _Y;
+}
+
 namespace std {
 
 int fpclassify(double x)
@@ -435,6 +449,11 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl opera
 //////////////////////////////////////////////////////////////////////////
 
 double copysign(double x, double y)
+{
+    return std::copysign(x, y);
+}
+
+extern "C" float copysign(float x, float y)
 {
     return std::copysign(x, y);
 }
@@ -893,11 +912,296 @@ extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
 
 extern __declspec(dllimport) double _HUGE;
 
-float nearbyintf(float x) {
+float nearbyintf(float x)
+{
     return 0;
 }
 
-double __cdecl scalbn(double _X, int _Y) {
+double __cdecl scalbn(double _X, int _Y)
+{
     return 0;
 }
+
+typedef union {
+    double value;
+    struct {
+        unsigned __int32 lsw;
+        unsigned __int32 msw;
+    } parts;
+    struct {
+        unsigned __int64 w;
+    } xparts;
+} ieee_double_shape_type;
+
+#define EXTRACT_WORDS(ix0, ix1, d) \
+  do {                             \
+    ieee_double_shape_type ew_u;   \
+    ew_u.value = (d);              \
+    (ix0) = ew_u.parts.msw;        \
+    (ix1) = ew_u.parts.lsw;        \
+  } while (0)
+
+/* Get a 64-bit int from a double. */
+#define EXTRACT_WORD64(ix, d)    \
+  do {                           \
+    ieee_double_shape_type ew_u; \
+    ew_u.value = (d);            \
+    (ix) = ew_u.xparts.w;        \
+  } while (0)
+
+/* Get the more significant 32 bit int from a double.  */
+
+#define GET_HIGH_WORD(i, d)      \
+  do {                           \
+    ieee_double_shape_type gh_u; \
+    gh_u.value = (d);            \
+    (i) = gh_u.parts.msw;        \
+  } while (0)
+
+/* Get the less significant 32 bit int from a double.  */
+
+#define GET_LOW_WORD(i, d)       \
+  do {                           \
+    ieee_double_shape_type gl_u; \
+    gl_u.value = (d);            \
+    (i) = gl_u.parts.lsw;        \
+  } while (0)
+
+/* Set a double from two 32 bit ints.  */
+
+#define INSERT_WORDS(d, ix0, ix1) \
+  do {                            \
+    ieee_double_shape_type iw_u;  \
+    iw_u.parts.msw = (ix0);       \
+    iw_u.parts.lsw = (ix1);       \
+    (d) = iw_u.value;             \
+  } while (0)
+
+/* Set a double from a 64-bit int. */
+#define INSERT_WORD64(d, ix)     \
+  do {                           \
+    ieee_double_shape_type iw_u; \
+    iw_u.xparts.w = (ix);        \
+    (d) = iw_u.value;            \
+  } while (0)
+
+/* Set the more significant 32 bits of a double from an int.  */
+
+#define SET_HIGH_WORD(d, v)      \
+  do {                           \
+    ieee_double_shape_type sh_u; \
+    sh_u.value = (d);            \
+    sh_u.parts.msw = (v);        \
+    (d) = sh_u.value;            \
+  } while (0)
+
+/* Set the less significant 32 bits of a double from an int.  */
+
+#define SET_LOW_WORD(d, v)       \
+  do {                           \
+    ieee_double_shape_type sl_u; \
+    sl_u.value = (d);            \
+    sl_u.parts.lsw = (v);        \
+    (d) = sl_u.value;            \
+  } while (0)
+
+#define STRICT_ASSIGN(type, lval, rval) ((lval) = (rval))
+
+double log1p(double x)
+{
+    static const double                      /* -- */
+        ln2_hi = 6.93147180369123816490e-01, /* 3fe62e42 fee00000 */
+        ln2_lo = 1.90821492927058770002e-10, /* 3dea39ef 35793c76 */
+        two54 = 1.80143985094819840000e+16,  /* 43500000 00000000 */
+        Lp1 = 6.666666666666735130e-01,      /* 3FE55555 55555593 */
+        Lp2 = 3.999999999940941908e-01,      /* 3FD99999 9997FA04 */
+        Lp3 = 2.857142874366239149e-01,      /* 3FD24924 94229359 */
+        Lp4 = 2.222219843214978396e-01,      /* 3FCC71C5 1D8E78AF */
+        Lp5 = 1.818357216161805012e-01,      /* 3FC74664 96CB03DE */
+        Lp6 = 1.531383769920937332e-01,      /* 3FC39A09 D078C69F */
+        Lp7 = 1.479819860511658591e-01;      /* 3FC2F112 DF3E5244 */
+
+    static const double zero = 0.0;
+    static volatile double vzero = 0.0;
+
+    double hfsq, f, c, s, z, R, u;
+    __int32 k, hx, hu, ax;
+
+    GET_HIGH_WORD(hx, x);
+    ax = hx & 0x7fffffff;
+
+    k = 1;
+    if (hx < 0x3FDA827A) {    /* 1+x < sqrt(2)+ */
+        if (ax >= 0x3ff00000) { /* x <= -1.0 */
+            if (x == -1.0)
+                return -two54 / vzero; /* log1p(-1)=+inf */
+            else
+                return (x - x) / (x - x); /* log1p(x<-1)=NaN */
+        }
+        if (ax < 0x3e200000) {    /* |x| < 2**-29 */
+            if (two54 + x > zero    /* raise inexact */
+                && ax < 0x3c900000) /* |x| < 2**-54 */
+                return x;
+            else
+                return x - x * x * 0.5;
+        }
+        if (hx > 0 || hx <= static_cast<__int32>(0xbfd2bec4)) {
+            k = 0;
+            f = x;
+            hu = 1;
+        } /* sqrt(2)/2- <= 1+x < sqrt(2)+ */
+    }
+    if (hx >= 0x7ff00000) return x + x;
+    if (k != 0) {
+        if (hx < 0x43400000) {
+            STRICT_ASSIGN(double, u, 1.0 + x);
+            GET_HIGH_WORD(hu, u);
+            k = (hu >> 20) - 1023;
+            c = (k > 0) ? 1.0 - (u - x) : x - (u - 1.0); /* correction term */
+            c /= u;
+        } else {
+            u = x;
+            GET_HIGH_WORD(hu, u);
+            k = (hu >> 20) - 1023;
+            c = 0;
+        }
+        hu &= 0x000fffff;
+        /*
+        * The approximation to sqrt(2) used in thresholds is not
+        * critical.  However, the ones used above must give less
+        * strict bounds than the one here so that the k==0 case is
+        * never reached from here, since here we have committed to
+        * using the correction term but don't use it if k==0.
+        */
+        if (hu < 0x6a09e) {                  /* u ~< sqrt(2) */
+            SET_HIGH_WORD(u, hu | 0x3ff00000); /* normalize u */
+        } else {
+            k += 1;
+            SET_HIGH_WORD(u, hu | 0x3fe00000); /* normalize u/2 */
+            hu = (0x00100000 - hu) >> 2;
+        }
+        f = u - 1.0;
+    }
+    hfsq = 0.5 * f * f;
+    if (hu == 0) { /* |f| < 2**-20 */
+        if (f == zero) {
+            if (k == 0) {
+                return zero;
+            } else {
+                c += k * ln2_lo;
+                return k * ln2_hi + c;
+            }
+        }
+        R = hfsq * (1.0 - 0.66666666666666666 * f);
+        if (k == 0)
+            return f - R;
+        else
+            return k * ln2_hi - ((R - (k * ln2_lo + c)) - f);
+    }
+    s = f / (2.0 + f);
+    z = s * s;
+    R = z * (Lp1 +
+        z * (Lp2 + z * (Lp3 + z * (Lp4 + z * (Lp5 + z * (Lp6 + z * Lp7))))));
+    if (k == 0)
+        return f - (hfsq - s * (hfsq + R));
+    else
+        return k * ln2_hi - ((hfsq - (s * (hfsq + R) + (k * ln2_lo + c))) - f);
+}
+
+
+extern "C" float __cdecl asinhf(float x)
+{
+    static const double one = 1.00000000000000000000e+00;/* 0x3FF00000, 0x00000000 */
+    static const double ln2 = 6.93147180559945286227e-01;/* 0x3FE62E42, 0xFEFA39EF */
+    static const double huge = 1.00000000000000000000e+300;
+
+    double t, w;
+    __int32 hx, ix;
+    GET_HIGH_WORD(hx, x);
+    ix = hx & 0x7fffffff;
+    if (ix >= 0x7ff00000) return x + x; /* x is inf or NaN */
+    if (ix < 0x3e300000) {              /* |x|<2**-28 */
+        if (huge + x > one) return x;     /* return x inexact except 0 */
+    }
+    if (ix > 0x41b00000) { /* |x| > 2**28 */
+        w = log(fabs(x)) + ln2;
+    } else if (ix > 0x40000000) { /* 2**28 > |x| > 2.0 */
+        t = fabs(x);
+        w = log(2.0 * t + one / (sqrt(x * x + one) + t));
+    } else { /* 2.0 > |x| > 2**-28 */
+        t = x * x;
+        w = log1p(fabs(x) + t / (one + sqrt(one + t)));
+    }
+    if (hx > 0) {
+        return w;
+    } else {
+        return -w;
+    }
+}
+
+extern "C" float __cdecl acoshf(float x)
+{
+    static const double one = 1.0;
+    static const double ln2 = 6.93147180559945286227e-01; /* 0x3FE62E42, 0xFEFA39EF */
+    double t;
+    __int32 hx;
+    unsigned __int32 lx;
+    EXTRACT_WORDS(hx, lx, x);
+    if (hx < 0x3ff00000) { /* x < 1 */
+        return (x - x) / (x - x);
+    } else if (hx >= 0x41b00000) { /* x > 2**28 */
+        if (hx >= 0x7ff00000) {      /* x is inf of NaN */
+            return x + x;
+        } else {
+            return log(x) + ln2; /* acosh(huge)=log(2x) */
+        }
+    } else if (((hx - 0x3ff00000) | lx) == 0) {
+        return 0.0;                 /* acosh(1) = 0 */
+    } else if (hx > 0x40000000) { /* 2**28 > x > 2 */
+        t = x * x;
+        return log(2.0 * x - one / (x + sqrt(t - one)));
+    } else { /* 1<x<2 */
+        t = x - one;
+        return log1p(t + sqrt(2.0 * t + t * t));
+    }
+    
+}
+extern "C" float __cdecl atanhf(float x)
+{
+    static const double one = 1.0, huge = 1e300;
+    static const double zero = 0.0;
+
+    double t;
+    __int32 hx, ix;
+    unsigned __int32 lx;
+    EXTRACT_WORDS(hx, lx, x);
+    ix = hx & 0x7fffffff;
+    if ((ix | ((lx | -static_cast<__int32>(lx)) >> 31)) > 0x3ff00000) { /* |x|>1 */
+        return 0;
+        //return (x - x) / (x - x);
+    }
+    if (ix == 0x3ff00000) {
+        //return x / zero;
+        return 0xfffff;
+    }
+    if (ix < 0x3e300000 && (huge + x) > zero) return x; /* x<2**-28 */
+    SET_HIGH_WORD(x, ix);
+    if (ix < 0x3fe00000) { /* x < 0.5 */
+        t = x + x;
+        t = 0.5 * log1p(t + t * x / (one - x));
+    } else {
+        t = 0.5 * log1p((x + x) / (one - x));
+    }
+    if (hx >= 0)
+        return t;
+    else
+        return -t;
+    
+}
+extern "C" float __cdecl exp2f(float x)
+{
+    return pow((float)2, x);
+}
+
+
 #endif // USING_VC6RT

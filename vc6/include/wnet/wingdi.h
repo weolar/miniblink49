@@ -1,10 +1,4 @@
-/**************************************************************************
-*                                                                         *
-* wingdi.h -- GDI procedure declarations, constant definitions and macros *
-*                                                                         *
-* Copyright (c) Microsoft Corp. All rights reserved.                      *
-*                                                                         *
-**************************************************************************/
+//Copyright (c) Microsoft Corp. All rights reserved
 
 #ifndef _WINGDI_
 #define _WINGDI_

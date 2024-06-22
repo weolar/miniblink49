@@ -563,6 +563,11 @@ typedef EGLint (EGLAPIENTRYP PFNEGLDUPNATIVEFENCEFDANDROIDPROC)(EGLDisplay dpy, 
 #define EGL_YUV_CHROMA_SITING_0_5_EXT		0x3285
 #endif
 
+#ifndef EGL_ARM_implicit_external_sync
+#define EGL_ARM_implicit_external_sync 1
+#define EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM 0x328A
+#endif /* EGL_ARM_implicit_external_sync */
+
 #ifdef __cplusplus
 }
 #endif

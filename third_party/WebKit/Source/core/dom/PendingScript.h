@@ -34,19 +34,33 @@
 #include "wtf/RefPtr.h"
 #include "wtf/text/TextPosition.h"
 
+#include "v8.h"
+#include "third_party/WebKit/Source/bindings/core/v8/ScopedPersistent.h"
+
 namespace blink {
 
 class Element;
+class Document;
 class ScriptSourceCode;
 class ScriptStreamer;
+class ModuleScriptLoader;
+class ModuleRecord;
+class HTMLScriptRunner;
+class ScriptPromiseResolver;
+class MyScriptPromiseResolver;
 
 // A container for an external script which may be loaded and executed.
 //
 // A ResourcePtr alone does not prevent the underlying Resource
 // from purging its data buffer. This class holds a dummy client open for its
 // lifetime in order to guarantee that the data buffer will not be purged.
-class CORE_EXPORT PendingScript final : public ResourceOwner<ScriptResource> {
-    ALLOW_ONLY_INLINE_ALLOCATION();
+class CORE_EXPORT PendingScript final 
+    : public GarbageCollectedFinalized<PendingScript>
+    , public ResourceOwner<ScriptResource> {
+    //ALLOW_ONLY_INLINE_ALLOCATION();
+    //USING_GARBAGE_COLLECTED_MIXIN(PendingScript);
+    //USING_PRE_FINALIZER(PendingScript, dispose);
+    WTF_MAKE_NONCOPYABLE(PendingScript);
 public:
     enum Type {
         ParsingBlocking,
@@ -54,12 +68,12 @@ public:
         Async
     };
 
-    PendingScript();
-    PendingScript(Element*, ScriptResource*);
-    PendingScript(const PendingScript&);
+    static PendingScript* create(Element*, ScriptResource*);
+
+    //PendingScript(const PendingScript&);
     ~PendingScript();
 
-    PendingScript& operator=(const PendingScript&);
+    //PendingScript& operator=(const PendingScript&);
 
     TextPosition startingPosition() const { return m_startingPosition; }
     void setStartingPosition(const TextPosition& position) { m_startingPosition = position; }
@@ -69,7 +83,7 @@ public:
 
     Element* element() const { return m_element.get(); }
     void setElement(Element*);
-    PassRefPtrWillBeRawPtr<Element> releaseElementAndClear();
+    //PassRefPtrWillBeRawPtr<Element> releaseElementAndClear();
 
     void setScriptResource(ScriptResource*);
 
@@ -84,8 +98,38 @@ public:
 
     bool isReady() const;
 
+    //////////////////////////////////////////////////////////////////////////
+    void dispose(ScriptResourceClient* client);
+    bool isModule() const;
+    bool hadGetModuleDepend() const;
+    bool requesetModuleScript(Document* document, const ModuleRecord* parentModuleRecord, const String& sourceUrl, ScriptPromiseResolver* resolver);
+    Vector<String> compileModuleAndRequestDepend(HTMLScriptRunner* scriptRunner, Document* document);
+    //v8::Local<v8::Module> getModule(v8::Isolate* isolate) const { return m_module.newLocal(isolate); }
+    ModuleRecord* getModuleRecord() const { return m_moduleRecord; }
+    bool isWatchingForLoad() const { return m_watchingForLoad; }
+//     bool copyIfNeeded(const PendingScript& other);
+//     void setCopying();
+    bool hasModuleScriptString() const;
+    void setModuleScriptString(const String& str);
 private:
+    void setGetModuleDepend();
+    //////////////////////////////////////////////////////////////////////////
+
+private:
+    //PendingScript();
+    PendingScript(Element*, ScriptResource*);
     bool m_watchingForLoad;
+
+    //////////////////////////////////////////////////////////////////////////模块相关实现
+    bool m_isModule;
+    bool m_hadGetModuleDepend;
+    bool m_isCopying; // 临时给executeScriptsWaitingForParsing用，用来查找哪个拷贝是m_scriptsToExecuteAfterParsing里面的
+    Member<ModuleScriptLoader> m_moduleScriptLoader; // 没有<script>标签而是js里面import引入的脚本
+    Member<ModuleRecord> m_moduleRecord;
+    //Member<ScriptResourceClient> m_client;
+    String m_moduleScriptString;
+    //////////////////////////////////////////////////////////////////////////
+
     RefPtrWillBeMember<Element> m_element;
     TextPosition m_startingPosition; // Only used for inline script tags.
 

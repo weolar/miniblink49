@@ -189,7 +189,9 @@ static void installV8SVGViewElementTemplate(v8::Local<v8::FunctionTemplate> func
     static_assert(2 == SVGViewElement::SVG_ZOOMANDPAN_MAGNIFY, "the value of SVGViewElement_SVG_ZOOMANDPAN_MAGNIFY does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGViewElement::domTemplate(v8::Isolate* isolate)

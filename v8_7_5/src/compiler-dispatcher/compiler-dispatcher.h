@@ -20,7 +20,7 @@
 #include "src/globals.h"
 #include "src/identity-map.h"
 #include "src/maybe-handles.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+//#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
 
 namespace v8 {
 
@@ -108,14 +108,14 @@ class V8_EXPORT_PRIVATE CompilerDispatcher {
   void AbortAll();
 
  private:
-  FRIEND_TEST(CompilerDispatcherTest, IdleTaskNoIdleTime);
-  FRIEND_TEST(CompilerDispatcherTest, IdleTaskSmallIdleTime);
-  FRIEND_TEST(CompilerDispatcherTest, FinishNowWithWorkerTask);
-  FRIEND_TEST(CompilerDispatcherTest, AbortJobNotStarted);
-  FRIEND_TEST(CompilerDispatcherTest, AbortJobAlreadyStarted);
-  FRIEND_TEST(CompilerDispatcherTest, AsyncAbortAllPendingWorkerTask);
-  FRIEND_TEST(CompilerDispatcherTest, AsyncAbortAllRunningWorkerTask);
-  FRIEND_TEST(CompilerDispatcherTest, CompileMultipleOnBackgroundThread);
+//   FRIEND_TEST(CompilerDispatcherTest, IdleTaskNoIdleTime);
+//   FRIEND_TEST(CompilerDispatcherTest, IdleTaskSmallIdleTime);
+//   FRIEND_TEST(CompilerDispatcherTest, FinishNowWithWorkerTask);
+//   FRIEND_TEST(CompilerDispatcherTest, AbortJobNotStarted);
+//   FRIEND_TEST(CompilerDispatcherTest, AbortJobAlreadyStarted);
+//   FRIEND_TEST(CompilerDispatcherTest, AsyncAbortAllPendingWorkerTask);
+//   FRIEND_TEST(CompilerDispatcherTest, AsyncAbortAllRunningWorkerTask);
+//   FRIEND_TEST(CompilerDispatcherTest, CompileMultipleOnBackgroundThread);
 
   struct Job {
     explicit Job(BackgroundCompileTask* task_arg);

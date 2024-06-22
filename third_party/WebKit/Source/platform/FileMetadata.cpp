@@ -34,15 +34,40 @@
 #include "public/platform/Platform.h"
 #include "public/platform/WebFileInfo.h"
 #include "public/platform/WebFileUtilities.h"
+#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
 namespace blink {
 
 bool getFileSize(const String& path, long long& result)
 {
-    FileMetadata metadata;
-    if (!getFileMetadata(path, metadata))
+//     FileMetadata metadata;
+//     if (!getFileMetadata(path, metadata))
+//         return false;
+//     result = metadata.length;
+//     return true;
+
+    if (path.isEmpty())
         return false;
-    result = metadata.length;
+
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    OutputDebugStringA("getFileSize entry\n");
+
+    HANDLE hFile = ::CreateFile(buffer.data(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (INVALID_HANDLE_VALUE == hFile) {
+        OutputDebugStringA("getFileSize fail 1\n");
+        hFile = ::CreateFile(buffer.data(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+            NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+        if (INVALID_HANDLE_VALUE == hFile) {
+            result = 0;
+            return false;
+        }
+    }
+
+    LARGE_INTEGER size;
+    ::GetFileSizeEx(hFile, &size);
+    result = size.QuadPart;
+    ::CloseHandle(hFile);
+
     return true;
 }
 

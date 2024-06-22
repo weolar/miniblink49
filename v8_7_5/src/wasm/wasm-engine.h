@@ -163,6 +163,10 @@ class V8_EXPORT_PRIVATE WasmEngine {
   // {AddIsolate}.
   void EnableCodeLogging(Isolate*);
 
+  // This is called from the foreground thread of the Isolate to log all
+  // outstanding code objects (added via {LogCode}).
+  void LogOutstandingCodesForIsolate(Isolate*);
+
   // Create a new NativeModule. The caller is responsible for its
   // lifetime. The native module will be given some memory for code,
   // which will be page size aligned. The size of the initial memory
@@ -181,6 +185,16 @@ class V8_EXPORT_PRIVATE WasmEngine {
   // This will spawn foreground tasks that do *not* keep the NativeModule alive.
   void SampleTopTierCodeSizeInAllIsolates(const std::shared_ptr<NativeModule>&);
 
+  // Called by each Isolate to report its live code for a GC cycle.
+  void ReportLiveCodeForGC(Isolate*, Vector<WasmCode*> live_code);
+
+  // Add potentially dead code. The occurrence in the set of potentially dead
+  // code counts as a reference, and is decremented on the next GC.
+  // Returns {true} if the code was added to the set of potentially dead code,
+  // {false} if an entry already exists. The ref count is *unchanged* in any
+  // case.
+  V8_WARN_UNUSED_RESULT bool AddPotentiallyDeadCode(WasmCode*);
+
   // Call on process start and exit.
   static void InitializeOncePerProcess();
   static void GlobalTearDown();
@@ -190,13 +204,17 @@ class V8_EXPORT_PRIVATE WasmEngine {
   static std::shared_ptr<WasmEngine> GetWasmEngine();
 
  private:
+  struct CurrentGCInfo;
   struct IsolateInfo;
+  struct NativeModuleInfo;
 
   AsyncCompileJob* CreateAsyncCompileJob(
       Isolate* isolate, const WasmFeatures& enabled,
       std::unique_ptr<byte[]> bytes_copy, size_t length,
       Handle<Context> context,
       std::shared_ptr<CompilationResultResolver> resolver);
+
+  void TriggerGC();
 
   WasmMemoryTracker memory_tracker_;
   WasmCodeManager code_manager_;
@@ -224,10 +242,17 @@ class V8_EXPORT_PRIVATE WasmEngine {
   // Set of isolates which use this WasmEngine.
   std::unordered_map<Isolate*, std::unique_ptr<IsolateInfo>> isolates_;
 
-  // Maps each NativeModule to the set of Isolates that have access to that
-  // NativeModule. The isolate sets currently only grow, they never shrink.
-  std::unordered_map<NativeModule*, std::unordered_set<Isolate*>>
-      isolates_per_native_module_;
+  // Set of native modules managed by this engine.
+  std::unordered_map<NativeModule*, std::unique_ptr<NativeModuleInfo>>
+      native_modules_;
+
+  // Size of code that became dead since the last GC. If this exceeds a certain
+  // threshold, a new GC is triggered.
+  size_t new_potentially_dead_code_size_ = 0;
+
+  // If an engine-wide GC is currently running, this pointer stores information
+  // about that.
+  std::unique_ptr<CurrentGCInfo> current_gc_info_;
 
   // End of fields protected by {mutex_}.
   //////////////////////////////////////////////////////////////////////////////

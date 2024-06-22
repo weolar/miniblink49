@@ -34,7 +34,9 @@ public:
         m_hTipWnd = CreateWindowEx(WS_EX_TOOLWINDOW, kToolTipClassName, kToolTipClassName, WS_POPUP | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 225, 140, HWND_DESKTOP, NULL, nullptr, this);
         ::SetPropW(m_hTipWnd, kToolTipClassName, (HANDLE)this);
 
-        m_hFont = CreateFont(18, 0, 0, 0, FW_THIN, FALSE, FALSE, FALSE,
+        int fontHeight = m_dpi * 18;
+
+        m_hFont = CreateFont(fontHeight, 0, 0, 0, FW_THIN, FALSE, FALSE, FALSE,
             GB2312_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
             DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, L"微软雅黑");
     }
@@ -48,6 +50,12 @@ public:
 
     bool registerClass()
     {
+        HDC screen = ::GetDC(nullptr);
+        int dpiX = ::GetDeviceCaps(screen, LOGPIXELSX);
+        m_dpi = dpiX * 100.0 / 96;
+        m_dpi /= 100;
+        ::ReleaseDC(0, screen);
+
         WNDCLASSEX wcex;
 
         wcex.cbSize = sizeof(WNDCLASSEX);
@@ -65,7 +73,7 @@ public:
         return !!RegisterClassEx(&wcex);
     }
 
-    void show(const WCHAR* text, POINT* pos)
+    void show(const WCHAR* text, const POINT* pos)
     {
         if (!text) {
             if (m_isToolsTip)
@@ -82,7 +90,7 @@ public:
         bool isSameText = textString == m_text;
         if (!isSameText || !m_isToolsTip) {
             m_text = textString;
-
+            
             HDC hScreenDc = ::GetDC(m_hTipWnd);
             HFONT hOldFont = (HFONT)::SelectObject(hScreenDc, m_hFont);
             ::GetTextExtentPoint32(hScreenDc, m_text.c_str(), m_text.size(), &m_size);
@@ -153,7 +161,7 @@ private:
         if (m_delayShowTimer.isActive())
             m_delayShowTimer.stop();
         m_delayShowCount = 0;
-        m_delayShowTimer.start(0.5, m_repeatInterval, FROM_HERE);
+        m_delayShowTimer.start(0.1, m_repeatInterval, FROM_HERE);
     }
 
     bool isNearPos(const POINT& a, const POINT& b)
@@ -173,7 +181,7 @@ private:
         if (!m_isToolsTip)
             point = m_pos;
 
-        if (/*(15 < m_delayShowCount || !m_isToolsTip) && */!m_isShow) {
+        if (!m_isShow) {
             m_isShow = true;
 
             ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 7, m_size.cy + 5, SWP_NOACTIVATE);
@@ -223,7 +231,10 @@ private:
     SIZE m_size;
     bool m_isToolsTip;
     double m_repeatInterval;
+    static double m_dpi;
 };
+
+double ToolTip::m_dpi = 1;
 
 }
 

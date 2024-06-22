@@ -9,10 +9,11 @@
 #include "core/CoreExport.h"
 #include "wtf/ArrayBuffer.h"
 #include "wtf/RefCounted.h"
+#include "wtf/ThreadSafeRefCounted.h"
 
 namespace blink {
 
-class CORE_EXPORT DOMArrayBufferBase : public RefCounted<DOMArrayBufferBase>, public ScriptWrappable {
+class CORE_EXPORT DOMArrayBufferBase : public ThreadSafeRefCounted<DOMArrayBufferBase>, public ScriptWrappable {
 public:
     virtual ~DOMArrayBufferBase() { }
 

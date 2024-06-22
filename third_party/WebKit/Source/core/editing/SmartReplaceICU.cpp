@@ -96,7 +96,6 @@ bool isCharacterSmartReplaceExempt(UChar32 c, bool isPreviousCharacter)
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return uset_contains(getSmartSet(isPreviousCharacter), c);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
 	return false;
 }
 

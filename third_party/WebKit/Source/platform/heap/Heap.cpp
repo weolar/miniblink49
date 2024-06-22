@@ -2046,6 +2046,8 @@ String Heap::createBacktraceString()
 }
 #endif
 
+CallbackStack::Item* s_testItem = nullptr;
+
 void Heap::pushTraceCallback(void* object, TraceCallback callback)
 {
     ASSERT(ThreadState::current()->isInGC());
@@ -2053,6 +2055,8 @@ void Heap::pushTraceCallback(void* object, TraceCallback callback)
     // Trace should never reach an orphaned page.
     ASSERT(!Heap::orphanedPagePool()->contains(object));
     CallbackStack::Item* slot = s_markingStack->allocateEntry();
+    if (s_testItem == slot)
+        OutputDebugStringA("");
     *slot = CallbackStack::Item(object, callback);
 }
 

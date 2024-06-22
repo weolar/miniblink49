@@ -447,7 +447,9 @@ static void installV8StorageTemplate(v8::Local<v8::FunctionTemplate> functionTem
     V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, static_cast<v8::PropertyAttribute>(v8::DontDelete | v8::DontEnum), clearMethodConfiguration);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Storage::domTemplate(v8::Isolate* isolate)

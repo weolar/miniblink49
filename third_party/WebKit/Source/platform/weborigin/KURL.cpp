@@ -44,6 +44,9 @@
 #include "GOwnPtr.h"
 #endif
 
+#pragma optimize("", off)
+#pragma clang optimize off
+
 // FIXME: This file makes too much use of the + operator on String.
 // We either have to optimize that operator so it doesn't involve
 // so many allocations, or change this to use StringBuffer instead.
@@ -350,7 +353,7 @@ KURL::KURL(ParsedURLStringTag tag, const char* url)
     ASSERT(m_string.is8Bit());
 }
 
-bool needInserFileHead(const String& url)
+static bool needInserFileHead(const String& url)
 {
     if (WTF::kNotFound != url.find("file:/"))
         return false;
@@ -367,6 +370,19 @@ bool needInserFileHead(const String& url)
     return false;
 }
 
+static bool needFixInserFileHead(const String& url, String* fixSchemeUrl)
+{
+    if (url.length() > 9 && url.startsWith("file://", WTF::TextCaseInsensitive)) {
+        if (L'\\' != url[7] && L'/' != url[7]) {
+            *fixSchemeUrl = url;
+            fixSchemeUrl->insert("\\", 7);
+            fixSchemeUrl->replace(L"\\", L"/");
+            return true;
+        }
+    }
+    return false;
+}
+
 KURL::KURL(ParsedURLStringTag, const String& url)
 {
     bool fixed = false;
@@ -377,9 +393,11 @@ KURL::KURL(ParsedURLStringTag, const String& url)
             fixed = true;
             fixSchemeUrl = url;
             fixSchemeUrl = WTF::ensureUTF16String(fixSchemeUrl); // see http://blog.csdn.net/weolar/article/details/78020701
-            fixSchemeUrl.insert(L"file:///", 0);            
+            fixSchemeUrl.insert(L"file:///", 0);
             fixSchemeUrl.replace(L"\\", L"/");
-            parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data());
+            parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data(), nullptr);
+        } else if (needFixInserFileHead(url, &fixSchemeUrl)) {
+            parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data(), nullptr);
         } else
             parse(WTF::ensureStringToUTF8(url, true).data(), nullptr);
 
@@ -1701,6 +1719,8 @@ String encodeWithURLEscapeSequences(const String& notEncodedString)
 // the output buffer. The result will not be null terminated.
 static void appendEncodedHostname(LCharBuffer& buffer, const LChar* str, unsigned strLen)
 {
+    if (0 == strLen)
+        return;
     // Needs to be big enough to hold an IDN-encoded name.
     // For host names bigger than this, we won't do IDN encoding, which is almost certainly OK.
     const unsigned hostnameBufferLength = 2048;

@@ -11,10 +11,11 @@
 #include "core/dom/DOMSharedArrayBuffer.h"
 #include "wtf/ArrayBufferView.h"
 #include "wtf/RefCounted.h"
+#include "wtf/ThreadSafeRefCounted.h"
 
 namespace blink {
 
-class CORE_EXPORT DOMArrayBufferView : public RefCounted<DOMArrayBufferView>, public ScriptWrappable {
+class CORE_EXPORT DOMArrayBufferView : public ThreadSafeRefCounted<DOMArrayBufferView>, public ScriptWrappable {
     DEFINE_WRAPPERTYPEINFO();
 public:
     typedef WTF::ArrayBufferView::ViewType ViewType;

@@ -1515,12 +1515,12 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
         parsedValue = parseTouchAction();
         break;
 
-//     case CSSPropertyScrollBlocksOn:
-//         if (id == CSSValueNone)
-//             validPrimitive = true;
-//         else
-//             parsedValue = parseScrollBlocksOn();
-//         break;
+    case CSSPropertyScrollBlocksOn:
+        if (id == CSSValueNone)
+            validPrimitive = true;
+        else
+            parsedValue = parseScrollBlocksOn();
+        break;
 
     case CSSPropertyAlignContent:
         parsedValue = parseContentDistributionOverflowPosition();
@@ -1558,6 +1558,14 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
     case CSSPropertyBackdropFilter:
     case CSSPropertyFontFeatureSettings:
     case CSSPropertyImageOrientation:
+        break;
+
+    case CSSPropertyGridColumnGap:
+    case CSSPropertyGridRowGap:
+        validPrimitive = validUnit(value, FLength | FPercent | FNonNeg | unitless);
+        break;
+    case CSSPropertyImeMode:
+        //CSSParserValue* value = m_valueList->current();
         break;
 
     default:
@@ -7746,11 +7754,11 @@ bool CSSPropertyParser::parseSVGValue(CSSPropertyID propId, bool important)
             validPrimitive = true;
         break;
 
-//     case CSSPropertyEnableBackground:
-//     // accumulate | new [x] [y] [width] [height] | inherit
-//         if (id == CSSValueAccumulate) // TODO : new
-//             validPrimitive = true;
-//         break;
+    case CSSPropertyEnableBackground:
+    // accumulate | new [x] [y] [width] [height] | inherit
+        if (id == CSSValueAccumulate) // TODO : new
+            validPrimitive = true;
+        break;
 
     case CSSPropertyClipPath:
     case CSSPropertyFilter:

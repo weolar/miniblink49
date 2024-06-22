@@ -28,6 +28,9 @@ namespace blink {
 
 enum CSSPropertyID {
     CSSPropertyInvalid = 0,
+    // This isn't a property, but we need to know the position of @apply rules in style rules
+    CSSPropertyApplyAtRule = 1,
+    CSSPropertyVariable = 2,
 %(property_enums)s
 };
 
@@ -203,12 +206,16 @@ class CSSPropertyNamesWriter(css_properties.CSSProperties):
         property_offsets = []
         property_names = []
         current_offset = 0
-        for enum_value in range(1, max(enum_value_to_name) + 1):
+        for enum_value in range(self._first_enum_value, max(enum_value_to_name) + 1):
             property_offsets.append(current_offset)
+            
             if enum_value in enum_value_to_name:
                 name = enum_value_to_name[enum_value]
                 property_names.append(name)
                 current_offset += len(name) + 1
+                print enum_value
+            else:
+                print 'not enum_value'
 
         css_name_and_enum_pairs = [(property['name'], property['property_id']) for property in self._properties_including_aliases]
 
@@ -220,7 +227,8 @@ class CSSPropertyNamesWriter(css_properties.CSSProperties):
             'property_to_enum_map': '\n'.join('%s, %s' % property for property in css_name_and_enum_pairs),
         }
         # FIXME: If we could depend on Python 2.7, we would use subprocess.check_output
-        gperf_args = [self.gperf_path, '--key-positions=*', '-P', '-n']
+        #gperf_args = [self.gperf_path, '--key-positions=*', '-P', '-n']
+        gperf_args = ['E:\\mycode\\wke-master\\cygwin\\bin\\gperf.exe', '--key-positions=*', '-P', '-n']
         gperf_args.extend(['-m', '50'])  # Pick best of 50 attempts.
         gperf_args.append('-D')  # Allow duplicate hashes -> More compact code.
         gperf = subprocess.Popen(gperf_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)

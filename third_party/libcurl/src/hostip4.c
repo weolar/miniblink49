@@ -72,7 +72,7 @@ bool Curl_ipvalid(struct connectdata *conn)
 }
 
 #ifdef CURLRES_SYNCH
-
+#error "111"
 /*
  * Curl_getaddrinfo() - the IPv4 synchronous version.
  *

@@ -22,6 +22,14 @@ FetchDataConsumerHandle* BodyStreamBuffer::handle() const
     return m_handle.get();
 }
 
+BodyStreamBuffer::BodyStreamBuffer(PassOwnPtr<FetchDataConsumerHandle> handle) : m_handle(handle)
+{
+}
+
+BodyStreamBuffer::~BodyStreamBuffer()
+{
+}
+
 PassOwnPtr<FetchDataConsumerHandle> BodyStreamBuffer::releaseHandle()
 {
     ASSERT(!m_fetchDataLoader);
@@ -45,6 +53,8 @@ public:
     {
         m_loader->start(handle, this);
     }
+
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
     DEFINE_INLINE_VIRTUAL_TRACE()
     {

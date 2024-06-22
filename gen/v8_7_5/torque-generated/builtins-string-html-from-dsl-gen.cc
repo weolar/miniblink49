@@ -12,11 +12,16 @@
 #include "src/objects/js-regexp-string-iterator.h"
 #include "src/objects/module.h"
 #include "src/objects/stack-frame-info.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-array-gen.h"
 #include "src/builtins/builtins-collections-gen.h"
 #include "src/builtins/builtins-data-view-gen.h"
 #include "src/builtins/builtins-iterator-gen.h"
 #include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-typed-array-gen.h"
@@ -102,18 +107,18 @@ TF_BUILTIN(CreateHTML, CodeStubAssembler) {
     compiler::TNode<String> tmp4;
     compiler::TNode<Object> tmp5;
     ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4, &tmp5);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 12);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 12);
     compiler::TNode<String> tmp6;
     USE(tmp6);
     tmp6 = ca_.UncheckedCast<String>(CodeStubAssembler(state_).ToThisString(compiler::TNode<Context>{tmp0}, compiler::TNode<Object>{tmp1}, compiler::TNode<String>{tmp2}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 13);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 13);
     compiler::TNode<String> tmp7;
     USE(tmp7);
     tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("<"));
     compiler::TNode<String> tmp8;
     USE(tmp8);
     tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).StringAdd(compiler::TNode<Context>{tmp0}, compiler::TNode<String>{tmp7}, compiler::TNode<String>{tmp3}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 14);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 14);
     compiler::TNode<String> tmp9;
     USE(tmp9);
     tmp9 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
@@ -133,15 +138,15 @@ TF_BUILTIN(CreateHTML, CodeStubAssembler) {
     compiler::TNode<String> tmp17;
     compiler::TNode<String> tmp18;
     ca_.Bind(&block1, &tmp11, &tmp12, &tmp13, &tmp14, &tmp15, &tmp16, &tmp17, &tmp18);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 16);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 16);
     compiler::TNode<String> tmp19;
     USE(tmp19);
     tmp19 = ca_.UncheckedCast<String>(CodeStubAssembler(state_).ToString_Inline(compiler::TNode<Context>{tmp11}, compiler::TNode<Object>{tmp16}));
     compiler::TNode<String> tmp20;
     tmp20 = TORQUE_CAST(CodeStubAssembler(state_).CallRuntime(Runtime::kStringEscapeQuotes, tmp11, tmp19));
     USE(tmp20);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 15);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 17);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 15);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 17);
     compiler::TNode<String> tmp21;
     USE(tmp21);
     tmp21 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string(" "));
@@ -166,7 +171,7 @@ TF_BUILTIN(CreateHTML, CodeStubAssembler) {
     compiler::TNode<String> tmp28;
     USE(tmp28);
     tmp28 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).StringAdd(compiler::TNode<Context>{tmp11}, compiler::TNode<String>{tmp26}, compiler::TNode<String>{tmp27}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 14);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 14);
     ca_.Goto(&block2, tmp11, tmp12, tmp13, tmp14, tmp15, tmp16, tmp17, tmp28);
   }
 
@@ -180,7 +185,7 @@ TF_BUILTIN(CreateHTML, CodeStubAssembler) {
     compiler::TNode<String> tmp35;
     compiler::TNode<String> tmp36;
     ca_.Bind(&block2, &tmp29, &tmp30, &tmp31, &tmp32, &tmp33, &tmp34, &tmp35, &tmp36);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 20);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 20);
     compiler::TNode<String> tmp37;
     USE(tmp37);
     tmp37 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string(">"));
@@ -214,39 +219,43 @@ TF_BUILTIN(StringPrototypeAnchor, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 27);
-    compiler::TNode<IntPtrT> tmp2;
-    USE(tmp2);
-    tmp2 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp3;
-    USE(tmp3);
-    tmp3 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(arguments, compiler::TNode<IntPtrT>{tmp2}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 26);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.anchor"));
-    compiler::TNode<String> tmp5;
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 27);
+    compiler::TNode<IntPtrT> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("a"));
-    compiler::TNode<String> tmp6;
+    tmp5 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp6;
     USE(tmp6);
-    tmp6 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("name"));
+    tmp6 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(BaseBuiltinsFromDSLAssembler::Arguments{compiler::TNode<RawPtrT>{tmp2}, compiler::TNode<RawPtrT>{tmp3}, compiler::TNode<IntPtrT>{tmp4}}, compiler::TNode<IntPtrT>{tmp5}));
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 26);
     compiler::TNode<String> tmp7;
-    tmp7 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp6, tmp3));
     USE(tmp7);
-    arguments->PopAndReturn(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.anchor"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("a"));
+    compiler::TNode<String> tmp9;
+    USE(tmp9);
+    tmp9 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("name"));
+    compiler::TNode<String> tmp10;
+    tmp10 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp9, tmp6));
+    USE(tmp10);
+    arguments.PopAndReturn(tmp10);
   }
 }
 
@@ -255,36 +264,40 @@ TF_BUILTIN(StringPrototypeBig, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 34);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 33);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.big"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 34);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("big"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 33);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.big"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("big"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -293,37 +306,41 @@ TF_BUILTIN(StringPrototypeBlink, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 42);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 43);
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 41);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.blink"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 42);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("blink"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 43);
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 41);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.blink"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("blink"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -332,36 +349,40 @@ TF_BUILTIN(StringPrototypeBold, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 51);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 50);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.bold"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 51);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("b"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 50);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.bold"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("b"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -370,39 +391,43 @@ TF_BUILTIN(StringPrototypeFontcolor, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 59);
-    compiler::TNode<IntPtrT> tmp2;
-    USE(tmp2);
-    tmp2 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp3;
-    USE(tmp3);
-    tmp3 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(arguments, compiler::TNode<IntPtrT>{tmp2}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 58);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fontcolor"));
-    compiler::TNode<String> tmp5;
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 59);
+    compiler::TNode<IntPtrT> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("font"));
-    compiler::TNode<String> tmp6;
+    tmp5 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp6;
     USE(tmp6);
-    tmp6 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("color"));
+    tmp6 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(BaseBuiltinsFromDSLAssembler::Arguments{compiler::TNode<RawPtrT>{tmp2}, compiler::TNode<RawPtrT>{tmp3}, compiler::TNode<IntPtrT>{tmp4}}, compiler::TNode<IntPtrT>{tmp5}));
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 58);
     compiler::TNode<String> tmp7;
-    tmp7 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp6, tmp3));
     USE(tmp7);
-    arguments->PopAndReturn(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fontcolor"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("font"));
+    compiler::TNode<String> tmp9;
+    USE(tmp9);
+    tmp9 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("color"));
+    compiler::TNode<String> tmp10;
+    tmp10 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp9, tmp6));
+    USE(tmp10);
+    arguments.PopAndReturn(tmp10);
   }
 }
 
@@ -411,39 +436,43 @@ TF_BUILTIN(StringPrototypeFontsize, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 67);
-    compiler::TNode<IntPtrT> tmp2;
-    USE(tmp2);
-    tmp2 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp3;
-    USE(tmp3);
-    tmp3 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(arguments, compiler::TNode<IntPtrT>{tmp2}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 66);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fontsize"));
-    compiler::TNode<String> tmp5;
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 67);
+    compiler::TNode<IntPtrT> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("font"));
-    compiler::TNode<String> tmp6;
+    tmp5 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp6;
     USE(tmp6);
-    tmp6 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("size"));
+    tmp6 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(BaseBuiltinsFromDSLAssembler::Arguments{compiler::TNode<RawPtrT>{tmp2}, compiler::TNode<RawPtrT>{tmp3}, compiler::TNode<IntPtrT>{tmp4}}, compiler::TNode<IntPtrT>{tmp5}));
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 66);
     compiler::TNode<String> tmp7;
-    tmp7 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp6, tmp3));
     USE(tmp7);
-    arguments->PopAndReturn(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fontsize"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("font"));
+    compiler::TNode<String> tmp9;
+    USE(tmp9);
+    tmp9 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("size"));
+    compiler::TNode<String> tmp10;
+    tmp10 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp9, tmp6));
+    USE(tmp10);
+    arguments.PopAndReturn(tmp10);
   }
 }
 
@@ -452,36 +481,40 @@ TF_BUILTIN(StringPrototypeFixed, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 75);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 74);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fixed"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 75);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("tt"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 74);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.fixed"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("tt"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -490,36 +523,40 @@ TF_BUILTIN(StringPrototypeItalics, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 83);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 82);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.italics"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 83);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("i"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 82);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.italics"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("i"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -528,39 +565,43 @@ TF_BUILTIN(StringPrototypeLink, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 91);
-    compiler::TNode<IntPtrT> tmp2;
-    USE(tmp2);
-    tmp2 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp3;
-    USE(tmp3);
-    tmp3 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(arguments, compiler::TNode<IntPtrT>{tmp2}));
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 90);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.link"));
-    compiler::TNode<String> tmp5;
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 91);
+    compiler::TNode<IntPtrT> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("a"));
-    compiler::TNode<String> tmp6;
+    tmp5 = ca_.UncheckedCast<IntPtrT>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr8ATintptr17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp6;
     USE(tmp6);
-    tmp6 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("href"));
+    tmp6 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetArgumentValue(BaseBuiltinsFromDSLAssembler::Arguments{compiler::TNode<RawPtrT>{tmp2}, compiler::TNode<RawPtrT>{tmp3}, compiler::TNode<IntPtrT>{tmp4}}, compiler::TNode<IntPtrT>{tmp5}));
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 90);
     compiler::TNode<String> tmp7;
-    tmp7 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp6, tmp3));
     USE(tmp7);
-    arguments->PopAndReturn(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.link"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("a"));
+    compiler::TNode<String> tmp9;
+    USE(tmp9);
+    tmp9 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("href"));
+    compiler::TNode<String> tmp10;
+    tmp10 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp9, tmp6));
+    USE(tmp10);
+    arguments.PopAndReturn(tmp10);
   }
 }
 
@@ -569,37 +610,41 @@ TF_BUILTIN(StringPrototypeSmall, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 99);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 100);
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 98);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.small"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 99);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("small"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 100);
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 98);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.small"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("small"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -608,37 +653,41 @@ TF_BUILTIN(StringPrototypeStrike, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 108);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 109);
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 107);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.strike"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 108);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("strike"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 109);
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 107);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.strike"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("strike"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -647,36 +696,40 @@ TF_BUILTIN(StringPrototypeSub, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 116);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 115);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.sub"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 116);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("sub"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 115);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.sub"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("sub"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 
@@ -685,36 +738,40 @@ TF_BUILTIN(StringPrototypeSup, CodeStubAssembler) {
   TNode<Context> parameter0 = UncheckedCast<Context>(Parameter(Descriptor::kContext));
   USE(parameter0);
   Node* argc = Parameter(Descriptor::kJSActualArgumentsCount);
-  CodeStubArguments arguments_impl(this, ChangeInt32ToIntPtr(argc));
-  TNode<Object> parameter1 = arguments_impl.GetReceiver();
-auto arguments = &arguments_impl;
-USE(arguments);
+  TNode<IntPtrT> arguments_length(ChangeInt32ToIntPtr(argc));
+  TNode<RawPtrT> arguments_frame = UncheckedCast<RawPtrT>(LoadFramePointer());
+  BaseBuiltinsFromDSLAssembler::Arguments torque_arguments(GetFrameArguments(arguments_frame, arguments_length));
+  CodeStubArguments arguments(this, torque_arguments);
+  TNode<Object> parameter1 = arguments.GetReceiver();
 USE(parameter1);
-  compiler::CodeAssemblerParameterizedLabel<Context, Object> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
-    ca_.Goto(&block0, parameter0, parameter1);
+  compiler::CodeAssemblerParameterizedLabel<Context, Object, RawPtrT, RawPtrT, IntPtrT> block0(&ca_, compiler::CodeAssemblerLabel::kNonDeferred);
+    ca_.Goto(&block0, parameter0, parameter1, torque_arguments.frame, torque_arguments.base, torque_arguments.length);
 
   if (block0.is_used()) {
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
-    ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 123);
-    compiler::TNode<String> tmp2;
-    USE(tmp2);
-    tmp2 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    compiler::TNode<String> tmp3;
-    USE(tmp3);
-    tmp3 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
-    ca_.SetSourcePosition("../../src/builtins/string-html.tq", 122);
-    compiler::TNode<String> tmp4;
-    USE(tmp4);
-    tmp4 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.sup"));
+    compiler::TNode<RawPtrT> tmp2;
+    compiler::TNode<RawPtrT> tmp3;
+    compiler::TNode<IntPtrT> tmp4;
+    ca_.Bind(&block0, &tmp0, &tmp1, &tmp2, &tmp3, &tmp4);
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 123);
     compiler::TNode<String> tmp5;
     USE(tmp5);
-    tmp5 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("sup"));
+    tmp5 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
     compiler::TNode<String> tmp6;
-    tmp6 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp4, tmp5, tmp2, tmp3));
     USE(tmp6);
-    arguments->PopAndReturn(tmp6);
+    tmp6 = BaseBuiltinsFromDSLAssembler(state_).kEmptyString();
+    ca_.SetSourcePosition("../../v8/src/builtins/string-html.tq", 122);
+    compiler::TNode<String> tmp7;
+    USE(tmp7);
+    tmp7 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("String.prototype.sup"));
+    compiler::TNode<String> tmp8;
+    USE(tmp8);
+    tmp8 = ca_.UncheckedCast<String>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr6String18ATconstexpr_string("sup"));
+    compiler::TNode<String> tmp9;
+    tmp9 = TORQUE_CAST(CodeStubAssembler(state_).CallBuiltin(Builtins::kCreateHTML, tmp0, tmp1, tmp7, tmp8, tmp5, tmp6));
+    USE(tmp9);
+    arguments.PopAndReturn(tmp9);
   }
 }
 

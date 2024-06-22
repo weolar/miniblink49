@@ -24,7 +24,7 @@ private:
     std::map<int, void*> m_liveSelf;
     CRITICAL_SECTION m_liveSelfLock;
     static IdLiveDetect* m_inst;
-};   
+};
 
 }
 

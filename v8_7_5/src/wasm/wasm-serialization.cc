@@ -201,7 +201,7 @@ constexpr size_t kCodeHeaderSize =
     sizeof(size_t) +          // source positions size
     sizeof(size_t) +          // protected instructions size
     sizeof(WasmCode::Kind) +  // code kind
-    sizeof(WasmCode::Tier);   // tier
+    sizeof(ExecutionTier);    // tier
 
 // A List of all isolate-independent external references. This is used to create
 // a tag from the Address of an external reference and vice versa.
@@ -503,7 +503,12 @@ bool NativeModuleDeserializer::ReadHeader(Reader* reader) {
 
 bool NativeModuleDeserializer::ReadCode(uint32_t fn_index, Reader* reader) {
   size_t code_section_size = reader->Read<size_t>();
-  if (code_section_size == 0) return true;
+  if (code_section_size == 0) {
+    DCHECK(FLAG_wasm_lazy_compilation ||
+           native_module_->enabled_features().compilation_hints);
+    native_module_->UseLazyStub(fn_index);
+    return true;
+  }
   size_t constant_pool_offset = reader->Read<size_t>();
   size_t safepoint_table_offset = reader->Read<size_t>();
   size_t handler_table_offset = reader->Read<size_t>();
@@ -516,7 +521,7 @@ bool NativeModuleDeserializer::ReadCode(uint32_t fn_index, Reader* reader) {
   size_t source_position_size = reader->Read<size_t>();
   size_t protected_instructions_size = reader->Read<size_t>();
   WasmCode::Kind kind = reader->Read<WasmCode::Kind>();
-  WasmCode::Tier tier = reader->Read<WasmCode::Tier>();
+  ExecutionTier tier = reader->Read<ExecutionTier>();
 
   Vector<const byte> code_buffer = {reader->current_location(), code_size};
   reader->Skip(code_size);
@@ -608,9 +613,10 @@ MaybeHandle<WasmModuleObject> DeserializeNativeModule(
   ModuleWireBytes wire_bytes(wire_bytes_vec);
   // TODO(titzer): module features should be part of the serialization format.
   WasmFeatures enabled_features = WasmFeaturesFromIsolate(isolate);
-  ModuleResult decode_result = DecodeWasmModule(
-      enabled_features, wire_bytes.start(), wire_bytes.end(), false,
-      i::wasm::kWasmOrigin, isolate->counters(), isolate->allocator());
+  ModuleResult decode_result =
+      DecodeWasmModule(enabled_features, wire_bytes.start(), wire_bytes.end(),
+                       false, i::wasm::kWasmOrigin, isolate->counters(),
+                       isolate->wasm_engine()->allocator());
   if (decode_result.failed()) return {};
   CHECK_NOT_NULL(decode_result.value());
   WasmModule* module = decode_result.value().get();
@@ -625,10 +631,10 @@ MaybeHandle<WasmModuleObject> DeserializeNativeModule(
       std::move(wire_bytes_copy), script, Handle<ByteArray>::null());
   NativeModule* native_module = module_object->native_module();
 
-  if (FLAG_wasm_lazy_compilation) {
-    native_module->SetLazyBuiltin();
-  }
+  native_module->set_lazy_compilation(FLAG_wasm_lazy_compilation);
+
   NativeModuleDeserializer deserializer(native_module);
+  WasmCodeRefScope wasm_code_ref_scope;
 
   Reader reader(data + kVersionSize);
   if (!deserializer.Read(&reader)) return {};

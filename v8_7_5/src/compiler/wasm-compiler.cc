@@ -1132,7 +1132,7 @@ static bool ReverseBytesSupported(MachineOperatorBuilder* m,
 
 Node* WasmGraphBuilder::BuildChangeEndiannessStore(
     Node* node, MachineRepresentation mem_rep, wasm::ValueType wasmtype) {
-  Node* result;
+  Node* result = nullptr;
   Node* value = node;
   MachineOperatorBuilder* m = mcgraph()->machine();
   int valueSizeInBytes = wasm::ValueTypes::ElementSizeInBytes(wasmtype);
@@ -1281,7 +1281,7 @@ Node* WasmGraphBuilder::BuildChangeEndiannessStore(
 Node* WasmGraphBuilder::BuildChangeEndiannessLoad(Node* node,
                                                   MachineType memtype,
                                                   wasm::ValueType wasmtype) {
-  Node* result;
+  Node* result = nullptr;
   Node* value = node;
   MachineOperatorBuilder* m = mcgraph()->machine();
   int valueSizeInBytes = ElementSizeInBytes(memtype.representation());
@@ -2699,6 +2699,9 @@ Node* WasmGraphBuilder::BuildImportCall(wasm::FunctionSig* sig, Node** args,
       DCHECK_NULL(rets);
       return BuildWasmReturnCall(sig, args, position, ref_node, use_retpoline);
   }
+
+  ::OutputDebugStringA("WasmGraphBuilder::BuildImportCall fail\n");
+  return nullptr;
 }
 
 Node* WasmGraphBuilder::BuildImportCall(wasm::FunctionSig* sig, Node** args,
@@ -2750,6 +2753,8 @@ Node* WasmGraphBuilder::BuildImportCall(wasm::FunctionSig* sig, Node** args,
       DCHECK_NULL(rets);
       return BuildWasmReturnCall(sig, args, position, ref_node, use_retpoline);
   }
+  ::OutputDebugStringA("WasmGraphBuilder::BuildImportCall fail\n");
+  return nullptr;
 }
 
 Node* WasmGraphBuilder::CallDirect(uint32_t index, Node** args, Node*** rets,
@@ -2874,6 +2879,9 @@ Node* WasmGraphBuilder::BuildIndirectCall(uint32_t sig_index, Node** args,
       return BuildWasmReturnCall(sig, args, position, target_instance,
                                  use_retpoline);
   }
+
+  ::OutputDebugStringA("WasmGraphBuilder::BuildIndirectCall fail\n");
+  return nullptr;
 }
 
 Node* WasmGraphBuilder::BuildIndirectCall(uint32_t table_index,
@@ -2916,6 +2924,9 @@ Node* WasmGraphBuilder::BuildIndirectCall(uint32_t table_index,
       return BuildWasmReturnCall(sig, args, position, target_instance,
                                  use_retpoline);
   }
+
+  ::OutputDebugStringA("WasmGraphBuilder::BuildIndirectCall fail\n");
+  return nullptr;
 }
 
 Node* WasmGraphBuilder::ReturnCall(uint32_t index, Node** args,
@@ -3615,6 +3626,11 @@ const Operator* WasmGraphBuilder::GetSafeLoadOperator(int offset,
                                                       wasm::ValueType type) {
   int alignment = offset % (wasm::ValueTypes::ElementSizeInBytes(type));
   MachineType mach_type = wasm::ValueTypes::MachineTypeFor(type);
+  if (COMPRESS_POINTERS_BOOL && mach_type.IsTagged()) {
+    // We are loading tagged value from off-heap location, so we need to load
+    // it as a full word otherwise we will not be able to decompress it.
+    mach_type = MachineType::Pointer();
+  }
   if (alignment == 0 || mcgraph()->machine()->UnalignedLoadSupported(
                             wasm::ValueTypes::MachineRepresentationFor(type))) {
     return mcgraph()->machine()->Load(mach_type);
@@ -3626,6 +3642,11 @@ const Operator* WasmGraphBuilder::GetSafeStoreOperator(int offset,
                                                        wasm::ValueType type) {
   int alignment = offset % (wasm::ValueTypes::ElementSizeInBytes(type));
   MachineRepresentation rep = wasm::ValueTypes::MachineRepresentationFor(type);
+  if (COMPRESS_POINTERS_BOOL && IsAnyTagged(rep)) {
+    // We are storing tagged value to off-heap location, so we need to store
+    // it as a full word otherwise we will not be able to decompress it.
+    rep = MachineType::PointerRepresentation();
+  }
   if (alignment == 0 || mcgraph()->machine()->UnalignedStoreSupported(rep)) {
     StoreRepresentation store_rep(rep, WriteBarrierKind::kNoWriteBarrier);
     return mcgraph()->machine()->Store(store_rep);
@@ -5578,9 +5599,9 @@ class WasmWrapperGraphBuilder : public WasmGraphBuilder {
       offset = 0;
       for (size_t i = 0; i < return_count; ++i) {
         wasm::ValueType type = sig_->GetReturn(i);
-        Node* val = SetEffect(graph()->NewNode(
-            mcgraph()->machine()->Load(wasm::ValueTypes::MachineTypeFor(type)),
-            arg_buffer, Int32Constant(offset), Effect(), Control()));
+        Node* val = SetEffect(
+            graph()->NewNode(GetSafeLoadOperator(offset, type), arg_buffer,
+                             Int32Constant(offset), Effect(), Control()));
         returns[i] = val;
         offset += wasm::ValueTypes::ElementSizeInBytes(type);
       }
@@ -5946,7 +5967,7 @@ wasm::WasmCode* CompileWasmMathIntrinsic(wasm::WasmEngine* wasm_engine,
       result.frame_slot_count, result.tagged_parameter_slots,
       std::move(result.protected_instructions),
       std::move(result.source_positions), wasm::WasmCode::kFunction,
-      wasm::WasmCode::kOther);
+      wasm::ExecutionTier::kNone);
   // TODO(titzer): add counters for math intrinsic code size / allocation
   return native_module->PublishCode(std::move(wasm_code));
 }
@@ -6011,7 +6032,7 @@ wasm::WasmCode* CompileWasmImportCallWrapper(wasm::WasmEngine* wasm_engine,
       result.frame_slot_count, result.tagged_parameter_slots,
       std::move(result.protected_instructions),
       std::move(result.source_positions), wasm::WasmCode::kWasmToJsWrapper,
-      wasm::WasmCode::kOther);
+      wasm::ExecutionTier::kNone);
   return native_module->PublishCode(std::move(wasm_code));
 }
 
@@ -6115,9 +6136,10 @@ TurbofanWasmCompilationUnit::TurbofanWasmCompilationUnit(
 TurbofanWasmCompilationUnit::~TurbofanWasmCompilationUnit() = default;
 
 bool TurbofanWasmCompilationUnit::BuildGraphForWasmFunction(
-    wasm::CompilationEnv* env, const wasm::FunctionBody& func_body,
-    wasm::WasmFeatures* detected, double* decode_ms, MachineGraph* mcgraph,
-    NodeOriginTable* node_origins, SourcePositionTable* source_positions) {
+    AccountingAllocator* allocator, wasm::CompilationEnv* env,
+    const wasm::FunctionBody& func_body, wasm::WasmFeatures* detected,
+    double* decode_ms, MachineGraph* mcgraph, NodeOriginTable* node_origins,
+    SourcePositionTable* source_positions) {
   base::ElapsedTimer decode_timer;
   if (FLAG_trace_wasm_decode_time) {
     decode_timer.Start();
@@ -6126,9 +6148,9 @@ bool TurbofanWasmCompilationUnit::BuildGraphForWasmFunction(
   // Create a TF graph during decoding.
   WasmGraphBuilder builder(env, mcgraph->zone(), mcgraph, func_body.sig,
                            source_positions);
-  wasm::VoidResult graph_construction_result = wasm::BuildTFGraph(
-      wasm_unit_->wasm_engine_->allocator(), env->enabled_features, env->module,
-      &builder, detected, func_body, node_origins);
+  wasm::VoidResult graph_construction_result =
+      wasm::BuildTFGraph(allocator, env->enabled_features, env->module,
+                         &builder, detected, func_body, node_origins);
   if (graph_construction_result.failed()) {
     if (FLAG_trace_wasm_compiler) {
       StdoutStream{} << "Compilation failed: "
@@ -6149,8 +6171,7 @@ bool TurbofanWasmCompilationUnit::BuildGraphForWasmFunction(
 
   if (wasm_unit_->func_index_ >= FLAG_trace_wasm_ast_start &&
       wasm_unit_->func_index_ < FLAG_trace_wasm_ast_end) {
-    PrintRawWasmCode(wasm_unit_->wasm_engine_->allocator(), func_body,
-                     env->module, wasm::kPrintLocals);
+    PrintRawWasmCode(allocator, func_body, env->module, wasm::kPrintLocals);
   }
   if (FLAG_trace_wasm_decode_time) {
     *decode_ms = decode_timer.Elapsed().InMillisecondsF();
@@ -6174,14 +6195,15 @@ Vector<const char> GetDebugName(Zone* zone, int index) {
 }  // namespace
 
 wasm::WasmCompilationResult TurbofanWasmCompilationUnit::ExecuteCompilation(
-    wasm::CompilationEnv* env, const wasm::FunctionBody& func_body,
-    Counters* counters, wasm::WasmFeatures* detected) {
+    wasm::WasmEngine* wasm_engine, wasm::CompilationEnv* env,
+    const wasm::FunctionBody& func_body, Counters* counters,
+    wasm::WasmFeatures* detected) {
   TRACE_EVENT0(TRACE_DISABLED_BY_DEFAULT("v8.wasm"),
                "ExecuteTurbofanCompilation");
   double decode_ms = 0;
   size_t node_count = 0;
 
-  Zone zone(wasm_unit_->wasm_engine_->allocator(), ZONE_NAME);
+  Zone zone(wasm_engine->allocator(), ZONE_NAME);
   MachineGraph* mcgraph = new (&zone) MachineGraph(
       new (&zone) Graph(&zone), new (&zone) CommonOperatorBuilder(&zone),
       new (&zone) MachineOperatorBuilder(
@@ -6206,8 +6228,9 @@ wasm::WasmCompilationResult TurbofanWasmCompilationUnit::ExecuteCompilation(
                                       : nullptr;
   SourcePositionTable* source_positions =
       new (mcgraph->zone()) SourcePositionTable(mcgraph->graph());
-  if (!BuildGraphForWasmFunction(env, func_body, detected, &decode_ms, mcgraph,
-                                 node_origins, source_positions)) {
+  if (!BuildGraphForWasmFunction(wasm_engine->allocator(), env, func_body,
+                                 detected, &decode_ms, mcgraph, node_origins,
+                                 source_positions)) {
     return wasm::WasmCompilationResult{};
   }
 
@@ -6228,9 +6251,8 @@ wasm::WasmCompilationResult TurbofanWasmCompilationUnit::ExecuteCompilation(
   }
 
   Pipeline::GenerateCodeForWasmFunction(
-      &info, wasm_unit_->wasm_engine_, mcgraph, call_descriptor,
-      source_positions, node_origins, func_body, env->module,
-      wasm_unit_->func_index_);
+      &info, wasm_engine, mcgraph, call_descriptor, source_positions,
+      node_origins, func_body, env->module, wasm_unit_->func_index_);
 
   if (FLAG_trace_wasm_decode_time) {
     double pipeline_ms = pipeline_timer.Elapsed().InMillisecondsF();
@@ -6243,23 +6265,27 @@ wasm::WasmCompilationResult TurbofanWasmCompilationUnit::ExecuteCompilation(
   // TODO(bradnelson): Improve histogram handling of size_t.
   counters->wasm_compile_function_peak_memory_bytes()->AddSample(
       static_cast<int>(mcgraph->graph()->zone()->allocation_size()));
-  return std::move(*info.ReleaseWasmCompilationResult());
+  auto result = info.ReleaseWasmCompilationResult();
+  DCHECK_EQ(wasm::ExecutionTier::kTurbofan, result->result_tier);
+  return std::move(*result);
 }
 
 wasm::WasmCompilationResult InterpreterCompilationUnit::ExecuteCompilation(
-    wasm::CompilationEnv* env, const wasm::FunctionBody& func_body,
-    Counters* counters, wasm::WasmFeatures* detected) {
-  Zone zone(wasm_unit_->wasm_engine_->allocator(), ZONE_NAME);
+    wasm::WasmEngine* wasm_engine, wasm::CompilationEnv* env,
+    const wasm::FunctionBody& func_body, Counters* counters,
+    wasm::WasmFeatures* detected) {
+  Zone zone(wasm_engine->allocator(), ZONE_NAME);
   const wasm::WasmModule* module = env ? env->module : nullptr;
   wasm::WasmFullDecoder<wasm::Decoder::kValidate, wasm::EmptyInterface> decoder(
       &zone, module, env->enabled_features, detected, func_body);
   decoder.Decode();
   if (decoder.failed()) return wasm::WasmCompilationResult{};
 
-  wasm::WasmCompilationResult result = CompileWasmInterpreterEntry(
-      wasm_unit_->wasm_engine_, env->enabled_features, wasm_unit_->func_index_,
-      func_body.sig);
+  wasm::WasmCompilationResult result =
+      CompileWasmInterpreterEntry(wasm_engine, env->enabled_features,
+                                  wasm_unit_->func_index_, func_body.sig);
   DCHECK(result.succeeded());
+  DCHECK_EQ(wasm::ExecutionTier::kInterpreter, result.result_tier);
 
   return result;
 }

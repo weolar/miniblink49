@@ -35,11 +35,11 @@ namespace compiler {
   V(CallRuntime)                  \
   V(CallRuntimeForPair)           \
   V(CreateBlockContext)           \
-  V(CreateFunctionContext)        \
   V(CreateEvalContext)            \
+  V(CreateFunctionContext)        \
   V(Debugger)                     \
-  V(PushContext)                  \
   V(PopContext)                   \
+  V(PushContext)                  \
   V(ResumeGenerator)              \
   V(ReThrow)                      \
   V(StaContextSlot)               \
@@ -48,15 +48,75 @@ namespace compiler {
   V(SwitchOnGeneratorState)       \
   V(Throw)
 
-#define CLEAR_ACCUMULATOR_LIST(V) \
-  V(CreateEmptyObjectLiteral)     \
-  V(CreateMappedArguments)        \
-  V(CreateRestParameter)          \
-  V(CreateUnmappedArguments)      \
-  V(LdaContextSlot)               \
-  V(LdaCurrentContextSlot)        \
-  V(LdaImmutableContextSlot)      \
-  V(LdaImmutableCurrentContextSlot)
+#define CLEAR_ACCUMULATOR_LIST(V)   \
+  V(Add)                            \
+  V(AddSmi)                         \
+  V(BitwiseAnd)                     \
+  V(BitwiseAndSmi)                  \
+  V(BitwiseNot)                     \
+  V(BitwiseOr)                      \
+  V(BitwiseOrSmi)                   \
+  V(BitwiseXor)                     \
+  V(BitwiseXorSmi)                  \
+  V(CloneObject)                    \
+  V(CreateArrayFromIterable)        \
+  V(CreateArrayLiteral)             \
+  V(CreateEmptyArrayLiteral)        \
+  V(CreateEmptyObjectLiteral)       \
+  V(CreateMappedArguments)          \
+  V(CreateObjectLiteral)            \
+  V(CreateRestParameter)            \
+  V(CreateUnmappedArguments)        \
+  V(Dec)                            \
+  V(DeletePropertySloppy)           \
+  V(DeletePropertyStrict)           \
+  V(Div)                            \
+  V(DivSmi)                         \
+  V(Exp)                            \
+  V(ExpSmi)                         \
+  V(ForInContinue)                  \
+  V(ForInEnumerate)                 \
+  V(ForInNext)                      \
+  V(ForInStep)                      \
+  V(GetTemplateObject)              \
+  V(Inc)                            \
+  V(LdaContextSlot)                 \
+  V(LdaCurrentContextSlot)          \
+  V(LdaImmutableContextSlot)        \
+  V(LdaImmutableCurrentContextSlot) \
+  V(LogicalNot)                     \
+  V(Mod)                            \
+  V(ModSmi)                         \
+  V(Mul)                            \
+  V(MulSmi)                         \
+  V(Negate)                         \
+  V(SetPendingMessage)              \
+  V(ShiftLeft)                      \
+  V(ShiftLeftSmi)                   \
+  V(ShiftRight)                     \
+  V(ShiftRightLogical)              \
+  V(ShiftRightLogicalSmi)           \
+  V(ShiftRightSmi)                  \
+  V(Sub)                            \
+  V(SubSmi)                         \
+  V(TestEqual)                      \
+  V(TestEqualStrict)                \
+  V(TestGreaterThan)                \
+  V(TestGreaterThanOrEqual)         \
+  V(TestInstanceOf)                 \
+  V(TestLessThan)                   \
+  V(TestLessThanOrEqual)            \
+  V(TestNull)                       \
+  V(TestReferenceEqual)             \
+  V(TestTypeOf)                     \
+  V(TestUndefined)                  \
+  V(TestUndetectable)               \
+  V(ToBooleanLogicalNot)            \
+  V(ToName)                         \
+  V(ToNumber)                       \
+  V(ToNumeric)                      \
+  V(ToString)                       \
+  V(TypeOf)
 
 #define UNCONDITIONAL_JUMPS_LIST(V) \
   V(Jump)                           \
@@ -74,10 +134,10 @@ namespace compiler {
   V(JumpIfNotUndefinedConstant)   \
   V(JumpIfNull)                   \
   V(JumpIfNullConstant)           \
-  V(JumpIfToBooleanTrueConstant)  \
+  V(JumpIfToBooleanFalse)         \
   V(JumpIfToBooleanFalseConstant) \
   V(JumpIfToBooleanTrue)          \
-  V(JumpIfToBooleanFalse)         \
+  V(JumpIfToBooleanTrueConstant)  \
   V(JumpIfTrue)                   \
   V(JumpIfTrueConstant)           \
   V(JumpIfUndefined)              \
@@ -88,18 +148,6 @@ namespace compiler {
   V(LdaNamedPropertyNoFeedback)       \
   V(StackCheck)                       \
   V(StaNamedPropertyNoFeedback)       \
-  V(TestEqual)                        \
-  V(TestEqualStrict)                  \
-  V(TestGreaterThan)                  \
-  V(TestGreaterThanOrEqual)           \
-  V(TestInstanceOf)                   \
-  V(TestLessThan)                     \
-  V(TestLessThanOrEqual)              \
-  V(TestNull)                         \
-  V(TestReferenceEqual)               \
-  V(TestTypeOf)                       \
-  V(TestUndefined)                    \
-  V(TestUndetectable)                 \
   V(ThrowReferenceErrorIfHole)        \
   V(ThrowSuperAlreadyCalledIfNotHole) \
   V(ThrowSuperNotCalledIfHole)
@@ -121,8 +169,8 @@ namespace compiler {
   V(ExtraWide)                       \
   V(GetSuperConstructor)             \
   V(Illegal)                         \
-  V(LdaFalse)                        \
   V(LdaConstant)                     \
+  V(LdaFalse)                        \
   V(LdaGlobal)                       \
   V(LdaGlobalInsideTypeof)           \
   V(LdaKeyedProperty)                \
@@ -188,9 +236,9 @@ class CompilationSubject {
   MaybeHandle<JSFunction> closure_;
 };
 
-typedef ZoneSet<Handle<Object>, HandleComparator<Object>> ConstantsSet;
-typedef ZoneSet<Handle<Map>, HandleComparator<Map>> MapsSet;
-typedef ZoneSet<FunctionBlueprint> BlueprintsSet;
+using ConstantsSet = ZoneSet<Handle<Object>, HandleComparator<Object>>;
+using MapsSet = ZoneSet<Handle<Map>, HandleComparator<Map>>;
+using BlueprintsSet = ZoneSet<FunctionBlueprint>;
 
 class Hints {
  public:
@@ -215,7 +263,7 @@ class Hints {
   BlueprintsSet function_blueprints_;
 };
 
-typedef ZoneVector<Hints> HintsVector;
+using HintsVector = ZoneVector<Hints>;
 
 // The SerializerForBackgroundCompilation makes sure that the relevant function
 // data such as bytecode, SharedFunctionInfo and FeedbackVector, used by later
@@ -247,14 +295,16 @@ class SerializerForBackgroundCompilation {
   void ProcessCallVarArgs(interpreter::BytecodeArrayIterator* iterator,
                           ConvertReceiverMode receiver_mode,
                           bool with_spread = false);
+
   void ProcessJump(interpreter::BytecodeArrayIterator* iterator);
   void MergeAfterJump(interpreter::BytecodeArrayIterator* iterator);
-  void ProcessNamedPropertyAccess(Hints const& receiver, NameRef const& name,
-                                  FeedbackSlot slot);
 
-  Hints RunChildSerializer(CompilationSubject function,
-                           base::Optional<Hints> new_target,
-                           const HintsVector& arguments, bool with_spread);
+  void ProcessKeyedPropertyAccess(Hints const& receiver, Hints const& key,
+                                  FeedbackSlot slot, AccessMode mode);
+  void ProcessNamedPropertyAccess(interpreter::BytecodeArrayIterator* iterator,
+                                  AccessMode mode);
+  void ProcessNamedPropertyAccess(Hints const& receiver, NameRef const& name,
+                                  FeedbackSlot slot, AccessMode mode);
 
   GlobalAccessFeedback const* ProcessFeedbackForGlobalAccess(FeedbackSlot slot);
   void ProcessFeedbackForKeyedPropertyAccess(FeedbackSlot slot,
@@ -262,6 +312,10 @@ class SerializerForBackgroundCompilation {
   void ProcessFeedbackForNamedPropertyAccess(FeedbackSlot slot,
                                              NameRef const& name);
   void ProcessMapForNamedPropertyAccess(MapRef const& map, NameRef const& name);
+
+  Hints RunChildSerializer(CompilationSubject function,
+                           base::Optional<Hints> new_target,
+                           const HintsVector& arguments, bool with_spread);
 
   JSHeapBroker* broker() const { return broker_; }
   Zone* zone() const { return zone_; }

@@ -109,7 +109,9 @@ static void installV8MediaKeyErrorTemplate(v8::Local<v8::FunctionTemplate> funct
     static_assert(6 == MediaKeyError::MEDIA_KEYERR_DOMAIN, "the value of MediaKeyError_MEDIA_KEYERR_DOMAIN does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8MediaKeyError::domTemplate(v8::Isolate* isolate)

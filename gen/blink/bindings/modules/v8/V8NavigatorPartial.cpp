@@ -70,64 +70,64 @@ namespace blink {
 
 namespace NavigatorPartialV8Internal {
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+// #ifdef MINIBLINK_NOT_IMPLEMENTED
 
-static void bluetoothAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    RawPtr<Bluetooth> cppValue(NavigatorBluetooth::bluetooth(*impl));
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "bluetooth"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
-}
-
-static void bluetoothAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::bluetoothAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void credentialsAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    RawPtr<CredentialsContainer> cppValue(NavigatorCredentials::credentials(*impl));
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "credentials"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
-}
-
-static void credentialsAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::credentialsAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void doNotTrackAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    v8SetReturnValueStringOrNull(info, NavigatorDoNotTrack::doNotTrack(*impl), info.GetIsolate());
-}
-
-static void doNotTrackAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::doNotTrackAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
+// static void bluetoothAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     RawPtr<Bluetooth> cppValue(NavigatorBluetooth::bluetooth(*impl));
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "bluetooth"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+// }
+// 
+// static void bluetoothAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::bluetoothAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void credentialsAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     RawPtr<CredentialsContainer> cppValue(NavigatorCredentials::credentials(*impl));
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "credentials"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+// }
+// 
+// static void credentialsAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::credentialsAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void doNotTrackAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     v8SetReturnValueStringOrNull(info, NavigatorDoNotTrack::doNotTrack(*impl), info.GetIsolate());
+// }
+// 
+// static void doNotTrackAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::doNotTrackAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
 static void geolocationAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -148,50 +148,50 @@ static void geolocationAttributeGetterCallback(const v8::FunctionCallbackInfo<v8
     NavigatorPartialV8Internal::geolocationAttributeGetter(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
-
-static void mediaDevicesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    RawPtr<MediaDevices> cppValue(NavigatorUserMedia::mediaDevices(*impl));
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "mediaDevices"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
-}
-
-static void mediaDevicesAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::mediaDevicesAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void servicesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
-    RawPtr<ServicePortCollection> cppValue(NavigatorServices::services(executionContext, *impl));
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "services"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
-}
-
-static void servicesAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::servicesAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
+// 
+// static void mediaDevicesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     RawPtr<MediaDevices> cppValue(NavigatorUserMedia::mediaDevices(*impl));
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "mediaDevices"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+// }
+// 
+// static void mediaDevicesAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::mediaDevicesAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void servicesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
+//     RawPtr<ServicePortCollection> cppValue(NavigatorServices::services(executionContext, *impl));
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "services"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+// }
+// 
+// static void servicesAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::servicesAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
 static void connectionAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -213,29 +213,29 @@ static void connectionAttributeGetterCallback(const v8::FunctionCallbackInfo<v8:
     NavigatorPartialV8Internal::connectionAttributeGetter(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
+// 
+// static void permissionsAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Navigator* impl = V8Navigator::toImpl(holder);
+//     RawPtr<Permissions> cppValue(NavigatorPermissions::permissions(*impl));
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "permissions"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+// }
+// 
+// static void permissionsAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     NavigatorPartialV8Internal::permissionsAttributeGetter(info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
 
-static void permissionsAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    v8::Local<v8::Object> holder = info.Holder();
-    Navigator* impl = V8Navigator::toImpl(holder);
-    RawPtr<Permissions> cppValue(NavigatorPermissions::permissions(*impl));
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "permissions"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
-}
-
-static void permissionsAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    NavigatorPartialV8Internal::permissionsAttributeGetter(info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-#endif // MINIBLINK_NOT_IMPLEMENTED
+// #endif // MINIBLINK_NOT_IMPLEMENTED
 
 static void pluginsAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
@@ -781,8 +781,8 @@ static void requestMIDIAccessMethodCallback(const v8::FunctionCallbackInfo<v8::V
 static const V8DOMConfiguration::AccessorConfiguration V8NavigatorAccessors[] = {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     {"doNotTrack", NavigatorPartialV8Internal::doNotTrackAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-    {"geolocation", NavigatorPartialV8Internal::geolocationAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 #endif // MINIBLINK_NOT_IMPLEMENTED
+    {"geolocation", NavigatorPartialV8Internal::geolocationAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"plugins", NavigatorPartialV8Internal::pluginsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"mimeTypes", NavigatorPartialV8Internal::mimeTypesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 #ifdef MINIBLINK_NOT_IMPLEMENTED
@@ -820,54 +820,54 @@ void V8NavigatorPartial::installV8NavigatorTemplate(v8::Local<v8::FunctionTempla
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"bluetooth", NavigatorPartialV8Internal::bluetoothAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"credentials", NavigatorPartialV8Internal::credentialsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::enumerateDevicesEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"mediaDevices", NavigatorPartialV8Internal::mediaDevicesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"services", NavigatorPartialV8Internal::servicesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"bluetooth", NavigatorPartialV8Internal::bluetoothAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"credentials", NavigatorPartialV8Internal::credentialsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::enumerateDevicesEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"mediaDevices", NavigatorPartialV8Internal::mediaDevicesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"services", NavigatorPartialV8Internal::servicesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
     if (RuntimeEnabledFeatures::networkInformationEnabled()) {
         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
         {"connection", NavigatorPartialV8Internal::connectionAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
     }
-    if (RuntimeEnabledFeatures::permissionsEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"permissions", NavigatorPartialV8Internal::permissionsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::presentationEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"presentation", NavigatorPartialV8Internal::presentationAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::quotaPromiseEnabled()) {
-        static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
-        {"storageQuota", NavigatorPartialV8Internal::storageQuotaAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        const V8DOMConfiguration::MethodConfiguration requestMediaKeySystemAccessMethodConfiguration = {
-            "requestMediaKeySystemAccess", NavigatorPartialV8Internal::requestMediaKeySystemAccessMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts,
-        };
-        V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, requestMediaKeySystemAccessMethodConfiguration);
-    }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//     if (RuntimeEnabledFeatures::permissionsEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"permissions", NavigatorPartialV8Internal::permissionsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::presentationEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"presentation", NavigatorPartialV8Internal::presentationAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::quotaPromiseEnabled()) {
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
+//         {"storageQuota", NavigatorPartialV8Internal::storageQuotaAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         const V8DOMConfiguration::MethodConfiguration requestMediaKeySystemAccessMethodConfiguration = {
+//             "requestMediaKeySystemAccess", NavigatorPartialV8Internal::requestMediaKeySystemAccessMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts,
+//         };
+//         V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, requestMediaKeySystemAccessMethodConfiguration);
+//     }
+// #endif // MINIBLINK_NOT_IMPLEMENTED
 
     if (RuntimeEnabledFeatures::navigatorContentUtilsEnabled()) {
         const V8DOMConfiguration::MethodConfiguration registerProtocolHandlerMethodConfiguration = {

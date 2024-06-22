@@ -39,8 +39,12 @@ void PageAnimator::serviceScriptedAnimations(double monotonicAnimationStartTime)
 
     WillBeHeapVector<RefPtrWillBeMember<Document>> documents;
     for (Frame* frame = m_page->mainFrame(); frame; frame = frame->tree().traverseNext()) {
-        if (frame->isLocalFrame())
-            documents.append(toLocalFrame(frame)->document());
+        if (frame->isLocalFrame()) {
+            Document* document = toLocalFrame(frame)->document();
+            if (!document)
+                DebugBreak();
+            documents.append(document);
+        }
     }
 
     for (size_t i = 0; i < documents.size(); ++i) {
@@ -59,12 +63,19 @@ void PageAnimator::serviceScriptedAnimations(double monotonicAnimationStartTime)
     }
 
     for (size_t i = 0; i < documents.size(); ++i) {
+        Document* document = documents[i];
+        if (!document)
+            DebugBreak();
         DocumentAnimations::updateAnimationTimingForAnimationFrame(*documents[i], monotonicAnimationStartTime);
         SVGDocumentExtensions::serviceOnAnimationFrame(*documents[i], monotonicAnimationStartTime);
     }
 
-    for (size_t i = 0; i < documents.size(); ++i)
+    for (size_t i = 0; i < documents.size(); ++i) {
+        Document* document = documents[i];
+        if (!document)
+            DebugBreak();
         documents[i]->serviceScriptedAnimations(monotonicAnimationStartTime);
+    }
 
 #if ENABLE(OILPAN)
     documents.clear();

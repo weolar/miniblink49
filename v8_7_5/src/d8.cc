@@ -47,6 +47,10 @@
 #include "src/vm-state-inl.h"
 #include "src/wasm/wasm-engine.h"
 
+#ifdef V8_INTL_SUPPORT
+#include "unicode/locid.h"
+#endif  // V8_INTL_SUPPORT
+
 #if !defined(_WIN32) && !defined(_WIN64)
 #include <unistd.h>  // NOLINT
 #else
@@ -1117,8 +1121,36 @@ void Shell::RealmNavigate(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
   Local<Context> context = Local<Context>::New(isolate, data->realms_[index]);
   v8::MaybeLocal<Value> global_object = context->Global();
+
+  // Context::Global doesn't return JSGlobalProxy if DetachGlobal is called in
+  // advance.
+  if (!global_object.IsEmpty()) {
+    HandleScope scope(isolate);
+    if (!Utils::OpenHandle(*global_object.ToLocalChecked())
+             ->IsJSGlobalProxy()) {
+      global_object = v8::MaybeLocal<Value>();
+    }
+  }
+
   DisposeRealm(args, index);
   CreateRealm(args, index, global_object);
+}
+
+// Realm.detachGlobal(i) detaches the global objects of realm i from realm i.
+void Shell::RealmDetachGlobal(const v8::FunctionCallbackInfo<v8::Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+  PerIsolateData* data = PerIsolateData::Get(isolate);
+  int index = data->RealmIndexOrThrow(args, 0);
+  if (index == -1) return;
+  if (index == 0 || index == data->realm_current_ ||
+      index == data->realm_switch_) {
+    Throw(args.GetIsolate(), "Invalid realm index");
+    return;
+  }
+
+  HandleScope scope(isolate);
+  Local<Context> realm = Local<Context>::New(isolate, data->realms_[index]);
+  realm->DetachGlobal();
 }
 
 // Realm.dispose(i) disposes the reference to the realm i.
@@ -1807,6 +1839,10 @@ Local<ObjectTemplate> Shell::CreateGlobalTemplate(Isolate* isolate) {
       String::NewFromUtf8(isolate, "navigate", NewStringType::kNormal)
           .ToLocalChecked(),
       FunctionTemplate::New(isolate, RealmNavigate));
+  realm_template->Set(
+      String::NewFromUtf8(isolate, "detachGlobal", NewStringType::kNormal)
+          .ToLocalChecked(),
+      FunctionTemplate::New(isolate, RealmDetachGlobal));
   realm_template->Set(
       String::NewFromUtf8(isolate, "dispose", NewStringType::kNormal)
           .ToLocalChecked(),
@@ -2844,6 +2880,9 @@ bool Shell::SetOptions(int argc, char* argv[]) {
     } else if (strncmp(argv[i], "--icu-data-file=", 16) == 0) {
       options.icu_data_file = argv[i] + 16;
       argv[i] = nullptr;
+    } else if (strncmp(argv[i], "--icu-locale=", 13) == 0) {
+      options.icu_locale = argv[i] + 13;
+      argv[i] = nullptr;
 #ifdef V8_USE_EXTERNAL_STARTUP_DATA
     } else if (strncmp(argv[i], "--natives_blob=", 15) == 0) {
       options.natives_blob = argv[i] + 15;
@@ -3272,7 +3311,8 @@ class Deserializer : public ValueDeserializer::Delegate {
     if (clone_id < data_->shared_array_buffer_contents().size()) {
       const SharedArrayBuffer::Contents contents =
           data_->shared_array_buffer_contents().at(clone_id);
-      return SharedArrayBuffer::New(isolate_, contents);
+      return SharedArrayBuffer::New(isolate_, contents.Data(),
+                                    contents.ByteLength());
     }
     return MaybeLocal<SharedArrayBuffer>();
   }
@@ -3345,7 +3385,16 @@ int Shell::Main(int argc, char* argv[]) {
   std::ofstream trace_file;
   v8::base::EnsureConsoleOutput();
   if (!SetOptions(argc, argv)) return 1;
+
   v8::V8::InitializeICUDefaultLocation(argv[0], options.icu_data_file);
+
+#ifdef V8_INTL_SUPPORT
+  if (options.icu_locale != nullptr) {
+    icu::Locale locale(options.icu_locale);
+    UErrorCode error_code = U_ZERO_ERROR;
+    icu::Locale::setDefault(locale, error_code);
+  }
+#endif  // V8_INTL_SUPPORT
 
   v8::platform::InProcessStackDumping in_process_stack_dumping =
       options.disable_in_process_stack_traces

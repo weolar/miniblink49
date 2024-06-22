@@ -134,7 +134,7 @@ static int xmlInitializeDict(void) {
  *
  * Free the dictionary mutex.
  */
-void
+void XMLCALL
 xmlDictCleanup(void) {
     if (!xmlDictInitialized)
         return;
@@ -437,7 +437,7 @@ xmlDictComputeFastQKey(const xmlChar *prefix, int plen,
  *
  * Returns the newly created dictionnary, or NULL if an error occured.
  */
-xmlDictPtr
+xmlDictPtr XMLCALL
 xmlDictCreate(void) {
     xmlDictPtr dict;
 
@@ -478,7 +478,7 @@ xmlDictCreate(void) {
  *
  * Returns the newly created dictionnary, or NULL if an error occured.
  */
-xmlDictPtr
+xmlDictPtr XMLCALL
 xmlDictCreateSub(xmlDictPtr sub) {
     xmlDictPtr dict = xmlDictCreate();
 
@@ -500,7 +500,7 @@ xmlDictCreateSub(xmlDictPtr sub) {
  *
  * Returns 0 in case of success and -1 in case of error
  */
-int
+int XMLCALL
 xmlDictReference(xmlDictPtr dict) {
     if (!xmlDictInitialized)
         if (!xmlInitializeDict())
@@ -655,7 +655,7 @@ xmlDictGrow(xmlDictPtr dict, int size) {
  * Free the hash @dict and its contents. The userdata is
  * deallocated with @f if provided.
  */
-void
+void XMLCALL
 xmlDictFree(xmlDictPtr dict) {
     int i;
     xmlDictEntryPtr iter;
@@ -720,7 +720,7 @@ xmlDictFree(xmlDictPtr dict) {
  *
  * Returns the internal copy of the name or NULL in case of internal error
  */
-const xmlChar *
+const xmlChar * XMLCALL
 xmlDictLookup(xmlDictPtr dict, const xmlChar *name, int len) {
     unsigned long key, okey, nbi = 0;
     xmlDictEntryPtr entry;
@@ -853,7 +853,7 @@ xmlDictLookup(xmlDictPtr dict, const xmlChar *name, int len) {
  *
  * Returns the internal copy of the name or NULL if not found.
  */
-const xmlChar *
+const xmlChar * XMLCALL
 xmlDictExists(xmlDictPtr dict, const xmlChar *name, int len) {
     unsigned long key, okey, nbi = 0;
     xmlDictEntryPtr insert;
@@ -955,7 +955,7 @@ xmlDictExists(xmlDictPtr dict, const xmlChar *name, int len) {
  *
  * Returns the internal copy of the QName or NULL in case of internal error
  */
-const xmlChar *
+const xmlChar * XMLCALL
 xmlDictQLookup(xmlDictPtr dict, const xmlChar *prefix, const xmlChar *name) {
     unsigned long okey, key, nbi = 0;
     xmlDictEntryPtr entry;
@@ -1060,7 +1060,7 @@ xmlDictQLookup(xmlDictPtr dict, const xmlChar *prefix, const xmlChar *name) {
  * Returns 1 if true, 0 if false and -1 in case of error
  * -1 in case of error
  */
-int
+int XMLCALL
 xmlDictOwns(xmlDictPtr dict, const xmlChar *str) {
     xmlDictStringsPtr pool;
 
@@ -1086,7 +1086,7 @@ xmlDictOwns(xmlDictPtr dict, const xmlChar *str) {
  * Returns the number of elements in the dictionnary or
  * -1 in case of error
  */
-int
+int XMLCALL
 xmlDictSize(xmlDictPtr dict) {
     if (dict == NULL)
 	return(-1);

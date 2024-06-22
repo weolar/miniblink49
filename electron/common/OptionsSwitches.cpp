@@ -2,30 +2,30 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-#include "OptionsSwitches.h"
+#include "common/OptionsSwitches.h"
 
 namespace options {
 
-const char kTitle[]          = "title";
-const char kIcon[]           = "icon";
-const char kFrame[]          = "frame";
-const char kShow[]           = "show";
-const char kCenter[]         = "center";
-const char kX[]              = "x";
-const char kY[]              = "y";
-const char kWidth[]          = "width";
-const char kHeight[]         = "height";
-const char kMinWidth[]       = "minWidth";
-const char kMinHeight[]      = "minHeight";
-const char kMaxWidth[]       = "maxWidth";
-const char kMaxHeight[]      = "maxHeight";
-const char kResizable[]      = "resizable";
-const char kMovable[]        = "movable";
-const char kMinimizable[]    = "minimizable";
-const char kMaximizable[]    = "maximizable";
+const char kTitle[] = "title";
+const char kIcon[] = "icon";
+const char kFrame[] = "frame";
+const char kShow[] = "show";
+const char kCenter[] = "center";
+const char kX[] = "x";
+const char kY[] = "y";
+const char kWidth[] = "width";
+const char kHeight[] = "height";
+const char kMinWidth[] = "minWidth";
+const char kMinHeight[] = "minHeight";
+const char kMaxWidth[] = "maxWidth";
+const char kMaxHeight[] = "maxHeight";
+const char kResizable[] = "resizable";
+const char kMovable[] = "movable";
+const char kMinimizable[] = "minimizable";
+const char kMaximizable[] = "maximizable";
 const char kFullScreenable[] = "fullscreenable";
-const char kClosable[]       = "closable";
-const char kFullscreen[]     = "fullscreen";
+const char kClosable[] = "closable";
+const char kFullscreen[] = "fullscreen";
 
 // Whether the window should show in taskbar.
 const char kSkipTaskbar[] = "skipTaskbar";
@@ -101,7 +101,7 @@ const char kNodeIntegration[] = "nodeIntegration";
 const char kGuestInstanceID[] = "guestInstanceId";
 
 // Web runtime features.
-const char kExperimentalFeatures[]       = "experimentalFeatures";
+const char kExperimentalFeatures[] = "experimentalFeatures";
 const char kExperimentalCanvasFeatures[] = "experimentalCanvasFeatures";
 
 // Opener window's ID.
@@ -117,7 +117,7 @@ const char kBlinkFeatures[] = "blinkFeatures";
 // Disable blink features.
 const char kDisableBlinkFeatures[] = "disableBlinkFeatures";
 
-}  // namespace options
+} // namespace options
 
 namespace switches {
 
@@ -157,13 +157,13 @@ const char kAppUserModelId[] = "app-user-model-id";
 
 // The command line switch versions of the options.
 const char kBackgroundColor[] = "background-color";
-const char kZoomFactor[]      = "zoom-factor";
-const char kPreloadScript[]   = "preload";
-const char kPreloadURL[]      = "preload-url";
+const char kZoomFactor[] = "zoom-factor";
+const char kPreloadScript[] = "preload";
+const char kPreloadURL[] = "preload-url";
 const char kNodeIntegration[] = "node-integration";
 const char kGuestInstanceID[] = "guest-instance-id";
-const char kOpenerID[]        = "opener-id";
-const char kScrollBounce[]    = "scroll-bounce";
+const char kOpenerID[] = "opener-id";
+const char kScrollBounce[] = "scroll-bounce";
 
 // Widevine options
 // Path to Widevine CDM binaries.
@@ -171,5 +171,4 @@ const char kWidevineCdmPath[] = "widevine-cdm-path";
 // Widevine CDM version.
 const char kWidevineCdmVersion[] = "widevine-cdm-version";
 
-}  // namespace switches
-
+} // namespace switches

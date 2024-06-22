@@ -1,5 +1,6 @@
 #include "base/compiler_specific.h"
 #include "third_party/WebKit/public/platform/Platform.h"
+#include "net/StorageDef.h"
 
 namespace WTF {
 class Mutex;
@@ -8,9 +9,10 @@ class Mutex;
 namespace blink {
 template <typename T> class Timer;
 class WebThreadSupportingGC;
+class GcTimeScheduler;
 }
 
-namespace cc_blink {
+namespace mc_blink {
 class WebCompositorSupportImpl;
 }
 
@@ -31,10 +33,13 @@ public:
     void shutdown();
     void preShutdown();
 
-    static void initialize();
+    static void initialize(bool ocEnable);
 
     void setGcTimer(double intervalSec);
     void setResGcTimer(double intervalSec);
+
+    float getZoom() const { return m_zoom; }
+    void setZoom(float f) { m_zoom = f; }
    
     virtual void cryptographicallyRandomValues(unsigned char* buffer, size_t length) override;
 
@@ -60,6 +65,8 @@ public:
     virtual blink::WebString userAgent() override;
     static const char* getUserAgent();
     void setUserAgent(const char* ua);
+
+    blink::WebData parseDataURL(const  blink::WebURL&, blink::WebString& mimetype, blink::WebString& charset) override;
 
     virtual blink::WebData loadResource(const char* name) override;
 
@@ -87,7 +94,8 @@ public:
 
     // DOM Storage --------------------------------------------------
     virtual blink::WebStorageNamespace* createLocalStorageNamespace() override;
-    blink::WebStorageNamespace* createSessionStorageNamespace();
+    //blink::WebStorageNamespace* createSessionStorageNamespace();
+    int64 genStorageNamespaceId();
     virtual bool portAllowed(const blink::WebURL&) const override;
 
     // Resources -----------------------------------------------------------
@@ -117,13 +125,39 @@ public:
 
     virtual blink::WebCrypto* crypto() override;
 
+    // media
+
+    virtual double audioHardwareSampleRate() override;
+    virtual size_t audioHardwareBufferSize() override;
+    virtual unsigned audioHardwareOutputChannels() override;
+
+    // Creates a device for audio I/O.
+    // Pass in (numberOfInputChannels > 0) if live/local audio input is desired.
+    virtual blink::WebAudioDevice* createAudioDevice(size_t bufferSize, unsigned numberOfInputChannels, unsigned numberOfChannels, double sampleRate, blink::WebAudioDevice::RenderCallback*, const blink::WebString& deviceId) override;
+
     //////////////////////////////////////////////////////////////////////////
     virtual void registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
     virtual void unregisterMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
 
+    // Platform events -----------------------------------------------------
+    virtual blink::WebString domCodeStringFromEnum(int domCode) override;
+    virtual blink::WebString domKeyStringFromEnum(int domKey) override;
+
+    // GPU ----------------------------------------------------------------
+    virtual blink::WebGraphicsContext3D* createOffscreenGraphicsContext3D(const blink::WebGraphicsContext3D::Attributes&, blink::WebGraphicsContext3D* shareContext) override;
+    virtual blink::WebGraphicsContext3D* createOffscreenGraphicsContext3D(const blink::WebGraphicsContext3D::Attributes&, blink::WebGraphicsContext3D* shareContext, blink::WebGLInfo* glInfo) override;
+    virtual blink::WebGraphicsContext3D* createOffscreenGraphicsContext3D(const blink::WebGraphicsContext3D::Attributes&) override;
+
+    virtual blink::WebGraphicsContext3DProvider* createSharedOffscreenGraphicsContext3DProvider() override;
+    virtual bool canAccelerate2dCanvas() override;
+    virtual bool isThreadedCompositingEnabled() override;
+    virtual blink::WebFlingAnimator* createFlingAnimator() override;
+    virtual blink::WebGestureCurve* createFlingAnimationCurve(blink::WebGestureDevice deviceSource, const blink::WebFloatPoint& velocity, const blink::WebSize& cumulativeScroll) override;
+
     //////////////////////////////////////////////////////////////////////////
-    blink::WebThread* tryGetIoThread() const;
-    blink::WebThread* ioThread();
+    //blink::WebThread* tryGetIoThread() const;
+    WTF::Vector<blink::WebThread*> getIoThreads();
+    blink::WebThread* createIoThread(const char* threadName);
     void doGarbageCollected();
 
     //////////////////////////////////////////////////////////////////////////
@@ -145,17 +179,23 @@ private:
     void perfTimer(blink::Timer<BlinkPlatformImpl>*);
     bool m_isDisableGC;
 
+    float m_zoom;
+
     CRITICAL_SECTION* m_lock;
     static const int m_maxThreadNum = 1000;
     std::vector<WebThreadImpl*> m_threads;
     int m_threadNum;
 
-    blink::Timer<BlinkPlatformImpl>* m_gcTimer;
-    blink::Timer<BlinkPlatformImpl>* m_defaultGcTimer;
-    blink::Timer<BlinkPlatformImpl>* m_perfTimer;
-    blink::Timer<BlinkPlatformImpl>* m_resTimer; // 资源单独一个定时器
+//     blink::Timer<BlinkPlatformImpl>* m_gcTimer;
+//     blink::Timer<BlinkPlatformImpl>* m_defaultGcTimer;
+//     blink::Timer<BlinkPlatformImpl>* m_perfTimer;
+//     blink::Timer<BlinkPlatformImpl>* m_resTimer; // 资源单独一个定时器
 
-    WTF::OwnPtr<blink::WebThreadSupportingGC> m_ioThread;
+    blink::GcTimeScheduler* m_gcTimeScheduler;
+
+    //WTF::OwnPtr<blink::WebThreadSupportingGC> m_ioThread;
+    std::vector<blink::WebThreadSupportingGC*> m_ioThreads;
+    //blink::WebThreadSupportingGC* m_ioThread;
 
     ThreadIdentifier m_mainThreadId;
     blink::WebThemeEngine* m_webThemeEngine;
@@ -164,10 +204,14 @@ private:
     WebBlobRegistryImpl* m_blobRegistryImpl;
     WebFileUtilitiesImpl* m_webFileUtilitiesImpl;
     WebCryptoImpl* m_webCryptoImpl;
-    cc_blink::WebCompositorSupportImpl* m_webCompositorSupport;
+    blink::WebCompositorSupport* m_mcCompositorSupport;
+    blink::WebCompositorSupport* m_ccCompositorSupport;
+
     blink::WebScrollbarBehavior* m_webScrollbarBehavior;
-    DOMStorageMapWrap* m_localStorageStorageMap;
-    DOMStorageMapWrap* m_sessionStorageStorageMap;
+#ifdef MINIBLINK_NO_PAGE_LOCALSTORAGE
+    DOMStorageMap* m_localStorageStorageMap;
+#endif
+//  DOMStorageMap* m_sessionStorageStorageMap;
     int64 m_storageNamespaceIdCount;
     double m_firstMonotonicallyIncreasingTime;
 

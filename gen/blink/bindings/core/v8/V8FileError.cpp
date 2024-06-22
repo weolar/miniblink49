@@ -101,7 +101,9 @@ static void installV8FileErrorTemplate(v8::Local<v8::FunctionTemplate> functionT
     static_assert(12 == FileError::PATH_EXISTS_ERR, "the value of FileError_PATH_EXISTS_ERR does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8FileError::domTemplate(v8::Isolate* isolate)

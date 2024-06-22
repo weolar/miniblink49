@@ -478,7 +478,7 @@ static int extract_path(Edge* edge, Edge* stop, SkPath* path) {
 
 #include "SkTSearch.h"
 
-static int EdgeProc(const Edge* a, const Edge* b) {
+static int __cdecl EdgeProc(const Edge* a, const Edge* b) {
     return (a->fX == b->fX) ? a->top() - b->top() : a->fX - b->fX;
 }
 

@@ -458,6 +458,7 @@ class ModuleDecoderImpl : public Decoder {
         } else {
           // Ignore this section when feature was disabled. It is an optional
           // custom section anyways.
+          consume_bytes(static_cast<uint32_t>(end_ - start_), nullptr);
         }
         break;
       case kDataCountSectionCode:
@@ -1008,16 +1009,19 @@ class ModuleDecoderImpl : public Decoder {
     }
 
     // Decode sequence of compilation hints.
-    if (decoder.ok()) module_->compilation_hints.reserve(hint_count);
+    if (decoder.ok()) {
+      module_->compilation_hints.reserve(hint_count);
+      module_->num_lazy_compilation_hints = 0;
+    }
     for (uint32_t i = 0; decoder.ok() && i < hint_count; i++) {
       TRACE("DecodeCompilationHints[%d] module+%d\n", i,
             static_cast<int>(pc_ - start_));
 
       // Compilation hints are encoded in one byte each.
-      // +-------+-------------+------------+------------------+
-      // | 2 bit | 2 bit       | 2 bit      | 2 bit            |
-      // | ...   | Second tier | First tier | Lazy compilation |
-      // +-------+-------------+------------+------------------+
+      // +-------+----------+---------------+------------------+
+      // | 2 bit | 2 bit    | 2 bit         | 2 bit            |
+      // | ...   | Top tier | Baseline tier | Lazy compilation |
+      // +-------+----------+---------------+------------------+
       uint8_t hint_byte = decoder.consume_u8("compilation hint");
       if (!decoder.ok()) break;
 
@@ -1025,9 +1029,9 @@ class ModuleDecoderImpl : public Decoder {
       WasmCompilationHint hint;
       hint.strategy =
           static_cast<WasmCompilationHintStrategy>(hint_byte & 0x03);
-      hint.first_tier =
+      hint.baseline_tier =
           static_cast<WasmCompilationHintTier>(hint_byte >> 2 & 0x3);
-      hint.second_tier =
+      hint.top_tier =
           static_cast<WasmCompilationHintTier>(hint_byte >> 4 & 0x3);
 
       // Check strategy.
@@ -1037,22 +1041,29 @@ class ModuleDecoderImpl : public Decoder {
                        hint_byte);
       }
 
-      // Ensure that the second tier never downgrades the compilation result.
-      // If first and secod tier are the same it will be invoked only once.
-      if (hint.second_tier < hint.first_tier &&
-          hint.second_tier != WasmCompilationHintTier::kDefault) {
+      // Ensure that the top tier never downgrades a compilation result.
+      // If baseline and top tier are the same compilation will be invoked only
+      // once.
+      if (hint.top_tier < hint.baseline_tier &&
+          hint.top_tier != WasmCompilationHintTier::kDefault) {
         decoder.errorf(decoder.pc(),
                        "Invalid compilation hint %#x (forbidden downgrade)",
                        hint_byte);
       }
 
       // Happily accept compilation hint.
-      if (decoder.ok()) module_->compilation_hints.push_back(std::move(hint));
+      if (decoder.ok()) {
+        if (hint.strategy == WasmCompilationHintStrategy::kLazy) {
+          module_->num_lazy_compilation_hints++;
+        }
+        module_->compilation_hints.push_back(std::move(hint));
+      }
     }
 
     // If section was invalid reset compilation hints.
     if (decoder.failed()) {
       module_->compilation_hints.clear();
+      module_->num_lazy_compilation_hints = 0;
     }
 
     // @TODO(frgossen) Skip the whole compilation hints section in the outer

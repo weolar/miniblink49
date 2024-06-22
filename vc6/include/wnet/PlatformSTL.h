@@ -29,12 +29,47 @@ struct OwnedPtrDeleter<T[]> {
     }
 };
 
+template<class _Ty>
+struct default_delete {	// default deleter for unique_ptr
+    default_delete() = default;
+
+    template<class _Ty2, class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value, void>::type>
+        default_delete(const default_delete<_Ty2>&) // construct from another default_delete
+    {
+    }
+
+    void operator()(_Ty *_Ptr) const
+    {	// delete a pointer
+        static_assert(0 < sizeof(_Ty), "can't delete an incomplete type");
+        delete _Ptr;
+    }
+};
+
+template<class _Ty>
+struct default_delete<_Ty[]> { // default deleter for unique_ptr to array of unknown size
+    default_delete() = default;
+
+    template<class _Uty, class = typename enable_if<is_convertible<_Uty(*)[], _Ty(*)[]>::value, void>::type>
+        default_delete(const default_delete<_Uty[]>&)
+    {	// construct from another default_delete
+    }
+
+    template<class _Uty,
+    class = typename enable_if<is_convertible<_Uty(*)[], _Ty(*)[]>::value,
+        void>::type>
+        void operator()(_Uty *_Ptr) const // delete a pointer
+    {	
+        static_assert(0 < sizeof(_Uty), "can't delete an incomplete type");
+        delete[] _Ptr;
+    }
+};
+
 template <class T, int n>
 struct OwnedPtrDeleter<T[n]> {
     static_assert(sizeof(T) < 0, "do not use array with size as type");
 };
 
-template <typename T> class unique_ptr {
+template <typename T, typename TDeleteor = default_delete<T> > class unique_ptr {
 public:
     typedef typename remove_extent<T>::type ValueType;
     typedef ValueType* PtrType;
@@ -46,7 +81,8 @@ public:
 
     ~unique_ptr()
     {
-        OwnedPtrDeleter<T>::deletePtr(m_ptr);
+        //OwnedPtrDeleter<T>::deletePtr(m_ptr);
+        TDeleteor()(m_ptr);
         m_ptr = nullptr;
     }
 
@@ -75,14 +111,14 @@ public:
     ValueType& operator[](std::ptrdiff_t i) const;
 
     bool operator!() const { return !m_ptr; }
-    explicit operator bool() const { return m_ptr; }
+    explicit operator bool() const { return !!m_ptr; }
 
     unique_ptr& operator=(std::nullptr_t) { reset(); return *this; }
 
-    bool operator!=(std::nullptr_t) { return !m_ptr; }
+    bool operator!=(std::nullptr_t) { return !!m_ptr; }
 
     unique_ptr& operator=(unique_ptr&&);
-    template <typename U> unique_ptr& operator=(unique_ptr<U>&&);
+    //template <typename U, typename TDeleteor = default_delete<T>> unique_ptr& operator=(unique_ptr<U, TDeleteor>&&);
 
     void swap(unique_ptr& o) { std::swap(m_ptr, o.m_ptr); }
 
@@ -109,22 +145,22 @@ private:
     PtrType m_ptr;
 };
 
-
-template <typename T> inline void unique_ptr<T>::reset(PtrType ptr)
+template <typename T, typename TDeleteor = default_delete<T>> inline void unique_ptr<T, TDeleteor>::reset(PtrType ptr)
 {
     PtrType p = m_ptr;
     m_ptr = ptr;
-    OwnedPtrDeleter<T>::deletePtr(p);
+    //OwnedPtrDeleter<T>::deletePtr(p);
+    TDeleteor()(p);
 }
 
-template <typename T> inline typename unique_ptr<T>::PtrType unique_ptr<T>::release()
+template <typename T, typename TDeleteor = default_delete<T> > inline typename unique_ptr<T, TDeleteor>::PtrType unique_ptr<T, TDeleteor>::release()
 {
     PtrType ptr = m_ptr;
     m_ptr = nullptr;
     return ptr;
 }
 
-template <typename T> inline typename unique_ptr<T>::ValueType& unique_ptr<T>::operator[](std::ptrdiff_t i) const
+template <typename T, typename TDeleteor = default_delete<T> > inline typename unique_ptr<T, TDeleteor>::ValueType& unique_ptr<T, TDeleteor>::operator[](std::ptrdiff_t i) const
 {
     static_assert(is_array<T>::value, "elements access is possible for arrays only");
 //     DCHECK(m_ptr);
@@ -136,19 +172,20 @@ template <typename T> inline typename unique_ptr<T>::ValueType& unique_ptr<T>::o
     return m_ptr[i];
 }
 
-template <typename T> inline unique_ptr<T>::unique_ptr(unique_ptr<T>&& o)
+template <typename T, typename TDeleteor = default_delete<T> > inline unique_ptr<T, TDeleteor>::unique_ptr(unique_ptr<T, TDeleteor>&& o)
     : m_ptr(o.release())
 {
 }
 
-template <typename T>
-template <typename U, typename> inline unique_ptr<T>::unique_ptr(unique_ptr<U>&& o)
-    : m_ptr(o.release())
-{
-    static_assert(!is_array<T>::value, "pointers to array must never be converted");
-}
+// template <typename T, typename TDeleteor = default_delete<T> >
+// template <typename U, typename TDeleteor = default_delete<T> > 
+// inline unique_ptr<T, TDeleteor>::unique_ptr(unique_ptr<U, TDeleteor>&& o)
+//     : m_ptr(o.release())
+// {
+//     static_assert(!is_array<T>::value, "pointers to array must never be converted");
+// }
 
-template <typename T> inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& o)
+template <typename T, typename TDeleteor = default_delete<T>> inline unique_ptr<T, TDeleteor>& unique_ptr<T, TDeleteor>::operator=(unique_ptr<T, TDeleteor>&& o)
 {
     PtrType ptr = m_ptr;
     m_ptr = o.release();
@@ -157,26 +194,29 @@ template <typename T> inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<
     if (ptr && m_ptr == ptr)
         DebugBreak();
 #endif
-    OwnedPtrDeleter<T>::deletePtr(ptr);
+    //OwnedPtrDeleter<T>::deletePtr(ptr);
+    TDeleteor()(ptr);
 
     return *this;
 }
 
-template <typename T>
-template <typename U> inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<U>&& o)
-{
-    static_assert(!is_array<T>::value, "pointers to array must never be converted");
-    PtrType ptr = m_ptr;
-    m_ptr = o.release();
-    //DCHECK(!ptr || m_ptr != ptr);
-#ifdef DEBUG
-    if (ptr && m_ptr == ptr)
-        DebugBreak();
-#endif
-    OwnedPtrDeleter<T>::deletePtr(ptr);
-
-    return *this;
-}
+// template <typename T, typename TDeleteor >
+// template <typename U, typename TDeleteor > 
+// inline unique_ptr<T, TDeleteor>& unique_ptr<T, TDeleteor>::operator=(unique_ptr<U, TDeleteor>&& o)
+// {
+//     static_assert(!is_array<T>::value, "pointers to array must never be converted");
+//     PtrType ptr = m_ptr;
+//     m_ptr = o.release();
+//     //DCHECK(!ptr || m_ptr != ptr);
+// #ifdef DEBUG
+//     if (ptr && m_ptr == ptr)
+//         DebugBreak();
+// #endif
+//     //OwnedPtrDeleter<T>::deletePtr(ptr);
+//     TDeleteor()(ptr);
+// 
+//     return *this;
+// }
 
 template <typename T> inline void swap(unique_ptr<T>& a, unique_ptr<T>& b)
 {

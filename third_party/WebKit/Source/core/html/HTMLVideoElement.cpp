@@ -230,6 +230,12 @@ bool HTMLVideoElement::copyVideoTextureToPlatformTexture(WebGraphicsContext3D* c
     return false;
 }
 
+bool HTMLVideoElement::shouldDisplayPosterImage() const
+{
+    return false; // weolar: not impl
+    return displayMode() == Poster;
+}
+
 bool HTMLVideoElement::hasAvailableVideoFrame() const
 {
     if (!webMediaPlayer())

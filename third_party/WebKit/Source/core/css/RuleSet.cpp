@@ -118,6 +118,15 @@ RuleData::RuleData(StyleRule* rule, unsigned selectorIndex, unsigned position, A
 {
     ASSERT(m_position == position);
     ASSERT(m_selectorIndex == selectorIndex);
+
+    // The selector index field in RuleData is only 13 bits so we can't support
+    // selectors at index 8192 or beyond.
+    // See https://crbug.com/804179
+    if (selectorIndex >= (1 << RuleData::kSelectorIndexBits))
+        return;
+    if (position >= (1 << RuleData::kPositionBits))
+        return;
+
     SelectorFilter::collectIdentifierHashes(selector(), m_descendantSelectorIdentifierHashes, maximumIdentifierCount);
 }
 
@@ -218,7 +227,17 @@ bool RuleSet::findBestRuleSetAndAdd(const CSSSelector& component, RuleData& rule
 
 void RuleSet::addRule(StyleRule* rule, unsigned selectorIndex, AddRuleFlags addRuleFlags)
 {
-    RuleData ruleData(rule, selectorIndex, m_ruleCount++, addRuleFlags);
+    unsigned position = m_ruleCount++;
+
+    // The selector index field in RuleData is only 13 bits so we can't support
+    // selectors at index 8192 or beyond.
+    // See https://crbug.com/804179
+    if (selectorIndex >= (1 << (RuleData::kSelectorIndexBits - 1)))
+        return;
+    if (position >= (1 << RuleData::kPositionBits))
+        return;
+
+    RuleData ruleData(rule, selectorIndex, position, addRuleFlags);
     m_features.collectFeaturesFromRuleData(ruleData);
 
     if (!findBestRuleSetAndAdd(ruleData.selector(), ruleData)) {

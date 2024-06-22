@@ -53,6 +53,6 @@ private:
     static WindowList* m_instance;
 };
 
-}  // namespace atom
+} // namespace atom
 
-#endif  // ATOM_BROWSER_WINDOW_LIST_H_
+#endif // ATOM_BROWSER_WINDOW_LIST_H_

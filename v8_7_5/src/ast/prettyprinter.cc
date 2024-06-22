@@ -610,12 +610,12 @@ void AstPrinter::PrintLabels(ZonePtrList<const AstRawString>* labels) {
 }
 
 void AstPrinter::PrintLiteral(Literal* literal, bool quote) {
+  const char* symbol = nullptr;
   switch (literal->type()) {
     case Literal::kString:
       PrintLiteral(literal->AsRawString(), quote);
       break;
     case Literal::kSymbol:
-      const char* symbol;
       switch (literal->AsSymbol()) {
         case AstSymbol::kHomeObjectSymbol:
           symbol = "HomeObjectSymbol";
@@ -977,7 +977,7 @@ void AstPrinter::VisitForOfStatement(ForOfStatement* node) {
   IndentedScope indent(this, "FOR OF", node->position());
   PrintLabelsIndented(node->labels());
   PrintLabelsIndented(node->own_labels(), "OWN ");
-  const char* for_type;
+  const char* for_type = nullptr;
   switch (node->type()) {
     case IteratorType::kNormal:
       for_type = "FOR";

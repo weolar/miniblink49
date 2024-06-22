@@ -5,6 +5,8 @@
 #include "src/ostreams.h"
 #include "src/regexp/regexp-ast.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

@@ -95,6 +95,8 @@ public:
     // Discards the notifier if it is a oneshot because it timed it.
     void requestTimedOut(GeoNotifier*);
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<Geolocation*>(object); }
+
 private:
     // Returns the last known position, if any. May return null.
     Geoposition* lastPosition();

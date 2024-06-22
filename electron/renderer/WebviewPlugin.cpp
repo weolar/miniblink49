@@ -29,16 +29,16 @@ void NPP_StreamAsFile(NPP instance, NPStream* stream, const char* fname);
 void NPP_Print(NPP instance, NPPrint* platformPrint);
 int16_t NPP_HandleEvent(NPP instance, void* event);
 void NPP_URLNotify(NPP instance, const char* URL, NPReason reason, void* notifyData);
-NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value);
-NPError NPP_SetValue(NPP instance, NPNVariable variable, void *value);
+NPError NPP_GetValue(NPP instance, NPPVariable variable, void* value);
+NPError NPP_SetValue(NPP instance, NPNVariable variable, void* value);
 
 //Functions for scriptablePluginClass
-NPObject* pluginAllocate(NPP npp, NPClass *aClass);
-void pluginDeallocate(NPObject *npobj);
-bool pluginHasMethod(NPObject *obj, NPIdentifier methodName);
-bool pluginInvoke(NPObject *obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result);
-bool hasProperty(NPObject *obj, NPIdentifier propertyName);
-bool getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result);
+NPObject* pluginAllocate(NPP npp, NPClass* aClass);
+void pluginDeallocate(NPObject* npobj);
+bool pluginHasMethod(NPObject* obj, NPIdentifier methodName);
+bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount, NPVariant* result);
+bool hasProperty(NPObject* obj, NPIdentifier propertyName);
+bool getProperty(NPObject* obj, NPIdentifier propertyName, NPVariant* result);
 
 struct NPObjectEx : public NPObject {
     WebviewPluginImpl* impl;
@@ -59,12 +59,14 @@ static struct NPClass scriptablePluginClass = {
 };
 
 //接口的实现
-NPError __stdcall Webview_NP_Initialize(NPNetscapeFuncs* browserFuncs) {
+NPError __stdcall Webview_NP_Initialize(NPNetscapeFuncs* browserFuncs)
+{
     g_npBrowserFunctions = browserFuncs;
     return NPERR_NO_ERROR;
 }
 
-NPError __stdcall Webview_NP_GetEntryPoints(NPPluginFuncs* pluginFuncs) {
+NPError __stdcall Webview_NP_GetEntryPoints(NPPluginFuncs* pluginFuncs)
+{
     pluginFuncs->version = 11;
     pluginFuncs->size = sizeof(pluginFuncs);
     pluginFuncs->newp = NPP_New;
@@ -84,12 +86,14 @@ NPError __stdcall Webview_NP_GetEntryPoints(NPPluginFuncs* pluginFuncs) {
     return NPERR_NO_ERROR;
 }
 
-void __stdcall Webview_NP_Shutdown(void) {
+void __stdcall Webview_NP_Shutdown(void)
+{
 }
 
 static void npVariantToListValue(WebviewPluginImpl* impl, const NPVariant& arg, base::ListValue* listParams);
 
-static void npVariantTypeObjectToDirValue(WebviewPluginImpl* impl, NPObject* objectValue, base::DictionaryValue* dirParams) {
+static void npVariantTypeObjectToDirValue(WebviewPluginImpl* impl, NPObject* objectValue, base::DictionaryValue* dirParams)
+{
     NPIdentifier* identifier = nullptr;
     uint32_t count = 0;
     NPP instance = impl->getInstance();
@@ -120,14 +124,15 @@ static void npVariantTypeObjectToDirValue(WebviewPluginImpl* impl, NPObject* obj
             dirParams->Set(method, dirParamsObj);
             break;
         }
-        
+
         g_npBrowserFunctions->releasevariantvalue(&result);
         g_npBrowserFunctions->memfree(method);
     }
     g_npBrowserFunctions->memfree(identifier);
 }
 
-void npVariantToListValue(WebviewPluginImpl* impl, const NPVariant& arg, base::ListValue* listParams) {
+void npVariantToListValue(WebviewPluginImpl* impl, const NPVariant& arg, base::ListValue* listParams)
+{
     switch (arg.type) {
     case NPVariantType_Bool:
         listParams->AppendBoolean(arg.value.boolValue);
@@ -150,14 +155,16 @@ void npVariantToListValue(WebviewPluginImpl* impl, const NPVariant& arg, base::L
     }
 }
 
-static void toResultString(const utf8* str, NPVariant* result) {
+static void toResultString(const utf8* str, NPVariant* result)
+{
     size_t length = strlen(str);
     utf8* strBuffer = (utf8*)g_npBrowserFunctions->memalloc(length);
     memcpy(strBuffer, str, length);
     STRINGN_TO_NPVARIANT(strBuffer, length, *result);
 }
 
-bool pluginHasMethod(NPObject* obj, NPIdentifier methodName) {
+bool pluginHasMethod(NPObject* obj, NPIdentifier methodName)
+{
     // This function will be called when we invoke method on this plugin elements.
     NPUTF8* name = g_npBrowserFunctions->utf8fromidentifier(methodName);
     bool result = false;
@@ -323,15 +330,14 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
         const utf8* titile = wkeGetTitle(impl->getWebview());
         toResultString(titile, result);
         return true;
-   
     }
     if ("native_isLoading" == method) {
-        bool b = wkeIsLoading(impl->getWebview());
+        BOOL b = wkeIsLoading(impl->getWebview());
         BOOLEAN_TO_NPVARIANT(b, *result);
         return true;
     }
     if ("native_isLoadingMainFrame" == method) {
-        bool b = wkeIsLoading(impl->getWebview());
+        BOOL b = wkeIsLoading(impl->getWebview());
         BOOLEAN_TO_NPVARIANT(b, *result);
         return true;
     }
@@ -351,7 +357,7 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
         return true;
     }
     if ("native_canGoForward" == method) {
-        bool b = wkeCanGoForward(impl->getWebview());
+        BOOL b = wkeCanGoForward(impl->getWebview());
         BOOLEAN_TO_NPVARIANT(b, *result);
         return true;
     }
@@ -373,23 +379,15 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
         BOOLEAN_TO_NPVARIANT(true, *result);
         return true;
     }
-    if ("native_goToIndex" == method || 
-        "native_goToOffset" == method || 
-        "native_isCrashed" == method ||
-        "native_openDevTools" == method ||
-        "native_closeDevTools" == method ||
-        "native_inspectElement" == method ||
-        "native_setAudioMuted" == method ||
-        "native_isAudioMuted" == method
-        ) {
+    if ("native_goToIndex" == method || "native_goToOffset" == method || "native_isCrashed" == method || "native_openDevTools" == method || "native_closeDevTools" == method || "native_inspectElement" == method || "native_setAudioMuted" == method || "native_isAudioMuted" == method) {
         BOOLEAN_TO_NPVARIANT(false, *result);
         return true;
     }
     if ("native_setUserAgent" == method) {
         if (argCount >= 1 && NPVariantType_String == args[0].type) {
-            std::string  ua = std::string(args[0].value.stringValue.UTF8Characters, args[0].value.stringValue.UTF8Length);
+            std::string ua = std::string(args[0].value.stringValue.UTF8Characters, args[0].value.stringValue.UTF8Length);
             wkeSetUserAgent(impl->getWebview(), ua.c_str());
-        }       
+        }
         BOOLEAN_TO_NPVARIANT(false, *result);
         return true;
     }
@@ -446,14 +444,7 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
         BOOLEAN_TO_NPVARIANT(true, *result);
         return true;
     }
-    if ("native_replace" == method || "native_replaceMisspelling" == method || 
-        "native_findInPage" == method || "native_stopFindInPage" == method ||
-        "native_inspectServiceWorker" == method || "native_print" == method || 
-        "native_printToPDF" == method || "native_showDefinitionForSelection" == method ||
-        "native_capturePage" == method ||
-        "native_setZoomLevel" == method ||
-        "native_setZoomLevelLimits" == method ||
-        "native_sendInputEvent" == method) {
+    if ("native_replace" == method || "native_replaceMisspelling" == method || "native_findInPage" == method || "native_stopFindInPage" == method || "native_inspectServiceWorker" == method || "native_print" == method || "native_printToPDF" == method || "native_showDefinitionForSelection" == method || "native_capturePage" == method || "native_setZoomLevel" == method || "native_setZoomLevelLimits" == method || "native_sendInputEvent" == method) {
         BOOLEAN_TO_NPVARIANT(true, *result);
         return true;
     }
@@ -486,12 +477,13 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
         doExecuteJavaScript(impl, args, argCount, result);
         return true;
     }
-    // 
-    
+    //
+
     return false;
 }
 
-NPObject* pluginAllocate(NPP npp, NPClass* npClass) {
+NPObject* pluginAllocate(NPP npp, NPClass* npClass)
+{
     NPObjectEx* npObject = reinterpret_cast<NPObjectEx*>(malloc(sizeof(NPObjectEx)));
 
     npObject->impl = (WebviewPluginImpl*)npp->pdata;
@@ -502,22 +494,26 @@ NPObject* pluginAllocate(NPP npp, NPClass* npClass) {
     return npObject;
 }
 
-void pluginDeallocate(NPObject* npobj) {
+void pluginDeallocate(NPObject* npobj)
+{
     free(npobj);
 }
 
-bool hasProperty(NPObject *obj, NPIdentifier propertyName) {
+bool hasProperty(NPObject* obj, NPIdentifier propertyName)
+{
     return false;
 }
 
-bool getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result) {
+bool getProperty(NPObject* obj, NPIdentifier propertyName, NPVariant* result)
+{
     return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 //NPP Functions Implements
-NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char* argn[], char* argv[], NPSavedData* saved) {
+NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char* argn[], char* argv[], NPSavedData* saved)
+{
     bool b = (0 == strcmp(pluginType, "application/browser-plugin"));
     if (b && !instance)
         return NPERR_NO_ERROR;
@@ -537,7 +533,8 @@ NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_Destroy(NPP instance, NPSavedData** save) {
+NPError NPP_Destroy(NPP instance, NPSavedData** save)
+{
     // If we created a plugin instance, we'll destroy and clean it up.
     NPObject* pluginInstance = (NPObject*)instance->pdata;
     if (!pluginInstance) {
@@ -548,14 +545,16 @@ NPError NPP_Destroy(NPP instance, NPSavedData** save) {
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_SetWindow(NPP instance, NPWindow* window) {
+NPError NPP_SetWindow(NPP instance, NPWindow* window)
+{
     WebviewPluginImpl* impl = (WebviewPluginImpl*)instance->pdata;
     impl->onSetWinow(*window);
 
     return NPERR_NO_ERROR;
 }
 
-int16_t NPP_HandleEvent(NPP instance, void* event) {
+int16_t NPP_HandleEvent(NPP instance, void* event)
+{
     NPEvent* evt = (NPEvent*)event;
     WebviewPluginImpl* impl = (WebviewPluginImpl*)instance->pdata;
     switch (evt->event) {
@@ -583,38 +582,45 @@ int16_t NPP_HandleEvent(NPP instance, void* event) {
     case WM_CHAR:
         impl->onKey(evt->event, evt->wParam, evt->lParam);
         break;
-
     }
     return 0;
 }
 
-NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream* stream, NPBool seekable, uint16_t* stype) {
+NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream* stream, NPBool seekable, uint16_t* stype)
+{
     *stype = NP_ASFILEONLY;
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_DestroyStream(NPP instance, NPStream* stream, NPReason reason) {
+NPError NPP_DestroyStream(NPP instance, NPStream* stream, NPReason reason)
+{
     return NPERR_NO_ERROR;
 }
 
-int32 NPP_WriteReady(NPP instance, NPStream* stream) {
+int32 NPP_WriteReady(NPP instance, NPStream* stream)
+{
     return 0;
 }
 
-int32 NPP_Write(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer) {
+int32 NPP_Write(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer)
+{
     return 0;
 }
 
-void NPP_StreamAsFile(NPP instance, NPStream* stream, const char* fname) {
+void NPP_StreamAsFile(NPP instance, NPStream* stream, const char* fname)
+{
 }
 
-void NPP_Print(NPP instance, NPPrint* platformPrint) {
+void NPP_Print(NPP instance, NPPrint* platformPrint)
+{
 }
 
-void NPP_URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData) {
+void NPP_URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
+{
 }
 
-NPError NPP_GetValue(NPP instance, NPPVariable variable, void* value) {
+NPError NPP_GetValue(NPP instance, NPPVariable variable, void* value)
+{
     NPObject* pluginInstance = NULL;
     switch (variable) {
     case NPPVpluginScriptableNPObject: {
@@ -624,9 +630,8 @@ NPError NPP_GetValue(NPP instance, NPPVariable variable, void* value) {
         if (pluginInstance)
             g_npBrowserFunctions->retainobject(pluginInstance);
 
-        *(NPObject **)value = pluginInstance;
-    }
-        break;
+        *(NPObject**)value = pluginInstance;
+    } break;
     default:
         return NPERR_GENERIC_ERROR;
     }
@@ -634,7 +639,8 @@ NPError NPP_GetValue(NPP instance, NPPVariable variable, void* value) {
     return NPERR_NO_ERROR;
 }
 
-NPError NPP_SetValue(NPP instance, NPNVariable variable, void* value) {
+NPError NPP_SetValue(NPP instance, NPNVariable variable, void* value)
+{
     return NPERR_GENERIC_ERROR;
 }
 

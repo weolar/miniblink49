@@ -26,22 +26,23 @@ static_assert(V8_ARRAY_BUFFER_INTERNAL_FIELD_COUNT == 2,
 
 // ArrayBufferAllocator -------------------------------------------------------
 
+// G:\mycode\mb\third_party\WebKit\Source\wtf\ArrayBufferContents.cpp
 void* ArrayBufferAllocator::Allocate(size_t length) {
-  //return calloc(1, length);
+    //return calloc(1, length);
     void* data = nullptr;
     WTF::ArrayBufferContents::allocateMemory(length, WTF::ArrayBufferContents::ZeroInitialize, data);
     return data;
 }
 
 void* ArrayBufferAllocator::AllocateUninitialized(size_t length) {
-  //return malloc(length);
+    //return malloc(length);
     void* data = nullptr;
     WTF::ArrayBufferContents::allocateMemory(length, WTF::ArrayBufferContents::DontInitialize, data);
     return data;
 }
 
 void ArrayBufferAllocator::Free(void* data, size_t length) {
-  //free(data);
+    //free(data);
     WTF::ArrayBufferContents::freeMemory(data, length);
 }
 

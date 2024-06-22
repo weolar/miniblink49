@@ -537,7 +537,7 @@ bool XMLDocumentParser::parseDocumentFragment(const String& chunk, DocumentFragm
 static int globalDescriptor = 0;
 static ThreadIdentifier libxmlLoaderThread = 0;
 
-static int matchFunc(const char*)
+static int XMLCALL matchFunc(const char*)
 {
     // Only match loads initiated due to uses of libxml2 from within
     // XMLDocumentParser to avoid interfering with client applications that also
@@ -636,7 +636,7 @@ static bool shouldAllowExternalLoad(const KURL& url)
     return true;
 }
 
-static void* openFunc(const char* uri)
+static void* XMLCALL openFunc(const char* uri)
 {
     ASSERT(XMLDocumentParserScope::currentDocument);
     ASSERT(currentThread() == libxmlLoaderThread);
@@ -671,7 +671,7 @@ static void* openFunc(const char* uri)
     return new SharedBufferReader(data);
 }
 
-static int readFunc(void* context, char* buffer, int len)
+static int XMLCALL readFunc(void* context, char* buffer, int len)
 {
     // Do 0-byte reads in case of a null descriptor
     if (context == &globalDescriptor)
@@ -681,13 +681,13 @@ static int readFunc(void* context, char* buffer, int len)
     return data->readData(buffer, len);
 }
 
-static int writeFunc(void*, const char*, int)
+static int XMLCALL writeFunc(void*, const char*, int)
 {
     // Always just do 0-byte writes
     return 0;
 }
 
-static int closeFunc(void* context)
+static int XMLCALL closeFunc(void* context)
 {
     if (context != &globalDescriptor) {
         SharedBufferReader* data = static_cast<SharedBufferReader*>(context);
@@ -696,7 +696,7 @@ static int closeFunc(void* context)
     return 0;
 }
 
-static void errorFunc(void*, const char*, ...)
+static void XMLCALL errorFunc(void*, const char*, ...)
 {
     // FIXME: It would be nice to display error messages somewhere.
 }
@@ -1288,38 +1288,38 @@ static inline XMLDocumentParser* getParser(void* closure)
     return static_cast<XMLDocumentParser*>(ctxt->_private);
 }
 
-static void startElementNsHandler(void* closure, const xmlChar* localName, const xmlChar* prefix, const xmlChar* uri, int nbNamespaces, const xmlChar** namespaces, int nbAttributes, int nbDefaulted, const xmlChar** libxmlAttributes)
+static void XMLCALL startElementNsHandler(void* closure, const xmlChar* localName, const xmlChar* prefix, const xmlChar* uri, int nbNamespaces, const xmlChar** namespaces, int nbAttributes, int nbDefaulted, const xmlChar** libxmlAttributes)
 {
     getParser(closure)->startElementNs(toAtomicString(localName), toAtomicString(prefix), toAtomicString(uri), nbNamespaces, namespaces, nbAttributes, nbDefaulted, libxmlAttributes);
 }
 
-static void endElementNsHandler(void* closure, const xmlChar*, const xmlChar*, const xmlChar*)
+static void XMLCALL endElementNsHandler(void* closure, const xmlChar*, const xmlChar*, const xmlChar*)
 {
     getParser(closure)->endElementNs();
 }
 
-static void charactersHandler(void* closure, const xmlChar* chars, int length)
+static void XMLCALL charactersHandler(void* closure, const xmlChar* chars, int length)
 {
     getParser(closure)->characters(chars, length);
 }
 
-static void processingInstructionHandler(void* closure, const xmlChar* target, const xmlChar* data)
+static void XMLCALL processingInstructionHandler(void* closure, const xmlChar* target, const xmlChar* data)
 {
     getParser(closure)->processingInstruction(toString(target), toString(data));
 }
 
-static void cdataBlockHandler(void* closure, const xmlChar* text, int length)
+static void XMLCALL cdataBlockHandler(void* closure, const xmlChar* text, int length)
 {
     getParser(closure)->cdataBlock(toString(text, length));
 }
 
-static void commentHandler(void* closure, const xmlChar* text)
+static void XMLCALL commentHandler(void* closure, const xmlChar* text)
 {
     getParser(closure)->comment(toString(text));
 }
 
 WTF_ATTRIBUTE_PRINTF(2, 3)
-static void warningHandler(void* closure, const char* message, ...)
+static void XMLCALL warningHandler(void* closure, const char* message, ...)
 {
     va_list args;
     va_start(args, message);
@@ -1328,7 +1328,7 @@ static void warningHandler(void* closure, const char* message, ...)
 }
 
 WTF_ATTRIBUTE_PRINTF(2, 3)
-static void normalErrorHandler(void* closure, const char* message, ...)
+static void XMLCALL normalErrorHandler(void* closure, const char* message, ...)
 {
     va_list args;
     va_start(args, message);
@@ -1386,7 +1386,7 @@ static xmlEntityPtr getXHTMLEntity(const xmlChar* name)
     return entity;
 }
 
-static xmlEntityPtr getEntityHandler(void* closure, const xmlChar* name)
+static xmlEntityPtr XMLCALL getEntityHandler(void* closure, const xmlChar* name)
 {
     xmlParserCtxtPtr ctxt = static_cast<xmlParserCtxtPtr>(closure);
     xmlEntityPtr ent = xmlGetPredefinedEntity(name);
@@ -1405,7 +1405,7 @@ static xmlEntityPtr getEntityHandler(void* closure, const xmlChar* name)
     return ent;
 }
 
-static void startDocumentHandler(void* closure)
+static void XMLCALL startDocumentHandler(void* closure)
 {
     xmlParserCtxt* ctxt = static_cast<xmlParserCtxt*>(closure);
     XMLDocumentParser* parser = getParser(closure);
@@ -1414,19 +1414,19 @@ static void startDocumentHandler(void* closure)
     xmlSAX2StartDocument(closure);
 }
 
-static void endDocumentHandler(void* closure)
+static void XMLCALL endDocumentHandler(void* closure)
 {
     getParser(closure)->endDocument();
     xmlSAX2EndDocument(closure);
 }
 
-static void internalSubsetHandler(void* closure, const xmlChar* name, const xmlChar* externalID, const xmlChar* systemID)
+static void XMLCALL internalSubsetHandler(void* closure, const xmlChar* name, const xmlChar* externalID, const xmlChar* systemID)
 {
     getParser(closure)->internalSubset(toString(name), toString(externalID), toString(systemID));
     xmlSAX2InternalSubset(closure, name, externalID, systemID);
 }
 
-static void externalSubsetHandler(void* closure, const xmlChar*, const xmlChar* externalId, const xmlChar*)
+static void XMLCALL externalSubsetHandler(void* closure, const xmlChar*, const xmlChar* externalId, const xmlChar*)
 {
     String extId = toString(externalId);
     if (extId == "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -1444,7 +1444,7 @@ static void externalSubsetHandler(void* closure, const xmlChar*, const xmlChar* 
     }
 }
 
-static void ignorableWhitespaceHandler(void*, const xmlChar*, int)
+static void XMLCALL ignorableWhitespaceHandler(void*, const xmlChar*, int)
 {
     // Nothing to do, but we need this to work around a crasher.
     // http://bugzilla.gnome.org/show_bug.cgi?id=172255
@@ -1642,7 +1642,7 @@ struct AttributeParseState {
     bool gotAttributes;
 };
 
-static void attributesStartElementNsHandler(void* closure, const xmlChar* xmlLocalName, const xmlChar* /*xmlPrefix*/,
+static void XMLCALL attributesStartElementNsHandler(void* closure, const xmlChar* xmlLocalName, const xmlChar* /*xmlPrefix*/,
     const xmlChar* /*xmlURI*/, int /*nbNamespaces*/, const xmlChar** /*namespaces*/,
     int nbAttributes, int /*nbDefaulted*/, const xmlChar** libxmlAttributes)
 {

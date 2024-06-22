@@ -198,7 +198,7 @@ static const V8DOMConfiguration::AccessorConfiguration V8NodeListAccessors[] = {
 };
 
 static const V8DOMConfiguration::MethodConfiguration V8NodeListMethods[] = {
-    {"item", NodeListV8Internal::itemMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
+    { "item", NodeListV8Internal::itemMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts },
     { "keys", NodeListV8Internal::keysMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
     { "values", NodeListV8Internal::valuesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
     { "entries", NodeListV8Internal::entriesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
@@ -221,10 +221,15 @@ static void installV8NodeListTemplate(v8::Local<v8::FunctionTemplate> functionTe
     {
         v8::IndexedPropertyHandlerConfiguration config(NodeListV8Internal::indexedPropertyGetterCallback, 0, 0, 0, indexedPropertyEnumerator<NodeList>);
         functionTemplate->InstanceTemplate()->SetHandler(config);
+
+        // Array iterator (@@iterator)
+        prototypeTemplate->SetIntrinsicDataProperty(v8::Symbol::GetIterator(isolate), v8::kArrayProto_values, v8::DontEnum);
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8NodeList::domTemplate(v8::Isolate* isolate)

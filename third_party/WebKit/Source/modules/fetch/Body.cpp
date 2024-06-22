@@ -76,6 +76,7 @@ public:
 
     void close()
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_stream->close();
         if (m_bodyStreamBuffer)
@@ -87,6 +88,7 @@ public:
 
     void error()
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_stream->error(DOMException::create(NetworkError, "network error"));
         if (m_bodyStreamBuffer)
@@ -99,6 +101,7 @@ public:
 private:
     void obtainReader()
     {
+        m_keeplive = this;
         m_reader = m_bodyStreamBuffer->handle()->obtainReader(this);
     }
 
@@ -192,6 +195,8 @@ private:
     // Source of data.
     Member<BodyStreamBuffer> m_bodyStreamBuffer;
     OwnPtr<FetchDataConsumerHandle::Reader> m_reader;
+
+    Persistent<ReadableStreamSource> m_keeplive;
 
     Member<ReadableByteStream> m_stream;
     bool m_streamNeedsMore;

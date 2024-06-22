@@ -1,3 +1,7 @@
+
+#ifndef utypes_h
+#define utypes_h
+
 typedef enum UErrorCode {
     /* The ordering of U_ERROR_INFO_START Vs U_USING_FALLBACK_WARNING looks weird
     * and is that way because VC++ debugger displays first encountered constant,
@@ -206,3 +210,29 @@ typedef enum UErrorCode {
 
     U_ERROR_LIMIT = U_PLUGIN_ERROR_LIMIT      /**< This must always be the last value to indicate the limit for UErrorCode (last error code +1) */
 } UErrorCode;
+
+#ifdef __cplusplus
+/**
+* Does the error code indicate success?
+* @stable ICU 2.0
+*/
+static inline signed char U_SUCCESS(UErrorCode code) { return (signed char)(code <= U_ZERO_ERROR); }
+/**
+* Does the error code indicate a failure?
+* @stable ICU 2.0
+*/
+static inline signed char U_FAILURE(UErrorCode code) { return (signed char)(code > U_ZERO_ERROR); }
+#else
+/**
+* Does the error code indicate success?
+* @stable ICU 2.0
+*/
+#define U_SUCCESS(x) ((x) <= U_ZERO_ERROR)
+/**
+* Does the error code indicate a failure?
+* @stable ICU 2.0
+*/
+#define U_FAILURE(x) ((x) > U_ZERO_ERROR)
+#endif // __cplusplus
+
+#endif // utypes_h

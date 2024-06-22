@@ -74,7 +74,11 @@ WorkerGlobalScope::WorkerGlobalScope(const KURL& url, const String& userAgent, W
     , m_v8CacheOptions(V8CacheOptionsDefault)
     , m_script(adoptPtr(new WorkerScriptController(*this, thread->isolate())))
     , m_thread(thread)
+#if V8_MAJOR_VERSION < 7
     , m_workerInspectorController(adoptRefWillBeNoop(new WorkerInspectorController(this)))
+#else
+    , m_workerInspectorController(nullptr)
+#endif
     , m_closing(false)
     , m_eventQueue(WorkerEventQueue::create(this))
     , m_workerClients(workerClients)
@@ -89,7 +93,9 @@ WorkerGlobalScope::WorkerGlobalScope(const KURL& url, const String& userAgent, W
     if (m_workerClients)
         m_workerClients->reattachThread();
 
+#if V8_MAJOR_VERSION < 7
     m_thread->setWorkerInspectorController(m_workerInspectorController.get());
+#endif
 }
 
 WorkerGlobalScope::~WorkerGlobalScope()
@@ -188,10 +194,12 @@ void WorkerGlobalScope::postTask(const WebTraceLocation& location, PassOwnPtr<Ex
 
 void WorkerGlobalScope::clearInspector()
 {
+#if V8_MAJOR_VERSION < 7
     ASSERT(m_workerInspectorController);
     thread()->setWorkerInspectorController(nullptr);
     m_workerInspectorController->dispose();
     m_workerInspectorController.clear();
+#endif
 }
 
 void WorkerGlobalScope::dispose()

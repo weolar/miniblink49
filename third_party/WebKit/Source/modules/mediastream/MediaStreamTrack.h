@@ -85,6 +85,7 @@ public:
 
     // ActiveDOMObject
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const override;
 
     PassOwnPtr<AudioSourceProvider> createWebAudioSource();
 

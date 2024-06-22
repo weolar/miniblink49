@@ -60,6 +60,7 @@ ScriptLoader::ScriptLoader(Element* element, bool parserInserted, bool alreadySt
     : m_element(element)
     , m_resource(0)
     , m_startLineNumber(WTF::OrdinalNumber::beforeFirst())
+    , m_pendingScript(PendingScript::create(nullptr, nullptr))
     , m_parserInserted(parserInserted)
     , m_isExternalScript(false)
     , m_alreadyStarted(alreadyStarted)
@@ -77,7 +78,7 @@ ScriptLoader::ScriptLoader(Element* element, bool parserInserted, bool alreadySt
 
 ScriptLoader::~ScriptLoader()
 {
-    m_pendingScript.stopWatchingForLoad(this);
+    m_pendingScript->stopWatchingForLoad(this);
 }
 
 DEFINE_TRACE(ScriptLoader)
@@ -113,8 +114,11 @@ void ScriptLoader::handleAsyncAttribute()
 
 void ScriptLoader::detach()
 {
-    m_pendingScript.stopWatchingForLoad(this);
-    m_pendingScript.releaseElementAndClear();
+    if (!m_pendingScript)
+        return;
+//     m_pendingScript->stopWatchingForLoad(this);
+//     m_pendingScript->releaseElementAndClear();
+    m_pendingScript->dispose(this);
 }
 
 // Helper function
@@ -182,6 +186,11 @@ bool ScriptLoader::isScriptTypeSupported(LegacyTypeSupport supportLegacyTypes) c
 
 bool isBlacklistWebsiteToUseUtf8(const String& url);
 
+static bool isModuleScript(ScriptLoaderClient* client)
+{
+    return equalIgnoringCase(client->typeAttributeValue(), "module");
+}
+
 // http://dev.w3.org/html5/spec/Overview.html#prepare-a-script
 bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, LegacyTypeSupport supportLegacyTypes)
 {
@@ -202,7 +211,7 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
         m_forceAsync = true;
 
     // FIXME: HTML5 spec says we should check that all children are either comments or empty text nodes.
-    if (!client->hasSourceAttribute() && !m_element->hasChildren())
+    if (client->hasNomoduleAttribute() || (!client->hasSourceAttribute() && !m_element->hasChildren()))
         return false;
 
     if (!m_element->inDocument())
@@ -235,7 +244,7 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
 
     if (client->hasSourceAttribute()) {
         FetchRequest::DeferOption defer = FetchRequest::NoDefer;
-        if (!m_parserInserted || client->asyncAttributeValue() || client->deferAttributeValue())
+        if (!m_parserInserted || client->asyncAttributeValue() || client->deferAttributeValue() || isModuleScript(client))
             defer = FetchRequest::LazyLoad;
 
         const String& sourceUrl = client->sourceAttributeValue();
@@ -247,7 +256,7 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
             return false;
     }
 
-    if (client->hasSourceAttribute() && client->deferAttributeValue() && m_parserInserted && !client->asyncAttributeValue()) {
+    if (isModuleScript(client) || (client->hasSourceAttribute() && client->deferAttributeValue() && m_parserInserted && !client->asyncAttributeValue())) {
         m_willExecuteWhenDocumentFinishedParsing = true;
         m_willBeParserExecuted = true;
     } else if (client->hasSourceAttribute() && m_parserInserted && !client->asyncAttributeValue()) {
@@ -257,21 +266,21 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
         m_readyToBeParserExecuted = true;
     } else if (client->hasSourceAttribute() && !client->asyncAttributeValue() && !m_forceAsync) {
         m_willExecuteInOrder = true;
-        m_pendingScript = PendingScript(m_element, m_resource.get());
+        m_pendingScript = PendingScript::create(m_element, m_resource.get());
         contextDocument->scriptRunner()->queueScriptForExecution(this, ScriptRunner::IN_ORDER_EXECUTION);
         // Note that watchForLoad can immediately call notifyFinished.
-        m_pendingScript.watchForLoad(this);
+        m_pendingScript->watchForLoad(this);
     } else if (client->hasSourceAttribute()) {
-        m_pendingScript = PendingScript(m_element, m_resource.get());
+        m_pendingScript = PendingScript::create(m_element, m_resource.get());
         LocalFrame* frame = m_element->document().frame();
         if (frame) {
             ScriptState* scriptState = ScriptState::forMainWorld(frame);
             if (scriptState->contextIsValid())
-                ScriptStreamer::startStreaming(m_pendingScript, PendingScript::Async, frame->settings(), scriptState);
+                ScriptStreamer::startStreaming(*m_pendingScript, PendingScript::Async, frame->settings(), scriptState);
         }
         contextDocument->scriptRunner()->queueScriptForExecution(this, ScriptRunner::ASYNC_EXECUTION);
         // Note that watchForLoad can immediately call notifyFinished.
-        m_pendingScript.watchForLoad(this);
+        m_pendingScript->watchForLoad(this);
     } else {
         // Reset line numbering for nested writes.
         TextPosition position = elementDocument.isInDocumentWrite() ? TextPosition() : scriptStartPosition;
@@ -417,11 +426,13 @@ bool ScriptLoader::executeScript(const ScriptSourceCode& sourceCode, double* com
 void ScriptLoader::execute()
 {
     ASSERT(!m_willBeParserExecuted);
-    ASSERT(m_pendingScript.resource());
+    ASSERT(m_pendingScript->resource());
     bool errorOccurred = false;
-    ScriptSourceCode source = m_pendingScript.getSource(KURL(), errorOccurred);
-    RefPtrWillBeRawPtr<Element> element = m_pendingScript.releaseElementAndClear();
-    ALLOW_UNUSED_LOCAL(element);
+    ScriptSourceCode source = m_pendingScript->getSource(KURL(), errorOccurred);
+//     RefPtrWillBeRawPtr<Element> element = m_pendingScript->releaseElementAndClear();
+//     ALLOW_UNUSED_LOCAL(element);
+    m_pendingScript->dispose(this);
+
     if (errorOccurred) {
         dispatchErrorEvent();
     } else if (!m_resource->wasCanceled()) {
@@ -460,7 +471,7 @@ void ScriptLoader::notifyFinished(Resource* resource)
     else
         contextDocument->scriptRunner()->notifyScriptReady(this, ScriptRunner::ASYNC_EXECUTION);
 
-    m_pendingScript.stopWatchingForLoad(this);
+    m_pendingScript->stopWatchingForLoad(this);
 }
 
 bool ScriptLoader::ignoresLoadRequest() const

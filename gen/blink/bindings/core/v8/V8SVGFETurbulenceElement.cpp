@@ -334,7 +334,9 @@ static void installV8SVGFETurbulenceElementTemplate(v8::Local<v8::FunctionTempla
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_STITCHTYPE_NOSTITCH", SVGFETurbulenceElementV8Internal::SVG_STITCHTYPE_NOSTITCHConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFETurbulenceElement::domTemplate(v8::Isolate* isolate)

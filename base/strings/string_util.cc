@@ -106,4 +106,8 @@ std::string UTF16ToUTF8(const string16& utf16) {
     return WideToUTF8(utf16);
 }
 
+string16 ASCIIToUTF16(const std::string& ascii) {
+  return ASCIIToWide(ascii);
+}
+
 }

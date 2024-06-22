@@ -71,7 +71,9 @@ static void installV8WebGLCompressedTextureETC1Template(v8::Local<v8::FunctionTe
     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8WebGLCompressedTextureETC1Constants, WTF_ARRAY_LENGTH(V8WebGLCompressedTextureETC1Constants));
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WebGLCompressedTextureETC1::domTemplate(v8::Isolate* isolate)

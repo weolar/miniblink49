@@ -7,6 +7,9 @@
 
 namespace wke {
 
+class CWebView;
+typedef CWebView* wkeWebView;
+
 void recordJsExceptionInfo(const v8::TryCatch& tryCatch);
 
 class AutoAllowRecordJsExceptionInfo {
@@ -34,8 +37,14 @@ private:
 };
 
 bool checkThreadCallIsValid(const char* funcName);
+bool checkWebViewIsValid(wkeWebView webView);
 
 }
+
+#define WKE_CHECK_WEBVIEW_AND_THREAD_IS_VALID(webView, ret) \
+    wke::checkThreadCallIsValid(__FUNCTION__); \
+    if (!webView || !wke::checkWebViewIsValid(webView)) \
+        return ret;
 
 #endif
 #endif // wke_wkeUtil_h

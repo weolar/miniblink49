@@ -200,7 +200,7 @@ void WebMediaPlayerClientImpl::disconnectedFromRemoteDevice()
 }
 
 // MediaPlayer -------------------------------------------------
-void WebMediaPlayerClientImpl::load(WebMediaPlayer::LoadType loadType, const WTF::String& url, WebMediaPlayer::CORSMode corsMode)
+void WebMediaPlayerClientImpl::load(WebMediaPlayer::LoadType loadType, const WTF::String& url, WebMediaPlayer::CORSMode corsMode, bool isAudio)
 {
     ASSERT(!m_webMediaPlayer);
 
@@ -234,7 +234,7 @@ void WebMediaPlayerClientImpl::load(WebMediaPlayer::LoadType loadType, const WTF
 
     setPreload(mediaElement().effectivePreloadType());
 
-    m_webMediaPlayer->load(loadType, kurl, corsMode);
+    m_webMediaPlayer->load(loadType, kurl, corsMode, isAudio);
 
     if (mediaElement().isFullscreen())
         m_webMediaPlayer->enterFullscreen();

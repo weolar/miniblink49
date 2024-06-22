@@ -23,7 +23,7 @@ public:
     int encodedLength() const override;
 
 private:
-    std::vector<char> data_;
+    std::vector<char> m_data;
     int m_encodedLength;
 
     DISALLOW_COPY_AND_ASSIGN(FixedReceivedData);

@@ -814,7 +814,7 @@ void WebURLLoaderWinINet::fileLoadImpl(const blink::KURL& url)
     if (url.protocolIsData()) {
         WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
         if (m_client && m_loader)
-            net::handleDataURL(m_loader, m_client, url);
+            net::handleDataURL(m_loader, m_client, url, false, false);
         return;
     }
 

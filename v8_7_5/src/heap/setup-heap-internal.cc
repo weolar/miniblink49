@@ -42,6 +42,8 @@
 #include "src/regexp/jsregexp.h"
 #include "src/wasm/wasm-objects.h"
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -314,7 +316,7 @@ bool Heap::CreateInitialMaps() {
   // Allocate the empty enum cache.
   {
     AllocationResult allocation =
-        Allocate(roots.tuple2_map(), AllocationType::kReadOnly);
+        Allocate(roots.enum_cache_map(), AllocationType::kReadOnly);
     if (!allocation.To(&obj)) return false;
   }
   set_empty_enum_cache(EnumCache::cast(obj));
@@ -600,6 +602,17 @@ bool Heap::CreateInitialMaps() {
                                   SKIP_WRITE_BARRIER);
     PropertyArray::cast(obj)->initialize_length(0);
     set_empty_property_array(PropertyArray::cast(obj));
+  }
+
+  {
+    if (!AllocateRaw(FixedArray::SizeFor(0), AllocationType::kReadOnly)
+             .To(&obj)) {
+      return false;
+    }
+    obj->set_map_after_allocation(roots.closure_feedback_cell_array_map(),
+                                  SKIP_WRITE_BARRIER);
+    FixedArray::cast(obj)->set_length(0);
+    set_empty_closure_feedback_cell_array(ClosureFeedbackCellArray::cast(obj));
   }
 
 #define ALLOCATE_EMPTY_FIXED_TYPED_ARRAY(Type, type, TYPE, ctype)         \

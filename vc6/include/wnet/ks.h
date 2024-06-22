@@ -5704,6 +5704,93 @@ if ( pIrp->RequestorMode != KernelMode ) { \
     return STATUS_INVALID_DEVICE_REQUEST; \
 }
 
+typedef /* [public][public][public][public] */
+enum __MIDL___MIDL_itf_devicetopology_0000_0000_0005 {
+    ePcxChanMap_FL_FR	= 0,
+    ePcxChanMap_FC_LFE = (ePcxChanMap_FL_FR + 1),
+    ePcxChanMap_BL_BR = (ePcxChanMap_FC_LFE + 1),
+    ePcxChanMap_FLC_FRC = (ePcxChanMap_BL_BR + 1),
+    ePcxChanMap_SL_SR = (ePcxChanMap_FLC_FRC + 1),
+    ePcxChanMap_Unknown = (ePcxChanMap_SL_SR + 1)
+} EChannelMapping;
+
+typedef /* [public][public][public][public] */
+enum __MIDL___MIDL_itf_devicetopology_0000_0000_0006 {
+    eConnTypeUnknown	= 0,
+    eConnTypeEighth = (eConnTypeUnknown + 1),
+    eConnTypeQuarter = (eConnTypeEighth + 1),
+    eConnTypeAtapiInternal = (eConnTypeQuarter + 1),
+    eConnTypeRCA = (eConnTypeAtapiInternal + 1),
+    eConnTypeOptical = (eConnTypeRCA + 1),
+    eConnTypeOtherDigital = (eConnTypeOptical + 1),
+    eConnTypeOtherAnalog = (eConnTypeOtherDigital + 1),
+    eConnTypeMultichannelAnalogDIN = (eConnTypeOtherAnalog + 1),
+    eConnTypeXlrProfessional = (eConnTypeMultichannelAnalogDIN + 1),
+    eConnTypeRJ11Modem = (eConnTypeXlrProfessional + 1),
+    eConnTypeCombination = (eConnTypeRJ11Modem + 1)
+} EPcxConnectionType;
+
+typedef /* [public][public][public][public] */
+enum __MIDL___MIDL_itf_devicetopology_0000_0000_0007 {
+    eGeoLocRear	= 0x1,
+    eGeoLocFront = (eGeoLocRear + 1),
+    eGeoLocLeft = (eGeoLocFront + 1),
+    eGeoLocRight = (eGeoLocLeft + 1),
+    eGeoLocTop = (eGeoLocRight + 1),
+    eGeoLocBottom = (eGeoLocTop + 1),
+    eGeoLocRearOPanel = (eGeoLocBottom + 1),
+    eGeoLocRiser = (eGeoLocRearOPanel + 1),
+    eGeoLocInsideMobileLid = (eGeoLocRiser + 1),
+    eGeoLocDrivebay = (eGeoLocInsideMobileLid + 1),
+    eGeoLocHDMI = (eGeoLocDrivebay + 1),
+    eGeoLocOutsideMobileLid = (eGeoLocHDMI + 1),
+    eGeoLocATAPI = (eGeoLocOutsideMobileLid + 1),
+    eGeoLocReserved5 = (eGeoLocATAPI + 1),
+    eGeoLocReserved6 = (eGeoLocReserved5 + 1)
+} EPcxGeoLocation;
+
+typedef /* [public][public][public][public] */
+enum __MIDL___MIDL_itf_devicetopology_0000_0000_0008 {
+    eGenLocPrimaryBox = 0,
+    eGenLocInternal = (eGenLocPrimaryBox + 1),
+    eGenLocSeperate = (eGenLocInternal + 1),
+    eGenLocOther = (eGenLocSeperate + 1)
+} EPcxGenLocation;
+
+typedef /* [public][public][public][public] */
+enum __MIDL___MIDL_itf_devicetopology_0000_0000_0009 {
+    ePortConnJack = 0,
+    ePortConnIntegratedDevice = (ePortConnJack + 1),
+    ePortConnBothIntegratedAndJack = (ePortConnIntegratedDevice + 1),
+    ePortConnUnknown = (ePortConnBothIntegratedAndJack + 1)
+} EPxcPortConnection;
+
+typedef /* [public][public] */ struct __MIDL___MIDL_itf_devicetopology_0000_0000_0010 {
+    EChannelMapping ChannelMapping;
+    COLORREF Color;
+    EPcxConnectionType ConnectionType;
+    EPcxGeoLocation GeoLocation;
+    EPcxGenLocation GenLocation;
+    EPxcPortConnection PortConnection;
+    BOOL IsConnected;
+} 	KSJACK_DESCRIPTION;
+
+typedef struct __MIDL___MIDL_itf_devicetopology_0000_0000_0010* PKSJACK_DESCRIPTION;
+
+typedef KSIDENTIFIER KSPROPERTY;
+
+typedef KSIDENTIFIER* PKSPROPERTY;
+
+typedef KSIDENTIFIER KSMETHOD;
+
+typedef KSIDENTIFIER* PKSMETHOD;
+
+typedef KSIDENTIFIER KSEVENT;
+
+typedef KSIDENTIFIER* PKSEVENT;
+
+// DEFINE_GUIDSTRUCT("00000001-0000-0010-8000-00aa00389b71", KSDATAFORMAT_SUBTYPE_PCM);
+// #define KSDATAFORMAT_SUBTYPE_PCM DEFINE_GUIDNAMED(KSDATAFORMAT_SUBTYPE_PCM)
 
 #endif // !_KS_
 

@@ -2032,7 +2032,9 @@ void V8HTMLInputElement::installV8HTMLInputElementTemplate(v8::Local<v8::Functio
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8HTMLInputElement::domTemplate(v8::Isolate* isolate)

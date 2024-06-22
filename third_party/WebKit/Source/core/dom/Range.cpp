@@ -1651,12 +1651,6 @@ void Range::getBorderAndTextQuads(Vector<FloatQuad>& quads) const
                 layoutText->absoluteQuadsForRange(textQuads, startOffset, endOffset);
                 m_ownerDocument->adjustFloatQuadsForScrollAndAbsoluteZoom(textQuads, *layoutText);
 
-//                 for (size_t i = 0; i < textQuads.size(); ++i) {
-//                     FloatQuad xx = textQuads[i];
-// 
-//                     String output = String::format("Range::getBorderAndTextQuads: %f %d\n", xx.boundingBox().x(), i);
-//                     OutputDebugStringA(output.utf8().data());
-//                 }
                 quads.appendVector(textQuads);
             }
         }

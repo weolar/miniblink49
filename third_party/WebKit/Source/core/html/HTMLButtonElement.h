@@ -32,6 +32,7 @@ class HTMLButtonElement final : public HTMLFormControlElement {
     DEFINE_WRAPPERTYPEINFO();
 public:
     static PassRefPtrWillBeRawPtr<HTMLButtonElement> create(Document&, HTMLFormElement*);
+    ~HTMLButtonElement();
 
     void setType(const AtomicString&);
 

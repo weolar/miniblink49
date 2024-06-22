@@ -54,13 +54,13 @@ const float twoPiFloat = piFloat * 2.0f;
 
 #if OS(ANDROID) || COMPILER(MSVC)
 // ANDROID and MSVC's math.h does not currently supply log2 or log2f.
-inline double log2(double num)
+inline double __cdecl log2(double num)
 {
     // This constant is roughly M_LN2, which is not provided by default on Windows and Android.
     return log(num) / 0.693147180559945309417232121458176568;
 }
 
-inline float log2f(float num)
+inline float __cdecl log2f(float num)
 {
     // This constant is roughly M_LN2, which is not provided by default on Windows and Android.
     return logf(num) / 0.693147180559945309417232121458176568f;

@@ -314,6 +314,15 @@ static void toStringMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& in
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void toStringTestMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
+    DOMTokenList* impl = V8DOMTokenList::toImpl(info.This());
+    v8SetReturnValueString(info, impl->toString(), info.GetIsolate());
+    OutputDebugStringA("toStringTestMethodCallback\n");
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
 static void iteratorMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "iterator", "DOMTokenList", info.Holder(), info.GetIsolate());
@@ -403,8 +412,15 @@ static void installV8DOMTokenListTemplate(v8::Local<v8::FunctionTemplate> functi
     };
     V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, static_cast<v8::PropertyAttribute>(v8::DontDelete | v8::DontEnum), toStringMethodConfiguration);
 
+    const V8DOMConfiguration::MethodConfiguration toStringTestMethodConfiguration = {
+        "toStringTest", DOMTokenListV8Internal::toStringTestMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts,
+    };
+    V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, static_cast<v8::PropertyAttribute>(v8::DontDelete | v8::DontEnum), toStringTestMethodConfiguration);
+
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8DOMTokenList::domTemplate(v8::Isolate* isolate)

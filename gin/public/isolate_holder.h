@@ -80,8 +80,8 @@ class GIN_EXPORT IsolateHolder {
       size_t magicNum;
       size_t size;
   };
-  static const size_t magicNum0 = 0x1122dd44;
-  static const size_t magicNum1 = 0x11227788;
+  static const size_t magicNum0 = 0x33333333;
+  static const size_t magicNum1 = 0x44444444;
 
   static MemoryHead* GetPointerHead(void* pointer);
   static size_t GetPointerMemSize(void* pointer);

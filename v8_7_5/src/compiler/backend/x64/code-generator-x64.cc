@@ -258,7 +258,9 @@ class OutOfLineRecordWrite final : public OutOfLineCode {
     SaveFPRegsMode const save_fp_mode =
         frame()->DidAllocateDoubleRegisters() ? kSaveFPRegs : kDontSaveFPRegs;
 
-    if (stub_mode_ == StubCallMode::kCallWasmRuntimeStub) {
+    if (mode_ == RecordWriteMode::kValueIsEphemeronKey) {
+      __ CallEphemeronKeyBarrier(object_, scratch1_, save_fp_mode);
+    } else if (stub_mode_ == StubCallMode::kCallWasmRuntimeStub) {
       // A direct call to a wasm runtime stub defined in this module.
       // Just encode the stub index. This will be patched when the code
       // is added to the native module and copied into wasm code space.
@@ -1953,18 +1955,18 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
     }
     case kX64DecompressSigned: {
       CHECK(instr->HasOutput());
-      __ movsxlq(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movsxlq);
       break;
     }
     case kX64DecompressPointer: {
       CHECK(instr->HasOutput());
-      __ movsxlq(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movsxlq);
       __ addq(i.OutputRegister(), kRootRegister);
       break;
     }
     case kX64DecompressAny: {
       CHECK(instr->HasOutput());
-      __ movsxlq(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movsxlq);
       // TODO(solanes): Do branchful compute?
       // Branchlessly compute |masked_root|:
       STATIC_ASSERT((kSmiTagSize == 1) && (kSmiTag < 32));
@@ -1982,15 +1984,15 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
     // TODO(solanes): We might get away with doing a no-op in these three cases.
     // The movl instruction is the conservative way for the moment.
     case kX64CompressSigned: {
-      __ movl(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movl);
       break;
     }
     case kX64CompressPointer: {
-      __ movl(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movl);
       break;
     }
     case kX64CompressAny: {
-      __ movl(i.OutputRegister(), i.InputRegister(0));
+      ASSEMBLE_MOVX(movl);
       break;
     }
     case kX64Movq:

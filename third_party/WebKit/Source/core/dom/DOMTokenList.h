@@ -66,9 +66,10 @@ public:
 
     DEFINE_INLINE_VIRTUAL_TRACE() { }
 
+    virtual void setValue(const AtomicString&) = 0;
+
 protected:
     virtual const AtomicString& value() const = 0;
-    virtual void setValue(const AtomicString&) = 0;
 
     virtual void addInternal(const AtomicString&);
     virtual bool containsInternal(const AtomicString&) const = 0;

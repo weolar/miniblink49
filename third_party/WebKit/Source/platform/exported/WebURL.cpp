@@ -58,4 +58,29 @@ WebURL::operator KURL() const
 	return KURL(ParsedURLString, (String)m_string);
 }
 
+WebURL::WebURL(const WebString& str)
+{
+    m_string = str;
+    KURL url(ParsedURLString, (String)m_string);
+    m_isValid = url.isValid();
+}
+
+bool WebURL::schemeIsHTTPOrHTTPS() const
+{
+    KURL url(ParsedURLString, (String)m_string);
+    return (url.protocolIsInHTTPFamily());
+}
+
+std::string WebURL::getOrigin() const
+{
+    KURL url(ParsedURLString, (String)m_string);
+    if (!url.isValid())
+        return "";
+
+    String origin = url.protocol();
+    origin.append(url.host());
+    origin.append(String::format("%d", url.port()));
+    return std::string(origin.utf8().data());
+}
+
 } // namespace blink

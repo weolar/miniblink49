@@ -177,6 +177,9 @@ int KeyboardEvent::keyCode() const
     if (!m_keyEvent)
         return 0;
 
+//     if (type() == "irkeypress")
+//         return m_keyEvent->windowsVirtualKeyCode();
+
 #if OS(ANDROID)
     // FIXME: Check to see if this applies to other OS.
     // If the key event belongs to IME composition then propagate to JS.

@@ -132,7 +132,11 @@ public:
         v8::Local<v8::Value>,
         int argc,
         v8::Local<v8::Value> argv[]) override;
+
     v8::Local<v8::Context> mainWorldScriptContext() const override;
+    int32_t getScriptContextWorldId(v8::Local<v8::Context> scriptContext) const override;
+    v8::Local<v8::Context> getScriptContextFromWorldId(v8::Isolate* isolate, int worldId) const override;
+
     void reload(bool ignoreCache) override;
     void reloadWithOverrideURL(const WebURL& overrideUrl, bool ignoreCache) override;
     void reloadImage(const WebNode&) override;
@@ -400,8 +404,8 @@ private:
 
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     UserMediaClientImpl m_userMediaClientImpl;
-    OwnPtrWillBeMember<GeolocationClientProxy> m_geolocationClientProxy;
 #endif // MINIBLINK_NOT_IMPLEMENTED
+    OwnPtrWillBeMember<GeolocationClientProxy> m_geolocationClientProxy;
 
     WebDevToolsFrontendImpl* m_webDevToolsFrontend;
 

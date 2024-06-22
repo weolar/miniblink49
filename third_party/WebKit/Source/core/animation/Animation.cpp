@@ -112,14 +112,15 @@ Animation::~Animation()
 #if !ENABLE(OILPAN)
     if (m_content)
         m_content->detach();
+#endif
+
     if (m_timeline)
         m_timeline->animationDestroyed(this);
-#endif
 
     destroyCompositorPlayer();
 }
 
-#if !ENABLE(OILPAN)
+#if 1 // !ENABLE(OILPAN)
 void Animation::detachFromTimeline()
 {
     m_timeline = nullptr;

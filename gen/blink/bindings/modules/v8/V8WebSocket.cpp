@@ -548,7 +548,9 @@ static void installV8WebSocketTemplate(v8::Local<v8::FunctionTemplate> functionT
     static_assert(3 == DOMWebSocket::CLOSED, "the value of DOMWebSocket_CLOSED does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WebSocket::domTemplate(v8::Isolate* isolate)

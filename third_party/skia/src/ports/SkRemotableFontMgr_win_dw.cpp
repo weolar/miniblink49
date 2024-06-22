@@ -21,6 +21,10 @@
 
 #include <dwrite.h>
 
+#ifndef LOCALE_NAME_MAX_LENGTH
+#define LOCALE_NAME_MAX_LENGTH 85
+#endif
+
 class SK_API SkRemotableFontMgr_DirectWrite : public SkRemotableFontMgr {
 private:
     struct DataId {
@@ -164,7 +168,7 @@ public:
              "Could not get requested family.");
 
         int count = fontFamily->GetFontCount();
-        SkFontIdentity* fontIds;
+        SkFontIdentity* fontIds = nullptr;
         SkAutoTUnref<SkRemotableFontIdentitySet> fontIdSet(
             new SkRemotableFontIdentitySet(count, &fontIds));
         for (int fontIndex = 0; fontIndex < count; ++fontIndex) {
@@ -208,8 +212,8 @@ public:
             return E_UNEXPECTED;
         }
 
-        size_t len = wcsnlen_s(metrics.lfMessageFont.lfFaceName, LF_FACESIZE) + 1;
-        if (0 != wcsncpy_s(name->reset(len), len, metrics.lfMessageFont.lfFaceName, _TRUNCATE)) {
+        size_t len = wcslen(metrics.lfMessageFont.lfFaceName) + 1;
+        if (0 != wcsncpy(name->reset(len), metrics.lfMessageFont.lfFaceName, len)) {
             return E_UNEXPECTED;
         }
 
@@ -352,11 +356,11 @@ public:
 
         // IUnknown methods
         ULONG STDMETHODCALLTYPE AddRef() override {
-            return InterlockedIncrement(&fRefCount);
+            return InterlockedIncrement((volatile LONG *)&fRefCount);
         }
 
         ULONG STDMETHODCALLTYPE Release() override {
-            ULONG newCount = InterlockedDecrement(&fRefCount);
+            ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
             if (0 == newCount) {
                 delete this;
             }

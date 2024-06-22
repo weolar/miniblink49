@@ -3,6 +3,7 @@
 
 #include <ostream>
 #include <sstream>
+#include <xstring>
 
 namespace std {
 
@@ -23,72 +24,81 @@ namespace std {
  //}
 
 template<>
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char const * str)
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, unsigned char const * b)
 {
-    if (!str)
-        return os;
+    if (!b)
+        return a;
 
-    os << ((const char *)str);
-    return os;
+    size_t len = strlen((const char*)b);
+    if (0 == len)
+        return a;
+
+    a.write((const char*)b, len);
+    return a;
 }
 
 template<>
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char c)
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, unsigned char b)
 {
-    os << ((char)c);
-    return os;
+    a.put(b);
+    return a;
 }
 
 template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b)
 {
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64d", b);
-    aCopy << buf;
-    a << aCopy;
+    char buf[32] = { 0 };
+
+    const char* fmt = "%I64d";
+    if (a.flags() & ios_base::hex)
+        fmt = "%llu";
+    sprintf(buf, fmt, b);
+
+    a.write(buf, strlen(buf));
     return a;
 }
 
 template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b)
 {
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64u", b);
-    aCopy << buf;
-    a << aCopy;
+    char buf[32] = { 0 };
+
+    const char* fmt = "%I64u";
+    if (a.flags() & ios_base::hex)
+        fmt = "%llx";
+    sprintf(buf, fmt, b);
+
+    a.write(buf, strlen(buf));
     return a;
 }
 
 template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b)
 {
-    ostringstream aCopy;
-    char bCopy[3] = { b, 0, 0 };
-    aCopy.write(bCopy, 1);
-    a << aCopy;
+    a.put(b);
     return a;
 }
 
 template<>
 basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char> >(
-    basic_ostream<char, char_traits<char> > & os, char const * b) // weolar 多重定义
+    basic_ostream<char, char_traits<char> >& a, char const* b) // weolar 多重定义
 {
-    ostringstream aCopy;
     size_t len = strlen(b);
-    aCopy.write(b, len);
-    os << aCopy;
-    return os;
+    if (0 == len)
+        return a;
+
+    a.write(b, len);
+    return a;
 }
 
 template<>
 basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char>, allocator<char> >(
     basic_ostream<char, char_traits<char> > & a, basic_string<char, char_traits<char>, allocator<char> > const & b) // weolar 无定义
 {
-    ostringstream aCopy;
-    aCopy.write(b.c_str(), b.size());
-    a << aCopy;
+    if (0 == b.size())
+        return a;
+
+    a.write(b.c_str(), b.size());
     return a;
 }
 
@@ -96,7 +106,7 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
 //     basic_ostream<char, char_traits<char> > & a, char const * b) {
 //     ostringstream aCopy;
 //     aCopy.write(b, strlen(b));
-//     a << aCopy;
+//     a << aCopy.str();
 //     return a;
 // }
 
@@ -107,6 +117,107 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
 // 
 // }
 
+// basic_string<char, char_traits<char>, allocator<char> >& basic_string<char, char_traits<char>, allocator<char> >::push_back(char c)
+// {
+//     return append(1, c);
+// }
+// 
+// basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >& basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >::push_back(unsigned short c)
+// {
+//     return append(1, c);
+// }
+// 
+// void basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >::clear(void)
+// {
+// 
+// }
+
+// basic_string<char, char_traits<char>, allocator<char> >& basic_string<char, char_traits<char>, allocator<char> >::push_back(char)
+// {
+// 
+// }
+
+}
+
+//void __stdcall `eh vector constructor iterator'(void *,unsigned int,unsigned int,void (__thiscall*)(void *),void (__thiscall*)(void *))
+
+#if defined __cplusplus_cli
+#define CALEETYPE __clrcall
+#else
+#define CALEETYPE __stdcall
+#endif
+#define __RELIABILITY_CONTRACT
+#define SECURITYCRITICAL_ATTRIBUTE
+#define ASSERT_UNMANAGED_CODE_ATTRIBUTE
+
+#if defined __cplusplus_cli
+#define CALLTYPE __clrcall 
+#elif defined _M_IX86
+#define CALLTYPE __thiscall
+#else
+#define CALLTYPE __stdcall
+#endif
+
+__RELIABILITY_CONTRACT
+void CALEETYPE __ArrayUnwind(
+    void*       ptr,                // Pointer to array to destruct
+    size_t      size,               // Size of each element (including padding)
+    int         count,              // Number of elements in the array
+    void(CALLTYPE *pDtor)(void*)    // The destructor to call
+    );
+
+__RELIABILITY_CONTRACT
+inline void CALEETYPE __ehvec_ctor(
+    void*       ptr,                // Pointer to array to destruct
+    size_t      size,               // Size of each element (including padding)
+                                    //  int         count,              // Number of elements in the array
+    size_t      count,              // Number of elements in the array
+    void(CALLTYPE *pCtor)(void*),   // Constructor to call
+    void(CALLTYPE *pDtor)(void*)    // Destructor to call should exception be thrown
+    ) {
+    size_t i = 0;      // Count of elements constructed
+    int success = 0;
+
+    __try {
+        // Construct the elements of the array
+        for (; i < count; i++) {
+            (*pCtor)(ptr);
+            ptr = (char*)ptr + size;
+        }
+        success = 1;
+    } __finally {
+        if (!success)
+            __ArrayUnwind(ptr, size, (int)i, pDtor);
+    }
+}
+
+__RELIABILITY_CONTRACT
+SECURITYCRITICAL_ATTRIBUTE
+inline void CALEETYPE __ehvec_dtor(
+    void*       ptr,                // Pointer to array to destruct
+    size_t      size,               // Size of each element (including padding)
+                                    //  int         count,              // Number of elements in the array
+    size_t      count,              // Number of elements in the array
+    void(CALLTYPE *pDtor)(void*)    // The destructor to call
+    ) {
+    //_Analysis_assume_(count > 0);
+
+    int success = 0;
+
+    // Advance pointer past end of array
+    ptr = (char*)ptr + size*count;
+
+    __try {
+        // Destruct elements
+        while (count-- > 0) {
+            ptr = (char*)ptr - size;
+            (*pDtor)(ptr);
+        }
+        success = 1;
+    } __finally {
+        if (!success)
+            __ArrayUnwind(ptr, size, (int)count, pDtor);
+    }
 }
 
 #endif // USING_VC6RT

@@ -6,7 +6,8 @@ namespace atom {
 
 class V8PersistentTls {
 public:
-    static v8::Persistent<v8::Function>* get(DWORD* constructorTlsKey) {
+    static v8::Persistent<v8::Function>* get(DWORD* constructorTlsKey)
+    {
         v8::Persistent<v8::Function>* constructor = nullptr;
         if (0 == *constructorTlsKey)
             *constructorTlsKey = ::TlsAlloc();

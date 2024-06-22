@@ -35,16 +35,18 @@ namespace blink {
 
 struct WebExternalTextureMailbox {
     signed char name[64];
-    unsigned syncPoint;
+    signed char syncToken[24];
+    bool validSyncToken;
     bool allowOverlay;
     bool nearestNeighbor;
 
     WebExternalTextureMailbox()
-        : syncPoint(0)
+        : validSyncToken(false)
         , allowOverlay(false)
         , nearestNeighbor(false)
     {
         memset(name, 0, sizeof(name));
+        memset(syncToken, 0, sizeof(syncToken));
     }
 };
 

@@ -9,7 +9,7 @@
 namespace v8 {
 namespace internal {
 
-class TestBuiltinsFromDSLAssembler {
+class V8_EXPORT_PRIVATE TestBuiltinsFromDSLAssembler {
  public:
   explicit TestBuiltinsFromDSLAssembler(compiler::CodeAssemblerState* state) : state_(state), ca_(state) { USE(state_, ca_); }
   compiler::TNode<BoolT> ElementsKindTestHelper1(ElementsKind p_kind);
@@ -127,21 +127,39 @@ class TestBuiltinsFromDSLAssembler {
    public:
     DEFINE_FIELD_OFFSET_CONSTANTS(JSObject::kSize, TORQUE_GENERATED_TEST_CLASS_WITH_ALL_TYPES_FIELDS)
   };
-  void TestClassWithAllTypesLoadsAndStores(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_t, compiler::TNode<RawPtrT> p_r, compiler::TNode<Int32T> p_v1, compiler::TNode<Uint32T> p_v2, compiler::TNode<Int32T> p_v3, compiler::TNode<Uint32T> p_v4);
+  void TestClassWithAllTypesLoadsAndStores(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_t, compiler::TNode<RawPtrT> p_r, compiler::TNode<Int8T> p_v1, compiler::TNode<Uint8T> p_v2, compiler::TNode<Int16T> p_v3, compiler::TNode<Uint16T> p_v4);
   compiler::TNode<FixedArray> NewInternalClass(compiler::TNode<Smi> p_x);
   void TestInternalClass(compiler::TNode<Context> p_context);
-  compiler::TNode<Int32T> LoadTestClassWithAllTypesA(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesA(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Int32T> p_v);
-  compiler::TNode<Uint32T> LoadTestClassWithAllTypesB(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesB(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint32T> p_v);
-  compiler::TNode<Uint32T> LoadTestClassWithAllTypesB2(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesB2(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint32T> p_v);
-  compiler::TNode<Uint32T> LoadTestClassWithAllTypesB3(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesB3(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint32T> p_v);
-  compiler::TNode<Int32T> LoadTestClassWithAllTypesC(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesC(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Int32T> p_v);
-  compiler::TNode<Uint32T> LoadTestClassWithAllTypesD(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
-  void StoreTestClassWithAllTypesD(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint32T> p_v);
+  struct StructWithConst {
+    compiler::TNode<Object> a;
+    compiler::TNode<Int32T> b;
+
+    std::tuple<compiler::TNode<Object>, compiler::TNode<Int32T>> Flatten() const {
+      return std::tuple_cat(std::make_tuple(a), std::make_tuple(b));
+    }
+  };
+  void TestConstInStructs();
+  struct TestIterator {
+    compiler::TNode<Smi> count;
+
+    std::tuple<compiler::TNode<Smi>> Flatten() const {
+      return std::tuple_cat(std::make_tuple(count));
+    }
+  };
+  compiler::TNode<Object> TestNewFixedArrayFromSpread(compiler::TNode<Context> p_context);
+  void TestReferences();
+  compiler::TNode<Int8T> LoadTestClassWithAllTypesA(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesA(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Int8T> p_v);
+  compiler::TNode<Uint8T> LoadTestClassWithAllTypesB(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesB(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint8T> p_v);
+  compiler::TNode<Uint8T> LoadTestClassWithAllTypesB2(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesB2(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint8T> p_v);
+  compiler::TNode<Uint8T> LoadTestClassWithAllTypesB3(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesB3(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint8T> p_v);
+  compiler::TNode<Int16T> LoadTestClassWithAllTypesC(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesC(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Int16T> p_v);
+  compiler::TNode<Uint16T> LoadTestClassWithAllTypesD(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
+  void StoreTestClassWithAllTypesD(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Uint16T> p_v);
   compiler::TNode<Int32T> LoadTestClassWithAllTypesE(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
   void StoreTestClassWithAllTypesE(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o, compiler::TNode<Int32T> p_v);
   compiler::TNode<Uint32T> LoadTestClassWithAllTypesF(compiler::TNode<TestBuiltinsFromDSLAssembler::TestClassWithAllTypes> p_o);
@@ -157,11 +175,17 @@ class TestBuiltinsFromDSLAssembler {
   compiler::TNode<Number> LoadInternalClassB(compiler::TNode<FixedArray> p_o);
   void StoreInternalClassB(compiler::TNode<FixedArray> p_o, compiler::TNode<Number> p_v);
   void _method_InternalClass_Flip(compiler::TNode<FixedArray> p_this, compiler::CodeAssemblerLabel* label_NotASmi);
+  compiler::TNode<Smi> LoadSmiPairA(compiler::TNode<FixedArray> p_o);
+  void StoreSmiPairA(compiler::TNode<FixedArray> p_o, compiler::TNode<Smi> p_v);
+  compiler::TNode<Smi> LoadSmiPairB(compiler::TNode<FixedArray> p_o);
+  void StoreSmiPairB(compiler::TNode<FixedArray> p_o, compiler::TNode<Smi> p_v);
+  CodeStubAssembler::Reference _method_SmiPair_GetA(compiler::TNode<FixedArray> p_this);
   compiler::TNode<Object> GenericMacroTest5ATSmi(compiler::TNode<Smi> p_param);
   compiler::TNode<Object> GenericMacroTestWithLabels5ATSmi(compiler::TNode<Smi> p_param, compiler::CodeAssemblerLabel* label_X);
   compiler::TNode<Object> IncrementIfSmi32UT5ATSmi10FixedArray10HeapNumber(compiler::TNode<Object> p_x);
   compiler::TNode<Smi> ExampleGenericOverload5ATSmi(compiler::TNode<Smi> p_o);
   compiler::TNode<Object> ExampleGenericOverload20UT5ATSmi10HeapObject(compiler::TNode<Object> p_o);
+  void Swap5ATSmi(CodeStubAssembler::Reference p_a, CodeStubAssembler::Reference p_b);
  private:
   compiler::CodeAssemblerState* const state_;
   compiler::CodeAssembler ca_;

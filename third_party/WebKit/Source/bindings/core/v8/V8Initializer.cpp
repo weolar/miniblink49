@@ -42,6 +42,9 @@
 #include "bindings/core/v8/V8PerContextData.h"
 #include "bindings/core/v8/V8Window.h"
 #include "bindings/core/v8/WorkerScriptController.h"
+#include "bindings/core/v8/Modulator.h"
+#include "bindings/core/v8/ModuleRecord.h"
+#include "bindings/core/v8/ScriptPromiseResolver.h"
 #include "core/dom/Document.h"
 #include "core/dom/ExceptionCode.h"
 #include "core/fetch/AccessControlStatus.h"
@@ -52,6 +55,7 @@
 #include "core/inspector/ScriptArguments.h"
 #include "core/inspector/ScriptCallStack.h"
 #include "core/workers/WorkerGlobalScope.h"
+#include "platform/weborigin/KURL.h"
 #include "platform/EventDispatchForbiddenScope.h"
 #include "platform/RuntimeEnabledFeatures.h"
 #include "platform/TraceEvent.h"
@@ -322,7 +326,7 @@ static void failedAccessCheckCallbackInMainThread(v8::Local<v8::Object> host, v8
     exceptionState.throwIfNeeded();
 }
 
-static bool codeGenerationCheckCallbackInMainThread(v8::Local<v8::Context> context)
+static bool codeGenerationCheckCallbackInMainThread(v8::Local<v8::Context> context, v8::Local<v8::String> source)
 {
     if (ExecutionContext* executionContext = toExecutionContext(context)) {
         if (ContentSecurityPolicy* policy = toDocument(executionContext)->contentSecurityPolicy())
@@ -357,10 +361,76 @@ static void timerTraceProfilerInMainThread(const char* name, int status)
     }
 }
 
+#if V8_MAJOR_VERSION >= 7
+static v8::MaybeLocal<v8::Promise> hostImportModuleDynamically(
+    v8::Local<v8::Context> context,
+    v8::Local<v8::ScriptOrModule> v8Referrer,
+    v8::Local<v8::String> v8Specifier)
+{
+    v8::Context::Scope scope(context);
+    ScriptState* scriptState = ScriptState::from(context);
+
+    RefPtrWillBeRawPtr<ScriptPromiseResolver> resolver = ScriptPromiseResolver::create(scriptState);
+    ScriptPromise promise = resolver->promise();
+    Modulator* modulator = Modulator::from(context);
+    if (!modulator) {
+        resolver->reject();
+        return v8::Local<v8::Promise>::Cast(promise.v8Value());
+    }
+
+    String specifier = toCoreStringWithNullCheck(v8Specifier);
+    v8::Local<v8::Value> v8ReferrerUrl = v8Referrer->GetResourceName();
+    KURL referrerUrl;
+    if (v8ReferrerUrl->IsString()) {
+        String referrerResourceUrlStr = toCoreString(v8::Local<v8::String>::Cast(v8ReferrerUrl));
+        if (!referrerResourceUrlStr.isEmpty())
+            referrerUrl = KURL(ParsedURLString, referrerResourceUrlStr);
+    }
+
+    //ReferrerScriptInfo referrer_info = ReferrerScriptInfo::FromV8HostDefinedOptions(context, v8_referrer->GetHostDefinedOptions());
+    modulator->resolveDynamically(scriptState, specifier, referrerUrl, /*referrer_info, */resolver.release());
+    return v8::Local<v8::Promise>::Cast(promise.v8Value());
+}
+
+// https://html.spec.whatwg.org/C/#hostgetimportmetaproperties
+static void hostGetImportMetaProperties(v8::Local<v8::Context> context,
+    v8::Local<v8::Module> module,
+    v8::Local<v8::Object> meta) {
+    //ScriptState* scriptState = ScriptState::from(context);
+    v8::Isolate* isolate = context->GetIsolate();
+    v8::HandleScope handle_scope(isolate);
+
+    Modulator* modulator = Modulator::from(context);
+    if (!modulator)
+        return;
+
+    // TODO(shivanisha): Can a valid source url be passed to the constructor.
+    //ModuleImportMeta host_meta = modulator->HostGetImportMetaProperties(ModuleRecord(isolate, module, KURL()));
+    ModuleRecord* moduleRecord = modulator->getModuleRecordById(module->GetIdentityHash());
+    if (!moduleRecord)
+        return;
+
+    // 3. Return <<Record { [[Key]]: "url", [[Value]]: urlString }>>. [spec text]
+    v8::Local<v8::String> urlKey = v8String(isolate, "url");
+    v8::Local<v8::String> urlValue = v8String(isolate, /*host_meta.Url()*/moduleRecord->url().getUTF8String());
+    meta->CreateDataProperty(context, urlKey, urlValue).ToChecked();
+}
+#endif
+
 static void initializeV8Common(v8::Isolate* isolate)
 {
+#if V8_MAJOR_VERSION <= 5
     v8::V8::AddGCPrologueCallback(V8GCController::gcPrologue);
     v8::V8::AddGCEpilogueCallback(V8GCController::gcEpilogue);
+#else
+    isolate->AddGCPrologueCallback(V8GCController::gcPrologue);
+    isolate->AddGCEpilogueCallback(V8GCController::gcEpilogue);
+#endif
+
+#if V8_MAJOR_VERSION >= 7
+    isolate->SetHostImportModuleDynamicallyCallback(hostImportModuleDynamically);
+    isolate->SetHostInitializeImportMetaObjectCallback(hostGetImportMetaProperties);
+#endif
 
     v8::Debug::SetLiveEditEnabled(isolate, false);
 
@@ -383,16 +453,39 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 
     void* allocate(size_t size, WTF::ArrayBufferContents::InitializationPolicy policy)
     {
-         void* data;
-         WTF::ArrayBufferContents::allocateMemory(size, policy, data);
+        void* data;
+        WTF::ArrayBufferContents::allocateMemory(size, policy, data);
 
-//         WTF::ArrayBufferContents::allocateMemory(size + sizeof(MemoryHead), policy, data);
-//         MemoryHead* head = (MemoryHead*)data;
-//         head->magicNum = magicNum0;
-//         head->size = size;
-//         data = getHeadToMemBegin(head);
+        // 本函数的返回值，必须是ArrayBufferContents::allocateMemory的返回值。因为下面堆栈：
+        //  node.dll!blink::`anonymous namespace'::ArrayBufferAllocator::allocate
+        //  node.dll!blink::`anonymous namespace'::ArrayBufferAllocator::AllocateUninitialized
+        //  node.dll!v8::internal::JSTypedArray::MaterializeArrayBuffer
+        //  node.dll!v8::internal::JSTypedArray::GetBuffer
+        //  node.dll!v8::ArrayBufferView::Buffer
+        //  node.dll!blink::V8Uint16Array::toImpl
+        //  node.dll!blink::V8ArrayBufferView::toImpl  -> V8ArrayBuffer::toImpl
+        //  node.dll!blink::CryptoV8Internal::getRandomValuesMethod
+        //  node.dll!blink::CryptoV8Internal::getRandomValuesMethodCallback
+        //  node.dll!v8::internal::FunctionCallbackArguments::Call
+        // 可以看到WTF::ArrayBufferContents contents(v8Contents.Data(), v8Contents.ByteLength(), WTF::ArrayBufferContents::NotShared);
+        // 这里会把本函数分配的内存，直接取出后给ArrayBufferContents
+
+//         WTF::ArrayBufferContents::allocateMemory(size + sizeof(gin::IsolateHolder::MemoryHead), policy, data);
 // 
-         return data;
+//         static int ii = 0;
+//         ii++;
+// 
+//         char* output = (char*)malloc(0x100);
+//         sprintf_s(output, 0x99, "ArrayBufferAllocator::allocate: data:%p %d\n", data, ii);
+//         OutputDebugStringA(output);
+//         free(output);
+// 
+//         gin::IsolateHolder::MemoryHead* head = (gin::IsolateHolder::MemoryHead*)data;
+//         head->magicNum = gin::IsolateHolder::magicNum0;
+//         head->size = size;
+//         data = gin::IsolateHolder::GetHeadToMemBegin(head);
+
+        return data;
     }
 
     void* Allocate(size_t size) override
@@ -407,10 +500,12 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 
     void Free(void* data, size_t size) override
     {
-//         MemoryHead* head = getPointerHead(data);
-//         if (head->magicNum != magicNum0)
+//         gin::IsolateHolder::MemoryHead* head = gin::IsolateHolder::GetPointerHead(data);
+//         if (head->magicNum != gin::IsolateHolder::magicNum0)
 //             DebugBreak();
+//         head->magicNum = gin::IsolateHolder::magicNum1;
 //         WTF::ArrayBufferContents::freeMemory(head, size);
+
         WTF::ArrayBufferContents::freeMemory(data, size);
     }
 };
@@ -508,6 +603,11 @@ void V8Initializer::initializeWorker(v8::Isolate* isolate)
     uint32_t here;
     isolate->SetStackLimit(reinterpret_cast<uintptr_t>(&here - kWorkerMaxStackSize / sizeof(uint32_t*)));
     isolate->SetPromiseRejectCallback(promiseRejectHandlerInWorker);
+
+#if V8_MAJOR_VERSION >= 5
+    // Optimize for memory usage instead of latency for the worker isolate.
+    isolate->IsolateInBackgroundNotification();
+#endif
 }
 
 } // namespace blink

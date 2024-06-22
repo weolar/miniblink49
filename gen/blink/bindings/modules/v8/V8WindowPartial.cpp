@@ -29,9 +29,12 @@
 
 #include "bindings/core/v8/V8Window.h"
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#include "bindings/modules/v8/V8AnalyserNode.h"
-#include "bindings/modules/v8/V8AppBannerPromptResult.h"
+#include "bindings/modules/v8/V8SourceBuffer.h"
+#include "bindings/modules/v8/V8SourceBufferList.h"
+
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
+// #include "bindings/modules/v8/V8AnalyserNode.h"
+// #include "bindings/modules/v8/V8AppBannerPromptResult.h"
 #include "bindings/modules/v8/V8AudioBuffer.h"
 #include "bindings/modules/v8/V8AudioBufferSourceNode.h"
 #include "bindings/modules/v8/V8AudioContext.h"
@@ -40,16 +43,16 @@
 #include "bindings/modules/v8/V8AudioNode.h"
 #include "bindings/modules/v8/V8AudioParam.h"
 #include "bindings/modules/v8/V8AudioProcessingEvent.h"
-#include "bindings/modules/v8/V8BatteryManager.h"
-#include "bindings/modules/v8/V8BeforeInstallPromptEvent.h"
-#include "bindings/modules/v8/V8BiquadFilterNode.h"
-#include "bindings/modules/v8/V8BluetoothDevice.h"
-#include "bindings/modules/v8/V8BluetoothGATTCharacteristic.h"
-#include "bindings/modules/v8/V8BluetoothGATTRemoteServer.h"
-#include "bindings/modules/v8/V8BluetoothGATTService.h"
-#include "bindings/modules/v8/V8BluetoothUUID.h"
-#include "bindings/modules/v8/V8Cache.h"
-#include "bindings/modules/v8/V8CacheStorage.h"
+// #include "bindings/modules/v8/V8BatteryManager.h"
+// #include "bindings/modules/v8/V8BeforeInstallPromptEvent.h"
+// #include "bindings/modules/v8/V8BiquadFilterNode.h"
+// #include "bindings/modules/v8/V8BluetoothDevice.h"
+// #include "bindings/modules/v8/V8BluetoothGATTCharacteristic.h"
+// #include "bindings/modules/v8/V8BluetoothGATTRemoteServer.h"
+// #include "bindings/modules/v8/V8BluetoothGATTService.h"
+// #include "bindings/modules/v8/V8BluetoothUUID.h"
+// #include "bindings/modules/v8/V8Cache.h"
+// #include "bindings/modules/v8/V8CacheStorage.h"
 #endif
 #include "bindings/modules/v8/V8CanvasGradient.h"
 #include "bindings/modules/v8/V8CanvasPattern.h"
@@ -88,51 +91,51 @@
 #include "bindings/modules/v8/V8HMDVRDevice.h"
 #endif
 #include "bindings/modules/v8/V8Headers.h"
-#if MINIBLINK_NOT_IMPLEMENTED
-#include "bindings/modules/v8/V8IDBCursor.h"
-#include "bindings/modules/v8/V8IDBCursorWithValue.h"
-#include "bindings/modules/v8/V8IDBDatabase.h"
-#include "bindings/modules/v8/V8IDBFactory.h"
-#include "bindings/modules/v8/V8IDBIndex.h"
-#include "bindings/modules/v8/V8IDBKeyRange.h"
-#include "bindings/modules/v8/V8IDBObjectStore.h"
-#include "bindings/modules/v8/V8IDBOpenDBRequest.h"
-#include "bindings/modules/v8/V8IDBRequest.h"
-#include "bindings/modules/v8/V8IDBTransaction.h"
-#include "bindings/modules/v8/V8IDBVersionChangeEvent.h"
-#include "bindings/modules/v8/V8MIDIAccess.h"
-#include "bindings/modules/v8/V8MIDIConnectionEvent.h"
-#include "bindings/modules/v8/V8MIDIInput.h"
-#include "bindings/modules/v8/V8MIDIInputMap.h"
-#include "bindings/modules/v8/V8MIDIMessageEvent.h"
-#include "bindings/modules/v8/V8MIDIOutput.h"
-#include "bindings/modules/v8/V8MIDIOutputMap.h"
-#include "bindings/modules/v8/V8MIDIPort.h"
-#include "bindings/modules/v8/V8MediaDevices.h"
-#include "bindings/modules/v8/V8MediaElementAudioSourceNode.h"
-#include "bindings/modules/v8/V8MediaEncryptedEvent.h"
-#include "bindings/modules/v8/V8MediaKeyMessageEvent.h"
-#include "bindings/modules/v8/V8MediaKeySession.h"
-#include "bindings/modules/v8/V8MediaKeyStatusMap.h"
-#include "bindings/modules/v8/V8MediaKeySystemAccess.h"
-#include "bindings/modules/v8/V8MediaKeys.h"
-#include "bindings/modules/v8/V8MediaSession.h"
+#if 1 // MINIBLINK_NOT_IMPLEMENTED
+// #include "bindings/modules/v8/V8IDBCursor.h"
+// #include "bindings/modules/v8/V8IDBCursorWithValue.h"
+// #include "bindings/modules/v8/V8IDBDatabase.h"
+// #include "bindings/modules/v8/V8IDBFactory.h"
+// #include "bindings/modules/v8/V8IDBIndex.h"
+// #include "bindings/modules/v8/V8IDBKeyRange.h"
+// #include "bindings/modules/v8/V8IDBObjectStore.h"
+// #include "bindings/modules/v8/V8IDBOpenDBRequest.h"
+// #include "bindings/modules/v8/V8IDBRequest.h"
+// #include "bindings/modules/v8/V8IDBTransaction.h"
+// #include "bindings/modules/v8/V8IDBVersionChangeEvent.h"
+// #include "bindings/modules/v8/V8MIDIAccess.h"
+// #include "bindings/modules/v8/V8MIDIConnectionEvent.h"
+// #include "bindings/modules/v8/V8MIDIInput.h"
+// #include "bindings/modules/v8/V8MIDIInputMap.h"
+// #include "bindings/modules/v8/V8MIDIMessageEvent.h"
+// #include "bindings/modules/v8/V8MIDIOutput.h"
+// #include "bindings/modules/v8/V8MIDIOutputMap.h"
+// #include "bindings/modules/v8/V8MIDIPort.h"
+// #include "bindings/modules/v8/V8MediaDevices.h"
+// #include "bindings/modules/v8/V8MediaElementAudioSourceNode.h"
+// #include "bindings/modules/v8/V8MediaEncryptedEvent.h"
+// #include "bindings/modules/v8/V8MediaKeyMessageEvent.h"
+// #include "bindings/modules/v8/V8MediaKeySession.h"
+// #include "bindings/modules/v8/V8MediaKeyStatusMap.h"
+// #include "bindings/modules/v8/V8MediaKeySystemAccess.h"
+// #include "bindings/modules/v8/V8MediaKeys.h"
+// #include "bindings/modules/v8/V8MediaSession.h"
 #include "bindings/modules/v8/V8MediaSource.h"
-#include "bindings/modules/v8/V8MediaStream.h"
-#include "bindings/modules/v8/V8MediaStreamAudioDestinationNode.h"
-#include "bindings/modules/v8/V8MediaStreamAudioSourceNode.h"
-#include "bindings/modules/v8/V8MediaStreamEvent.h"
-#include "bindings/modules/v8/V8MediaStreamTrack.h"
+// #include "bindings/modules/v8/V8MediaStream.h"
+// #include "bindings/modules/v8/V8MediaStreamAudioDestinationNode.h"
+// #include "bindings/modules/v8/V8MediaStreamAudioSourceNode.h"
+// #include "bindings/modules/v8/V8MediaStreamEvent.h"
+// #include "bindings/modules/v8/V8MediaStreamTrack.h"
 #endif
 #include "bindings/modules/v8/V8MimeType.h"
 #include "bindings/modules/v8/V8MimeTypeArray.h"
-#if MINIBLINK_NOT_IMPLEMENTED
-#include "bindings/modules/v8/V8NetworkInformation.h"
-#include "bindings/modules/v8/V8Notification.h"
+#if 1 // MINIBLINK_NOT_IMPLEMENTED
+// #include "bindings/modules/v8/V8NetworkInformation.h"
+// #include "bindings/modules/v8/V8Notification.h"
 #include "bindings/modules/v8/V8OfflineAudioCompletionEvent.h"
 #include "bindings/modules/v8/V8OfflineAudioContext.h"
-#include "bindings/modules/v8/V8OscillatorNode.h"
-#include "bindings/modules/v8/V8PasswordCredential.h"
+// #include "bindings/modules/v8/V8OscillatorNode.h"
+// #include "bindings/modules/v8/V8PasswordCredential.h"
 #endif
 #include "bindings/modules/v8/V8Path2D.h"
 #if MINIBLINK_NOT_IMPLEMENTED
@@ -177,8 +180,10 @@
 #include "bindings/modules/v8/V8SubtleCrypto.h"
 #include "bindings/modules/v8/V8SyncManager.h"
 #include "bindings/modules/v8/V8SyncRegistration.h"
+#endif // MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8TextDecoder.h"
 #include "bindings/modules/v8/V8TextEncoder.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8TrackDefault.h"
 #include "bindings/modules/v8/V8TrackDefaultList.h"
 #include "bindings/modules/v8/V8VRDevice.h"
@@ -187,6 +192,7 @@
 #include "bindings/modules/v8/V8VRPositionState.h"
 #include "bindings/modules/v8/V8VideoPlaybackQuality.h"
 #include "bindings/modules/v8/V8WaveShaperNode.h"
+#endif // MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8WebGL2RenderingContext.h"
 #include "bindings/modules/v8/V8WebGLActiveInfo.h"
 #include "bindings/modules/v8/V8WebGLBuffer.h"
@@ -204,7 +210,7 @@
 #include "bindings/modules/v8/V8WebGLTransformFeedback.h"
 #include "bindings/modules/v8/V8WebGLUniformLocation.h"
 #include "bindings/modules/v8/V8WebGLVertexArrayObject.h"
-#endif // MINIBLINK_NOT_IMPLEMENTED
+
 #include "bindings/modules/v8/V8WebSocket.h"
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "core/dom/ContextFeatures.h"
@@ -795,7 +801,7 @@ static void localStorageAttributeGetterCallback(v8::Local<v8::Name>, const v8::P
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
-#ifdef  MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def  MINIBLINK_NOT_IMPLEMENTED
 
 #if ENABLE(WEB_AUDIO)
 static void webkitAudioContextAttributeSetter(v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
@@ -833,69 +839,69 @@ static void webkitOfflineAudioContextAttributeSetterCallback(v8::Local<v8::Name>
 }
 #endif // ENABLE(WEB_AUDIO)
 
-static void webkitIDBCursorConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBCursorConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBDatabaseConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBDatabaseConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBFactoryConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBFactoryConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBIndexConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBIndexConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBKeyRangeConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBKeyRangeConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBObjectStoreConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBObjectStoreConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBRequestConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBRequestConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
-
-static void webkitIDBTransactionConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
-{
-    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
-    UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBTransactionConstructor);
-    v8ConstructorAttributeGetter(property, info);
-    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-}
+// static void webkitIDBCursorConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBCursorConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBDatabaseConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBDatabaseConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBFactoryConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBFactoryConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBIndexConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBIndexConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBKeyRangeConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBKeyRangeConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBObjectStoreConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBObjectStoreConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBRequestConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBRequestConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
+// 
+// static void webkitIDBTransactionConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+// {
+//     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+//     UseCounter::countDeprecationIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedIDBTransactionConstructor);
+//     v8ConstructorAttributeGetter(property, info);
+//     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+// }
 
 #if ENABLE(WEB_AUDIO)
 static void AudioContextConstructorGetterCallback(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -1555,6 +1561,9 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"sessionStorage", DOMWindowPartialV8Internal::sessionStorageAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"localStorage", DOMWindowPartialV8Internal::localStorageAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 
+    { "SourceBuffer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SourceBuffer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    { "SourceBufferList", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SourceBufferList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 
 #if ENABLE(WEB_AUDIO)
@@ -1689,8 +1698,10 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"StorageEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8StorageEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     {"SubtleCrypto", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SubtleCrypto::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif // #ifdef MINIBLINK_NOT_IMPLEMENTED
     {"TextDecoder", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TextDecoder::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"TextEncoder", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TextEncoder::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+
     {"WebGLActiveInfo", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLActiveInfo::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLBuffer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLBuffer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLContextEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLContextEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -1702,7 +1713,6 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"WebGLShaderPrecisionFormat", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLShaderPrecisionFormat::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLTexture", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLTexture::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLUniformLocation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLUniformLocation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-#endif // #ifdef MINIBLINK_NOT_IMPLEMENTED
     {"WebSocket", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebSocket::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 };
 
@@ -1731,47 +1741,47 @@ void V8WindowPartial::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> fu
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-    if (RuntimeEnabledFeatures::globalCacheStorageEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"caches", DOMWindowPartialV8Internal::cachesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING), static_cast<v8::PropertyAttribute>(v8::DontDelete), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::deviceLightEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"ondevicelight", DOMWindowPartialV8Internal::ondevicelightAttributeGetterCallback, DOMWindowPartialV8Internal::ondevicelightAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"webkitSpeechGrammar", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechGrammarAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechGrammar::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"webkitSpeechGrammarList", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechGrammarListAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechGrammarList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"webkitSpeechRecognition", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognition::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"webkitSpeechRecognitionError", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionErrorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognitionError::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"webkitSpeechRecognitionEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionEventAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognitionEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"speechSynthesis", DOMWindowPartialV8Internal::speechSynthesisAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
+//     if (RuntimeEnabledFeatures::globalCacheStorageEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"caches", DOMWindowPartialV8Internal::cachesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING), static_cast<v8::PropertyAttribute>(v8::DontDelete), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::deviceLightEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"ondevicelight", DOMWindowPartialV8Internal::ondevicelightAttributeGetterCallback, DOMWindowPartialV8Internal::ondevicelightAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"webkitSpeechGrammar", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechGrammarAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechGrammar::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"webkitSpeechGrammarList", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechGrammarListAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechGrammarList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"webkitSpeechRecognition", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognition::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"webkitSpeechRecognitionError", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionErrorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognitionError::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"webkitSpeechRecognitionEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::webkitSpeechRecognitionEventAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechRecognitionEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"speechSynthesis", DOMWindowPartialV8Internal::speechSynthesisAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
 #if ENABLE(WEB_AUDIO)
     if (RuntimeEnabledFeatures::webAudioEnabled()) {
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
@@ -1800,311 +1810,311 @@ void V8WindowPartial::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> fu
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
 #endif // ENABLE(WEB_AUDIO)
-    if (RuntimeEnabledFeatures::appBannerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"AppBannerPromptResult", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8AppBannerPromptResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::appBannerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BeforeInstallPromptEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BeforeInstallPromptEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PeriodicSyncManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PeriodicSyncManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PeriodicSyncRegistration", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PeriodicSyncRegistration::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"SyncManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SyncManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"SyncRegistration", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SyncRegistration::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::compositorWorkerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"CompositorWorker", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CompositorWorker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"Credential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Credential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"CredentialsContainer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CredentialsContainer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"FederatedCredential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8FederatedCredential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PasswordCredential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PasswordCredential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::deviceLightEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"DeviceLightEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DeviceLightEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaEncryptedEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaEncryptedEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaKeyMessageEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeyMessageEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaKeySession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeySession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaKeySystemAccess", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeySystemAccess::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaKeys", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeys::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::enumerateDevicesEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaDevices", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaDevices::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::geofencingEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"CircularGeofencingRegion", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CircularGeofencingRegion::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::mediaSessionEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"MediaSession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaSession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"TrackDefault", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TrackDefault::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"TrackDefaultList", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TrackDefaultList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"VideoPlaybackQuality", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VideoPlaybackQuality::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
+//     if (RuntimeEnabledFeatures::appBannerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"AppBannerPromptResult", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8AppBannerPromptResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::appBannerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BeforeInstallPromptEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BeforeInstallPromptEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PeriodicSyncManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PeriodicSyncManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PeriodicSyncRegistration", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PeriodicSyncRegistration::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"SyncManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SyncManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::backgroundSyncEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"SyncRegistration", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SyncRegistration::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::compositorWorkerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"CompositorWorker", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CompositorWorker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"Credential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Credential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"CredentialsContainer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CredentialsContainer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"FederatedCredential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8FederatedCredential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::credentialManagerEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PasswordCredential", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PasswordCredential::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::deviceLightEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"DeviceLightEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DeviceLightEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaEncryptedEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaEncryptedEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaKeyMessageEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeyMessageEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaKeySession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeySession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaKeySystemAccess", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeySystemAccess::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::encryptedMediaEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaKeys", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeys::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::enumerateDevicesEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaDevices", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaDevices::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::geofencingEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"CircularGeofencingRegion", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CircularGeofencingRegion::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::mediaSessionEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"MediaSession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaSession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"TrackDefault", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TrackDefault::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"TrackDefaultList", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TrackDefaultList::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::mediaSourceExperimentalEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"VideoPlaybackQuality", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VideoPlaybackQuality::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
     if (RuntimeEnabledFeatures::mediaSourceEnabled()) {
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
         {"MediaSource", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaSource::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
-    if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"ServicePortCollection", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ServicePortCollection::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"ServicePort", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ServicePort::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::networkInformationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"NetworkInformation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8NetworkInformation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::notificationsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"Notification", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Notification::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::permissionsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PermissionStatus", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PermissionStatus::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::permissionsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"Permissions", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Permissions::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::presentationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"DefaultSessionStartEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DefaultSessionStartEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::presentationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PresentationAvailability", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PresentationAvailability::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::presentationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"Presentation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Presentation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::presentationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PresentationSession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PresentationSession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::pushMessagingEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PushManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PushManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::pushMessagingEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PushSubscription", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PushSubscription::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::screenOrientationEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"ScreenOrientation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ScreenOrientation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"SpeechSynthesisEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechSynthesisEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"SpeechSynthesisUtterance", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechSynthesisUtterance::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGL2RenderingContext", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGL2RenderingContext::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGLQuery", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLQuery::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGLSampler", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLSampler::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGLSync", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLSync::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGLTransformFeedback", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLTransformFeedback::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"WebGLVertexArrayObject", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLVertexArrayObject::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BluetoothDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BluetoothGATTCharacteristic", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTCharacteristic::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BluetoothGATTRemoteServer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTRemoteServer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BluetoothGATTService", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTService::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"BluetoothUUID", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothUUID::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"HMDVRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8HMDVRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"PositionSensorVRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PositionSensorVRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"VRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"VREyeParameters", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VREyeParameters::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"VRFieldOfView", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRFieldOfView::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    if (RuntimeEnabledFeatures::webVREnabled()) {
-        static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
-        {"VRPositionState", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRPositionState::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
-        V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
-    }
-    static const V8DOMConfiguration::ConstantConfiguration V8WindowConstants[] = {
-        {"TEMPORARY", 0, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
-        {"PERSISTENT", 1, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
-    };
-    V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8WindowConstants, WTF_ARRAY_LENGTH(V8WindowConstants));
-    static_assert(0 == DOMWindowFileSystem::TEMPORARY, "the value of DOMWindow_TEMPORARY does not match with implementation");
-    static_assert(1 == DOMWindowFileSystem::PERSISTENT, "the value of DOMWindow_PERSISTENT does not match with implementation");
-    if (RuntimeEnabledFeatures::fileSystemEnabled()) {
-        const V8DOMConfiguration::MethodConfiguration webkitRequestFileSystemMethodConfiguration = {
-            "webkitRequestFileSystem", DOMWindowPartialV8Internal::webkitRequestFileSystemMethodCallback, 0, 3, V8DOMConfiguration::ExposedToAllScripts,
-        };
-        V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, webkitRequestFileSystemMethodConfiguration);
-    }
-    if (RuntimeEnabledFeatures::fileSystemEnabled()) {
-        const V8DOMConfiguration::MethodConfiguration webkitResolveLocalFileSystemURLMethodConfiguration = {
-            "webkitResolveLocalFileSystemURL", DOMWindowPartialV8Internal::webkitResolveLocalFileSystemURLMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts,
-        };
-        V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, webkitResolveLocalFileSystemURLMethodConfiguration);
-    }
-    if (RuntimeEnabledFeatures::databaseEnabled()) {
-        const V8DOMConfiguration::MethodConfiguration openDatabaseMethodConfiguration = {
-            "openDatabase", DOMWindowPartialV8Internal::openDatabaseMethodCallback, 0, 4, V8DOMConfiguration::ExposedToAllScripts,
-        };
-        V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, openDatabaseMethodConfiguration);
-    }
+//     if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"ServicePortCollection", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ServicePortCollection::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::navigatorConnectEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"ServicePort", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ServicePort::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::networkInformationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"NetworkInformation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8NetworkInformation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::notificationsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"Notification", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Notification::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::permissionsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PermissionStatus", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PermissionStatus::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::permissionsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"Permissions", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Permissions::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::presentationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"DefaultSessionStartEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DefaultSessionStartEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::presentationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PresentationAvailability", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PresentationAvailability::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::presentationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"Presentation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Presentation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::presentationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PresentationSession", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PresentationSession::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::pushMessagingEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PushManager", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PushManager::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::pushMessagingEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PushSubscription", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PushSubscription::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::screenOrientationEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"ScreenOrientation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ScreenOrientation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"SpeechSynthesisEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechSynthesisEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::scriptedSpeechEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"SpeechSynthesisUtterance", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8SpeechSynthesisUtterance::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGL2RenderingContext", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGL2RenderingContext::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGLQuery", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLQuery::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGLSampler", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLSampler::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGLSync", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLSync::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGLTransformFeedback", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLTransformFeedback::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::unsafeES3APIsEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"WebGLVertexArrayObject", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLVertexArrayObject::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BluetoothDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BluetoothGATTCharacteristic", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTCharacteristic::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BluetoothGATTRemoteServer", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTRemoteServer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BluetoothGATTService", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothGATTService::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webBluetoothEnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"BluetoothUUID", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8BluetoothUUID::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"HMDVRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8HMDVRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"PositionSensorVRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PositionSensorVRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"VRDevice", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRDevice::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"VREyeParameters", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VREyeParameters::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"VRFieldOfView", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRFieldOfView::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::webVREnabled()) {
+//         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
+//         {"VRPositionState", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VRPositionState::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
+//     }
+//     static const V8DOMConfiguration::ConstantConfiguration V8WindowConstants[] = {
+//         {"TEMPORARY", 0, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
+//         {"PERSISTENT", 1, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
+//     };
+//     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8WindowConstants, WTF_ARRAY_LENGTH(V8WindowConstants));
+//     static_assert(0 == DOMWindowFileSystem::TEMPORARY, "the value of DOMWindow_TEMPORARY does not match with implementation");
+//     static_assert(1 == DOMWindowFileSystem::PERSISTENT, "the value of DOMWindow_PERSISTENT does not match with implementation");
+//     if (RuntimeEnabledFeatures::fileSystemEnabled()) {
+//         const V8DOMConfiguration::MethodConfiguration webkitRequestFileSystemMethodConfiguration = {
+//             "webkitRequestFileSystem", DOMWindowPartialV8Internal::webkitRequestFileSystemMethodCallback, 0, 3, V8DOMConfiguration::ExposedToAllScripts,
+//         };
+//         V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, webkitRequestFileSystemMethodConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::fileSystemEnabled()) {
+//         const V8DOMConfiguration::MethodConfiguration webkitResolveLocalFileSystemURLMethodConfiguration = {
+//             "webkitResolveLocalFileSystemURL", DOMWindowPartialV8Internal::webkitResolveLocalFileSystemURLMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts,
+//         };
+//         V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, webkitResolveLocalFileSystemURLMethodConfiguration);
+//     }
+//     if (RuntimeEnabledFeatures::databaseEnabled()) {
+//         const V8DOMConfiguration::MethodConfiguration openDatabaseMethodConfiguration = {
+//             "openDatabase", DOMWindowPartialV8Internal::openDatabaseMethodCallback, 0, 4, V8DOMConfiguration::ExposedToAllScripts,
+//         };
+//         V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, openDatabaseMethodConfiguration);
+//     }
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 

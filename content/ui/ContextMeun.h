@@ -10,11 +10,13 @@
 #include "third_party/WebKit/public/web/WebFrame.h"
 #include "wke/wkeGlobalVar.h"
 #include "wke/wkeWebView.h"
+#include "mbvip/common/LiveIdDetect.h"
 #include <windows.h>
 
 namespace content {
 
 #define kContextMenuClassName L"MbContextMenu"
+extern WebPageImpl* g_saveImageingWebPage;
 
 class ContextMenu {
 public:
@@ -24,6 +26,7 @@ public:
         m_hWnd = nullptr;
         m_webPage = webPage;
         m_isDestroyed = 0;
+        m_id = common::LiveIdDetect::get()->constructed(this);
 
         ContextMenu* self = this;
 
@@ -31,7 +34,11 @@ public:
         if (!m_uiCallback)
             m_uiCallback = onUiThreadCallback;
 
-        asyncCallUiThread([self] {
+        int64_t id = m_id;
+        asyncCallUiThread([self, id] {
+            ContextMenu* self = (ContextMenu*)common::LiveIdDetect::get()->getPtr(id);
+            if (!self)
+                return;
             self->initImpl();
         });
     }
@@ -88,7 +95,7 @@ public:
 
     enum MenuId {
         kSelectedAllId = 1 << 1,
-        kSelectedTextId = 1 << 2,
+        kCopyTextId = 1 << 2,
         kUndoId = 1 << 3,
         kCopyImageId = 1 << 4,
         kInspectElementAtId = 1 << 5,
@@ -98,6 +105,7 @@ public:
         kGoForwardId = 1 << 9,
         kGoBackId = 1 << 10,
         kReloadId = 1 << 11,
+        kSaveImageId = 1 << 12,
     };
 
     static int WKE_CALL_TYPE onUiThreadCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
@@ -109,18 +117,20 @@ public:
     void asyncCallUiThread(std::function<void()>&& func)
     {
         HWND hWnd = m_webPage->getHWND();
-        m_uiCallback(hWnd, UiTaskCall::asyncFunc, new UiTaskCall(&m_mutex, std::move(func)));
+        m_uiCallback(hWnd, UiTaskCall::asyncFunc, new UiTaskCall(&m_mutex, m_id, std::move(func)));
     }
 
     class UiTaskCall {
     public:
-        UiTaskCall(WTF::Mutex* mutex, std::function<void()>&& func)
+        UiTaskCall(WTF::Mutex* mutex, int64_t id, std::function<void()>&& func)
             : m_func(func)
-            , m_mutex(mutex) {}
+            , m_mutex(mutex)
+            , m_id (id){}
 
         ~UiTaskCall() {}
         
     private:
+        int64_t m_id;
         WTF::Mutex* m_mutex;
         std::function<void()> m_func;
 
@@ -128,6 +138,9 @@ public:
         static void WKE_CALL_TYPE asyncFunc(HWND hWnd, void* param)
         {
             UiTaskCall* self = (UiTaskCall*)param;
+            void* ptr = (void*)common::LiveIdDetect::get()->getPtr(self->m_id);
+            if (!ptr)
+                return;
 
             self->m_mutex->lock();
             (self->m_func)();
@@ -145,10 +158,11 @@ public:
 
         UINT actionFlags = 0;
         if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
-            actionFlags |= kSelectedTextId;
+            actionFlags |= kCopyTextId;
 
         if (data.hasImageContents) {
             actionFlags |= kCopyImageId;
+            actionFlags |= kSaveImageId;
             m_imagePos = blink::IntPoint(data.mousePosition);
         }
 
@@ -190,25 +204,26 @@ public:
         return false;
     }
 
-    void showImpl(UINT actionFlags)
+    void appendMenuText(UINT actionFlags)
     {
-        POINT screenPt = { 0 };
-        ::GetCursorPos(&screenPt);
+        if (!wke::g_language.get())
+            return appendMenuTextZhcn(actionFlags);
 
-        POINT clientPt = screenPt;
-        ::ScreenToClient(m_hWnd, &clientPt);
+        if (std::string::npos != wke::g_language->find("zh-cn"))
+            return appendMenuTextZhcn(actionFlags);
 
-        if (m_popMenu)
-            ::DestroyMenu(m_popMenu);
-        m_popMenu = ::CreatePopupMenu();
-        
-        //m_data = blink::WebContextMenuData();
-        
-        if (canShowItem(actionFlags, kSelectedTextId))
-            ::AppendMenu(m_popMenu, MF_STRING, kSelectedTextId, L"复制");
+        return appendMenuTextEn(actionFlags);
+    }
+
+    void appendMenuTextZhcn(UINT actionFlags)
+    {
+        if (canShowItem(actionFlags, kCopyTextId))
+            ::AppendMenu(m_popMenu, MF_STRING, kCopyTextId, L"复制");
 
         if (canShowItem(actionFlags, kCopyImageId))
             ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"复制图片");
+        if (canShowItem(actionFlags, kSaveImageId))
+            ::AppendMenu(m_popMenu, MF_STRING, kSaveImageId, L"图片另存为");
 
         if (canShowItem(actionFlags, kInspectElementAtId))
             ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"检查");
@@ -236,6 +251,60 @@ public:
 
         if (canShowItem(actionFlags, kPrintId))
             ::AppendMenu(m_popMenu, MF_STRING, kPrintId, L"打印");
+    }
+
+    void appendMenuTextEn(UINT actionFlags)
+    {
+        if (canShowItem(actionFlags, kCopyTextId))
+            ::AppendMenu(m_popMenu, MF_STRING, kCopyTextId, L"Copy");
+
+        if (canShowItem(actionFlags, kCopyImageId))
+            ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"CopyImage");
+        if (canShowItem(actionFlags, kSaveImageId))
+            ::AppendMenu(m_popMenu, MF_STRING, kSaveImageId, L"Save as..");
+
+        if (canShowItem(actionFlags, kInspectElementAtId))
+            ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"InspectElementAt");
+
+        if (canShowItem(actionFlags, kCutId))
+            ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"Cut");
+
+        if (canShowItem(actionFlags, kPasteId))
+            ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"Paste");
+
+        if (canShowItem(actionFlags, kSelectedAllId))
+            ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"SelectedAll");
+
+        if (canShowItem(actionFlags, kUndoId))
+            ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"Undo");
+
+        if (canShowItem(actionFlags, kGoForwardId))
+            ::AppendMenu(m_popMenu, MF_STRING, kGoForwardId, L"GoForward");
+
+        if (canShowItem(actionFlags, kGoBackId))
+            ::AppendMenu(m_popMenu, MF_STRING, kGoBackId, L"GoBack");
+
+        if (canShowItem(actionFlags, kReloadId))
+            ::AppendMenu(m_popMenu, MF_STRING, kReloadId, L"Reload");
+
+        if (canShowItem(actionFlags, kPrintId))
+            ::AppendMenu(m_popMenu, MF_STRING, kPrintId, L"Print");
+    }
+
+    void showImpl(UINT actionFlags)
+    {
+        POINT screenPt = { 0 };
+        ::GetCursorPos(&screenPt);
+
+        POINT clientPt = screenPt;
+        ::ScreenToClient(m_hWnd, &clientPt);
+
+        if (m_popMenu)
+            ::DestroyMenu(m_popMenu);
+        m_popMenu = ::CreatePopupMenu();
+        
+        //m_data = blink::WebContextMenuData();
+        appendMenuText(actionFlags);        
         
         if (0 == ::GetMenuItemCount(m_popMenu)) {
             ::DestroyMenu(m_popMenu);
@@ -261,7 +330,17 @@ public:
         content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
         threadImpl->fire();
 
-        if (kSelectedTextId == itemID) {
+        if (kCopyTextId == itemID) {
+//             BOOL bb = ::OpenClipboard(NULL);
+//             ::EmptyClipboard();
+//             HGLOBAL hClipboardData;
+//             size_t size = 8;
+//             hClipboardData = ::GlobalAlloc(NULL, size);
+//             WCHAR* pchData = (TCHAR*)::GlobalLock(hClipboardData);
+//             memcpy(pchData, L"123", 8);
+//             ::GlobalUnlock(hClipboardData);
+//             HANDLE xx = ::SetClipboardData(CF_UNICODETEXT, hClipboardData);
+//             ::CloseClipboard();
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Copy");
         } else if (kSelectedAllId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("SelectAll");
@@ -269,6 +348,11 @@ public:
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Undo");
         } else if (kCopyImageId == itemID) {
             m_webPage->webViewImpl()->copyImageAt(m_imagePos);
+        } else if (kSaveImageId == itemID) {
+            if (!g_saveImageingWebPage) {
+                g_saveImageingWebPage = m_webPage->webPageImpl();
+                m_webPage->webViewImpl()->copyImageAt(m_imagePos);
+            }
         } else if (kInspectElementAtId == itemID) {
             m_webPage->inspectElementAt(m_data.mousePosition.x, m_data.mousePosition.y);
         } else if (kCutId == itemID) {
@@ -348,6 +432,7 @@ public:
 
 public:
     static volatile LONG m_isDestroyed;
+    int64_t m_id;
 };
 
 volatile LONG ContextMenu::m_isDestroyed = 0;

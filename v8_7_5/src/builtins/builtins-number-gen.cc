@@ -8,6 +8,8 @@
 #include "src/code-stub-assembler.h"
 #include "src/ic/binary-op-assembler.h"
 
+#include "src/objects-inl.h"
+
 namespace v8 {
 namespace internal {
 

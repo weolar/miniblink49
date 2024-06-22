@@ -28,20 +28,13 @@ namespace internal {
   R(x16) R(x17) R(x18) R(x19) R(x20) R(x21) R(x22) R(x23) \
   R(x24) R(x25) R(x26) R(x27) R(x28) R(x29) R(x30) R(x31)
 
-#if defined(V8_OS_WIN)
-// x18 is reserved as platform register on Windows ARM64.
+// x18 is the platform register and is reserved for the use of platform ABIs.
+// It is known to be reserved by the OS at least on Windows and iOS.
 #define ALLOCATABLE_GENERAL_REGISTERS(R)                  \
   R(x0)  R(x1)  R(x2)  R(x3)  R(x4)  R(x5)  R(x6)  R(x7)  \
   R(x8)  R(x9)  R(x10) R(x11) R(x12) R(x13) R(x14) R(x15) \
          R(x19) R(x20) R(x21) R(x22) R(x23) R(x24) R(x25) \
   R(x27) R(x28)
-#else
-#define ALLOCATABLE_GENERAL_REGISTERS(R)                  \
-  R(x0)  R(x1)  R(x2)  R(x3)  R(x4)  R(x5)  R(x6)  R(x7)  \
-  R(x8)  R(x9)  R(x10) R(x11) R(x12) R(x13) R(x14) R(x15) \
-  R(x18) R(x19) R(x20) R(x21) R(x22) R(x23) R(x24) R(x25) \
-  R(x27) R(x28)
-#endif
 
 #define FLOAT_REGISTERS(V)                                \
   V(s0)  V(s1)  V(s2)  V(s3)  V(s4)  V(s5)  V(s6)  V(s7)  \
@@ -323,14 +316,14 @@ VectorFormat ScalarFormatFromLaneSize(int lanesize);
 VectorFormat VectorFormatHalfWidthDoubleLanes(VectorFormat vform);
 VectorFormat VectorFormatFillQ(VectorFormat vform);
 VectorFormat ScalarFormatFromFormat(VectorFormat vform);
-unsigned RegisterSizeInBitsFromFormat(VectorFormat vform);
+V8_EXPORT_PRIVATE unsigned RegisterSizeInBitsFromFormat(VectorFormat vform);
 unsigned RegisterSizeInBytesFromFormat(VectorFormat vform);
 int LaneSizeInBytesFromFormat(VectorFormat vform);
 unsigned LaneSizeInBitsFromFormat(VectorFormat vform);
 int LaneSizeInBytesLog2FromFormat(VectorFormat vform);
-int LaneCountFromFormat(VectorFormat vform);
+V8_EXPORT_PRIVATE int LaneCountFromFormat(VectorFormat vform);
 int MaxLaneCountFromFormat(VectorFormat vform);
-bool IsVectorFormat(VectorFormat vform);
+V8_EXPORT_PRIVATE bool IsVectorFormat(VectorFormat vform);
 int64_t MaxIntFromFormat(VectorFormat vform);
 int64_t MinIntFromFormat(VectorFormat vform);
 uint64_t MaxUintFromFormat(VectorFormat vform);
@@ -536,7 +529,7 @@ bool AreAliased(const CPURegister& reg1, const CPURegister& reg2,
 // same size, and are of the same type. The system stack pointer may be
 // specified. Arguments set to NoReg are ignored, as are any subsequent
 // arguments. At least one argument (reg1) must be valid (not NoCPUReg).
-bool AreSameSizeAndType(
+V8_EXPORT_PRIVATE bool AreSameSizeAndType(
     const CPURegister& reg1, const CPURegister& reg2 = NoCPUReg,
     const CPURegister& reg3 = NoCPUReg, const CPURegister& reg4 = NoCPUReg,
     const CPURegister& reg5 = NoCPUReg, const CPURegister& reg6 = NoCPUReg,
@@ -553,9 +546,10 @@ bool AreSameFormat(const VRegister& reg1, const VRegister& reg2,
 // consecutive in the register file. Arguments may be set to NoVReg, and if so,
 // subsequent arguments must also be NoVReg. At least one argument (reg1) must
 // be valid (not NoVReg).
-bool AreConsecutive(const VRegister& reg1, const VRegister& reg2,
-                    const VRegister& reg3 = NoVReg,
-                    const VRegister& reg4 = NoVReg);
+V8_EXPORT_PRIVATE bool AreConsecutive(const VRegister& reg1,
+                                      const VRegister& reg2,
+                                      const VRegister& reg3 = NoVReg,
+                                      const VRegister& reg4 = NoVReg);
 
 typedef VRegister FloatRegister;
 typedef VRegister DoubleRegister;
@@ -563,7 +557,7 @@ typedef VRegister Simd128Register;
 
 // -----------------------------------------------------------------------------
 // Lists of registers.
-class CPURegList {
+class V8_EXPORT_PRIVATE CPURegList {
  public:
   template <typename... CPURegisters>
   explicit CPURegList(CPURegister reg0, CPURegisters... regs)
@@ -728,12 +722,7 @@ constexpr Register kJSFunctionRegister = x1;
 constexpr Register kContextRegister = cp;
 constexpr Register kAllocateSizeRegister = x1;
 
-#if defined(V8_OS_WIN)
-// x18 is reserved as platform register on Windows ARM64.
 constexpr Register kSpeculationPoisonRegister = x23;
-#else
-constexpr Register kSpeculationPoisonRegister = x18;
-#endif
 
 constexpr Register kInterpreterAccumulatorRegister = x0;
 constexpr Register kInterpreterBytecodeOffsetRegister = x19;

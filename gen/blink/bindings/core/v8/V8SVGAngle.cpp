@@ -270,7 +270,9 @@ static void installV8SVGAngleTemplate(v8::Local<v8::FunctionTemplate> functionTe
     static_assert(4 == SVGAngleTearOff::SVG_ANGLETYPE_GRAD, "the value of SVGAngleTearOff_SVG_ANGLETYPE_GRAD does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGAngle::domTemplate(v8::Isolate* isolate)

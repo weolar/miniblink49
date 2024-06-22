@@ -8,8 +8,9 @@
 #include <string.h>
 
 #include <intrin.h>
-#include <xutility>
-
+#if defined(__cplusplus)
+//#include <xutility> // weolar
+#endif
 #include <intrinvc6.h>
 
 #pragma pack(push,_CRT_PACKING)

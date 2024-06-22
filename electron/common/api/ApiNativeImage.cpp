@@ -16,6 +16,7 @@
 #include "gin/wrappable.h"
 #include "gin/dictionary.h"
 #include "base/strings/string_util.h"
+#include "mbvip/core/mb.h"
 
 #undef min
 #undef max
@@ -28,18 +29,23 @@ using std::min;
 #include <vector>
 
 namespace atom {
-    
-NativeImage::NativeImage(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+
+typedef mbMemBuf* (MB_CALL_TYPE* FN_mbEncodeBase64)(const char* data, unsigned len, int policy);
+
+NativeImage::NativeImage(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+{
     m_gdipBitmap = nullptr;
     gin::Wrappable<NativeImage>::InitWith(isolate, wrapper);
 }
 
-void NativeImage::init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+void NativeImage::init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+{
     v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
     prototype->SetClassName(v8::String::NewFromUtf8(isolate, "NativeImage"));
     gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
     builder.SetMethod("toPNG", &NativeImage::toPNGAPI);
+    builder.SetMethod("toDataURL", &NativeImage::toDataURLApi);
 
     constructor.Reset(isolate, prototype->GetFunction());
     target->Set(v8::String::NewFromUtf8(isolate, "NativeImage"), prototype->GetFunction());
@@ -49,7 +55,8 @@ void NativeImage::init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
     nativeImageClass.SetMethod("createFromPath", &NativeImage::createFromPathApi);
 }
 
-std::vector<unsigned char>* NativeImage::encodeToBuffer(const CLSID* clsid) {
+std::vector<unsigned char>* NativeImage::encodeToBuffer(const CLSID* clsid)
+{
     IStream* pIStream = nullptr;
 
     std::vector<unsigned char>* output = nullptr;
@@ -75,7 +82,7 @@ std::vector<unsigned char>* NativeImage::encodeToBuffer(const CLSID* clsid) {
 
         ULONG readSize = 0;
         hr = pIStream->Read(output->data(), dwSize, &readSize);
-        ok = (S_OK != hr);
+        ok = (S_OK == hr);
     } while (false);
 
     if (!ok && output) {
@@ -89,7 +96,8 @@ std::vector<unsigned char>* NativeImage::encodeToBuffer(const CLSID* clsid) {
     return output;
 }
 
-v8::Local<v8::Object> NativeImage::toPNGAPI(const base::DictionaryValue& args) {
+v8::Local<v8::Object> NativeImage::toPNGAPI(const base::DictionaryValue& args)
+{
     double scaleFactor = 1.0;
     args.GetDouble("scaleFactor", &scaleFactor);
 
@@ -106,7 +114,8 @@ v8::Local<v8::Object> NativeImage::toPNGAPI(const base::DictionaryValue& args) {
     return result;
 }
 
-v8::Local<v8::Object> NativeImage::toJpeg(const base::DictionaryValue& args) {
+v8::Local<v8::Object> NativeImage::toJpeg(const base::DictionaryValue& args)
+{
     int quality = 100;
     args.GetInteger("quality", &quality);
 
@@ -122,7 +131,8 @@ v8::Local<v8::Object> NativeImage::toJpeg(const base::DictionaryValue& args) {
     return result;
 }
 
-v8::Local<v8::Object> NativeImage::toBitmap(const base::DictionaryValue& args) {
+v8::Local<v8::Object> NativeImage::toBitmap(const base::DictionaryValue& args)
+{
     int quality = 100;
     args.GetInteger("quality", &quality);
 
@@ -132,10 +142,11 @@ v8::Local<v8::Object> NativeImage::toBitmap(const base::DictionaryValue& args) {
     Gdiplus::Rect rect(0, 0, w, h);
     Gdiplus::BitmapData lockedBitmapData;
     m_gdipBitmap->LockBits(
-#if _DEBUG
+#if USING_VC6RT != 1
         &
 #endif
-        rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
+        rect,
+        Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
 
     v8::Local<v8::Object> result;
     const char* data = reinterpret_cast<const char*>(lockedBitmapData.Scan0);
@@ -148,20 +159,24 @@ v8::Local<v8::Object> NativeImage::toBitmap(const base::DictionaryValue& args) {
 
     return result;
 }
- 
-v8::Local<v8::Object> NativeImage::createEmpty(v8::Isolate* isolate) {
+
+v8::Local<v8::Object> NativeImage::createEmpty(v8::Isolate* isolate)
+{
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, constructor);
-    v8::Local<v8::Object> obj = constructorFunction->NewInstance();
+    v8::Local<v8::Object> obj = constructorFunction->NewInstance(context).ToLocalChecked();
 
     NativeImage* self = (NativeImage*)WrappableBase::GetNativePtr(obj, &kWrapperInfo);
     return obj;
 }
 
-void NativeImage::createEmptyApi(const v8::FunctionCallbackInfo<v8::Value> info) {
+void NativeImage::createEmptyApi(const v8::FunctionCallbackInfo<v8::Value> info)
+{
     info.GetReturnValue().Set(createEmpty(info.GetIsolate()));
 }
 
-void NativeImage::createFromPathApi(const v8::FunctionCallbackInfo<v8::Value> info/*v8::Isolate* isolate, const std::string& path*/) {
+void NativeImage::createFromPathApi(const v8::FunctionCallbackInfo<v8::Value> info /*v8::Isolate* isolate, const std::string& path*/)
+{
     std::string fileContents;
     std::string path;
     if (info.Length() == 1 && info[0]->IsString()) {
@@ -179,7 +194,8 @@ void NativeImage::createFromPathApi(const v8::FunctionCallbackInfo<v8::Value> in
     info.GetReturnValue().Set(obj);
 }
 
-void NativeImage::createFromBufferApi(const v8::FunctionCallbackInfo<v8::Value> info) {
+void NativeImage::createFromBufferApi(const v8::FunctionCallbackInfo<v8::Value> info)
+{
     v8::Isolate* isolate = info.GetIsolate();
     v8::Local<v8::Value> buffer;
     v8::Local<v8::Object> resultObj;
@@ -207,16 +223,28 @@ void NativeImage::createFromBufferApi(const v8::FunctionCallbackInfo<v8::Value> 
     info.GetReturnValue().Set(resultObj);
 }
 
-v8::Local<v8::Object> NativeImage::createFromBITMAPINFO(v8::Isolate* isolate, const BITMAPINFO* gdiBitmapInfo, void* gdiBitmapData) {
+v8::Local<v8::Object> NativeImage::createFromBITMAPINFO(v8::Isolate* isolate, const BITMAPINFO* gdiBitmapInfo, void* gdiBitmapData)
+{
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, NativeImage::constructor);
-    v8::Local<v8::Object> resultObj = constructorFunction->NewInstance();
+    v8::Local<v8::Object> resultObj = constructorFunction->NewInstance(context).ToLocalChecked();
     NativeImage* self = (NativeImage*)WrappableBase::GetNativePtr(resultObj, &NativeImage::kWrapperInfo);
-    self->m_gdipBitmap = Gdiplus::Bitmap::FromBITMAPINFO(gdiBitmapInfo, gdiBitmapData);
+
+    Gdiplus::Bitmap* gdipBitmap = Gdiplus::Bitmap::FromBITMAPINFO(gdiBitmapInfo, gdiBitmapData);
+    if (!gdipBitmap)
+        return v8::Local<v8::Object>();
+
+    UINT w = gdipBitmap->GetWidth();
+    UINT h = gdipBitmap->GetHeight();
+    Gdiplus::Rect rect(0, 0, w, h);
+    self->m_gdipBitmap = gdipBitmap->Clone(rect, PixelFormat32bppARGB); // 这个要复制一份，不然好像外面的bitmap销毁，这个bitmap也没了
+    delete gdipBitmap;
 
     return resultObj;
 }
 
-void NativeImage::createFromBufferImpl(const unsigned char* data, size_t size) {
+void NativeImage::createFromBufferImpl(const unsigned char* data, size_t size)
+{
     HGLOBAL memHandle = ::GlobalAlloc(GMEM_FIXED, size);
     BYTE* pMem = (BYTE*)::GlobalLock(memHandle);
     memcpy(pMem, data, size);
@@ -233,16 +261,43 @@ void NativeImage::createFromBufferImpl(const unsigned char* data, size_t size) {
         istream->Release();
 }
 
-v8::Local<v8::Object> NativeImage::createNativeImageFromBuffer(v8::Isolate* isolate, const unsigned char* data, size_t size) {
+v8::Local<v8::Object> NativeImage::createNativeImageFromBuffer(v8::Isolate* isolate, const unsigned char* data, size_t size)
+{
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, NativeImage::constructor);
-    v8::Local<v8::Object> resultObj = constructorFunction->NewInstance();
+    v8::Local<v8::Object> resultObj = constructorFunction->NewInstance(context).ToLocalChecked();
     NativeImage* self = (NativeImage*)WrappableBase::GetNativePtr(resultObj, &NativeImage::kWrapperInfo);
     self->createFromBufferImpl(data, size);
 
     return resultObj;
 }
 
-void NativeImage::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+std::string NativeImage::toDataURLApi()
+{
+    static FN_mbEncodeBase64 pmbEncodeBase64 = nullptr;
+    if (!pmbEncodeBase64)
+        pmbEncodeBase64 = (FN_mbEncodeBase64)mbGetProcAddr("mbEncodeBase64");
+    if (!m_gdipBitmap)
+        return "";
+    UINT w = m_gdipBitmap->GetWidth();
+    UINT h = m_gdipBitmap->GetHeight();
+
+    Gdiplus::Rect rect(0, 0, w, h);
+    std::vector<unsigned char>* output = encodeToBuffer(&s_jpgClsid);
+    if (!output)
+        return "";
+    mbMemBuf* buf = pmbEncodeBase64((const char *)output->data(), output->size(), 0);
+    delete output;
+    if (!buf)
+        return "";    
+
+    std::string ret("data:image/jpeg;base64,");
+    ret += std::string((const char*)buf->data, buf->length);
+    return ret;
+}
+
+void NativeImage::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Isolate* isolate = args.GetIsolate();
     if (args.IsConstructCall()) {
         new NativeImage(isolate, args.This());
@@ -251,18 +306,21 @@ void NativeImage::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-NativeImage* NativeImage::GetSelf(v8::Local<v8::Object> handle) {
+NativeImage* NativeImage::GetSelf(v8::Local<v8::Object> handle)
+{
     return (NativeImage*)WrappableBase::GetNativePtr(handle, &kWrapperInfo);
 }
 
-HICON NativeImage::getIcon() {
+HICON NativeImage::getIcon()
+{
     HICON hIcon = NULL;
     if (m_gdipBitmap)
         m_gdipBitmap->GetHICON(&hIcon);
     return hIcon;
 }
 
-HBITMAP NativeImage::getBitmap() {
+HBITMAP NativeImage::getBitmap()
+{
     HBITMAP hBitmap = NULL;
     Gdiplus::Color colorBackground = 0xff000000;
     if (m_gdipBitmap)
@@ -270,12 +328,14 @@ HBITMAP NativeImage::getBitmap() {
     return hBitmap;
 }
 
-int NativeImage::getWidth() const {
+int NativeImage::getWidth() const
+{
     if (m_gdipBitmap)
         return m_gdipBitmap->GetWidth();
     return 0;
 }
-int NativeImage::getHeight() const {
+int NativeImage::getHeight() const
+{
     if (m_gdipBitmap)
         return m_gdipBitmap->GetHeight();
     return 0;
@@ -284,14 +344,15 @@ int NativeImage::getHeight() const {
 v8::Persistent<v8::Function> NativeImage::constructor;
 gin::WrapperInfo NativeImage::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-void initializeNativeImageApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
+void initializeNativeImageApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     NativeImage::init(env->isolate(), exports);
 }
 
-}  // atom namespace
+} // atom namespace
 
 static const char CommonNativeImageNative[] = "console.log('BrowserNativeImageNative');;";
-static NodeNative nativeCommonNativeImageNative{ "NativeImage", CommonNativeImageNative, sizeof(CommonNativeImageNative) - 1 };
+static NodeNative nativeCommonNativeImageNative { "NativeImage", CommonNativeImageNative, sizeof(CommonNativeImageNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_nativeImage, atom::initializeNativeImageApi, &nativeCommonNativeImageNative)

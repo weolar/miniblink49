@@ -89,7 +89,10 @@ TFJ(ExtrasUtilsCreatePrivateSymbol, SharedFunctionInfo::kDontAdaptArgumentsSenti
 TFJ(ExtrasUtilsMarkPromiseAsHandled, SharedFunctionInfo::kDontAdaptArgumentsSentinel) \
 TFJ(ExtrasUtilsPromiseState, SharedFunctionInfo::kDontAdaptArgumentsSentinel) \
 TFJ(ObjectFromEntries, SharedFunctionInfo::kDontAdaptArgumentsSentinel) \
+TFJ(ProxyConstructor, 2, kReceiver, kTarget, kHandler) \
+TFJ(ProxyRevocable, 2, kReceiver, kTarget, kHandler) \
 TFJ(ProxyRevoke, 0, kReceiver) \
+TFS(RegExpReplace, kRegexp, kString, kReplaceValue) \
 TFJ(RegExpPrototypeReplace, SharedFunctionInfo::kDontAdaptArgumentsSentinel) \
 TFJ(StringPrototypeEndsWith, SharedFunctionInfo::kDontAdaptArgumentsSentinel) \
 TFS(CreateHTML, kReceiver, kMethodName, kTagName, kAttr, kAttrValue) \

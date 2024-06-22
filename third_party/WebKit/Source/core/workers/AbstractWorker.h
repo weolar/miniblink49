@@ -59,6 +59,8 @@ public:
     AbstractWorker(ExecutionContext*);
     virtual ~AbstractWorker();
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<AbstractWorker*>(object); }
+
     DECLARE_VIRTUAL_TRACE();
 
 protected:

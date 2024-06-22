@@ -42,6 +42,7 @@
 #include "public/platform/Platform.h"
 #include "wtf/CurrentTime.h"
 #include "wtf/StdLibExtras.h"
+#include "wke/wkeGlobalVar.h"
 
 namespace blink {
 
@@ -75,6 +76,9 @@ void ImageResource::preCacheDataURIImage(const FetchRequest& request, ResourceFe
 
 ResourcePtr<ImageResource> ImageResource::fetch(FetchRequest& request, ResourceFetcher* fetcher)
 {
+    if (0 != (wke::g_disableDownloadMask & wke::kDisableImageDownload))
+        return nullptr;
+
     if (request.resourceRequest().requestContext() == WebURLRequest::RequestContextUnspecified)
         request.mutableResourceRequest().setRequestContext(WebURLRequest::RequestContextImage);
     if (fetcher->context().pageDismissalEventBeingDispatched()) {
@@ -446,7 +450,7 @@ void ImageResource::decodedSizeChanged(const blink::Image* image, int delta)
     size_t size = decodedSize();
     size_t result = size + delta;
 #ifndef MINIBLIN_CHANGE_DISABLE
-    if (delta < 0 && size < -delta)
+    if (delta < 0 && size < (size_t)-delta)
         result = 0;
 #endif
     

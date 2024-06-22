@@ -340,8 +340,7 @@ void CharsetDetector::setRecognizers(UErrorCode &status)
 
     if (fCSRecognizers == NULL) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    }
-    else {
+    } else {
         fCSRecognizers_size = rCount;
         for (int32_t r = 0; r < rCount; r += 1) {
             fCSRecognizers[r] = tempArray[r];
@@ -358,8 +357,7 @@ const CharsetMatch * const *CharsetDetector::detectAll(int32_t &maxMatchesFound,
         status = U_MISSING_RESOURCE_ERROR;// TODO:  Need to set proper status code for input text not set
 
         return NULL;
-    }
-    else if (fFreshTextSet) {
+    } else if (fFreshTextSet) {
         CharsetRecognizer *csr;
         int32_t            i;
 

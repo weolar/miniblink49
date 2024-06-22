@@ -286,7 +286,7 @@ bool LayoutListItem::updateMarkerLocation()
 {
     ASSERT(m_marker);
 
-    LayoutObject* markerParent = m_marker->parent();
+    LayoutObject* markerParent = m_marker->parent(); // https://chromium.googlesource.com/chromium/src/+/36d85fd5ae96048efcef076a209655ddf2bd02fe%5E%21/#F4
     LayoutObject* lineBoxParent = m_marker->isInside() ? this : getParentOfFirstLineBox(this, m_marker);
     if (!lineBoxParent) {
         // If the marker is currently contained inside an anonymous box, then we

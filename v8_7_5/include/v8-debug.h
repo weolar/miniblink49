@@ -19,6 +19,8 @@ enum DebugEvent {
   AfterCompile = 3,
   CompileError = 4,
   AsyncTaskEvent = 5,
+  BeforeCompile = 6,
+  PromiseEvent = 7,
 };
 
 class V8_EXPORT Debug {
@@ -248,7 +250,7 @@ class V8_EXPORT Debug {
    * to change. The Context exists only when the debugger is active, i.e. at
    * least one DebugEventListener or MessageHandler is set.
    */
-  static Local<Context> GetDebugContext();
+  static Local<Context> GetDebugContext(Isolate* isolate = nullptr); // weolar
 
   /**
    * While in the debug context, this method returns the top-most non-debug

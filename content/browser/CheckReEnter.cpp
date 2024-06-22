@@ -20,7 +20,7 @@ CheckReEnter::~CheckReEnter()
         --m_webPageImpl->m_enterCount;
     decrementEnterCount();
 
-    if (m_webPageImpl && pageDestroying == m_webPageImpl->m_state)
+    if (m_webPageImpl && (pageDestroying == m_webPageImpl->m_state || pagePreDestroy == m_webPageImpl->m_state))
         m_webPageImpl->doClose();
 }
 

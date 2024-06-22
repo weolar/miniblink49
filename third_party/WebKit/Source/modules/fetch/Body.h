@@ -67,6 +67,7 @@ public:
 
     // ActiveDOMObject override.
     bool hasPendingActivity() const override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<Body*>(object); }
 
     DECLARE_VIRTUAL_TRACE();
 

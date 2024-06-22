@@ -238,6 +238,25 @@ IntSize PopupMenuImpl::contentSize()
     return IntSize();
 }
 
+// void readFile(const wchar_t* path, Vector<char>* buffer)
+// {
+//     buffer->resize(0);
+//     HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+//     if (INVALID_HANDLE_VALUE == hFile) {
+//         DebugBreak();
+//         return;
+//     }
+// 
+//     DWORD fileSizeHigh;
+//     const DWORD bufferSize = ::GetFileSize(hFile, &fileSizeHigh);
+// 
+//     DWORD numberOfBytesRead = 0;
+//     buffer->resize(bufferSize);
+//     BOOL b = ::ReadFile(hFile, buffer->data(), bufferSize, &numberOfBytesRead, nullptr);
+//     ::CloseHandle(hFile);
+//     b = b;
+// }
+
 void PopupMenuImpl::writeDocument(SharedBuffer* data)
 {
     IntRect anchorRectInScreen = m_chromeClient->viewportToScreen(m_client->elementRectRelativeToViewport());
@@ -267,8 +286,17 @@ void PopupMenuImpl::writeDocument(SharedBuffer* data)
     addProperty("isRTL", isRTL, data);
     addProperty("paddingStart", isRTL ? m_client->clientPaddingRight().toDouble() : m_client->clientPaddingLeft().toDouble(), data);
     PagePopupClient::addString("};\n", data);
+
     data->append(Platform::current()->loadResource("pickerCommon.js"));
     data->append(Platform::current()->loadResource("listPicker.js"));
+//     Vector<char> buffer;
+// 
+//     readFile(L"G:\\mycode\\mb\\third_party\\WebKit\\Source\\web\\resources\\pickerCommon.js", &buffer);
+//     data->append(buffer);
+// 
+//     readFile(L"G:\\mycode\\mb\\third_party\\WebKit\\Source\\web\\resources\\listPicker.js", &buffer);
+//     data->append(buffer);
+
     PagePopupClient::addString("</script></body>\n", data);
 }
 

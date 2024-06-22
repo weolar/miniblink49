@@ -49,6 +49,15 @@ public:
         Shared,
     };
 
+    // Types that need to be used when injecting external memory.
+    // DataHandle allows specifying a deleter which will be invoked when
+    // DataHandle instance goes out of scope. If the data memory is allocated
+    // using ArrayBufferContents::AllocateMemoryOrNull, it is necessary to specify
+    // ArrayBufferContents::FreeMemory as the DataDeleter. Most clients would want
+    // to use ArrayBufferContents::CreateDataHandle, which allocates memory and
+    // specifies the correct deleter.
+    using DataDeleter = void (*)(void* data, size_t length, void* info);
+
     ArrayBufferContents();
     ArrayBufferContents(unsigned numElements, unsigned elementByteSize, SharingType isShared, ArrayBufferContents::InitializationPolicy);
 
@@ -57,7 +66,7 @@ public:
     // upon destruction.
     // This constructor will not call observer->StartObserving(), so it is a responsibility
     // of the caller to make sure JS knows about external memory.
-    ArrayBufferContents(void* data, unsigned sizeInBytes, SharingType isShared);
+    ArrayBufferContents(void* data, unsigned sizeInBytes, DataDeleter deleter, void* deleterInfo, SharingType isShared);
 
     ~ArrayBufferContents();
 
@@ -83,7 +92,7 @@ private:
     class DataHolder : public ThreadSafeRefCounted<DataHolder> {
         WTF_MAKE_NONCOPYABLE(DataHolder);
     public:
-        DataHolder();
+        DataHolder(DataDeleter deleter, void* deleterInfo);
         ~DataHolder();
 
         void allocateNew(unsigned sizeInBytes, SharingType isShared, InitializationPolicy);
@@ -98,6 +107,8 @@ private:
         void* m_data;
         unsigned m_sizeInBytes;
         SharingType m_isShared;
+        DataDeleter m_deleter;
+        void* m_deleterInfo;
     };
 
     RefPtr<DataHolder> m_holder;

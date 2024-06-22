@@ -2820,8 +2820,11 @@ KURL Element::hrefURL() const
     // <link> implement URLUtils?
     if (isHTMLAnchorElement(*this) || isHTMLAreaElement(*this) || isHTMLLinkElement(*this))
         return getURLAttribute(hrefAttr);
-    if (isSVGAElement(*this))
+    if (isSVGAElement(*this)) {
+        if (hasAttribute(SVGNames::hrefAttr))
+            return getURLAttribute(SVGNames::hrefAttr);
         return getURLAttribute(XLinkNames::hrefAttr);
+    }
     return KURL();
 }
 

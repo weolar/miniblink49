@@ -6,6 +6,8 @@
 
 #include "src/snapshot/embedded-data.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

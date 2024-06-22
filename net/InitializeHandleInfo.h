@@ -15,7 +15,9 @@ struct InitializeHandleInfo {
     std::string url;
     std::string method;
     curl_slist* headers;
+    RefPtr<PageNetExtraData> pageNetExtraData;
     std::string proxy;
+    std::string range;
     std::string wkeNetInterface;
     ProxyType proxyType;
     SetupHttpMethodInfo* methodInfo;

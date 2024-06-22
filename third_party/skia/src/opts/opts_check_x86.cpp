@@ -37,7 +37,7 @@
 
 /* Function to get the CPU SSE-level in runtime, for different compilers. */
 #ifdef _MSC_VER
-static inline void getcpuid(int info_type, int info[4]) {
+/*static inline*/ void getcpuid(int info_type, int info[4]) {
 #if defined(_WIN64)
     __cpuid(info, info_type);
 #else
@@ -53,7 +53,7 @@ static inline void getcpuid(int info_type, int info[4]) {
 #endif
 }
 #elif defined(__x86_64__)
-static inline void getcpuid(int info_type, int info[4]) {
+/*static inline*/ void getcpuid(int info_type, int info[4]) {
     asm volatile (
         "cpuid \n\t"
         : "=a"(info[0]), "=b"(info[1]), "=c"(info[2]), "=d"(info[3])
@@ -61,7 +61,7 @@ static inline void getcpuid(int info_type, int info[4]) {
     );
 }
 #else
-static inline void getcpuid(int info_type, int info[4]) {
+/*static inline*/ void getcpuid(int info_type, int info[4]) {
     // We save and restore ebx, so this code can be compatible with -fPIC
     asm volatile (
         "pushl %%ebx      \n\t"

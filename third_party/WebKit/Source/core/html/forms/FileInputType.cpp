@@ -44,6 +44,8 @@
 #include "wtf/text/StringBuilder.h"
 #include "wtf/text/WTFString.h"
 
+#include "wke/wkeGlobalVar.h"
+
 namespace blink {
 
 using blink::WebLocalizedString;
@@ -150,7 +152,7 @@ void FileInputType::handleDOMActivateEvent(Event* event)
     if (element().isDisabledFormControl())
         return;
 
-    if (!UserGestureIndicator::processingUserGesture())
+    if (!UserGestureIndicator::processingUserGesture() && !wke::g_jsClickEnable)
         return;
 
     if (ChromeClient* chromeClient = this->chromeClient()) {

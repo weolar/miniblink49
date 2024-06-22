@@ -19,11 +19,13 @@
 #define _NOEXCEPT_OP(x)
 #endif /* _HAS_EXCEPTIONS */
 
+
 // yvals.h
-#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
-#define _END_C_LIB_DECL	}
-#define _EXTERN_C			extern "C" {
-#define _END_EXTERN_C		}
+//#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
+//#define _END_C_LIB_DECL	}
+
+//#define _EXTERN_C			extern "C" {
+//#define _END_EXTERN_C		}
 #define _CRTIMP2_PURE
 
 /* Define _CRTIMP */
@@ -73,9 +75,13 @@ typedef bool _Bool;
  #if defined(__cplusplus)
   #define _C_LIB_DECL extern "C" {
   #define _END_C_LIB_DECL }
+  #define _EXTERN_C extern "C" {
+  #define _END_EXTERN_C }
  #else
   #define _C_LIB_DECL
   #define _END_C_LIB_DECL
+  #define _EXTERN_C 
+  #define _END_EXTERN_C 
  #endif /* __cplusplus */
 #define _CDECL
 		// CLASS _Lockit

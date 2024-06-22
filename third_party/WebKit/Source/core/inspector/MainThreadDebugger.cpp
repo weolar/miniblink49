@@ -41,6 +41,7 @@
 #include "core/frame/FrameHost.h"
 #include "core/frame/LocalFrame.h"
 #include "core/frame/UseCounter.h"
+#include "core/inspector/ConsoleMessage.h"
 #include "core/inspector/InspectorInstrumentation.h"
 #include "core/inspector/InspectorTaskRunner.h"
 #include "core/inspector/InspectorTraceEvents.h"
@@ -52,6 +53,9 @@
 #include "wtf/TemporaryChange.h"
 #include "wtf/ThreadingPrimitives.h"
 #include "wtf/text/StringBuilder.h"
+#if V8_MAJOR_VERSION >= 7
+#include <v8-inspector.h>
+#endif
 
 namespace blink {
 
@@ -59,6 +63,119 @@ static LocalFrame* retrieveFrameWithGlobalObjectCheck(v8::Local<v8::Context> con
 {
     return toLocalFrame(toFrameIfNotDetached(context));
 }
+
+#if V8_MAJOR_VERSION >= 7
+
+class InspectorClient : public v8_inspector::V8InspectorClient {
+public:
+    explicit InspectorClient(v8::Isolate* isolate)
+    {
+        m_isolate = isolate;
+        m_v8Inspector = v8_inspector::V8Inspector::create(isolate, this);
+    }
+
+    ~InspectorClient() override
+    {
+    }
+
+    MessageLevel levelChange(v8::Isolate::MessageErrorLevel level)
+    {
+        if (v8::Isolate::kMessageLog == level)
+            return LogMessageLevel;
+        else if (v8::Isolate::kMessageDebug == level)
+            return DebugMessageLevel;
+        else if (v8::Isolate::kMessageInfo == level)
+            return InfoMessageLevel;
+        else if (v8::Isolate::kMessageError == level)
+            return ErrorMessageLevel;
+        else if (v8::Isolate::kMessageWarning == level)
+            return WarningMessageLevel;
+        return LogMessageLevel;
+    }
+
+    void consoleAPIMessage(
+        int contextGroupId,
+        v8::Isolate::MessageErrorLevel level,
+        const v8_inspector::StringView& message,
+        const v8_inspector::StringView& url,
+        unsigned lineNumber,
+        unsigned columnNumber,
+        v8_inspector::V8StackTrace* stack) override
+    {
+        String messageStr;
+        if (message.is8Bit())
+            messageStr.append((const char*)message.characters8(), message.length());
+        else
+            messageStr.append((const UChar*)message.characters16(), message.length());
+
+        String urlStr;
+        if (url.is8Bit())
+            urlStr.append((const char*)url.characters8(), url.length());
+        else
+            urlStr.append((const UChar*)url.characters16(), url.length());
+        
+        Vector<ScriptCallFrame> callFrames;
+
+        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+            v8::StackTrace::kLineNumber
+            | v8::StackTrace::kColumnOffset
+            | v8::StackTrace::kScriptId
+            | v8::StackTrace::kScriptNameOrSourceURL
+            | v8::StackTrace::kFunctionName);
+
+        int stackNum = 50;
+        v8::HandleScope handleScope(m_isolate);
+        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(m_isolate, stackNum, options));
+        int count = stackTrace->GetFrameCount();
+
+        for (int i = 0; i < count; ++i) {
+            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(m_isolate, i);
+            int frameCount = stackTrace->GetFrameCount();
+            int line = stackFrame->GetLineNumber();
+            int column = stackFrame->GetColumn();
+            v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+            v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+            std::string scriptNameStr;
+            std::string funcNameStr;
+
+            if (!scriptName.IsEmpty()) {
+                v8::String::Utf8Value scriptNameUtf8(scriptName);
+                scriptNameStr = *scriptNameUtf8;
+            }
+
+            if (!funcName.IsEmpty()) {
+                v8::String::Utf8Value funcNameUtf8(funcName);
+                funcNameStr = *funcNameUtf8;
+            }
+
+            ScriptCallFrame callFrame(funcNameStr.c_str(), "", scriptNameStr.c_str(), line, column);
+            callFrames.append(callFrame);
+        }
+        
+        PassRefPtrWillBeRawPtr<ScriptCallStack> callstack = ScriptCallStack::create(callFrames);
+        PassRefPtrWillBeRawPtr<ConsoleMessage> consoleMessage = ConsoleMessage::create(DeprecationMessageSource, levelChange(level), messageStr, urlStr, lineNumber, columnNumber);
+        consoleMessage->setCallStack(callstack);
+
+        ScriptState* scriptState = ScriptState::current(m_isolate);
+        ExecutionContext* executionContext = scriptState->executionContext();
+        LocalDOMWindow* localDOMWindow = executionContext->executingWindow();
+        LocalFrame* frame = localDOMWindow->frame();
+
+        frame->console().addMessage(consoleMessage);
+    }
+
+    v8_inspector::V8Inspector* getV8Inspector()
+    {
+        return m_v8Inspector.get();
+    }
+
+private:
+    std::unique_ptr<v8_inspector::V8Inspector> m_v8Inspector;
+    v8::Isolate* m_isolate;
+};
+
+#endif
 
 // TODO(Oilpan): avoid keeping a raw reference separate from the
 // owner one; does not enable heap-movable objects.
@@ -69,6 +186,11 @@ MainThreadDebugger::MainThreadDebugger(PassOwnPtr<ClientMessageLoop> clientMessa
     , m_clientMessageLoop(clientMessageLoop)
     , m_pausedFrame(nullptr)
     , m_taskRunner(adoptPtr(new InspectorTaskRunner(isolate)))
+#if V8_MAJOR_VERSION >= 7
+    , m_inspectorClient(new InspectorClient(isolate))
+#else
+    , m_inspectorClient(nullptr)
+#endif
 {
     MutexLocker locker(creationMutex());
     ASSERT(!s_instance);
@@ -79,6 +201,8 @@ MainThreadDebugger::~MainThreadDebugger()
 {
     MutexLocker locker(creationMutex());
     ASSERT(s_instance == this);
+    if (m_inspectorClient)
+        delete m_inspectorClient;
     s_instance = nullptr;
 }
 
@@ -106,6 +230,24 @@ void MainThreadDebugger::initializeContext(v8::Local<v8::Context> context, int w
     String type = worldId == MainWorldId ? "page" : "injected";
     String debugData = "[" + type + "," + String::number(WeakIdentifierMap<LocalFrame>::identifier(localFrameRoot)) + "]";
     V8Debugger::setContextDebugData(context, debugData);
+
+#if V8_MAJOR_VERSION >= 7
+    v8_inspector::V8ContextInfo contextInfo(context, (int)(frame->frameID()), v8_inspector::StringView());
+
+//     context_info.origin = ToV8InspectorStringView(origin_string);
+//     context_info.auxData = ToV8InspectorStringView(aux_data);
+//     context_info.hasMemoryOnConsole = ExecutionContext::From(script_state) && ExecutionContext::From(script_state)->IsDocument();
+    if (s_instance->m_inspectorClient && s_instance->m_inspectorClient->getV8Inspector())
+        s_instance->m_inspectorClient->getV8Inspector()->contextCreated(contextInfo);
+#endif
+}
+
+void MainThreadDebugger::disposeContext(v8::Local<v8::Context> context, int worldId)
+{
+#if V8_MAJOR_VERSION >= 7
+    if (s_instance->m_inspectorClient && s_instance->m_inspectorClient->getV8Inspector())
+        s_instance->m_inspectorClient->getV8Inspector()->contextDestroyed(context);
+#endif
 }
 
 void MainThreadDebugger::addListener(ScriptDebugListener* listener, LocalFrame* localFrameRoot)

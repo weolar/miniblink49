@@ -886,7 +886,7 @@ void BytecodeGraphBuilder::VisitBytecodes() {
   interpreter::BytecodeArrayIterator iterator(bytecode_array());
   set_bytecode_iterator(&iterator);
   SourcePositionTableIterator source_position_iterator(
-      handle(bytecode_array()->SourcePositionTable(), isolate()));
+      handle(bytecode_array()->SourcePositionTableIfCollected(), isolate()));
 
   if (analyze_environment_liveness() && FLAG_trace_environment_liveness) {
     StdoutStream of;
@@ -2577,7 +2577,7 @@ void BytecodeGraphBuilder::VisitTestTypeOf() {
   Node* object = environment()->LookupAccumulator();
   auto literal_flag = interpreter::TestTypeOfFlags::Decode(
       bytecode_iterator().GetFlagOperand(0));
-  Node* result;
+  Node* result = nullptr;
   switch (literal_flag) {
     case interpreter::TestTypeOfFlags::LiteralFlag::kNumber:
       result = NewNode(simplified()->ObjectIsNumber(), object);

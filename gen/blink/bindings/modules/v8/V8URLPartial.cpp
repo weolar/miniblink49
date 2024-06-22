@@ -27,7 +27,7 @@ namespace blink {
 
 namespace DOMURLPartialV8Internal {
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
 static void createObjectURL2Method(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     MediaSource* source;
@@ -42,35 +42,37 @@ static void createObjectURL2Method(const v8::FunctionCallbackInfo<v8::Value>& in
     v8SetReturnValueStringOrNull(info, URLMediaSource::createObjectURL(executionContext, source), info.GetIsolate());
 }
 
-static void createObjectURL3Method(const v8::FunctionCallbackInfo<v8::Value>& info)
-{
-    MediaStream* stream;
-    {
-        stream = V8MediaStream::toImplWithTypeCheck(info.GetIsolate(), info[0]);
-        if (!stream) {
-            V8ThrowException::throwTypeError(info.GetIsolate(), ExceptionMessages::failedToExecute("createObjectURL", "URL", "parameter 1 is not of type 'MediaStream'."));
-            return;
-        }
-    }
-    ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
-    v8SetReturnValueStringOrNull(info, URLMediaStream::createObjectURL(executionContext, stream), info.GetIsolate());
-}
+// static void createObjectURL3Method(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     MediaStream* stream;
+//     {
+//         stream = V8MediaStream::toImplWithTypeCheck(info.GetIsolate(), info[0]);
+//         if (!stream) {
+//             V8ThrowException::throwTypeError(info.GetIsolate(), ExceptionMessages::failedToExecute("createObjectURL", "URL", "parameter 1 is not of type 'MediaStream'."));
+//             return;
+//         }
+//     }
+//     ExecutionContext* executionContext = currentExecutionContext(info.GetIsolate());
+//     v8SetReturnValueStringOrNull(info, URLMediaStream::createObjectURL(executionContext, stream), info.GetIsolate());
+// }
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
 static void createObjectURLMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "createObjectURL", "URL", info.Holder(), info.GetIsolate());
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     switch (std::min(1, info.Length())) {
     case 1:
         if (V8MediaSource::hasInstance(info[0], info.GetIsolate())) {
             createObjectURL2Method(info);
             return;
         }
+#ifdef MINIBLINK_NOT_IMPLEMENTED
         if (V8MediaStream::hasInstance(info[0], info.GetIsolate())) {
             createObjectURL3Method(info);
             return;
         }
+#endif
         break;
     default:
         break;

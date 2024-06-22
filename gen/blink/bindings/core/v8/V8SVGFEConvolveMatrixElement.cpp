@@ -438,7 +438,9 @@ static void installV8SVGFEConvolveMatrixElementTemplate(v8::Local<v8::FunctionTe
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_EDGEMODE_NONE", SVGFEConvolveMatrixElementV8Internal::SVG_EDGEMODE_NONEConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFEConvolveMatrixElement::domTemplate(v8::Isolate* isolate)

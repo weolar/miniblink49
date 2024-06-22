@@ -480,6 +480,7 @@ StackFrame::Type StackFrame::ComputeType(const StackFrameIteratorBase* iterator,
     Address pc = *(state->pc_address);
     // If the {pc} does not point into WebAssembly code we can rely on the
     // returned {wasm_code} to be null and fall back to {GetContainingCode}.
+    wasm::WasmCodeRefScope code_ref_scope;
     wasm::WasmCode* wasm_code =
         iterator->isolate()->wasm_engine()->code_manager()->LookupCode(pc);
     if (wasm_code != nullptr) {
@@ -619,7 +620,7 @@ Code ConstructEntryFrame::unchecked_code() const {
   return isolate()->heap()->builtin(Builtins::kJSConstructEntry);
 }
 
-Code ExitFrame::unchecked_code() const { UNREACHABLE(); }
+Code ExitFrame::unchecked_code() const { return Code(); }
 
 void ExitFrame::ComputeCallerState(State* state) const {
   // Set up the caller state.
@@ -960,12 +961,32 @@ void StandardFrame::IterateCompiledFrame(RootVisitor* v) const {
                          parameters_limit);
   }
 
+#ifdef V8_COMPRESS_POINTERS
+  Address isolate_root = isolate()->isolate_root();
+#endif
   // Visit pointer spill slots and locals.
   for (unsigned index = 0; index < stack_slots; index++) {
     int byte_index = index >> kBitsPerByteLog2;
     int bit_index = index & (kBitsPerByte - 1);
     if ((safepoint_bits[byte_index] & (1U << bit_index)) != 0) {
-      v->VisitRootPointer(Root::kTop, nullptr, parameters_limit + index);
+      FullObjectSlot spill_slot = parameters_limit + index;
+#ifdef V8_COMPRESS_POINTERS
+      // Spill slots may contain compressed values in which case the upper
+      // 32-bits will contain zeros. In order to simplify handling of such
+      // slots in GC we ensure that the slot always contains full value.
+
+      // The spill slot may actually contain weak references so we load/store
+      // values using spill_slot.location() in order to avoid dealing with
+      // FullMaybeObjectSlots here.
+      Tagged_t compressed_value = static_cast<Tagged_t>(*spill_slot.location());
+      if (!HAS_SMI_TAG(compressed_value)) {
+        // We don't need to update smi values.
+        *spill_slot.location() =
+            DecompressTaggedPointer<OnHeapAddressKind::kIsolateRoot>(
+                isolate_root, compressed_value);
+      }
+#endif
+      v->VisitRootPointer(Root::kTop, nullptr, spill_slot);
     }
   }
 
@@ -1274,11 +1295,17 @@ FrameSummary::JavaScriptFrameSummary::JavaScriptFrameSummary(
       parameters_(parameters, isolate) {
   DCHECK(abstract_code->IsBytecodeArray() ||
          Code::cast(abstract_code)->kind() != Code::OPTIMIZED_FUNCTION);
-  // TODO(v8:8510): Move this to the SourcePosition getter.
-  if (FLAG_enable_lazy_source_positions && abstract_code->IsBytecodeArray()) {
-    SharedFunctionInfo::EnsureSourcePositionsAvailable(
-        isolate, handle(function->shared(), isolate));
+}
+
+void FrameSummary::EnsureSourcePositionsAvailable() {
+  if (IsJavaScript()) {
+    java_script_summary_.EnsureSourcePositionsAvailable();
   }
+}
+
+void FrameSummary::JavaScriptFrameSummary::EnsureSourcePositionsAvailable() {
+  Handle<SharedFunctionInfo> shared(function()->shared(), isolate());
+  SharedFunctionInfo::EnsureSourcePositionsAvailable(isolate(), shared);
 }
 
 bool FrameSummary::JavaScriptFrameSummary::is_subject_to_debugging() const {
@@ -1766,7 +1793,7 @@ Address InternalFrame::GetCallerStackPointer() const {
   return fp() + StandardFrameConstants::kCallerSPOffset;
 }
 
-Code InternalFrame::unchecked_code() const { UNREACHABLE(); }
+Code InternalFrame::unchecked_code() const { return Code(); }
 
 void WasmCompiledFrame::Print(StringStream* accumulator, PrintMode mode,
                               int index) const {
@@ -1834,6 +1861,9 @@ int WasmCompiledFrame::position() const {
 
 void WasmCompiledFrame::Summarize(std::vector<FrameSummary>* functions) const {
   DCHECK(functions->empty());
+  // The {WasmCode*} escapes this scope via the {FrameSummary}, which is fine,
+  // since this code object is part of our stack.
+  wasm::WasmCodeRefScope code_ref_scope;
   wasm::WasmCode* code = wasm_code();
   int offset = static_cast<int>(pc() - code->instruction_start());
   Handle<WasmInstanceObject> instance(wasm_instance(), isolate());
@@ -1898,7 +1928,7 @@ void WasmInterpreterEntryFrame::Summarize(
   }
 }
 
-Code WasmInterpreterEntryFrame::unchecked_code() const { UNREACHABLE(); }
+Code WasmInterpreterEntryFrame::unchecked_code() const { return Code(); }
 
 WasmInstanceObject WasmInterpreterEntryFrame::wasm_instance() const {
   const int offset = WasmCompiledFrameConstants::kWasmInstanceOffset;
@@ -1972,6 +2002,9 @@ void PrintFunctionSource(StringStream* accumulator, SharedFunctionInfo shared,
 void JavaScriptFrame::Print(StringStream* accumulator,
                             PrintMode mode,
                             int index) const {
+  Handle<SharedFunctionInfo> shared = handle(function()->shared(), isolate());
+  SharedFunctionInfo::EnsureSourcePositionsAvailable(isolate(), shared);
+
   DisallowHeapAllocation no_gc;
   Object receiver = this->receiver();
   JSFunction function = this->function();
@@ -1988,7 +2021,6 @@ void JavaScriptFrame::Print(StringStream* accumulator,
   // doesn't contain scope info, scope_info will return 0 for the number of
   // parameters, stack local variables, context local variables, stack slots,
   // or context slots.
-  SharedFunctionInfo shared = function->shared();
   ScopeInfo scope_info = shared->scope_info();
   Object script_obj = shared->script();
   if (script_obj->IsScript()) {
@@ -2028,7 +2060,7 @@ void JavaScriptFrame::Print(StringStream* accumulator,
   }
   if (is_optimized()) {
     accumulator->Add(" {\n// optimized frame\n");
-    PrintFunctionSource(accumulator, shared, code);
+    PrintFunctionSource(accumulator, *shared, code);
     accumulator->Add("}\n");
     return;
   }
@@ -2078,7 +2110,7 @@ void JavaScriptFrame::Print(StringStream* accumulator,
     accumulator->Add("  [%02d] : %o\n", i, GetExpression(i));
   }
 
-  PrintFunctionSource(accumulator, shared, code);
+  PrintFunctionSource(accumulator, *shared, code);
 
   accumulator->Add("}\n\n");
 }

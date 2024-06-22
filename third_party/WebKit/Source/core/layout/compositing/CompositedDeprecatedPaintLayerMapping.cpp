@@ -1810,7 +1810,7 @@ bool CompositedDeprecatedPaintLayerMapping::containsPaintedContent() const
     // FIXME: we could optimize cases where the image, video or canvas is known to fill the border box entirely,
     // and set background color on the layer in that case, instead of allocating backing store and painting.
     if (layoutObject->isVideo() && toLayoutVideo(layoutObject)->shouldDisplayVideo())
-        return m_owningLayer.hasBoxDecorationsOrBackground();
+        return true;// m_owningLayer.hasBoxDecorationsOrBackground(); // weolar: force to use WebMediaPlayerImpl::paint
 
     if (m_owningLayer.hasVisibleBoxDecorations())
         return true;

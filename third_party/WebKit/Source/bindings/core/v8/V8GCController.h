@@ -38,11 +38,24 @@
 namespace blink {
 
 class Node;
+class ExecutionContext;
 
 class CORE_EXPORT V8GCController {
 public:
-    static void gcPrologue(v8::GCType, v8::GCCallbackFlags);
-    static void gcEpilogue(v8::GCType, v8::GCCallbackFlags);
+    static void gcPrologue(
+#if V8_MAJOR_VERSION > 5
+        v8::Isolate* isolate, v8::GCType type, v8::GCCallbackFlags flags, void* data
+#else
+        v8::GCType, v8::GCCallbackFlags
+#endif
+    );
+    static void gcEpilogue(
+#if V8_MAJOR_VERSION > 5
+        v8::Isolate* isolate, v8::GCType type, v8::GCCallbackFlags flags, void* data
+#else
+        v8::GCType, v8::GCCallbackFlags
+#endif
+    );
     static void minorGCPrologue(v8::Isolate*);
     static void minorGCEpilogue(v8::Isolate*);
     static void majorGCPrologue(v8::Isolate*, bool constructRetainedObjectInfos);
@@ -55,6 +68,8 @@ public:
     static void reportDOMMemoryUsageToV8(v8::Isolate*);
 
     static void traceDOMWrappers(v8::Isolate*, Visitor*);
+
+    static bool hasPendingActivity(v8::Isolate* isolate, ExecutionContext* executionContext);
 };
 
 }

@@ -6,10 +6,12 @@
 
 #include "src/asmjs/asm-js.h"
 #include "src/conversions-inl.h"
+#include "src/counters.h"
 #include "src/property-descriptor.h"
+#include "src/tracing/trace-event.h"
 #include "src/utils.h"
-#include "src/wasm/js-to-wasm-wrapper-cache.h"
 #include "src/wasm/module-compiler.h"
+#include "src/wasm/wasm-external-refs.h"
 #include "src/wasm/wasm-import-wrapper-cache.h"
 #include "src/wasm/wasm-module.h"
 #include "src/wasm/wasm-objects-inl.h"
@@ -81,13 +83,7 @@ class InstanceBuilder {
   Handle<FixedArray> tagged_globals_;
   std::vector<Handle<WasmExceptionObject>> exception_wrappers_;
   Handle<WasmExportedFunction> start_function_;
-  JSToWasmWrapperCache js_to_wasm_cache_;
   std::vector<SanitizedImport> sanitized_imports_;
-
-  UseTrapHandler use_trap_handler() const {
-    return module_object_->native_module()->use_trap_handler() ? kUseTrapHandler
-                                                               : kNoTrapHandler;
-  }
 
 // Helper routines to print out errors with imports.
 #define ERROR_THROWER_WITH_MESSAGE(TYPE)                                      \
@@ -245,12 +241,11 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
   // Record build time into correct bucket, then build instance.
   TimedHistogramScope wasm_instantiate_module_time_scope(SELECT_WASM_COUNTER(
       isolate_->counters(), module_->origin, wasm_instantiate, module_time));
+  NativeModule* native_module = module_object_->native_module();
 
   //--------------------------------------------------------------------------
   // Allocate the memory array buffer.
   //--------------------------------------------------------------------------
-  // We allocate the memory buffer before cloning or reusing the compiled module
-  // so we will know whether we need to recompile with bounds checks.
   uint32_t initial_pages = module_->initial_pages;
   auto initial_pages_counter = SELECT_WASM_COUNTER(
       isolate_->counters(), module_->origin, wasm, min_mem_pages_count);
@@ -271,10 +266,11 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
     Handle<JSArrayBuffer> memory = memory_.ToHandleChecked();
     memory->set_is_detachable(false);
 
-    DCHECK_IMPLIES(use_trap_handler(), module_->origin == kAsmJsOrigin ||
-                                           memory->is_wasm_memory() ||
-                                           memory->backing_store() == nullptr);
-  } else if (initial_pages > 0 || use_trap_handler()) {
+    DCHECK_IMPLIES(native_module->use_trap_handler(),
+                   module_->origin == kAsmJsOrigin ||
+                       memory->is_wasm_memory() ||
+                       memory->backing_store() == nullptr);
+  } else if (initial_pages > 0 || native_module->use_trap_handler()) {
     // We need to unconditionally create a guard region if using trap handlers,
     // even when the size is zero to prevent null-dereference issues
     // (e.g. https://crbug.com/769637).
@@ -288,38 +284,8 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
   }
 
   //--------------------------------------------------------------------------
-  // Recompile module if using trap handlers but could not get guarded memory
-  //--------------------------------------------------------------------------
-  if (module_->origin == kWasmOrigin && use_trap_handler()) {
-    // Make sure the memory has suitable guard regions.
-    WasmMemoryTracker* const memory_tracker =
-        isolate_->wasm_engine()->memory_tracker();
-
-    if (!memory_tracker->HasFullGuardRegions(
-            memory_.ToHandleChecked()->backing_store())) {
-      if (!FLAG_wasm_trap_handler_fallback) {
-        thrower_->LinkError(
-            "Provided memory is lacking guard regions but fallback was "
-            "disabled.");
-        return {};
-      }
-
-      TRACE("Recompiling module without bounds checks\n");
-      ErrorThrower thrower(isolate_, "recompile");
-      auto native_module = module_object_->native_module();
-      CompileNativeModuleWithExplicitBoundsChecks(isolate_, &thrower, module_,
-                                                  native_module);
-      if (thrower.error()) {
-        return {};
-      }
-      DCHECK(!native_module->use_trap_handler());
-    }
-  }
-
-  //--------------------------------------------------------------------------
   // Create the WebAssembly.Instance object.
   //--------------------------------------------------------------------------
-  NativeModule* native_module = module_object_->native_module();
   TRACE("New module instantiation for %p\n", native_module);
   Handle<WasmInstanceObject> instance =
       WasmInstanceObject::New(isolate_, module_object_);
@@ -445,34 +411,39 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
     }
   }
 
-  //--------------------------------------------------------------------------
-  // Check that indirect function table segments are within bounds.
-  //--------------------------------------------------------------------------
-  for (const WasmElemSegment& elem_segment : module_->elem_segments) {
-    if (!elem_segment.active) continue;
-    DCHECK_LT(elem_segment.table_index, table_count);
-    uint32_t base = EvalUint32InitExpr(instance, elem_segment.offset);
-    // Because of imported tables, {table_size} has to come from the table
-    // object itself.
-    auto table_object = handle(WasmTableObject::cast(instance->tables()->get(
-                                   elem_segment.table_index)),
-                               isolate_);
-    size_t table_size = table_object->elements()->length();
-    if (!IsInBounds(base, elem_segment.entries.size(), table_size)) {
-      thrower_->LinkError("table initializer is out of bounds");
-      return {};
+  // The bulk memory proposal changes the MVP behavior here; the segments are
+  // written as if `memory.init` and `table.init` are executed directly, and
+  // not bounds checked ahead of time.
+  if (!enabled_.bulk_memory) {
+    //--------------------------------------------------------------------------
+    // Check that indirect function table segments are within bounds.
+    //--------------------------------------------------------------------------
+    for (const WasmElemSegment& elem_segment : module_->elem_segments) {
+      if (!elem_segment.active) continue;
+      DCHECK_LT(elem_segment.table_index, table_count);
+      uint32_t base = EvalUint32InitExpr(instance, elem_segment.offset);
+      // Because of imported tables, {table_size} has to come from the table
+      // object itself.
+      auto table_object = handle(WasmTableObject::cast(instance->tables()->get(
+                                     elem_segment.table_index)),
+                                 isolate_);
+      size_t table_size = table_object->elements()->length();
+      if (!IsInBounds(base, elem_segment.entries.size(), table_size)) {
+        thrower_->LinkError("table initializer is out of bounds");
+        return {};
+      }
     }
-  }
 
-  //--------------------------------------------------------------------------
-  // Check that memory segments are within bounds.
-  //--------------------------------------------------------------------------
-  for (const WasmDataSegment& seg : module_->data_segments) {
-    if (!seg.active) continue;
-    uint32_t base = EvalUint32InitExpr(instance, seg.dest_addr);
-    if (!IsInBounds(base, seg.source.length(), instance->memory_size())) {
-      thrower_->LinkError("data segment is out of bounds");
-      return {};
+    //--------------------------------------------------------------------------
+    // Check that memory segments are within bounds.
+    //--------------------------------------------------------------------------
+    for (const WasmDataSegment& seg : module_->data_segments) {
+      if (!seg.active) continue;
+      uint32_t base = EvalUint32InitExpr(instance, seg.dest_addr);
+      if (!IsInBounds(base, seg.source.length(), instance->memory_size())) {
+        thrower_->LinkError("data segment is out of bounds");
+        return {};
+      }
     }
   }
 
@@ -487,6 +458,7 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
   //--------------------------------------------------------------------------
   if (table_count > 0) {
     LoadTableSegments(instance);
+    if (thrower_->error()) return {};
   }
 
   //--------------------------------------------------------------------------
@@ -494,6 +466,7 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
   //--------------------------------------------------------------------------
   if (module_->data_segments.size() > 0) {
     LoadDataSegments(instance);
+    if (thrower_->error()) return {};
   }
 
   //--------------------------------------------------------------------------
@@ -508,8 +481,9 @@ MaybeHandle<WasmInstanceObject> InstanceBuilder::Build() {
   if (module_->start_function_index >= 0) {
     int start_index = module_->start_function_index;
     auto& function = module_->functions[start_index];
-    Handle<Code> wrapper_code = js_to_wasm_cache_.GetOrCompileJSToWasmWrapper(
-        isolate_, function.sig, function.imported);
+    Handle<Code> wrapper_code = compiler::CompileJSToWasmWrapper(
+                                    isolate_, function.sig, function.imported)
+                                    .ToHandleChecked();
     // TODO(clemensh): Don't generate an exported function for the start
     // function. Use CWasmEntry instead.
     start_function_ = WasmExportedFunction::New(
@@ -616,16 +590,35 @@ void InstanceBuilder::LoadDataSegments(Handle<WasmInstanceObject> instance) {
   Vector<const uint8_t> wire_bytes =
       module_object_->native_module()->wire_bytes();
   for (const WasmDataSegment& segment : module_->data_segments) {
-    uint32_t source_size = segment.source.length();
-    // Segments of size == 0 are just nops.
-    if (source_size == 0) continue;
-    // Passive segments are not copied during instantiation.
-    if (!segment.active) continue;
-    uint32_t dest_offset = EvalUint32InitExpr(instance, segment.dest_addr);
-    DCHECK(IsInBounds(dest_offset, source_size, instance->memory_size()));
-    byte* dest = instance->memory_start() + dest_offset;
-    const byte* src = wire_bytes.start() + segment.source.offset();
-    memcpy(dest, src, source_size);
+    uint32_t size = segment.source.length();
+
+    if (enabled_.bulk_memory) {
+      // Passive segments are not copied during instantiation.
+      if (!segment.active) continue;
+
+      uint32_t dest_offset = EvalUint32InitExpr(instance, segment.dest_addr);
+      bool ok = ClampToBounds(dest_offset, &size,
+                              static_cast<uint32_t>(instance->memory_size()));
+      Address dest_addr =
+          reinterpret_cast<Address>(instance->memory_start()) + dest_offset;
+      Address src_addr = reinterpret_cast<Address>(wire_bytes.start()) +
+                         segment.source.offset();
+      memory_copy_wrapper(dest_addr, src_addr, size);
+      if (!ok) {
+        thrower_->LinkError("data segment is out of bounds");
+        return;
+      }
+    } else {
+      DCHECK(segment.active);
+      // Segments of size == 0 are just nops.
+      if (size == 0) continue;
+
+      uint32_t dest_offset = EvalUint32InitExpr(instance, segment.dest_addr);
+      DCHECK(IsInBounds(dest_offset, size, instance->memory_size()));
+      byte* dest = instance->memory_start() + dest_offset;
+      const byte* src = wire_bytes.start() + segment.source.offset();
+      memcpy(dest, src, size);
+    }
   }
 }
 
@@ -1199,25 +1192,21 @@ void InstanceBuilder::InitGlobals() {
                              SKIP_WRITE_BARRIER);
         break;
       case WasmInitExpr::kGlobalIndex: {
-        if (global.type == ValueType::kWasmAnyRef) {
-          DCHECK(enabled_.anyref);
-          int other_offset =
-              module_->globals[global.init.val.global_index].offset;
-
-          tagged_globals_->set(global.offset,
-                               tagged_globals_->get(other_offset),
-                               SKIP_WRITE_BARRIER);
-        }
         // Initialize with another global.
         uint32_t new_offset = global.offset;
         uint32_t old_offset =
             module_->globals[global.init.val.global_index].offset;
         TRACE("init [globals+%u] = [globals+%d]\n", global.offset, old_offset);
-        size_t size = (global.type == kWasmI64 || global.type == kWasmF64)
-                          ? sizeof(double)
-                          : sizeof(int32_t);
-        memcpy(raw_buffer_ptr(untagged_globals_, new_offset),
-               raw_buffer_ptr(untagged_globals_, old_offset), size);
+        if (ValueTypes::IsReferenceType(global.type)) {
+          DCHECK(enabled_.anyref || enabled_.eh);
+          tagged_globals_->set(new_offset, tagged_globals_->get(old_offset));
+        } else {
+          size_t size = (global.type == kWasmI64 || global.type == kWasmF64)
+                            ? sizeof(double)
+                            : sizeof(int32_t);
+          memcpy(raw_buffer_ptr(untagged_globals_, new_offset),
+                 raw_buffer_ptr(untagged_globals_, old_offset), size);
+        }
         break;
       }
       case WasmInitExpr::kNone:
@@ -1475,36 +1464,8 @@ void InstanceBuilder::InitializeTables(Handle<WasmInstanceObject> instance) {
   }
 }
 
-namespace {
-Handle<WasmExportedFunction> CreateWasmExportedFunctionForAsm(
-    Isolate* isolate, Handle<WasmInstanceObject> instance,
-    const WasmModule* module, uint32_t func_index,
-    JSToWasmWrapperCache* js_to_wasm_cache) {
-  const WasmFunction* function = &module->functions[func_index];
-  DCHECK_EQ(module->origin, kAsmJsOrigin);
-
-  Handle<Code> wrapper_code = js_to_wasm_cache->GetOrCompileJSToWasmWrapper(
-      isolate, function->sig, function->imported);
-  auto module_object =
-      Handle<WasmModuleObject>(instance->module_object(), isolate);
-  WireBytesRef func_name_ref = module->LookupFunctionName(
-      ModuleWireBytes(module_object->native_module()->wire_bytes()),
-      func_index);
-  auto func_name = WasmModuleObject::ExtractUtf8StringFromModuleBytes(
-                       isolate, module_object, func_name_ref)
-                       .ToHandleChecked();
-  auto wasm_exported_function = WasmExportedFunction::New(
-      isolate, instance, func_name, func_index,
-      static_cast<int>(function->sig->parameter_count()), wrapper_code);
-  WasmInstanceObject::SetWasmExportedFunction(isolate, instance, func_index,
-                                              wasm_exported_function);
-  return wasm_exported_function;
-}
-}  // namespace
-
 bool LoadElemSegmentImpl(Isolate* isolate, Handle<WasmInstanceObject> instance,
                          Handle<WasmTableObject> table_object,
-                         JSToWasmWrapperCache* js_to_wasm_cache,
                          const WasmElemSegment& elem_segment, uint32_t dst,
                          uint32_t src, size_t count) {
   // TODO(wasm): Move this functionality into wasm-objects, since it is used
@@ -1540,17 +1501,9 @@ bool LoadElemSegmentImpl(Isolate* isolate, Handle<WasmInstanceObject> instance,
                                                     func_index);
     if (wasm_exported_function.is_null()) {
       // No JSFunction entry yet exists for this function. Create a {Tuple2}
-      // holding the information to lazily allocate one (or eagerly allocate
-      // one for asm.js code).
-      if (module->origin == kAsmJsOrigin) {
-        Handle<WasmExportedFunction> function =
-            CreateWasmExportedFunctionForAsm(isolate, instance, module,
-                                             func_index, js_to_wasm_cache);
-        table_object->elements()->set(entry_index, *function);
-      } else {
-        WasmTableObject::SetFunctionTablePlaceholder(
-            isolate, table_object, entry_index, instance, func_index);
-      }
+      // holding the information to lazily allocate one.
+      WasmTableObject::SetFunctionTablePlaceholder(
+          isolate, table_object, entry_index, instance, func_index);
     } else {
       table_object->elements()->set(entry_index,
                                     *wasm_exported_function.ToHandleChecked());
@@ -1577,8 +1530,18 @@ void InstanceBuilder::LoadTableSegments(Handle<WasmInstanceObject> instance) {
         handle(WasmTableObject::cast(
                    instance->tables()->get(elem_segment.table_index)),
                isolate_),
-        &js_to_wasm_cache_, elem_segment, dst, src, count);
-    CHECK(success);
+        elem_segment, dst, src, count);
+    if (enabled_.bulk_memory) {
+      if (!success) {
+        thrower_->LinkError("table initializer is out of bounds");
+        // Break out instead of returning; we don't want to continue to
+        // initialize any further element segments, but still need to add
+        // dispatch tables below.
+        break;
+      }
+    } else {
+      CHECK(success);
+    }
   }
 
   int table_count = static_cast<int>(module_->tables.size());
@@ -1608,14 +1571,12 @@ void InstanceBuilder::InitializeExceptions(
 bool LoadElemSegment(Isolate* isolate, Handle<WasmInstanceObject> instance,
                      uint32_t table_index, uint32_t segment_index, uint32_t dst,
                      uint32_t src, uint32_t count) {
-  JSToWasmWrapperCache js_to_wasm_cache;
-
   auto& elem_segment = instance->module()->elem_segments[segment_index];
   return LoadElemSegmentImpl(
       isolate, instance,
       handle(WasmTableObject::cast(instance->tables()->get(table_index)),
              isolate),
-      &js_to_wasm_cache, elem_segment, dst, src, count);
+      elem_segment, dst, src, count);
 }
 
 }  // namespace wasm

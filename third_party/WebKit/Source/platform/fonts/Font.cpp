@@ -141,13 +141,8 @@ void Font::update(PassRefPtrWillBeRawPtr<FontSelector> fontSelector) const
     // style anyway. Other copies are transient, e.g., the state in the GraphicsContext, and
     // won't stick around long enough to get you in trouble). Still, this is pretty disgusting,
     // and could eventually be rectified by using RefPtrs for Fonts themselves.
-    if (!m_fontFallbackList) {
+    if (!m_fontFallbackList)
         m_fontFallbackList = FontFallbackList::create();
-//         WTF::String outstr = String::format("Font::update: %p %p\n", this, m_fontFallbackList.get());
-//         OutputDebugStringW(outstr.charactersWithNullTermination().data());
-//         if (gFontDebug == this)
-//             OutputDebugStringA("");
-    }
     m_fontFallbackList->invalidate(fontSelector);
 }
 

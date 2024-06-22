@@ -8,6 +8,8 @@
 
 #include "src/frames.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -24,6 +26,19 @@ void CallInterfaceDescriptor::DefaultInitializePlatformSpecific(
 }
 
 void RecordWriteDescriptor::InitializePlatformSpecific(
+    CallInterfaceDescriptorData* data) {
+  static const Register default_stub_registers[] = {ecx, edx, esi, edi,
+                                                    kReturnRegister0};
+
+  data->RestrictAllocatableRegisters(default_stub_registers,
+                                     arraysize(default_stub_registers));
+
+  CHECK_LE(static_cast<size_t>(kParameterCount),
+           arraysize(default_stub_registers));
+  data->InitializePlatformSpecific(kParameterCount, default_stub_registers);
+}
+
+void EphemeronKeyBarrierDescriptor::InitializePlatformSpecific(
     CallInterfaceDescriptorData* data) {
   static const Register default_stub_registers[] = {ecx, edx, esi, edi,
                                                     kReturnRegister0};

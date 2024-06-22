@@ -194,7 +194,9 @@ static void installV8MutationEventTemplate(v8::Local<v8::FunctionTemplate> funct
     static_assert(3 == MutationEvent::REMOVAL, "the value of MutationEvent_REMOVAL does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8MutationEvent::domTemplate(v8::Isolate* isolate)

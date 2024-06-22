@@ -293,8 +293,10 @@ void GIFImageDecoder::decode(size_t index)
 
     // It is also a fatal error if all data is received and we have decoded all
     // frames available but the file is truncated.
+#if 0 // zoom bug
     if (index >= m_frameBufferCache.size() - 1 && isAllDataReceived() && m_reader && !m_reader->parseCompleted())
         setFailed();
+#endif
 }
 
 void GIFImageDecoder::parse(GIFParseQuery query)

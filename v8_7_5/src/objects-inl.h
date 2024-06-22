@@ -222,8 +222,6 @@ bool HeapObject::IsPromiseReactionJobTask() const {
   return IsPromiseFulfillReactionJobTask() || IsPromiseRejectReactionJobTask();
 }
 
-bool HeapObject::IsEnumCache() const { return IsTuple2(); }
-
 bool HeapObject::IsFrameArray() const { return IsFixedArrayExact(); }
 
 bool HeapObject::IsArrayList() const {
@@ -381,6 +379,16 @@ double Object::Number() const {
   DCHECK(IsNumber());
   return IsSmi() ? static_cast<double>(Smi(this->ptr())->value())
                  : HeapNumber::unchecked_cast(*this)->value();
+}
+
+// static
+bool Object::SameNumberValue(double value1, double value2) {
+  // SameNumberValue(NaN, NaN) is true.
+  if (value1 != value2) {
+    return std::isnan(value1) && std::isnan(value2);
+  }
+  // SameNumberValue(0.0, -0.0) is false.
+  return (std::signbit(value1) == std::signbit(value2));
 }
 
 bool Object::IsNaN() const {

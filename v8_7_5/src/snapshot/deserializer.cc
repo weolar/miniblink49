@@ -27,6 +27,8 @@
 #include "src/tracing/trace-event.h"
 #include "src/tracing/traced-value.h"
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -306,8 +308,6 @@ HeapObject Deserializer::PostProcessNewObject(HeapObject obj, int space) {
     // TODO(mythria): Remove these once we store the default values for these
     // fields in the serializer.
     BytecodeArray bytecode_array = BytecodeArray::cast(obj);
-    bytecode_array->set_interrupt_budget(
-        interpreter::Interpreter::InterruptBudget());
     bytecode_array->set_osr_loop_nesting_level(0);
   }
 #ifdef DEBUG
@@ -679,9 +679,9 @@ bool Deserializer::ReadData(TSlot current, TSlot limit, int source_space,
         uint32_t reference_id = static_cast<uint32_t>(source_.GetInt());
         Address address;
         if (isolate->api_external_references()) {
-          DCHECK_WITH_MSG(
-              reference_id < num_api_references_,
-              "too few external references provided through the API");
+//           DCHECK_WITH_MSG(
+//               reference_id < num_api_references_,
+//               "too few external references provided through the API");
           address = static_cast<Address>(
               isolate->api_external_references()[reference_id]);
         } else {

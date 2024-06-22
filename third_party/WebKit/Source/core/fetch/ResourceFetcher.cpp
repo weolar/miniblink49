@@ -263,7 +263,53 @@ static PassRefPtr<TraceEvent::ConvertableToTraceFormat> urlForTraceEvent(const K
     return value.release();
 }
 
-ResourcePtr<Resource> ResourceFetcher::requestResource(FetchRequest& request, const ResourceFactory& factory)
+ResourcePtr<Resource> ResourceFetcher::preCacheData(const FetchRequest& request, const ResourceFactory& factory, const SubstituteData& substituteData)
+{
+    const KURL& url = request.resourceRequest().url();
+    ASSERT(url.protocolIsData() || substituteData.isValid());
+    if ((factory.type() == Resource::MainResource && !substituteData.isValid()) || factory.type() == Resource::Raw || factory.type() == Resource::Media)
+        return nullptr;
+
+    const String cacheIdentifier = getCacheIdentifier();
+    if (Resource* oldResource = memoryCache()->resourceForURL(url, cacheIdentifier)) {
+        if (!substituteData.isValid())
+            return nullptr;
+        memoryCache()->remove(oldResource);
+    }
+
+    WebString mimetype;
+    WebString charset;
+    RefPtr<SharedBuffer> data;
+    if (substituteData.isValid()) {
+        mimetype = substituteData.mimeType();
+        charset = substituteData.textEncoding();
+        data = substituteData.content();
+    } else {
+        data = PassRefPtr<SharedBuffer>(Platform::current()->parseDataURL(url, mimetype, charset));
+        if (!data)
+            return nullptr;
+    }
+    ResourceResponse response(url, mimetype, data->size(), charset, String());
+    response.setHTTPStatusCode(200);
+    response.setHTTPStatusText("OK");
+
+    ResourcePtr<Resource> resource = factory.create(request.resourceRequest(), request.charset());
+    resource->setNeedsSynchronousCacheHit(substituteData.forceSynchronousLoad());
+    resource->setOptions(request.options());
+    // FIXME: We should provide a body stream here.
+    resource->responseReceived(response, nullptr);
+    resource->setDataBufferingPolicy(BufferData);
+    if (data->size())
+        resource->setResourceBuffer(data);
+    resource->setIdentifier(createUniqueIdentifier());
+    resource->setCacheIdentifier(cacheIdentifier);
+    resource->finish();
+    memoryCache()->add(resource.get());
+    scheduleDocumentResourcesGC();
+    return resource;
+}
+
+ResourcePtr<Resource> ResourceFetcher::requestResource(FetchRequest& request, const ResourceFactory& factory, const SubstituteData& substituteData)
 {
     ASSERT(request.options().synchronousPolicy == RequestAsynchronously || factory.type() == Resource::Raw);
 
@@ -302,8 +348,15 @@ ResourcePtr<Resource> ResourceFetcher::requestResource(FetchRequest& request, co
         }
     }
 
+    bool isStaticData = request.resourceRequest().url().protocolIsData() || substituteData.isValid();
+    ResourcePtr<Resource> resource;
+#if 0
+    if (isStaticData)
+        resource = preCacheData(request, factory, substituteData);
+#endif
     // See if we can use an existing resource from the cache.
-    ResourcePtr<Resource> resource = memoryCache()->resourceForURL(url, getCacheIdentifier());
+    if (!resource)
+        resource = memoryCache()->resourceForURL(url, getCacheIdentifier());
 
     const RevalidationPolicy policy = determineRevalidationPolicy(factory.type(), request, resource.get());
     switch (policy) {

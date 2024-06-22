@@ -357,6 +357,8 @@ public:
         stopInternal();
     }
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
+
     void didGetReadable() override
     {
         ASSERT(m_reader);

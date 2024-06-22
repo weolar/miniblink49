@@ -94,11 +94,6 @@ namespace v8 {
 namespace internal {
 namespace compiler {
 
-// TurboFan can only handle 2^16 control inputs. Since each control flow split
-// requires at least two bytes (jump and offset), we limit the bytecode size
-// to 60KiB bytes.
-const int kMaxBytecodeSizeForTurbofan = 60 * KB;
-
 class PipelineData {
  public:
   // For main entry point.
@@ -795,7 +790,7 @@ PipelineStatistics* CreatePipelineStatistics(Handle<Script> script,
                                              ZoneStats* zone_stats) {
   PipelineStatistics* pipeline_statistics = nullptr;
 
-  bool tracing_enabled;
+  bool tracing_enabled = false;
   TRACE_EVENT_CATEGORY_GROUP_ENABLED(TRACE_DISABLED_BY_DEFAULT("v8.turbofan"),
                                      &tracing_enabled);
   if (tracing_enabled || FLAG_turbo_stats || FLAG_turbo_stats_nvp) {
@@ -821,7 +816,7 @@ PipelineStatistics* CreatePipelineStatistics(
     ZoneStats* zone_stats) {
   PipelineStatistics* pipeline_statistics = nullptr;
 
-  bool tracing_enabled;
+  bool tracing_enabled = false;
   TRACE_EVENT_CATEGORY_GROUP_ENABLED(TRACE_DISABLED_BY_DEFAULT("v8.wasm"),
                                      &tracing_enabled);
   if (tracing_enabled || FLAG_turbo_stats_wasm) {
@@ -924,7 +919,7 @@ PipelineCompilationJob::Status PipelineCompilationJob::PrepareJobImpl(
       this, TRACE_EVENT_FLAG_FLOW_IN | TRACE_EVENT_FLAG_FLOW_OUT, "function",
       compilation_info()->shared_info()->TraceIDRef());
   if (compilation_info()->bytecode_array()->length() >
-      kMaxBytecodeSizeForTurbofan) {
+      FLAG_max_optimized_bytecode_size) {
     return AbortOptimization(BailoutReason::kFunctionTooBig);
   }
 
@@ -1349,7 +1344,7 @@ struct GenericLoweringPhase {
   void Run(PipelineData* data, Zone* temp_zone) {
     GraphReducer graph_reducer(temp_zone, data->graph(),
                                data->jsgraph()->Dead());
-    JSGenericLowering generic_lowering(data->jsgraph());
+    JSGenericLowering generic_lowering(data->jsgraph(), &graph_reducer);
     AddReducer(data, &graph_reducer, &generic_lowering);
     graph_reducer.ReduceGraph();
   }
@@ -1542,6 +1537,21 @@ struct LateOptimizationPhase {
     AddReducer(data, &graph_reducer, &machine_reducer);
     AddReducer(data, &graph_reducer, &common_reducer);
     AddReducer(data, &graph_reducer, &select_lowering);
+    AddReducer(data, &graph_reducer, &value_numbering);
+    graph_reducer.ReduceGraph();
+  }
+};
+
+struct MachineOperatorOptimizationPhase {
+  static const char* phase_name() { return "V8.TFMachineOperatorOptimization"; }
+
+  void Run(PipelineData* data, Zone* temp_zone) {
+    GraphReducer graph_reducer(temp_zone, data->graph(),
+                               data->jsgraph()->Dead());
+    ValueNumberingReducer value_numbering(temp_zone, data->graph()->zone());
+    MachineOperatorReducer machine_reducer(&graph_reducer, data->jsgraph());
+
+    AddReducer(data, &graph_reducer, &machine_reducer);
     AddReducer(data, &graph_reducer, &value_numbering);
     graph_reducer.ReduceGraph();
   }
@@ -2114,6 +2124,12 @@ bool PipelineImpl::OptimizeGraph(Linkage* linkage) {
   Run<MemoryOptimizationPhase>();
   RunPrintAndVerify(MemoryOptimizationPhase::phase_name(), true);
 
+  // Run value numbering and machine operator reducer to optimize load/store
+  // address computation (in particular, reuse the address computation whenever
+  // possible).
+  Run<MachineOperatorOptimizationPhase>();
+  RunPrintAndVerify(MachineOperatorOptimizationPhase::phase_name(), true);
+
   data->source_positions()->RemoveDecorator();
   if (data->info()->trace_turbo_json_enabled()) {
     data->node_origins()->RemoveDecorator();
@@ -2268,7 +2284,7 @@ wasm::WasmCompilationResult Pipeline::GenerateCodeForWasmNativeStub(
   result.protected_instructions = code_generator->GetProtectedInstructions();
   result.frame_slot_count = code_generator->frame()->GetTotalFrameSlotCount();
   result.tagged_parameter_slots = call_descriptor->GetTaggedParameterSlots();
-  result.result_tier = wasm::ExecutionTier::kOptimized;
+  result.result_tier = wasm::ExecutionTier::kTurbofan;
 
   DCHECK(result.succeeded());
 
@@ -2516,7 +2532,7 @@ void Pipeline::GenerateCodeForWasmFunction(
   result->tagged_parameter_slots = call_descriptor->GetTaggedParameterSlots();
   result->source_positions = code_generator->GetSourcePositionTable();
   result->protected_instructions = code_generator->GetProtectedInstructions();
-  result->result_tier = wasm::ExecutionTier::kOptimized;
+  result->result_tier = wasm::ExecutionTier::kTurbofan;
 
   if (data.info()->trace_turbo_json_enabled()) {
     TurboJsonFile json_of(data.info(), std::ios_base::app);

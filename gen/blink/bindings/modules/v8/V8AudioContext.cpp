@@ -641,7 +641,7 @@ static void createOscillatorMethodCallback(const v8::FunctionCallbackInfo<v8::Va
 {
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
     UseCounter::countIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::AudioContextCreateOscillator);
-    AudioContextV8Internal::createOscillatorMethod(info);
+    //AudioContextV8Internal::createOscillatorMethod(info); // weolar
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
@@ -878,7 +878,9 @@ static void installV8AudioContextTemplate(v8::Local<v8::FunctionTemplate> functi
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8AudioContext::domTemplate(v8::Isolate* isolate)

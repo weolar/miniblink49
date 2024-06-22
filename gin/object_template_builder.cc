@@ -49,7 +49,7 @@ IndexedPropertyInterceptor* IndexedInterceptorFromV8(
   return PerIsolateData::From(isolate)->GetIndexedPropertyInterceptor(base);
 }
 
-void NamedPropertyGetter(v8::Local<v8::String> property,
+void NamedPropertyGetter(v8::Local<v8::Name> property,
                          const v8::PropertyCallbackInfo<v8::Value>& info) {
   v8::Isolate* isolate = info.GetIsolate();
   NamedPropertyInterceptor* interceptor =
@@ -61,7 +61,7 @@ void NamedPropertyGetter(v8::Local<v8::String> property,
   info.GetReturnValue().Set(interceptor->GetNamedProperty(isolate, name));
 }
 
-void NamedPropertySetter(v8::Local<v8::String> property,
+void NamedPropertySetter(v8::Local<v8::Name> property,
                          v8::Local<v8::Value> value,
                          const v8::PropertyCallbackInfo<v8::Value>& info) {
   v8::Isolate* isolate = info.GetIsolate();
@@ -75,7 +75,7 @@ void NamedPropertySetter(v8::Local<v8::String> property,
     info.GetReturnValue().Set(value);
 }
 
-void NamedPropertyQuery(v8::Local<v8::String> property,
+void NamedPropertyQuery(v8::Local<v8::Name> property,
                         const v8::PropertyCallbackInfo<v8::Integer>& info) {
   v8::Isolate* isolate = info.GetIsolate();
   NamedPropertyInterceptor* interceptor =
@@ -156,11 +156,12 @@ ObjectTemplateBuilder::~ObjectTemplateBuilder() {
 }
 
 ObjectTemplateBuilder& ObjectTemplateBuilder::AddNamedPropertyInterceptor() {
+  v8::Local<v8::Value> data;
   template_->SetNamedPropertyHandler(&NamedPropertyGetter,
                                      &NamedPropertySetter,
                                      &NamedPropertyQuery,
                                      NULL,
-                                     &NamedPropertyEnumerator);
+                                     &NamedPropertyEnumerator, data);
   return *this;
 }
 

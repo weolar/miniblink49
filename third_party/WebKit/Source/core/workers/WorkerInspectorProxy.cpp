@@ -16,6 +16,9 @@
 #include "platform/weborigin/KURL.h"
 #include "public/platform/WebTraceLocation.h"
 
+#pragma optimize("", off)
+#pragma clang optimize off
+
 namespace blink {
 
 WorkerInspectorProxy::WorkerInspectorProxy()
@@ -52,7 +55,8 @@ void WorkerInspectorProxy::workerThreadTerminated()
 
 static void connectToWorkerGlobalScopeInspectorTask(WorkerThread* workerThread)
 {
-    workerThread->workerGlobalScope()->workerInspectorController()->connectFrontend();
+    if (WorkerInspectorController* ctrl = workerThread->workerGlobalScope()->workerInspectorController())
+        ctrl->connectFrontend();
 }
 
 void WorkerInspectorProxy::connectToInspector(WorkerInspectorProxy::PageInspector* pageInspector)
@@ -66,7 +70,8 @@ void WorkerInspectorProxy::connectToInspector(WorkerInspectorProxy::PageInspecto
 
 static void disconnectFromWorkerGlobalScopeInspectorTask(WorkerThread* workerThread)
 {
-    workerThread->workerGlobalScope()->workerInspectorController()->disconnectFrontend();
+    if (WorkerInspectorController* ctrl = workerThread->workerGlobalScope()->workerInspectorController())
+        ctrl->disconnectFrontend();
 }
 
 void WorkerInspectorProxy::disconnectFromInspector()
@@ -79,7 +84,8 @@ void WorkerInspectorProxy::disconnectFromInspector()
 
 static void dispatchOnInspectorBackendTask(const String& message, WorkerThread* workerThread)
 {
-    workerThread->workerGlobalScope()->workerInspectorController()->dispatchMessageFromFrontend(message);
+    if (WorkerInspectorController* ctrl = workerThread->workerGlobalScope()->workerInspectorController())
+        ctrl->dispatchMessageFromFrontend(message);
 }
 
 void WorkerInspectorProxy::sendMessageToInspector(const String& message)

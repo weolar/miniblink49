@@ -4,11 +4,16 @@
 
 #include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/public/web/WebConsoleMessage.h"
+#if ENABLE_NODEJS
+#include "third_party/WebKit/Source/wtf/HashMap.h"
+#endif
 
 namespace cef {
 class BrowserHostImpl;
 class BrowserImpl;
 }
+
+struct NodeBindingInMbCore;
 
 using namespace blink;
 
@@ -16,6 +21,7 @@ namespace content {
 
 class WebPage;
 class ContextMenu;
+class WebGeolocationClientImpl;
 
 class WebFrameClientImpl : public WebFrameClient {
 public:
@@ -173,6 +179,10 @@ public:
     // Navigational queries ------------------------------------------------
     virtual WebNavigationPolicy decidePolicyForNavigation(const NavigationPolicyInfo& info) override;
 
+    // During a history navigation, we may choose to load new subframes from history as well.
+    // This returns such a history item if appropriate.
+    virtual WebHistoryItem historyItemForNewChildFrame(WebFrame*) override;
+
     // Services ------------------------------------------------------------
 
     // A frame specific cookie jar.  May return null, in which case
@@ -221,6 +231,11 @@ public:
     // WebKit is about to release its reference to a v8 context for a frame.
     virtual void willReleaseScriptContext(WebLocalFrame*, v8::Local<v8::Context>, int worldId) override;
 
+    // Geolocation ---------------------------------------------------------
+
+    // Access the embedder API for (client-based) geolocation client .
+    virtual WebGeolocationClient* geolocationClient() override;
+
     //////////////////////////////////////////////////////////////////////////
     void setWebPage(WebPage* webPage);
     WebPage* webPage();
@@ -249,6 +264,11 @@ private:
     WTF::Vector<WebFrame*> m_unusedFrames;
 
     ContextMenu* m_menu;
+    WebGeolocationClientImpl* m_webGeolocationClientImpl;
+
+#if ENABLE_NODEJS
+    WTF::HashMap<WebFrame*, NodeBindingInMbCore*> m_nodebindings;
+#endif
 };
 
 } // namespace blink

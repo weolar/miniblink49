@@ -16,6 +16,8 @@
 #include "src/string-builder-inl.h"
 #include "src/utils.h"
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

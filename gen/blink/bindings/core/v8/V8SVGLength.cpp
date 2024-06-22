@@ -290,7 +290,9 @@ static void installV8SVGLengthTemplate(v8::Local<v8::FunctionTemplate> functionT
     static_assert(10 == SVGLengthTearOff::SVG_LENGTHTYPE_PC, "the value of SVGLengthTearOff_SVG_LENGTHTYPE_PC does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGLength::domTemplate(v8::Isolate* isolate)

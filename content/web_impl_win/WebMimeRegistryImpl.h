@@ -62,6 +62,16 @@ private:
     WTF::HashSet<WTF::String>* m_supportedJavaScriptMIMETypes;
     WTF::HashSet<String>* m_supportedNonImageMIMETypes;
     WTF::HashMap<WTF::String, WTF::String>* m_mimetypeMap;
+
+    struct MimetypeToExt {
+        WTF::String mime;
+        WTF::Vector<WTF::String> exts;
+    };
+    struct MimetypeToExtMap {
+        WTF::Vector<MimetypeToExt*> m_map;
+        void add(const char* mine, ...);
+    };
+    MimetypeToExtMap* m_mimetypeToExtMap;
 };
 
 }  // namespace content

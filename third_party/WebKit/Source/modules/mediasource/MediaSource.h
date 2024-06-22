@@ -93,6 +93,7 @@ public:
     // ActiveDOMObject interface
     bool hasPendingActivity() const override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<MediaSource*>(object); }
 
     // URLRegistrable interface
     URLRegistry& registry() const override;
@@ -101,6 +102,7 @@ public:
     void openIfInEndedState();
     bool isOpen() const;
     void setSourceBufferActive(SourceBuffer*);
+    HTMLMediaElement* mediaElement() const;
 
     // Used by MediaSourceRegistry.
     void addedToRegistry();

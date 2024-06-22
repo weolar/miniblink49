@@ -284,11 +284,8 @@ Node::InsertionNotificationRequest ProcessingInstruction::insertedInto(Container
     String href;
     String charset;
     bool isValid = checkStyleSheet(href, charset);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (!DocumentXSLT::processingInstructionInsertedIntoDocument(document(), this))
         document().styleEngine().addStyleSheetCandidateNode(this, m_createdByParser);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     if (isValid)
         process(href, charset);
     return InsertionDone;

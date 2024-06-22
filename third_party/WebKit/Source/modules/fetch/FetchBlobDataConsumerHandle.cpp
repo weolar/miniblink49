@@ -153,6 +153,7 @@ private:
             m_obj.clear();
         }
 
+        ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
         OwnPtr<T> m_obj;
         // All accesses to |m_holder| must be protected by |m_mutex|.

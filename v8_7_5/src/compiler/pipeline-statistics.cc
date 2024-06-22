@@ -11,6 +11,8 @@
 #include "src/optimized-compilation-info.h"
 #include "src/tracing/trace-event.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

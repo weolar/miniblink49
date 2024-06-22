@@ -341,6 +341,7 @@ const QualifiedName& y2Attr = reinterpret_cast<QualifiedName*>(&AttrStorage)[238
 const QualifiedName& yChannelSelectorAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[239];
 const QualifiedName& zAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[240];
 const QualifiedName& zoomAndPanAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[241];
+const QualifiedName& hrefAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[242];
 
 PassOwnPtr<const QualifiedName*[]> getSVGAttrs()
 {
@@ -668,6 +669,7 @@ void init()
         { "yChannelSelector", 12848041, 16, 0, 1 },
         { "z", 9090206, 1, 0, 1 },
         { "zoomAndPan", 16695696, 10, 0, 1 },
+        { "href", 5797448, 4, 0, 1 },
     };
 
     size_t tag_i = 0;

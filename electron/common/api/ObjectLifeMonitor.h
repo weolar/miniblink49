@@ -30,6 +30,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(ObjectLifeMonitor);
 };
 
-}  // namespace atom
+} // namespace atom
 
-#endif  // ATOM_COMMON_API_OBJECT_LIFE_MONITOR_H_
+#endif // ATOM_COMMON_API_OBJECT_LIFE_MONITOR_H_

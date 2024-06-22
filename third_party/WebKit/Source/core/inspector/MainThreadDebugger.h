@@ -42,6 +42,8 @@ class Mutex;
 
 namespace blink {
 
+class InspectorClient;
+
 class CORE_EXPORT MainThreadDebugger final : public NoBaseWillBeGarbageCollectedFinalized<MainThreadDebugger>, public ScriptDebuggerBase {
     WTF_MAKE_NONCOPYABLE(MainThreadDebugger);
     WILL_BE_USING_GARBAGE_COLLECTED_MIXIN(MainThreadDebugger);
@@ -61,6 +63,8 @@ public:
     ~MainThreadDebugger() override;
 
     static void initializeContext(v8::Local<v8::Context>, int worldId);
+    static void disposeContext(v8::Local<v8::Context>, int worldId);
+
     void addListener(ScriptDebugListener*, LocalFrame*);
     void removeListener(ScriptDebugListener*, LocalFrame*);
 
@@ -84,6 +88,8 @@ private:
     OwnPtr<ClientMessageLoop> m_clientMessageLoop;
     RawPtrWillBeMember<LocalFrame> m_pausedFrame;
     OwnPtr<InspectorTaskRunner> m_taskRunner;
+
+    InspectorClient* m_inspectorClient;
 
     static MainThreadDebugger* s_instance;
 };

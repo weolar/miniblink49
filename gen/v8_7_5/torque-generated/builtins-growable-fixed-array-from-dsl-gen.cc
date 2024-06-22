@@ -12,11 +12,16 @@
 #include "src/objects/js-regexp-string-iterator.h"
 #include "src/objects/module.h"
 #include "src/objects/stack-frame-info.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-array-gen.h"
 #include "src/builtins/builtins-collections-gen.h"
 #include "src/builtins/builtins-data-view-gen.h"
 #include "src/builtins/builtins-iterator-gen.h"
 #include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-typed-array-gen.h"
@@ -83,7 +88,7 @@ GrowableFixedArrayBuiltinsFromDSLAssembler::GrowableFixedArray GrowableFixedArra
 
   if (block0.is_used()) {
     ca_.Bind(&block0);
-    ca_.SetSourcePosition("../../src/builtins/growable-fixed-array.tq", 43);
+    ca_.SetSourcePosition("../../v8/src/builtins/growable-fixed-array.tq", 43);
     compiler::TNode<FixedArray> tmp0;
     USE(tmp0);
     tmp0 = BaseBuiltinsFromDSLAssembler(state_).kEmptyFixedArray();
@@ -101,7 +106,7 @@ GrowableFixedArrayBuiltinsFromDSLAssembler::GrowableFixedArray GrowableFixedArra
     compiler::TNode<IntPtrT> tmp4;
     compiler::TNode<IntPtrT> tmp5;
     ca_.Bind(&block1, &tmp3, &tmp4, &tmp5);
-    ca_.SetSourcePosition("../../src/builtins/growable-fixed-array.tq", 42);
+    ca_.SetSourcePosition("../../v8/src/builtins/growable-fixed-array.tq", 42);
     ca_.Goto(&block2, tmp3, tmp4, tmp5);
   }
 

@@ -100,6 +100,7 @@ public:
     void suspend() override;
     void resume() override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<XMLHttpRequest*>(object); }
 
     // XMLHttpRequestEventTarget
     const AtomicString& interfaceName() const override;

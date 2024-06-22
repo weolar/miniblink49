@@ -453,10 +453,11 @@ bool DeprecatedPaintLayerPainter::shouldPaintLayerInSoftwareMode(const Deprecate
 {
     DisableCompositingQueryAsserts disabler;
     
-    return m_paintLayer.compositingState() == NotComposited
+    bool b = m_paintLayer.compositingState() == NotComposited
         || (paintingInfo.paintBehavior & PaintBehaviorFlattenCompositingLayers)
         || ((paintFlags & PaintLayerPaintingReflection) && !m_paintLayer.has3DTransform())
         || paintForFixedRootBackground(&m_paintLayer, paintFlags);
+    return b;
 }
 
 void DeprecatedPaintLayerPainter::paintOverflowControlsForFragments(const DeprecatedPaintLayerFragments& layerFragments, GraphicsContext* context, const DeprecatedPaintLayerPaintingInfo& localPaintingInfo, PaintLayerFlags paintFlags)

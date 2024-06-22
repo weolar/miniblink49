@@ -7,6 +7,8 @@
 #include "src/code-stub-assembler.h"
 #include "src/objects.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

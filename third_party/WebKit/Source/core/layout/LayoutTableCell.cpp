@@ -967,7 +967,7 @@ void LayoutTableCell::collectBorderValues(LayoutTable::CollapsedBorderValues& bo
     addBorderStyle(borderValues, afterBorder);
 }
 
-static int compareBorderValuesForQSort(const void* pa, const void* pb)
+static int __cdecl compareBorderValuesForQSort(const void* pa, const void* pb)
 {
     const CollapsedBorderValue* a = static_cast<const CollapsedBorderValue*>(pa);
     const CollapsedBorderValue* b = static_cast<const CollapsedBorderValue*>(pb);

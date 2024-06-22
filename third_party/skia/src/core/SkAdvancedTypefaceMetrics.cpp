@@ -11,7 +11,7 @@
 #include "SkTypes.h"
 
 #if defined(SK_BUILD_FOR_WIN)
-//#include <dwrite.h>
+#include <dwrite.h>
 #endif
 
 #if defined(SK_BUILD_FOR_UNIX) || defined(SK_BUILD_FOR_ANDROID)
@@ -262,12 +262,14 @@ template SkAdvancedTypefaceMetrics::WidthRange* getAdvanceData(
         const uint32_t* subsetGlyphIDs,
         uint32_t subsetGlyphIDsLength,
         bool (*getAdvance)(HDC hdc, int gId, int16_t* data));
-// template SkAdvancedTypefaceMetrics::WidthRange* getAdvanceData(
-//         IDWriteFontFace* fontFace,
-//         int num_glyphs,
-//         const uint32_t* subsetGlyphIDs,
-//         uint32_t subsetGlyphIDsLength,
-//         bool (*getAdvance)(IDWriteFontFace* fontFace, int gId, int16_t* data));
+
+template SkAdvancedTypefaceMetrics::WidthRange* getAdvanceData(
+        IDWriteFontFace* fontFace,
+        int num_glyphs,
+        const uint32_t* subsetGlyphIDs,
+        uint32_t subsetGlyphIDsLength,
+        bool (*getAdvance)(IDWriteFontFace* fontFace, int gId, int16_t* data));
+
 #elif defined(SK_BUILD_FOR_UNIX) || defined(SK_BUILD_FOR_ANDROID)
 template SkAdvancedTypefaceMetrics::WidthRange* getAdvanceData(
         FT_Face face,

@@ -64,6 +64,26 @@ String NetworkInformation::type() const
     return connectionTypeToString(m_type);
 }
 
+float NetworkInformation::downlink() const
+{
+    return networkStateNotifier().downlink();
+}
+
+String NetworkInformation::effectiveType() const
+{
+    return networkStateNotifier().effectiveType();
+}
+
+int NetworkInformation::rrt() const
+{
+    return networkStateNotifier().rrt();
+}
+
+bool NetworkInformation::saveData() const
+{
+    return networkStateNotifier().saveData();
+}
+
 void NetworkInformation::connectionTypeChange(WebConnectionType type)
 {
     ASSERT(executionContext()->isContextThread());

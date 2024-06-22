@@ -217,13 +217,11 @@ DEFINE_IMPLICATION(harmony_private_methods, harmony_private_fields)
   V(harmony_class_fields, "harmony fields in class literals")             \
   V(harmony_private_methods, "harmony private methods in class literals") \
   V(harmony_regexp_sequence, "RegExp Unicode sequence properties")        \
-  V(harmony_weak_refs, "harmony weak references")                         \
+  V(harmony_weak_refs, "harmony weak references")
 
 #ifdef V8_INTL_SUPPORT
 #define HARMONY_INPROGRESS(V)                                              \
   HARMONY_INPROGRESS_BASE(V)                                               \
-  V(harmony_intl_bigint, "BigInt.prototype.toLocaleString")                \
-  V(harmony_intl_datetime_style, "dateStyle timeStyle for DateTimeFormat") \
   V(harmony_intl_date_format_range, "DateTimeFormat formatRange")
 #else
 #define HARMONY_INPROGRESS(V) HARMONY_INPROGRESS_BASE(V)
@@ -231,11 +229,13 @@ DEFINE_IMPLICATION(harmony_private_methods, harmony_private_fields)
 
 // Features that are complete (but still behind --harmony/es-staging flag).
 #define HARMONY_STAGED_BASE(V) \
-  V(harmony_numeric_separator, "harmony numeric separator between digits")
+  V(harmony_promise_all_settled, "harmony Promise.allSettled")
 
 #ifdef V8_INTL_SUPPORT
-#define HARMONY_STAGED(V)          \
-  HARMONY_STAGED_BASE(V)           \
+#define HARMONY_STAGED(V)                                                  \
+  HARMONY_STAGED_BASE(V)                                                   \
+  V(harmony_intl_bigint, "BigInt.prototype.toLocaleString")                \
+  V(harmony_intl_datetime_style, "dateStyle timeStyle for DateTimeFormat") \
   V(harmony_intl_segmenter, "Intl.Segmenter")
 #else
 #define HARMONY_STAGED(V) HARMONY_STAGED_BASE(V)
@@ -256,7 +256,8 @@ DEFINE_IMPLICATION(harmony_private_methods, harmony_private_fields)
   V(harmony_object_from_entries, "harmony Object.fromEntries()")               \
   V(harmony_await_optimization, "harmony await taking 1 tick")                 \
   V(harmony_private_fields, "harmony private fields in class literals")        \
-  V(harmony_hashbang, "harmony hashbang syntax")
+  V(harmony_hashbang, "harmony hashbang syntax")                               \
+  V(harmony_numeric_separator, "harmony numeric separator between digits")
 
 #ifdef V8_INTL_SUPPORT
 #define HARMONY_SHIPPING(V) \
@@ -353,24 +354,18 @@ DEFINE_BOOL(enable_one_shot_optimization, true,
             "Enable size optimizations for the code that will "
             "only be executed once")
 
+// Flag for sealed, frozen elements kind instead of dictionary elements kind
+DEFINE_BOOL(enable_sealed_frozen_elements_kind, true,
+            "Enable sealed, frozen elements kind")
 
 // Flags for data representation optimizations
 DEFINE_BOOL(unbox_double_arrays, true, "automatically unbox arrays of doubles")
 DEFINE_BOOL_READONLY(string_slices, true, "use string slices")
 
-// Flags for Ignition for no-snapshot builds.
-#undef FLAG
-#ifndef V8_USE_SNAPSHOT
-#define FLAG FLAG_FULL
-#else
-#define FLAG FLAG_READONLY
-#endif
 DEFINE_INT(interrupt_budget, 144 * KB,
            "interrupt budget which should be used for the profiler counter")
-#undef FLAG
-#define FLAG FLAG_FULL
 
-DEFINE_INT(budget_for_feedback_vector_allocation, 2 * KB,
+DEFINE_INT(budget_for_feedback_vector_allocation, 1 * KB,
            "The budget in amount of bytecode executed by a function before we "
            "decide to allocate feedback vectors")
 DEFINE_BOOL(lazy_feedback_allocation, false, "Allocate feedback vectors lazily")
@@ -429,7 +424,11 @@ DEFINE_BOOL(block_concurrent_recompilation, false,
 DEFINE_BOOL(concurrent_inlining, false,
             "run optimizing compiler's inlining phase on a separate thread")
 DEFINE_IMPLICATION(future, concurrent_inlining)
-DEFINE_BOOL(trace_heap_broker, false, "trace the heap broker")
+DEFINE_BOOL(trace_heap_broker_verbose, false,
+            "trace the heap broker verbosely (all reports)")
+DEFINE_BOOL(trace_heap_broker, false,
+            "trace the heap broker (reports on missing data only)")
+DEFINE_IMPLICATION(trace_heap_broker_verbose, trace_heap_broker)
 
 // Flags for stress-testing the compiler.
 DEFINE_INT(stress_runs, 0, "number of stress runs")
@@ -505,6 +504,10 @@ DEFINE_FLOAT(reserve_inline_budget_scale_factor, 1.2,
              "maximum cumulative size of bytecode considered for inlining")
 DEFINE_INT(max_inlined_bytecode_size_small, 30,
            "maximum size of bytecode considered for small function inlining")
+DEFINE_INT(max_optimized_bytecode_size, 60 * KB,
+           "maximum bytecode size to "
+           "be considered for optimization; too high values may cause "
+           "the compiler to hit (release) assertions")
 DEFINE_FLOAT(min_inlining_frequency, 0.15, "minimum frequency for inlining")
 DEFINE_BOOL(polymorphic_inlining, true, "polymorphic inlining")
 DEFINE_BOOL(stress_inline, false,
@@ -669,8 +672,6 @@ DEFINE_IMPLICATION(future, wasm_shared_code)
 DEFINE_BOOL(wasm_trap_handler, true,
             "use signal handlers to catch out of bounds memory access in wasm"
             " (currently Linux x86_64 only)")
-DEFINE_BOOL(wasm_trap_handler_fallback, false,
-            "Use bounds checks if guarded memory is not available")
 DEFINE_BOOL(wasm_fuzzer_gen_test, false,
             "Generate a test case when running a wasm fuzzer")
 DEFINE_IMPLICATION(wasm_fuzzer_gen_test, single_threaded)
@@ -685,10 +686,14 @@ DEFINE_BOOL(wasm_lazy_compilation, false,
             "enable lazy compilation for all wasm modules")
 DEFINE_DEBUG_BOOL(trace_wasm_lazy_compilation, false,
                   "trace lazy compilation of wasm functions")
+DEFINE_BOOL(wasm_grow_shared_memory, false,
+            "Allow growing shared WebAssembly memory objects")
 // wasm-interpret-all resets {asm-,}wasm-lazy-compilation.
 DEFINE_NEG_IMPLICATION(wasm_interpret_all, asm_wasm_lazy_compilation)
 DEFINE_NEG_IMPLICATION(wasm_interpret_all, wasm_lazy_compilation)
 DEFINE_NEG_IMPLICATION(wasm_interpret_all, wasm_tier_up)
+DEFINE_BOOL(wasm_code_gc, false, "enable garbage collection of wasm code")
+DEFINE_IMPLICATION(future, wasm_code_gc)
 
 // Profiler flags.
 DEFINE_INT(frame_count, 1, "number of stack frames inspected by the profiler")
@@ -1041,9 +1046,10 @@ DEFINE_GENERIC_IMPLICATION(
                   v8::tracing::TracingCategoryObserver::ENABLED_BY_NATIVE))
 DEFINE_BOOL_READONLY(track_constant_fields, true,
                      "enable constant field tracking")
-DEFINE_BOOL_READONLY(modify_map_inplace, true, "enable in-place map updates")
 DEFINE_BOOL_READONLY(fast_map_update, false,
                      "enable fast map update by caching the migration target")
+DEFINE_BOOL(modify_field_representation_inplace, false,
+            "enable in-place field representation updates")
 DEFINE_INT(max_polymorphic_map_count, 4,
            "maximum number of maps to track in POLYMORPHIC state")
 
@@ -1169,6 +1175,7 @@ DEFINE_STRING(startup_src, nullptr,
               "Write V8 startup as C++ src. (mksnapshot only)")
 DEFINE_STRING(startup_blob, nullptr,
               "Write V8 startup blob file. (mksnapshot only)")
+DEFINE_STRING(target_os, nullptr, "The mksnapshot target os. (mksnapshot only)")
 
 //
 // Minor mark compact collector flags.
@@ -1285,7 +1292,6 @@ DEFINE_BOOL(print_ast, false, "print source AST")
 DEFINE_BOOL(trap_on_abort, false, "replace aborts by breakpoints")
 
 // compiler.cc
-DEFINE_BOOL(print_builtin_scopes, false, "print scopes for builtins")
 DEFINE_BOOL(print_scopes, false, "print scopes")
 
 // contexts.cc
@@ -1411,6 +1417,9 @@ DEFINE_STRING(redirect_code_traces_to, nullptr,
 
 DEFINE_BOOL(print_opt_source, false,
             "print source code of optimized and inlined functions")
+
+DEFINE_BOOL(win64_unwinding_info, false,
+            "Enable unwinding info for Windows/x64 (experimental).")
 
 #ifdef V8_TARGET_ARCH_ARM
 // Unsupported on arm. See https://crbug.com/v8/8713.

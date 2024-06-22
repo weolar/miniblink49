@@ -361,7 +361,9 @@ static void installV8SVGFECompositeElementTemplate(v8::Local<v8::FunctionTemplat
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_FECOMPOSITE_OPERATOR_ARITHMETIC", SVGFECompositeElementV8Internal::SVG_FECOMPOSITE_OPERATOR_ARITHMETICConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFECompositeElement::domTemplate(v8::Isolate* isolate)

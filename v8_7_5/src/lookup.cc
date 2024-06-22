@@ -218,7 +218,7 @@ Handle<JSReceiver> LookupIterator::GetRootForNonJSReceiver(
     Isolate* isolate, Handle<Object> receiver, uint32_t index) {
   // Strings are the only objects with properties (only elements) directly on
   // the wrapper. Hence we can skip generating the wrapper for all other cases.
-  if (index != kMaxUInt32 && receiver->IsString() &&
+  if (receiver->IsString() &&
       index < static_cast<uint32_t>(String::cast(*receiver)->length())) {
     // TODO(verwaest): Speed this up. Perhaps use a cached wrapper on the native
     // context, ensuring that we don't leak it into JS?
@@ -459,7 +459,7 @@ void LookupIterator::PrepareForDataProperty(Handle<Object> value) {
     }
 
     // Copy the backing store if it is copy-on-write.
-    if (IsSmiOrObjectElementsKind(to)) {
+    if (IsSmiOrObjectElementsKind(to) || IsSealedElementsKind(to)) {
       JSObject::EnsureWritableFastElements(holder_obj);
     }
     return;
@@ -934,10 +934,14 @@ bool LookupIterator::IsConstFieldValueEqualTo(Object value) const {
       // Uninitialized double field.
       return true;
     }
-    return bit_cast<double>(bits) == value->Number();
+    return Object::SameNumberValue(bit_cast<double>(bits), value->Number());
   } else {
     Object current_value = holder->RawFastPropertyAt(field_index);
-    return current_value->IsUninitialized(isolate()) || current_value == value;
+    if (current_value->IsUninitialized(isolate()) || current_value == value) {
+      return true;
+    }
+    return current_value->IsNumber() && value->IsNumber() &&
+           Object::SameNumberValue(current_value->Number(), value->Number());
   }
 }
 
@@ -1163,6 +1167,10 @@ LookupIterator::State LookupIterator::LookupInRegularHolder(
       return holder->IsJSTypedArray() ? INTEGER_INDEXED_EXOTIC : NOT_FOUND;
     }
     property_details_ = accessor->GetDetails(js_object, number_);
+    if (map->has_frozen_or_sealed_elements()) {
+      PropertyAttributes attrs = map->has_sealed_elements() ? SEALED : FROZEN;
+      property_details_ = property_details_.CopyAddAttributes(attrs);
+    }
   } else if (!map->is_dictionary_map()) {
     DescriptorArray descriptors = map->instance_descriptors();
     int number = descriptors->SearchWithCache(isolate_, *name_, map);

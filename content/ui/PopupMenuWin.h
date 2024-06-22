@@ -25,8 +25,12 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebPopupType.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
-#include "cc/trees/LayerTreeHostClient.h"
+#include "mc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
+#ifndef NO_USE_ORIG_CHROME
+#include "orig_chrome/content/WebPageOcBridge.h"
+#endif
+#include <functional>
 
 namespace blink {
 class WebPagePopupImpl;
@@ -35,7 +39,7 @@ class WebViewImpl;
 class WebPagePopup;
 }
 
-namespace cc {
+namespace mc {
 class LayerTreeHost;
 }
 
@@ -43,8 +47,16 @@ namespace content {
 
 class PlatformEventHandler;
 class PopupMenuWinClient;
+class LayerTreeWrap;
 
-class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient, public cc::LayerTreeHostClent {
+class PopupMenuWin 
+    : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>
+    , public blink::WebViewClient
+    , public mc::LayerTreeHostClent
+#ifndef NO_USE_ORIG_CHROME
+    , public WebPageOcBridge 
+#endif
+{
 public:
     static blink::WebWidget* create(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void closeWidgetSoon() override;
@@ -59,6 +71,7 @@ public:
     virtual void scheduleAnimation() override;
     virtual void setWindowRect(const blink::WebRect&) override;
     virtual blink::WebLayerTreeView* layerTreeView() override;
+    virtual void initializeLayerTreeView() override;
     virtual void show(blink::WebNavigationPolicy) override;
     void hide();
 
@@ -67,15 +80,29 @@ public:
     virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) override { didInvalidateRect(r); }
     virtual void onLayerTreeSetNeedsCommit() override { scheduleAnimation(); }
 
+    // WebPageOcBridge
+#ifndef NO_USE_ORIG_CHROME
+    virtual void onBeginPaint(HDC hdc, const RECT& damageRect) override;
+    virtual bool onEndPaintStep1(HDC hdc, const RECT& damageRect) override;
+    virtual void onEndPaintStep2(HDC hdc, const RECT& damageRect) override;
+    virtual void onLayout() override;
+    virtual void onBeginMainFrame() override;
+    virtual COLORREF getBackgroundColor() override;
+#endif
+
     LRESULT fireWheelEvent(UINT message, WPARAM wParam, LPARAM lParam);
     bool fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam);
 
     bool isVisible() const { return m_isVisible; }
 
+    LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void asynCreateWndOnMainThread();
+    void asynCreateWndOnUiThread();
+
 protected:
     PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
     blink::WebWidget* createWnd();
-    void updataSize();
+    void updataSize(bool needShow);
     void updataPaint();
     void initialize();
     bool initSetting();
@@ -83,29 +110,34 @@ protected:
     void postCommit();
     
     void registerClass();
-    void paint(HDC hdc, RECT rcPaint);
+    void paint(HDC hdc, const RECT& rcPaint);
     void beginMainFrame();
-    static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void updataMcLayerTreeHost();
+
+    static LRESULT CALLBACK popupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
-    LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
-    
+
     DECLARE_TRACE();
 
+    int m_id;
+
     PopupMenuWinClient* m_client;
-    blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
+    //blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
     static HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
-    bool m_needsCommit; // 防止重入beginMainFrame
+    bool m_allowBeginFrame; // 防止重入beginMainFrame
     bool m_isCommiting; // 防止多次发送Commit
     bool m_hasResize;
     bool m_needResize;
-    bool m_initialize;
+    static bool m_initialize;
     bool m_isVisible;
     double m_lastFrameTimeMonotonic;
     blink::WebPagePopup* m_popupImpl;
-    cc::LayerTreeHost* m_layerTreeHost;
+    mc::LayerTreeHost* m_layerTreeHost;
+#ifndef NO_USE_ORIG_CHROME
+    LayerTreeWrap* m_ccLayerTreeWrap;
+#endif
     blink::WebFrameClient* m_webFrameClient;
     blink::WebViewImpl* m_webViewImpl;
     HWND m_hParentWnd;

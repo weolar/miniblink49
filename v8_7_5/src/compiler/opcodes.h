@@ -237,6 +237,8 @@
   V(ChangeTaggedToUint32)            \
   V(ChangeTaggedToFloat64)           \
   V(ChangeTaggedToTaggedSigned)      \
+  V(ChangeCompressedToTaggedSigned)  \
+  V(ChangeTaggedToCompressedSigned)  \
   V(ChangeInt31ToTaggedSigned)       \
   V(ChangeInt32ToTagged)             \
   V(ChangeInt64ToTagged)             \
@@ -276,7 +278,11 @@
   V(CheckedTaggedToFloat64)           \
   V(CheckedTaggedToInt64)             \
   V(CheckedTaggedToTaggedSigned)      \
-  V(CheckedTaggedToTaggedPointer)
+  V(CheckedTaggedToTaggedPointer)     \
+  V(CheckedCompressedToTaggedSigned)  \
+  V(CheckedCompressedToTaggedPointer) \
+  V(CheckedTaggedToCompressedSigned)  \
+  V(CheckedTaggedToCompressedPointer)
 
 #define SIMPLIFIED_COMPARE_BINOP_LIST(V) \
   V(NumberEqual)                         \
@@ -287,6 +293,7 @@
   V(SpeculativeNumberLessThanOrEqual)    \
   V(ReferenceEqual)                      \
   V(SameValue)                           \
+  V(NumberSameValue)                     \
   V(StringEqual)                         \
   V(StringLessThan)                      \
   V(StringLessThanOrEqual)
@@ -382,12 +389,9 @@
   V(CheckIf)                            \
   V(CheckMaps)                          \
   V(CheckNumber)                        \
+  V(CheckInternalizedString)            \
   V(CheckReceiver)                      \
   V(CheckReceiverOrNullOrUndefined)     \
-  V(CheckInternalizedString)            \
-  V(CheckNonEmptyString)                \
-  V(CheckNonEmptyOneByteString)         \
-  V(CheckNonEmptyTwoByteString)         \
   V(CheckString)                        \
   V(CheckSymbol)                        \
   V(CheckSmi)                           \
@@ -447,8 +451,6 @@
   V(NewDoubleElements)                  \
   V(NewSmiOrObjectElements)             \
   V(NewArgumentsElements)               \
-  V(NewConsOneByteString)               \
-  V(NewConsTwoByteString)               \
   V(NewConsString)                      \
   V(DelayedStringConstant)              \
   V(EnsureWritableFastElements)         \

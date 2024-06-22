@@ -10,6 +10,8 @@
 #include "src/globals.h"
 #include "src/objects/shared-function-info.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

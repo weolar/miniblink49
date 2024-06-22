@@ -9,12 +9,13 @@
 #include <ole2.h>
 
 namespace atom {
-    
+
 #define kPopupClassName L"MbPopupClassName"
 
 class PopupWindow {
 public:
-    PopupWindow() {
+    PopupWindow()
+    {
         m_state = WindowUninited;
         m_hWnd = nullptr;
         m_cursorInfoType = 0;
@@ -32,7 +33,8 @@ public:
         m_id = IdLiveDetect::get()->constructed(this);
     }
 
-    ~PopupWindow() {
+    ~PopupWindow()
+    {
         if (m_memoryBMP)
             ::DeleteObject(m_memoryBMP);
         if (m_memoryDC)
@@ -45,11 +47,13 @@ public:
         ::DeleteCriticalSection(&m_memoryCanvasLock);
     }
 
-    static wkeWebView onCreateViewCallbackStatic(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures) {
+    static mbWebView onCreateViewCallbackStatic(mbWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures)
+    {
         return onCreateViewInBlinkThread(webView, navigationType, url, windowFeatures);
     }
 
-    void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
+    void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy)
+    {
         HWND hWnd = m_hWnd;
         RECT rectDest;
         ::GetClientRect(hWnd, &rectDest);
@@ -60,8 +64,7 @@ public:
         if (!m_memoryDC)
             m_memoryDC = ::CreateCompatibleDC(nullptr);
 
-        if (!m_memoryBMP || m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
-            m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
+        if (!m_memoryBMP || m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom || m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
             m_clientRect = rectDest;
 
             if (m_memoryBMP)
@@ -75,7 +78,8 @@ public:
         ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
     }
 
-    void onPaintUpdatedInUiThread(int x, int y, int cx, int cy) {
+    void onPaintUpdatedInUiThread(int x, int y, int cx, int cy)
+    {
         ::EnterCriticalSection(&m_memoryCanvasLock);
 
         HDC hdcScreen = ::GetDC(m_hWnd);
@@ -85,7 +89,8 @@ public:
         ::LeaveCriticalSection(&m_memoryCanvasLock);
     }
 
-    static void staticOnPaintUpdatedInCompositeThread(wkeWebView webView, PopupWindow* win, const HDC hdc, int x, int y, int cx, int cy) {
+    static void staticOnPaintUpdatedInCompositeThread(mbWebView webView, PopupWindow* win, const HDC hdc, int x, int y, int cx, int cy)
+    {
         ::EnterCriticalSection(&win->m_memoryCanvasLock);
         win->onPaintUpdatedInCompositeThread(hdc, x, y, cx, cy);
         ::LeaveCriticalSection(&win->m_memoryCanvasLock);
@@ -102,7 +107,8 @@ public:
         }
     }
 
-    void onPaintMessage(HWND hWnd) {
+    void onPaintMessage(HWND hWnd)
+    {
         PAINTSTRUCT ps = { 0 };
         HDC hdc = ::BeginPaint(hWnd, &ps);
 
@@ -133,9 +139,10 @@ public:
         ::EndPaint(hWnd, &ps);
     }
 
-    void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
         int id = m_id;
-        wkeWebView wkeWebview = m_wkeWebview;
+        mbWebView wkeWebview = m_wkeWebview;
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
             ::SetFocus(hWnd);
             ::SetCapture(hWnd);
@@ -166,13 +173,14 @@ public:
         });
     }
 
-    void onCursorChange() {
+    void onCursorChange()
+    {
         if (m_isCursorInfoTypeAsynGetting)
             return;
         m_isCursorInfoTypeAsynGetting = true;
 
         int id = m_id;
-        wkeWebView wkeWebview = m_wkeWebview;
+        mbWebView wkeWebview = m_wkeWebview;
         PopupWindow* win = this;
         HWND hWnd = m_hWnd;
         ThreadCall::callBlinkThreadAsync([wkeWebview, win, hWnd, id] {
@@ -188,7 +196,8 @@ public:
         });
     }
 
-    bool setCursorInfoTypeByCache() {
+    bool setCursorInfoTypeByCache()
+    {
         if (!m_isCursorInfoTypeAsynChanged)
             return false;
         m_isCursorInfoTypeAsynChanged = false;
@@ -266,8 +275,9 @@ public:
         return false;
     }
 
-    void onDragFiles(HDROP hDrop) {
-        int count = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0); // How many files were dropped? 
+    void onDragFiles(HDROP hDrop)
+    {
+        int count = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0); // How many files were dropped?
 
         int id = m_id;
         std::vector<std::vector<wchar_t>*>* fileNames = new std::vector<std::vector<wchar_t>*>();
@@ -291,7 +301,7 @@ public:
         screenPos->y = curPos->y;
         ::ScreenToClient(m_hWnd, screenPos);
 
-        wkeWebView wkeWebview = m_wkeWebview;
+        mbWebView wkeWebview = m_wkeWebview;
 
         ThreadCall::callBlinkThreadAsync([wkeWebview, id, fileNames, curPos, screenPos] {
             if (!IdLiveDetect::get()->isLive(id))
@@ -313,14 +323,15 @@ public:
         });
     }
 
-    static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
         int id = -1;
-        PopupWindow* self = (PopupWindow *)::GetPropW(hWnd, kPrppW);
-        wkeWebView wkeWebview = nullptr;
+        PopupWindow* self = (PopupWindow*)::GetPropW(hWnd, kPrppW);
+        mbWebView wkeWebview = nullptr;
         if (!self) {
             if (message == WM_CREATE) {
                 LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
-                self = (PopupWindow *)cs->lpCreateParams;
+                self = (PopupWindow*)cs->lpCreateParams;
                 id = self->m_id;
                 ::SetPropW(hWnd, kPrppW, (HANDLE)self);
                 ::SetTimer(hWnd, (UINT_PTR)self, 70, NULL);
@@ -363,8 +374,7 @@ public:
         case WM_ERASEBKGND:
             return TRUE;
 
-        case WM_SIZE:
-        {
+        case WM_SIZE: {
             ThreadCall::callBlinkThreadAsync([wkeWebview, lParam] {
                 wkeResize(wkeWebview, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(wkeWebview);
@@ -372,8 +382,7 @@ public:
 
             return 0;
         }
-        case WM_KEYDOWN:
-        {
+        case WM_KEYDOWN: {
             unsigned int virtualKeyCode = wParam;
             unsigned int flags = 0;
             if (HIWORD(lParam) & KF_REPEAT)
@@ -388,8 +397,7 @@ public:
             return 0;
             break;
         }
-        case WM_KEYUP:
-        {
+        case WM_KEYUP: {
             unsigned int virtualKeyCode = wParam;
             unsigned int flags = 0;
             if (HIWORD(lParam) & KF_REPEAT)
@@ -404,8 +412,7 @@ public:
             return 0;
             break;
         }
-        case WM_CHAR:
-        {
+        case WM_CHAR: {
             unsigned int charCode = wParam;
             unsigned int flags = 0;
             if (HIWORD(lParam) & KF_REPEAT)
@@ -429,14 +436,12 @@ public:
         case WM_LBUTTONUP:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP:
-        case WM_MOUSEMOVE:
-        {
+        case WM_MOUSEMOVE: {
             self->onCursorChange();
             self->onMouseMessage(hWnd, message, wParam, lParam);
             break;
         }
-        case WM_CONTEXTMENU:
-        {
+        case WM_CONTEXTMENU: {
             POINT pt;
             pt.x = LOWORD(lParam);
             pt.y = HIWORD(lParam);
@@ -464,8 +469,7 @@ public:
             });
             break;
         }
-        case WM_MOUSEWHEEL:
-        {
+        case WM_MOUSEWHEEL: {
             POINT pt;
             pt.x = LOWORD(lParam);
             pt.y = HIWORD(lParam);
@@ -512,17 +516,15 @@ public:
                 return 1;
             break;
 
-        case WM_IME_STARTCOMPOSITION:
-        {
+        case WM_IME_STARTCOMPOSITION: {
             ThreadCall::callBlinkThreadAsync([wkeWebview, hWnd] {
                 wkeRect* caret = new wkeRect();
                 *caret = wkeGetCaretRect(wkeWebview);
                 ::PostMessage(hWnd, WM_IME_STARTCOMPOSITION_ASYN, (WPARAM)caret, 0);
             });
         }
-        return 0;
-        case WM_IME_STARTCOMPOSITION_ASYN:
-        {
+            return 0;
+        case WM_IME_STARTCOMPOSITION_ASYN: {
             wkeRect* caret = (wkeRect*)wParam;
             COMPOSITIONFORM compositionForm;
             compositionForm.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
@@ -534,8 +536,7 @@ public:
             HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hWnd, hIMC);
-        }
-        break;
+        } break;
         case WM_DROPFILES:
             self->onDragFiles((HDROP)wParam);
             break;
@@ -545,7 +546,8 @@ public:
     }
 
 private:
-    static void registerClass(HINSTANCE hInstance) {
+    static void registerClass(HINSTANCE hInstance)
+    {
         static bool isInit = false;
         if (isInit)
             return;
@@ -569,8 +571,9 @@ private:
         ::RegisterClassExW(&wcex);
     }
 
-    static wkeWebView onCreateViewInBlinkThread(wkeWebView webView, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures) {
-        wkeWebView wkeWebview = wkeCreateWebView();
+    static mbWebView onCreateViewInBlinkThread(mbWebView webView, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures)
+    {
+        mbWebView wkeWebview = wkeCreateWebView();
 
         PopupWindow* newInstance = new PopupWindow();
         WebContents::CreateWindowParam* createWindowParam = new WebContents::CreateWindowParam();
@@ -592,9 +595,10 @@ private:
             createWindowParam->styleEx = 0;
         }
 
-        wkeSettings settings;
-        settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
-        wkeConfigure(&settings);
+        //         wkeSettings settings;
+        //         settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
+        //         wkeConfigure(&settings);
+        wkeSetDebugConfig(nullptr, "paintcallbackInOtherThread", nullptr);
 
         wkeOnCreateView(wkeWebview, onCreateViewCallbackStatic, newInstance);
         wkeOnPaintUpdated(wkeWebview, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, newInstance);
@@ -613,25 +617,26 @@ private:
         return wkeWebview;
     }
 
-    void newWindowInUiThreadWhenBlinkCall(const WebContents::CreateWindowParam* createWindowParam) {
+    void newWindowInUiThreadWhenBlinkCall(const WebContents::CreateWindowParam* createWindowParam)
+    {
         PopupWindow* self = this;
         int id = m_id;
 
         registerClass(nullptr);
 
         m_hWnd = ::CreateWindowEx(
-            createWindowParam->styleEx,        // window ex-style
-            kPopupClassName,    // window class name
+            createWindowParam->styleEx, // window ex-style
+            kPopupClassName, // window class name
             createWindowParam->title.c_str(), // window caption
-            createWindowParam->styles,         // window style
-            createWindowParam->x,              // initial x position
-            createWindowParam->y,              // initial y position
-            createWindowParam->width,          // initial x size
-            createWindowParam->height,         // initial y size
-            NULL,         // parent window handle
-            NULL,           // window menu handle
-            ::GetModuleHandleW(NULL),           // program instance handle
-            this);         // creation parameters
+            createWindowParam->styles, // window style
+            createWindowParam->x, // initial x position
+            createWindowParam->y, // initial y position
+            createWindowParam->width, // initial x size
+            createWindowParam->height, // initial y size
+            NULL, // parent window handle
+            NULL, // window menu handle
+            ::GetModuleHandleW(NULL), // program instance handle
+            this); // creation parameters
 
         if (!::IsWindow(m_hWnd))
             return;
@@ -668,7 +673,7 @@ private:
     WindowState m_state;
     static const WCHAR* kPrppW;
 
-    wkeWebView m_wkeWebview;
+    mbWebView m_wkeWebview;
 
     HWND m_hWnd;
     int m_cursorInfoType;
@@ -683,7 +688,6 @@ private:
 };
 
 const WCHAR* PopupWindow::kPrppW = L"MtRenderMain";
-
 
 }
 

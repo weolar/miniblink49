@@ -12,6 +12,7 @@ namespace internal {
 class RegexpReplaceBuiltinsFromDSLAssembler {
  public:
   explicit RegexpReplaceBuiltinsFromDSLAssembler(compiler::CodeAssemblerState* state) : state_(state), ca_(state) { USE(state_, ca_); }
+  compiler::TNode<String> RegExpReplaceFastString(compiler::TNode<Context> p_context, compiler::TNode<JSRegExp> p_regexp, compiler::TNode<String> p_string, compiler::TNode<String> p_replaceString);
  private:
   compiler::CodeAssemblerState* const state_;
   compiler::CodeAssembler ca_;

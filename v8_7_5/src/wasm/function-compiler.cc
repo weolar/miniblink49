@@ -105,22 +105,18 @@ std::unique_ptr<WasmInstructionBuffer> WasmInstructionBuffer::New() {
 // static
 ExecutionTier WasmCompilationUnit::GetDefaultExecutionTier(
     const WasmModule* module) {
-  if (module->origin == kWasmOrigin) {
-    if (FLAG_wasm_interpret_all) {
-      return ExecutionTier::kInterpreter;
-    } else if (FLAG_liftoff) {
-      return ExecutionTier::kBaseline;
-    }
-  }
-  return ExecutionTier::kOptimized;
+  // Liftoff does not support the special asm.js opcodes, thus always compile
+  // asm.js modules with TurboFan.
+  if (module->origin == kAsmJsOrigin) return ExecutionTier::kTurbofan;
+  if (FLAG_wasm_interpret_all) return ExecutionTier::kInterpreter;
+  return FLAG_liftoff ? ExecutionTier::kLiftoff : ExecutionTier::kTurbofan;
 }
 
-WasmCompilationUnit::WasmCompilationUnit(WasmEngine* wasm_engine, int index,
-                                         ExecutionTier tier)
-    : wasm_engine_(wasm_engine), func_index_(index), tier_(tier) {
+WasmCompilationUnit::WasmCompilationUnit(int index, ExecutionTier tier)
+    : func_index_(index), tier_(tier) {
   if (V8_UNLIKELY(FLAG_wasm_tier_mask_for_testing) && index < 32 &&
       (FLAG_wasm_tier_mask_for_testing & (1 << index))) {
-    tier = ExecutionTier::kOptimized;
+    tier = ExecutionTier::kTurbofan;
   }
   SwitchTier(tier);
 }
@@ -130,7 +126,7 @@ WasmCompilationUnit::WasmCompilationUnit(WasmEngine* wasm_engine, int index,
 WasmCompilationUnit::~WasmCompilationUnit() = default;
 
 WasmCompilationResult WasmCompilationUnit::ExecuteCompilation(
-    CompilationEnv* env,
+    WasmEngine* wasm_engine, CompilationEnv* env,
     const std::shared_ptr<WireBytesStorage>& wire_bytes_storage,
     Counters* counters, WasmFeatures* detected) {
   auto* func = &env->module->functions[func_index_];
@@ -156,23 +152,23 @@ WasmCompilationResult WasmCompilationUnit::ExecuteCompilation(
 
   WasmCompilationResult result;
   if (liftoff_unit_) {
-    result =
-        liftoff_unit_->ExecuteCompilation(env, func_body, counters, detected);
+    result = liftoff_unit_->ExecuteCompilation(wasm_engine->allocator(), env,
+                                               func_body, counters, detected);
     if (!result.succeeded()) {
       // If Liftoff failed, fall back to turbofan.
       // TODO(wasm): We could actually stop or remove the tiering unit for this
       // function to avoid compiling it twice with TurboFan.
-      SwitchTier(ExecutionTier::kOptimized);
+      SwitchTier(ExecutionTier::kTurbofan);
       DCHECK_NOT_NULL(turbofan_unit_);
     }
   }
   if (turbofan_unit_) {
-    result =
-        turbofan_unit_->ExecuteCompilation(env, func_body, counters, detected);
+    result = turbofan_unit_->ExecuteCompilation(wasm_engine, env, func_body,
+                                                counters, detected);
   }
   if (interpreter_unit_) {
-    result = interpreter_unit_->ExecuteCompilation(env, func_body, counters,
-                                                   detected);
+    result = interpreter_unit_->ExecuteCompilation(wasm_engine, env, func_body,
+                                                   counters, detected);
   }
   result.func_index = func_index_;
   result.requested_tier = tier_;
@@ -192,13 +188,13 @@ void WasmCompilationUnit::SwitchTier(ExecutionTier new_tier) {
   // switch tier from kLiftoff to kTurbofan, in which case {liftoff_unit_} is
   // already set.
   switch (new_tier) {
-    case ExecutionTier::kBaseline:
+    case ExecutionTier::kLiftoff:
       DCHECK(!turbofan_unit_);
       DCHECK(!liftoff_unit_);
       DCHECK(!interpreter_unit_);
-      liftoff_unit_.reset(new LiftoffCompilationUnit(this));
+      liftoff_unit_.reset(new LiftoffCompilationUnit());
       return;
-    case ExecutionTier::kOptimized:
+    case ExecutionTier::kTurbofan:
       DCHECK(!turbofan_unit_);
       DCHECK(!interpreter_unit_);
       liftoff_unit_.reset();
@@ -210,6 +206,8 @@ void WasmCompilationUnit::SwitchTier(ExecutionTier new_tier) {
       DCHECK(!interpreter_unit_);
       interpreter_unit_.reset(new compiler::InterpreterCompilationUnit(this));
       return;
+    case ExecutionTier::kNone:
+      UNREACHABLE();
   }
   UNREACHABLE();
 }
@@ -225,12 +223,14 @@ void WasmCompilationUnit::CompileWasmFunction(Isolate* isolate,
                              wire_bytes.start() + function->code.offset(),
                              wire_bytes.start() + function->code.end_offset()};
 
-  WasmCompilationUnit unit(isolate->wasm_engine(), function->func_index, tier);
+  WasmCompilationUnit unit(function->func_index, tier);
   CompilationEnv env = native_module->CreateCompilationEnv();
   WasmCompilationResult result = unit.ExecuteCompilation(
-      &env, native_module->compilation_state()->GetWireBytesStorage(),
+      isolate->wasm_engine(), &env,
+      native_module->compilation_state()->GetWireBytesStorage(),
       isolate->counters(), detected);
   if (result.succeeded()) {
+    WasmCodeRefScope code_ref_scope;
     native_module->AddCompiledCode(std::move(result));
   } else {
     native_module->compilation_state()->SetError();

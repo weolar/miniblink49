@@ -353,18 +353,18 @@ v8::MaybeLocal<v8::Script> V8ScriptRunner::compileScript(v8::Local<v8::String> c
     // NOTE: For compatibility with WebCore, ScriptSourceCode's line starts at
     // 1, whereas v8 starts at 0.
     v8::ScriptOrigin origin(
-        v8String(isolate, fileName),
-        v8::Integer::New(isolate, scriptStartPosition.m_line.zeroBasedInt()),
-        v8::Integer::New(isolate, scriptStartPosition.m_column.zeroBasedInt()),
-        v8Boolean(accessControlStatus == SharableCrossOrigin, isolate),
-        v8::Local<v8::Integer>(),
+        v8String(isolate, fileName), // resource_name
+        v8::Integer::New(isolate, scriptStartPosition.m_line.zeroBasedInt()), // resource_line_offset
+        v8::Integer::New(isolate, scriptStartPosition.m_column.zeroBasedInt()), // resource_column_offset
+        v8Boolean(accessControlStatus == SharableCrossOrigin, isolate), // resource_is_shared_cross_origin
+        v8::Local<v8::Integer>(), // script_id
 		//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION >= 5
 		v8String(isolate, sourceMapUrl),
 		v8Boolean(isInternalScript, isolate),
 #else
-		v8Boolean(isInternalScript, isolate),
-        v8String(isolate, sourceMapUrl),
+		//v8Boolean(isInternalScript, isolate),
+        v8String(isolate, sourceMapUrl), // source_map_url
 #endif
         v8Boolean(accessControlStatus == OpaqueResource, isolate));
 

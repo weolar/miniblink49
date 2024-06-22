@@ -5,6 +5,8 @@
 #include "src/compiler/backend/jump-threading.h"
 #include "src/compiler/backend/code-generator-impl.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

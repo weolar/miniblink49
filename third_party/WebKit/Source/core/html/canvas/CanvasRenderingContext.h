@@ -125,6 +125,7 @@ protected:
     // ActiveDOMObject notifications
     bool hasPendingActivity() const final;
     void stop() override = 0;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<CanvasRenderingContext*>(object); }
 
 private:
     RawPtrWillBeMember<HTMLCanvasElement> m_canvas;

@@ -12,11 +12,16 @@
 #include "src/objects/js-regexp-string-iterator.h"
 #include "src/objects/module.h"
 #include "src/objects/stack-frame-info.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-array-gen.h"
 #include "src/builtins/builtins-collections-gen.h"
 #include "src/builtins/builtins-data-view-gen.h"
 #include "src/builtins/builtins-iterator-gen.h"
 #include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-proxy-gen.h"
+#include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-regexp-gen.h"
 #include "src/builtins/builtins-typed-array-gen.h"
@@ -114,8 +119,8 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
     ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 11);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 12);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 11);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 12);
     compiler::TNode<JSArray> tmp2;
     USE(tmp2);
     compiler::CodeAssemblerLabel label0(&ca_);
@@ -143,447 +148,446 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     compiler::TNode<Object> tmp10;
     compiler::TNode<JSArray> tmp11;
     ca_.Bind(&block5, &tmp7, &tmp8, &tmp9, &tmp10, &tmp11);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 13);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 13);
     compiler::TNode<Smi> tmp12;
     USE(tmp12);
     tmp12 = ca_.UncheckedCast<Smi>(CodeStubAssembler(state_).LoadFastJSArrayLength(compiler::TNode<JSArray>{tmp11}));
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 14);
-    compiler::TNode<FixedArrayBase> tmp13;
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 14);
+    compiler::TNode<IntPtrT> tmp13 = ca_.IntPtrConstant(JSObject::kElementsOffset);
     USE(tmp13);
-    tmp13 = ca_.UncheckedCast<FixedArrayBase>(BaseBuiltinsFromDSLAssembler(state_).LoadJSObjectElements(compiler::TNode<JSObject>{tmp11}));
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 15);
-    compiler::TNode<FixedArray> tmp14;
-    USE(tmp14);
+    compiler::TNode<FixedArrayBase>tmp14 = CodeStubAssembler(state_).LoadReference<FixedArrayBase>(CodeStubAssembler::Reference{tmp11, tmp13});
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 15);
+    compiler::TNode<FixedArray> tmp15;
+    USE(tmp15);
     compiler::CodeAssemblerLabel label0(&ca_);
-    tmp14 = BaseBuiltinsFromDSLAssembler(state_).Cast10FixedArray(compiler::TNode<HeapObject>{tmp13}, &label0);
-    ca_.Goto(&block9, tmp7, tmp8, tmp9, tmp11, tmp12, tmp13, tmp13, tmp14);
+    tmp15 = BaseBuiltinsFromDSLAssembler(state_).Cast10FixedArray(compiler::TNode<HeapObject>{tmp14}, &label0);
+    ca_.Goto(&block9, tmp7, tmp8, tmp9, tmp11, tmp12, tmp14, tmp14, tmp15);
     if (label0.is_used()) {
       ca_.Bind(&label0);
-      ca_.Goto(&block10, tmp7, tmp8, tmp9, tmp11, tmp12, tmp13, tmp13);
+      ca_.Goto(&block10, tmp7, tmp8, tmp9, tmp11, tmp12, tmp14, tmp14);
     }
   }
 
   if (block10.is_used()) {
-    compiler::TNode<Context> tmp15;
-    compiler::TNode<Object> tmp16;
+    compiler::TNode<Context> tmp16;
     compiler::TNode<Object> tmp17;
-    compiler::TNode<JSArray> tmp18;
-    compiler::TNode<Smi> tmp19;
-    compiler::TNode<FixedArrayBase> tmp20;
+    compiler::TNode<Object> tmp18;
+    compiler::TNode<JSArray> tmp19;
+    compiler::TNode<Smi> tmp20;
     compiler::TNode<FixedArrayBase> tmp21;
-    ca_.Bind(&block10, &tmp15, &tmp16, &tmp17, &tmp18, &tmp19, &tmp20, &tmp21);
-    ca_.Goto(&block8, tmp15, tmp16, tmp17, tmp18, tmp19, tmp20);
+    compiler::TNode<FixedArrayBase> tmp22;
+    ca_.Bind(&block10, &tmp16, &tmp17, &tmp18, &tmp19, &tmp20, &tmp21, &tmp22);
+    ca_.Goto(&block8, tmp16, tmp17, tmp18, tmp19, tmp20, tmp21);
   }
 
   if (block9.is_used()) {
-    compiler::TNode<Context> tmp22;
-    compiler::TNode<Object> tmp23;
+    compiler::TNode<Context> tmp23;
     compiler::TNode<Object> tmp24;
-    compiler::TNode<JSArray> tmp25;
-    compiler::TNode<Smi> tmp26;
-    compiler::TNode<FixedArrayBase> tmp27;
+    compiler::TNode<Object> tmp25;
+    compiler::TNode<JSArray> tmp26;
+    compiler::TNode<Smi> tmp27;
     compiler::TNode<FixedArrayBase> tmp28;
-    compiler::TNode<FixedArray> tmp29;
-    ca_.Bind(&block9, &tmp22, &tmp23, &tmp24, &tmp25, &tmp26, &tmp27, &tmp28, &tmp29);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 17);
-    compiler::TNode<Smi> tmp30;
-    USE(tmp30);
-    tmp30 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
-    compiler::TNode<BoolT> tmp31;
+    compiler::TNode<FixedArrayBase> tmp29;
+    compiler::TNode<FixedArray> tmp30;
+    ca_.Bind(&block9, &tmp23, &tmp24, &tmp25, &tmp26, &tmp27, &tmp28, &tmp29, &tmp30);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 17);
+    compiler::TNode<Smi> tmp31;
     USE(tmp31);
-    tmp31 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp26}, compiler::TNode<Smi>{tmp30}));
-    ca_.Branch(tmp31, &block11, &block12, tmp22, tmp23, tmp24, tmp25, tmp26, tmp27, tmp29);
+    tmp31 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
+    compiler::TNode<BoolT> tmp32;
+    USE(tmp32);
+    tmp32 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp27}, compiler::TNode<Smi>{tmp31}));
+    ca_.Branch(tmp32, &block11, &block12, tmp23, tmp24, tmp25, tmp26, tmp27, tmp28, tmp30);
   }
 
   if (block11.is_used()) {
-    compiler::TNode<Context> tmp32;
-    compiler::TNode<Object> tmp33;
+    compiler::TNode<Context> tmp33;
     compiler::TNode<Object> tmp34;
-    compiler::TNode<JSArray> tmp35;
-    compiler::TNode<Smi> tmp36;
-    compiler::TNode<FixedArrayBase> tmp37;
-    compiler::TNode<FixedArray> tmp38;
-    ca_.Bind(&block11, &tmp32, &tmp33, &tmp34, &tmp35, &tmp36, &tmp37, &tmp38);
-    compiler::TNode<Smi> tmp39;
-    USE(tmp39);
-    tmp39 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp40;
+    compiler::TNode<Object> tmp35;
+    compiler::TNode<JSArray> tmp36;
+    compiler::TNode<Smi> tmp37;
+    compiler::TNode<FixedArrayBase> tmp38;
+    compiler::TNode<FixedArray> tmp39;
+    ca_.Bind(&block11, &tmp33, &tmp34, &tmp35, &tmp36, &tmp37, &tmp38, &tmp39);
+    compiler::TNode<Smi> tmp40;
     USE(tmp40);
-    tmp40 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedArray>{tmp38}, compiler::TNode<Smi>{tmp39}));
-    ca_.Goto(&block14, tmp32, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp40);
+    tmp40 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp41;
+    USE(tmp41);
+    tmp41 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedArray>{tmp39}, compiler::TNode<Smi>{tmp40}));
+    ca_.Goto(&block14, tmp33, tmp34, tmp35, tmp36, tmp37, tmp38, tmp39, tmp41);
   }
 
   if (block12.is_used()) {
-    compiler::TNode<Context> tmp41;
-    compiler::TNode<Object> tmp42;
+    compiler::TNode<Context> tmp42;
     compiler::TNode<Object> tmp43;
-    compiler::TNode<JSArray> tmp44;
-    compiler::TNode<Smi> tmp45;
-    compiler::TNode<FixedArrayBase> tmp46;
-    compiler::TNode<FixedArray> tmp47;
-    ca_.Bind(&block12, &tmp41, &tmp42, &tmp43, &tmp44, &tmp45, &tmp46, &tmp47);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 18);
-    compiler::TNode<Oddball> tmp48;
-    USE(tmp48);
-    tmp48 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 17);
-    ca_.Goto(&block13, tmp41, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48);
+    compiler::TNode<Object> tmp44;
+    compiler::TNode<JSArray> tmp45;
+    compiler::TNode<Smi> tmp46;
+    compiler::TNode<FixedArrayBase> tmp47;
+    compiler::TNode<FixedArray> tmp48;
+    ca_.Bind(&block12, &tmp42, &tmp43, &tmp44, &tmp45, &tmp46, &tmp47, &tmp48);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 18);
+    compiler::TNode<Oddball> tmp49;
+    USE(tmp49);
+    tmp49 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 17);
+    ca_.Goto(&block13, tmp42, tmp43, tmp44, tmp45, tmp46, tmp47, tmp48, tmp49);
   }
 
   if (block14.is_used()) {
-    compiler::TNode<Context> tmp49;
-    compiler::TNode<Object> tmp50;
+    compiler::TNode<Context> tmp50;
     compiler::TNode<Object> tmp51;
-    compiler::TNode<JSArray> tmp52;
-    compiler::TNode<Smi> tmp53;
-    compiler::TNode<FixedArrayBase> tmp54;
-    compiler::TNode<FixedArray> tmp55;
-    compiler::TNode<Object> tmp56;
-    ca_.Bind(&block14, &tmp49, &tmp50, &tmp51, &tmp52, &tmp53, &tmp54, &tmp55, &tmp56);
-    ca_.Goto(&block13, tmp49, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56);
+    compiler::TNode<Object> tmp52;
+    compiler::TNode<JSArray> tmp53;
+    compiler::TNode<Smi> tmp54;
+    compiler::TNode<FixedArrayBase> tmp55;
+    compiler::TNode<FixedArray> tmp56;
+    compiler::TNode<Object> tmp57;
+    ca_.Bind(&block14, &tmp50, &tmp51, &tmp52, &tmp53, &tmp54, &tmp55, &tmp56, &tmp57);
+    ca_.Goto(&block13, tmp50, tmp51, tmp52, tmp53, tmp54, tmp55, tmp56, tmp57);
   }
 
   if (block13.is_used()) {
-    compiler::TNode<Context> tmp57;
-    compiler::TNode<Object> tmp58;
+    compiler::TNode<Context> tmp58;
     compiler::TNode<Object> tmp59;
-    compiler::TNode<JSArray> tmp60;
-    compiler::TNode<Smi> tmp61;
-    compiler::TNode<FixedArrayBase> tmp62;
-    compiler::TNode<FixedArray> tmp63;
-    compiler::TNode<Object> tmp64;
-    ca_.Bind(&block13, &tmp57, &tmp58, &tmp59, &tmp60, &tmp61, &tmp62, &tmp63, &tmp64);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 19);
-    compiler::TNode<Smi> tmp65;
-    USE(tmp65);
-    tmp65 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
-    compiler::TNode<BoolT> tmp66;
+    compiler::TNode<Object> tmp60;
+    compiler::TNode<JSArray> tmp61;
+    compiler::TNode<Smi> tmp62;
+    compiler::TNode<FixedArrayBase> tmp63;
+    compiler::TNode<FixedArray> tmp64;
+    compiler::TNode<Object> tmp65;
+    ca_.Bind(&block13, &tmp58, &tmp59, &tmp60, &tmp61, &tmp62, &tmp63, &tmp64, &tmp65);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 19);
+    compiler::TNode<Smi> tmp66;
     USE(tmp66);
-    tmp66 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp61}, compiler::TNode<Smi>{tmp65}));
-    ca_.Branch(tmp66, &block15, &block16, tmp57, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64);
+    tmp66 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
+    compiler::TNode<BoolT> tmp67;
+    USE(tmp67);
+    tmp67 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp62}, compiler::TNode<Smi>{tmp66}));
+    ca_.Branch(tmp67, &block15, &block16, tmp58, tmp59, tmp60, tmp61, tmp62, tmp63, tmp64, tmp65);
   }
 
   if (block15.is_used()) {
-    compiler::TNode<Context> tmp67;
-    compiler::TNode<Object> tmp68;
+    compiler::TNode<Context> tmp68;
     compiler::TNode<Object> tmp69;
-    compiler::TNode<JSArray> tmp70;
-    compiler::TNode<Smi> tmp71;
-    compiler::TNode<FixedArrayBase> tmp72;
-    compiler::TNode<FixedArray> tmp73;
-    compiler::TNode<Object> tmp74;
-    ca_.Bind(&block15, &tmp67, &tmp68, &tmp69, &tmp70, &tmp71, &tmp72, &tmp73, &tmp74);
-    compiler::TNode<Smi> tmp75;
-    USE(tmp75);
-    tmp75 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
-    compiler::TNode<Object> tmp76;
+    compiler::TNode<Object> tmp70;
+    compiler::TNode<JSArray> tmp71;
+    compiler::TNode<Smi> tmp72;
+    compiler::TNode<FixedArrayBase> tmp73;
+    compiler::TNode<FixedArray> tmp74;
+    compiler::TNode<Object> tmp75;
+    ca_.Bind(&block15, &tmp68, &tmp69, &tmp70, &tmp71, &tmp72, &tmp73, &tmp74, &tmp75);
+    compiler::TNode<Smi> tmp76;
     USE(tmp76);
-    tmp76 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedArray>{tmp73}, compiler::TNode<Smi>{tmp75}));
-    ca_.Goto(&block18, tmp67, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp76);
+    tmp76 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
+    compiler::TNode<Object> tmp77;
+    USE(tmp77);
+    tmp77 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedArray>{tmp74}, compiler::TNode<Smi>{tmp76}));
+    ca_.Goto(&block18, tmp68, tmp69, tmp70, tmp71, tmp72, tmp73, tmp74, tmp75, tmp77);
   }
 
   if (block16.is_used()) {
-    compiler::TNode<Context> tmp77;
-    compiler::TNode<Object> tmp78;
+    compiler::TNode<Context> tmp78;
     compiler::TNode<Object> tmp79;
-    compiler::TNode<JSArray> tmp80;
-    compiler::TNode<Smi> tmp81;
-    compiler::TNode<FixedArrayBase> tmp82;
-    compiler::TNode<FixedArray> tmp83;
-    compiler::TNode<Object> tmp84;
-    ca_.Bind(&block16, &tmp77, &tmp78, &tmp79, &tmp80, &tmp81, &tmp82, &tmp83, &tmp84);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 20);
-    compiler::TNode<Oddball> tmp85;
-    USE(tmp85);
-    tmp85 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 19);
-    ca_.Goto(&block17, tmp77, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85);
+    compiler::TNode<Object> tmp80;
+    compiler::TNode<JSArray> tmp81;
+    compiler::TNode<Smi> tmp82;
+    compiler::TNode<FixedArrayBase> tmp83;
+    compiler::TNode<FixedArray> tmp84;
+    compiler::TNode<Object> tmp85;
+    ca_.Bind(&block16, &tmp78, &tmp79, &tmp80, &tmp81, &tmp82, &tmp83, &tmp84, &tmp85);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 20);
+    compiler::TNode<Oddball> tmp86;
+    USE(tmp86);
+    tmp86 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 19);
+    ca_.Goto(&block17, tmp78, tmp79, tmp80, tmp81, tmp82, tmp83, tmp84, tmp85, tmp86);
   }
 
   if (block18.is_used()) {
-    compiler::TNode<Context> tmp86;
-    compiler::TNode<Object> tmp87;
+    compiler::TNode<Context> tmp87;
     compiler::TNode<Object> tmp88;
-    compiler::TNode<JSArray> tmp89;
-    compiler::TNode<Smi> tmp90;
-    compiler::TNode<FixedArrayBase> tmp91;
-    compiler::TNode<FixedArray> tmp92;
-    compiler::TNode<Object> tmp93;
+    compiler::TNode<Object> tmp89;
+    compiler::TNode<JSArray> tmp90;
+    compiler::TNode<Smi> tmp91;
+    compiler::TNode<FixedArrayBase> tmp92;
+    compiler::TNode<FixedArray> tmp93;
     compiler::TNode<Object> tmp94;
-    ca_.Bind(&block18, &tmp86, &tmp87, &tmp88, &tmp89, &tmp90, &tmp91, &tmp92, &tmp93, &tmp94);
-    ca_.Goto(&block17, tmp86, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94);
+    compiler::TNode<Object> tmp95;
+    ca_.Bind(&block18, &tmp87, &tmp88, &tmp89, &tmp90, &tmp91, &tmp92, &tmp93, &tmp94, &tmp95);
+    ca_.Goto(&block17, tmp87, tmp88, tmp89, tmp90, tmp91, tmp92, tmp93, tmp94, tmp95);
   }
 
   if (block17.is_used()) {
-    compiler::TNode<Context> tmp95;
-    compiler::TNode<Object> tmp96;
+    compiler::TNode<Context> tmp96;
     compiler::TNode<Object> tmp97;
-    compiler::TNode<JSArray> tmp98;
-    compiler::TNode<Smi> tmp99;
-    compiler::TNode<FixedArrayBase> tmp100;
-    compiler::TNode<FixedArray> tmp101;
-    compiler::TNode<Object> tmp102;
+    compiler::TNode<Object> tmp98;
+    compiler::TNode<JSArray> tmp99;
+    compiler::TNode<Smi> tmp100;
+    compiler::TNode<FixedArrayBase> tmp101;
+    compiler::TNode<FixedArray> tmp102;
     compiler::TNode<Object> tmp103;
-    ca_.Bind(&block17, &tmp95, &tmp96, &tmp97, &tmp98, &tmp99, &tmp100, &tmp101, &tmp102, &tmp103);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 16);
-    ca_.Goto(&block2, tmp95, tmp96, tmp102, tmp103);
+    compiler::TNode<Object> tmp104;
+    ca_.Bind(&block17, &tmp96, &tmp97, &tmp98, &tmp99, &tmp100, &tmp101, &tmp102, &tmp103, &tmp104);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 16);
+    ca_.Goto(&block2, tmp96, tmp97, tmp103, tmp104);
   }
 
   if (block8.is_used()) {
-    compiler::TNode<Context> tmp104;
-    compiler::TNode<Object> tmp105;
+    compiler::TNode<Context> tmp105;
     compiler::TNode<Object> tmp106;
-    compiler::TNode<JSArray> tmp107;
-    compiler::TNode<Smi> tmp108;
-    compiler::TNode<FixedArrayBase> tmp109;
-    ca_.Bind(&block8, &tmp104, &tmp105, &tmp106, &tmp107, &tmp108, &tmp109);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 23);
-    compiler::TNode<FixedDoubleArray> tmp110;
-    USE(tmp110);
+    compiler::TNode<Object> tmp107;
+    compiler::TNode<JSArray> tmp108;
+    compiler::TNode<Smi> tmp109;
+    compiler::TNode<FixedArrayBase> tmp110;
+    ca_.Bind(&block8, &tmp105, &tmp106, &tmp107, &tmp108, &tmp109, &tmp110);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 23);
+    compiler::TNode<FixedDoubleArray> tmp111;
+    USE(tmp111);
     compiler::CodeAssemblerLabel label0(&ca_);
-    tmp110 = BaseBuiltinsFromDSLAssembler(state_).Cast16FixedDoubleArray(compiler::TNode<HeapObject>{ca_.UncheckedCast<FixedArrayBase>(tmp109)}, &label0);
-    ca_.Goto(&block21, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, ca_.UncheckedCast<FixedArrayBase>(tmp109), tmp110);
+    tmp111 = BaseBuiltinsFromDSLAssembler(state_).Cast16FixedDoubleArray(compiler::TNode<HeapObject>{ca_.UncheckedCast<FixedArrayBase>(tmp110)}, &label0);
+    ca_.Goto(&block21, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, ca_.UncheckedCast<FixedArrayBase>(tmp110), tmp111);
     if (label0.is_used()) {
       ca_.Bind(&label0);
-      ca_.Goto(&block22, tmp104, tmp105, tmp106, tmp107, tmp108, tmp109, ca_.UncheckedCast<FixedArrayBase>(tmp109));
+      ca_.Goto(&block22, tmp105, tmp106, tmp107, tmp108, tmp109, tmp110, ca_.UncheckedCast<FixedArrayBase>(tmp110));
     }
   }
 
   if (block22.is_used()) {
-    compiler::TNode<Context> tmp111;
-    compiler::TNode<Object> tmp112;
+    compiler::TNode<Context> tmp112;
     compiler::TNode<Object> tmp113;
-    compiler::TNode<JSArray> tmp114;
-    compiler::TNode<Smi> tmp115;
-    compiler::TNode<FixedArrayBase> tmp116;
+    compiler::TNode<Object> tmp114;
+    compiler::TNode<JSArray> tmp115;
+    compiler::TNode<Smi> tmp116;
     compiler::TNode<FixedArrayBase> tmp117;
-    ca_.Bind(&block22, &tmp111, &tmp112, &tmp113, &tmp114, &tmp115, &tmp116, &tmp117);
-    ca_.Goto(&block20, tmp111, tmp112, tmp113, tmp114, tmp115, tmp116);
+    compiler::TNode<FixedArrayBase> tmp118;
+    ca_.Bind(&block22, &tmp112, &tmp113, &tmp114, &tmp115, &tmp116, &tmp117, &tmp118);
+    ca_.Goto(&block20, tmp112, tmp113, tmp114, tmp115, tmp116, tmp117);
   }
 
   if (block21.is_used()) {
-    compiler::TNode<Context> tmp118;
-    compiler::TNode<Object> tmp119;
+    compiler::TNode<Context> tmp119;
     compiler::TNode<Object> tmp120;
-    compiler::TNode<JSArray> tmp121;
-    compiler::TNode<Smi> tmp122;
-    compiler::TNode<FixedArrayBase> tmp123;
+    compiler::TNode<Object> tmp121;
+    compiler::TNode<JSArray> tmp122;
+    compiler::TNode<Smi> tmp123;
     compiler::TNode<FixedArrayBase> tmp124;
-    compiler::TNode<FixedDoubleArray> tmp125;
-    ca_.Bind(&block21, &tmp118, &tmp119, &tmp120, &tmp121, &tmp122, &tmp123, &tmp124, &tmp125);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 25);
-    compiler::TNode<Smi> tmp126;
-    USE(tmp126);
-    tmp126 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
-    compiler::TNode<BoolT> tmp127;
+    compiler::TNode<FixedArrayBase> tmp125;
+    compiler::TNode<FixedDoubleArray> tmp126;
+    ca_.Bind(&block21, &tmp119, &tmp120, &tmp121, &tmp122, &tmp123, &tmp124, &tmp125, &tmp126);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 25);
+    compiler::TNode<Smi> tmp127;
     USE(tmp127);
-    tmp127 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp122}, compiler::TNode<Smi>{tmp126}));
-    ca_.Branch(tmp127, &block23, &block24, tmp118, tmp119, tmp120, tmp121, tmp122, tmp123, tmp125);
+    tmp127 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
+    compiler::TNode<BoolT> tmp128;
+    USE(tmp128);
+    tmp128 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp123}, compiler::TNode<Smi>{tmp127}));
+    ca_.Branch(tmp128, &block23, &block24, tmp119, tmp120, tmp121, tmp122, tmp123, tmp124, tmp126);
   }
 
   if (block23.is_used()) {
-    compiler::TNode<Context> tmp128;
-    compiler::TNode<Object> tmp129;
+    compiler::TNode<Context> tmp129;
     compiler::TNode<Object> tmp130;
-    compiler::TNode<JSArray> tmp131;
-    compiler::TNode<Smi> tmp132;
-    compiler::TNode<FixedArrayBase> tmp133;
-    compiler::TNode<FixedDoubleArray> tmp134;
-    ca_.Bind(&block23, &tmp128, &tmp129, &tmp130, &tmp131, &tmp132, &tmp133, &tmp134);
-    compiler::TNode<Smi> tmp135;
-    USE(tmp135);
-    tmp135 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
-    compiler::TNode<Object> tmp136;
+    compiler::TNode<Object> tmp131;
+    compiler::TNode<JSArray> tmp132;
+    compiler::TNode<Smi> tmp133;
+    compiler::TNode<FixedArrayBase> tmp134;
+    compiler::TNode<FixedDoubleArray> tmp135;
+    ca_.Bind(&block23, &tmp129, &tmp130, &tmp131, &tmp132, &tmp133, &tmp134, &tmp135);
+    compiler::TNode<Smi> tmp136;
     USE(tmp136);
-    tmp136 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedDoubleArray>{tmp134}, compiler::TNode<Smi>{tmp135}));
-    ca_.Goto(&block26, tmp128, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp136);
+    tmp136 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(0));
+    compiler::TNode<Object> tmp137;
+    USE(tmp137);
+    tmp137 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedDoubleArray>{tmp135}, compiler::TNode<Smi>{tmp136}));
+    ca_.Goto(&block26, tmp129, tmp130, tmp131, tmp132, tmp133, tmp134, tmp135, tmp137);
   }
 
   if (block24.is_used()) {
-    compiler::TNode<Context> tmp137;
-    compiler::TNode<Object> tmp138;
+    compiler::TNode<Context> tmp138;
     compiler::TNode<Object> tmp139;
-    compiler::TNode<JSArray> tmp140;
-    compiler::TNode<Smi> tmp141;
-    compiler::TNode<FixedArrayBase> tmp142;
-    compiler::TNode<FixedDoubleArray> tmp143;
-    ca_.Bind(&block24, &tmp137, &tmp138, &tmp139, &tmp140, &tmp141, &tmp142, &tmp143);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 26);
-    compiler::TNode<Oddball> tmp144;
-    USE(tmp144);
-    tmp144 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 25);
-    ca_.Goto(&block25, tmp137, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144);
+    compiler::TNode<Object> tmp140;
+    compiler::TNode<JSArray> tmp141;
+    compiler::TNode<Smi> tmp142;
+    compiler::TNode<FixedArrayBase> tmp143;
+    compiler::TNode<FixedDoubleArray> tmp144;
+    ca_.Bind(&block24, &tmp138, &tmp139, &tmp140, &tmp141, &tmp142, &tmp143, &tmp144);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 26);
+    compiler::TNode<Oddball> tmp145;
+    USE(tmp145);
+    tmp145 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 25);
+    ca_.Goto(&block25, tmp138, tmp139, tmp140, tmp141, tmp142, tmp143, tmp144, tmp145);
   }
 
   if (block26.is_used()) {
-    compiler::TNode<Context> tmp145;
-    compiler::TNode<Object> tmp146;
+    compiler::TNode<Context> tmp146;
     compiler::TNode<Object> tmp147;
-    compiler::TNode<JSArray> tmp148;
-    compiler::TNode<Smi> tmp149;
-    compiler::TNode<FixedArrayBase> tmp150;
-    compiler::TNode<FixedDoubleArray> tmp151;
-    compiler::TNode<Object> tmp152;
-    ca_.Bind(&block26, &tmp145, &tmp146, &tmp147, &tmp148, &tmp149, &tmp150, &tmp151, &tmp152);
-    ca_.Goto(&block25, tmp145, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152);
+    compiler::TNode<Object> tmp148;
+    compiler::TNode<JSArray> tmp149;
+    compiler::TNode<Smi> tmp150;
+    compiler::TNode<FixedArrayBase> tmp151;
+    compiler::TNode<FixedDoubleArray> tmp152;
+    compiler::TNode<Object> tmp153;
+    ca_.Bind(&block26, &tmp146, &tmp147, &tmp148, &tmp149, &tmp150, &tmp151, &tmp152, &tmp153);
+    ca_.Goto(&block25, tmp146, tmp147, tmp148, tmp149, tmp150, tmp151, tmp152, tmp153);
   }
 
   if (block25.is_used()) {
-    compiler::TNode<Context> tmp153;
-    compiler::TNode<Object> tmp154;
+    compiler::TNode<Context> tmp154;
     compiler::TNode<Object> tmp155;
-    compiler::TNode<JSArray> tmp156;
-    compiler::TNode<Smi> tmp157;
-    compiler::TNode<FixedArrayBase> tmp158;
-    compiler::TNode<FixedDoubleArray> tmp159;
-    compiler::TNode<Object> tmp160;
-    ca_.Bind(&block25, &tmp153, &tmp154, &tmp155, &tmp156, &tmp157, &tmp158, &tmp159, &tmp160);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 27);
-    compiler::TNode<Smi> tmp161;
-    USE(tmp161);
-    tmp161 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
-    compiler::TNode<BoolT> tmp162;
+    compiler::TNode<Object> tmp156;
+    compiler::TNode<JSArray> tmp157;
+    compiler::TNode<Smi> tmp158;
+    compiler::TNode<FixedArrayBase> tmp159;
+    compiler::TNode<FixedDoubleArray> tmp160;
+    compiler::TNode<Object> tmp161;
+    ca_.Bind(&block25, &tmp154, &tmp155, &tmp156, &tmp157, &tmp158, &tmp159, &tmp160, &tmp161);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 27);
+    compiler::TNode<Smi> tmp162;
     USE(tmp162);
-    tmp162 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp157}, compiler::TNode<Smi>{tmp161}));
-    ca_.Branch(tmp162, &block27, &block28, tmp153, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160);
+    tmp162 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
+    compiler::TNode<BoolT> tmp163;
+    USE(tmp163);
+    tmp163 = ca_.UncheckedCast<BoolT>(CodeStubAssembler(state_).SmiGreaterThan(compiler::TNode<Smi>{tmp158}, compiler::TNode<Smi>{tmp162}));
+    ca_.Branch(tmp163, &block27, &block28, tmp154, tmp155, tmp156, tmp157, tmp158, tmp159, tmp160, tmp161);
   }
 
   if (block27.is_used()) {
-    compiler::TNode<Context> tmp163;
-    compiler::TNode<Object> tmp164;
+    compiler::TNode<Context> tmp164;
     compiler::TNode<Object> tmp165;
-    compiler::TNode<JSArray> tmp166;
-    compiler::TNode<Smi> tmp167;
-    compiler::TNode<FixedArrayBase> tmp168;
-    compiler::TNode<FixedDoubleArray> tmp169;
-    compiler::TNode<Object> tmp170;
-    ca_.Bind(&block27, &tmp163, &tmp164, &tmp165, &tmp166, &tmp167, &tmp168, &tmp169, &tmp170);
-    compiler::TNode<Smi> tmp171;
-    USE(tmp171);
-    tmp171 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
-    compiler::TNode<Object> tmp172;
+    compiler::TNode<Object> tmp166;
+    compiler::TNode<JSArray> tmp167;
+    compiler::TNode<Smi> tmp168;
+    compiler::TNode<FixedArrayBase> tmp169;
+    compiler::TNode<FixedDoubleArray> tmp170;
+    compiler::TNode<Object> tmp171;
+    ca_.Bind(&block27, &tmp164, &tmp165, &tmp166, &tmp167, &tmp168, &tmp169, &tmp170, &tmp171);
+    compiler::TNode<Smi> tmp172;
     USE(tmp172);
-    tmp172 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedDoubleArray>{tmp169}, compiler::TNode<Smi>{tmp171}));
-    ca_.Goto(&block30, tmp163, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp172);
+    tmp172 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).FromConstexpr5ATSmi17ATconstexpr_int31(1));
+    compiler::TNode<Object> tmp173;
+    USE(tmp173);
+    tmp173 = ca_.UncheckedCast<Object>(ArrayBuiltinsFromDSLAssembler(state_).LoadElementOrUndefined(compiler::TNode<FixedDoubleArray>{tmp170}, compiler::TNode<Smi>{tmp172}));
+    ca_.Goto(&block30, tmp164, tmp165, tmp166, tmp167, tmp168, tmp169, tmp170, tmp171, tmp173);
   }
 
   if (block28.is_used()) {
-    compiler::TNode<Context> tmp173;
-    compiler::TNode<Object> tmp174;
+    compiler::TNode<Context> tmp174;
     compiler::TNode<Object> tmp175;
-    compiler::TNode<JSArray> tmp176;
-    compiler::TNode<Smi> tmp177;
-    compiler::TNode<FixedArrayBase> tmp178;
-    compiler::TNode<FixedDoubleArray> tmp179;
-    compiler::TNode<Object> tmp180;
-    ca_.Bind(&block28, &tmp173, &tmp174, &tmp175, &tmp176, &tmp177, &tmp178, &tmp179, &tmp180);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 28);
-    compiler::TNode<Oddball> tmp181;
-    USE(tmp181);
-    tmp181 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 27);
-    ca_.Goto(&block29, tmp173, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181);
+    compiler::TNode<Object> tmp176;
+    compiler::TNode<JSArray> tmp177;
+    compiler::TNode<Smi> tmp178;
+    compiler::TNode<FixedArrayBase> tmp179;
+    compiler::TNode<FixedDoubleArray> tmp180;
+    compiler::TNode<Object> tmp181;
+    ca_.Bind(&block28, &tmp174, &tmp175, &tmp176, &tmp177, &tmp178, &tmp179, &tmp180, &tmp181);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 28);
+    compiler::TNode<Oddball> tmp182;
+    USE(tmp182);
+    tmp182 = BaseBuiltinsFromDSLAssembler(state_).Undefined();
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 27);
+    ca_.Goto(&block29, tmp174, tmp175, tmp176, tmp177, tmp178, tmp179, tmp180, tmp181, tmp182);
   }
 
   if (block30.is_used()) {
-    compiler::TNode<Context> tmp182;
-    compiler::TNode<Object> tmp183;
+    compiler::TNode<Context> tmp183;
     compiler::TNode<Object> tmp184;
-    compiler::TNode<JSArray> tmp185;
-    compiler::TNode<Smi> tmp186;
-    compiler::TNode<FixedArrayBase> tmp187;
-    compiler::TNode<FixedDoubleArray> tmp188;
-    compiler::TNode<Object> tmp189;
+    compiler::TNode<Object> tmp185;
+    compiler::TNode<JSArray> tmp186;
+    compiler::TNode<Smi> tmp187;
+    compiler::TNode<FixedArrayBase> tmp188;
+    compiler::TNode<FixedDoubleArray> tmp189;
     compiler::TNode<Object> tmp190;
-    ca_.Bind(&block30, &tmp182, &tmp183, &tmp184, &tmp185, &tmp186, &tmp187, &tmp188, &tmp189, &tmp190);
-    ca_.Goto(&block29, tmp182, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190);
+    compiler::TNode<Object> tmp191;
+    ca_.Bind(&block30, &tmp183, &tmp184, &tmp185, &tmp186, &tmp187, &tmp188, &tmp189, &tmp190, &tmp191);
+    ca_.Goto(&block29, tmp183, tmp184, tmp185, tmp186, tmp187, tmp188, tmp189, tmp190, tmp191);
   }
 
   if (block29.is_used()) {
-    compiler::TNode<Context> tmp191;
-    compiler::TNode<Object> tmp192;
+    compiler::TNode<Context> tmp192;
     compiler::TNode<Object> tmp193;
-    compiler::TNode<JSArray> tmp194;
-    compiler::TNode<Smi> tmp195;
-    compiler::TNode<FixedArrayBase> tmp196;
-    compiler::TNode<FixedDoubleArray> tmp197;
-    compiler::TNode<Object> tmp198;
+    compiler::TNode<Object> tmp194;
+    compiler::TNode<JSArray> tmp195;
+    compiler::TNode<Smi> tmp196;
+    compiler::TNode<FixedArrayBase> tmp197;
+    compiler::TNode<FixedDoubleArray> tmp198;
     compiler::TNode<Object> tmp199;
-    ca_.Bind(&block29, &tmp191, &tmp192, &tmp193, &tmp194, &tmp195, &tmp196, &tmp197, &tmp198, &tmp199);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 24);
-    ca_.Goto(&block2, tmp191, tmp192, tmp198, tmp199);
+    compiler::TNode<Object> tmp200;
+    ca_.Bind(&block29, &tmp192, &tmp193, &tmp194, &tmp195, &tmp196, &tmp197, &tmp198, &tmp199, &tmp200);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 24);
+    ca_.Goto(&block2, tmp192, tmp193, tmp199, tmp200);
   }
 
   if (block20.is_used()) {
-    compiler::TNode<Context> tmp200;
-    compiler::TNode<Object> tmp201;
+    compiler::TNode<Context> tmp201;
     compiler::TNode<Object> tmp202;
-    compiler::TNode<JSArray> tmp203;
-    compiler::TNode<Smi> tmp204;
-    compiler::TNode<FixedArrayBase> tmp205;
-    ca_.Bind(&block20, &tmp200, &tmp201, &tmp202, &tmp203, &tmp204, &tmp205);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 31);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 32);
-    CodeStubAssembler(state_).Print("halting because of \'unreachable\' at ../../src/builtins/collections.tq:32:13");
+    compiler::TNode<Object> tmp203;
+    compiler::TNode<JSArray> tmp204;
+    compiler::TNode<Smi> tmp205;
+    compiler::TNode<FixedArrayBase> tmp206;
+    ca_.Bind(&block20, &tmp201, &tmp202, &tmp203, &tmp204, &tmp205, &tmp206);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 31);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 32);
     CodeStubAssembler(state_).Unreachable();
   }
 
   if (block4.is_used()) {
-    compiler::TNode<Context> tmp206;
-    compiler::TNode<Object> tmp207;
+    compiler::TNode<Context> tmp207;
     compiler::TNode<Object> tmp208;
-    ca_.Bind(&block4, &tmp206, &tmp207, &tmp208);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 36);
-    compiler::TNode<JSReceiver> tmp209;
-    USE(tmp209);
+    compiler::TNode<Object> tmp209;
+    ca_.Bind(&block4, &tmp207, &tmp208, &tmp209);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 36);
+    compiler::TNode<JSReceiver> tmp210;
+    USE(tmp210);
     compiler::CodeAssemblerLabel label0(&ca_);
-    tmp209 = BaseBuiltinsFromDSLAssembler(state_).Cast10JSReceiver(compiler::TNode<Context>{tmp206}, compiler::TNode<Object>{ca_.UncheckedCast<Object>(tmp208)}, &label0);
-    ca_.Goto(&block33, tmp206, tmp207, tmp208, ca_.UncheckedCast<Object>(tmp208), tmp209);
+    tmp210 = BaseBuiltinsFromDSLAssembler(state_).Cast10JSReceiver(compiler::TNode<Context>{tmp207}, compiler::TNode<Object>{ca_.UncheckedCast<Object>(tmp209)}, &label0);
+    ca_.Goto(&block33, tmp207, tmp208, tmp209, ca_.UncheckedCast<Object>(tmp209), tmp210);
     if (label0.is_used()) {
       ca_.Bind(&label0);
-      ca_.Goto(&block34, tmp206, tmp207, tmp208, ca_.UncheckedCast<Object>(tmp208));
+      ca_.Goto(&block34, tmp207, tmp208, tmp209, ca_.UncheckedCast<Object>(tmp209));
     }
   }
 
   if (block34.is_used()) {
-    compiler::TNode<Context> tmp210;
-    compiler::TNode<Object> tmp211;
+    compiler::TNode<Context> tmp211;
     compiler::TNode<Object> tmp212;
     compiler::TNode<Object> tmp213;
-    ca_.Bind(&block34, &tmp210, &tmp211, &tmp212, &tmp213);
-    ca_.Goto(&block32, tmp210, tmp211, tmp212);
+    compiler::TNode<Object> tmp214;
+    ca_.Bind(&block34, &tmp211, &tmp212, &tmp213, &tmp214);
+    ca_.Goto(&block32, tmp211, tmp212, tmp213);
   }
 
   if (block33.is_used()) {
-    compiler::TNode<Context> tmp214;
-    compiler::TNode<Object> tmp215;
+    compiler::TNode<Context> tmp215;
     compiler::TNode<Object> tmp216;
     compiler::TNode<Object> tmp217;
-    compiler::TNode<JSReceiver> tmp218;
-    ca_.Bind(&block33, &tmp214, &tmp215, &tmp216, &tmp217, &tmp218);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 37);
+    compiler::TNode<Object> tmp218;
+    compiler::TNode<JSReceiver> tmp219;
+    ca_.Bind(&block33, &tmp215, &tmp216, &tmp217, &tmp218, &tmp219);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 37);
     ca_.Goto(&block1);
   }
 
   if (block32.is_used()) {
-    compiler::TNode<Context> tmp219;
-    compiler::TNode<Object> tmp220;
+    compiler::TNode<Context> tmp220;
     compiler::TNode<Object> tmp221;
-    ca_.Bind(&block32, &tmp219, &tmp220, &tmp221);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 39);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 40);
-    CodeStubAssembler(state_).ThrowTypeError(compiler::TNode<Context>{tmp219}, MessageTemplate::kIteratorValueNotAnObject, compiler::TNode<Object>{ca_.UncheckedCast<Object>(tmp221)});
+    compiler::TNode<Object> tmp222;
+    ca_.Bind(&block32, &tmp220, &tmp221, &tmp222);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 39);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 40);
+    CodeStubAssembler(state_).ThrowTypeError(compiler::TNode<Context>{tmp220}, MessageTemplate::kIteratorValueNotAnObject, compiler::TNode<Object>{ca_.UncheckedCast<Object>(tmp222)});
   }
 
   if (block2.is_used()) {
-    compiler::TNode<Context> tmp222;
-    compiler::TNode<Object> tmp223;
+    compiler::TNode<Context> tmp223;
     compiler::TNode<Object> tmp224;
     compiler::TNode<Object> tmp225;
-    ca_.Bind(&block2, &tmp222, &tmp223, &tmp224, &tmp225);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 8);
-    ca_.Goto(&block35, tmp222, tmp223, tmp224, tmp225);
+    compiler::TNode<Object> tmp226;
+    ca_.Bind(&block2, &tmp223, &tmp224, &tmp225, &tmp226);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 8);
+    ca_.Goto(&block35, tmp223, tmp224, tmp225, tmp226);
   }
 
   if (block1.is_used()) {
@@ -591,12 +595,12 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     ca_.Goto(label_MayHaveSideEffects);
   }
 
-    compiler::TNode<Context> tmp226;
-    compiler::TNode<Object> tmp227;
+    compiler::TNode<Context> tmp227;
     compiler::TNode<Object> tmp228;
     compiler::TNode<Object> tmp229;
-    ca_.Bind(&block35, &tmp226, &tmp227, &tmp228, &tmp229);
-  return BaseBuiltinsFromDSLAssembler::KeyValuePair{compiler::TNode<Object>{tmp228}, compiler::TNode<Object>{tmp229}};
+    compiler::TNode<Object> tmp230;
+    ca_.Bind(&block35, &tmp227, &tmp228, &tmp229, &tmp230);
+  return BaseBuiltinsFromDSLAssembler::KeyValuePair{compiler::TNode<Object>{tmp229}, compiler::TNode<Object>{tmp230}};
 }
 
 BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::LoadKeyValuePair(compiler::TNode<Context> p_context, compiler::TNode<Object> p_o) {
@@ -612,7 +616,7 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     compiler::TNode<Context> tmp0;
     compiler::TNode<Object> tmp1;
     ca_.Bind(&block0, &tmp0, &tmp1);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 48);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 48);
     compiler::TNode<Object> tmp2;
     USE(tmp2);
     compiler::TNode<Object> tmp3;
@@ -648,21 +652,21 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     compiler::TNode<Context> tmp12;
     compiler::TNode<Object> tmp13;
     ca_.Bind(&block3, &tmp12, &tmp13);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 52);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 52);
     compiler::TNode<Smi> tmp14;
     USE(tmp14);
     tmp14 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).Convert5ATSmi17ATconstexpr_int31(0));
     compiler::TNode<Object> tmp15;
     USE(tmp15);
     tmp15 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetProperty(compiler::TNode<Context>{tmp12}, compiler::TNode<Object>{tmp13}, compiler::TNode<Object>{tmp14}));
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 53);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 53);
     compiler::TNode<Smi> tmp16;
     USE(tmp16);
     tmp16 = ca_.UncheckedCast<Smi>(BaseBuiltinsFromDSLAssembler(state_).Convert5ATSmi17ATconstexpr_int31(1));
     compiler::TNode<Object> tmp17;
     USE(tmp17);
     tmp17 = ca_.UncheckedCast<Object>(CodeStubAssembler(state_).GetProperty(compiler::TNode<Context>{tmp12}, compiler::TNode<Object>{tmp13}, compiler::TNode<Object>{tmp16}));
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 51);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 51);
     ca_.Goto(&block1, tmp12, tmp13, tmp15, tmp17);
   }
 
@@ -672,7 +676,7 @@ BaseBuiltinsFromDSLAssembler::KeyValuePair CollectionsBuiltinsFromDSLAssembler::
     compiler::TNode<Object> tmp20;
     compiler::TNode<Object> tmp21;
     ca_.Bind(&block1, &tmp18, &tmp19, &tmp20, &tmp21);
-    ca_.SetSourcePosition("../../src/builtins/collections.tq", 45);
+    ca_.SetSourcePosition("../../v8/src/builtins/collections.tq", 45);
     ca_.Goto(&block6, tmp18, tmp19, tmp20, tmp21);
   }
 

@@ -200,6 +200,22 @@ bool HTMLScriptElement::hasSourceAttribute() const
     return fastHasAttribute(srcAttr);
 }
 
+bool HTMLScriptElement::hasNomoduleAttribute() const
+{
+//     static char* nomoduleAttrAddr[sizeof(QualifiedName)] = { 0 };
+//     if (nomoduleAttrAddr[0] == 0) {
+//         AtomicString xhtmlNS("http://www.w3.org/1999/xhtml", AtomicString::ConstructFromLiteral);
+// 
+//         unsigned hash = StringHasher::computeHashAndMaskTop8Bits((const LChar*)"nomodule", 8);
+//         StringImpl* stringImpl = StringImpl::createStatic("nomodule", 8, hash);
+// 
+//         QualifiedName::createStatic(nomoduleAttrAddr, stringImpl, xhtmlNS);
+//     }
+// 
+//     QualifiedName* nomoduleAttr = (QualifiedName*)nomoduleAttrAddr;
+    return fastHasAttribute(nomoduleAttr);
+}
+
 void HTMLScriptElement::dispatchLoadEvent()
 {
     ASSERT(!m_loader->haveFiredLoadEvent());

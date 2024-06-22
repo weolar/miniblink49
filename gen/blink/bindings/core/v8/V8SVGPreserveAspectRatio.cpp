@@ -175,7 +175,9 @@ static void installV8SVGPreserveAspectRatioTemplate(v8::Local<v8::FunctionTempla
     static_assert(2 == SVGPreserveAspectRatioTearOff::SVG_MEETORSLICE_SLICE, "the value of SVGPreserveAspectRatioTearOff_SVG_MEETORSLICE_SLICE does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGPreserveAspectRatio::domTemplate(v8::Isolate* isolate)

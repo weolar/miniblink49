@@ -16,11 +16,13 @@ namespace {
 
 class IntlCollator : public mate::EventEmitter<IntlCollator> {
 public:
-    explicit IntlCollator(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    explicit IntlCollator(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+    {
         gin::Wrappable<IntlCollator>::InitWith(isolate, wrapper);
     }
 
-    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+    {
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "IntlCollator"));
@@ -31,7 +33,8 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "IntlCollator"), prototype->GetFunction());
     }
 
-    int compareApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    int compareApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsString())
             return -1;
 
@@ -59,7 +62,8 @@ public:
         return 0;
     }
 
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         v8::Isolate* isolate = args.GetIsolate();
         if (args.IsConstructCall()) {
             new IntlCollator(isolate, args.This());
@@ -76,16 +80,16 @@ public:
 v8::Persistent<v8::Function> IntlCollator::constructor;
 gin::WrapperInfo IntlCollator::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-void initializeCommonIntlCollatorApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
+void initializeCommonIntlCollatorApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     IntlCollator::init(env->isolate(), target);
 }
 
-}  // namespace
+} // namespace
 
-static const char CommonIntlCollatorSricpt[] =
-"exports = {};";
+static const char CommonIntlCollatorSricpt[] = "exports = {};";
 
-static NodeNative nativeCommonIntlCollatorNative{ "IntlCollator", CommonIntlCollatorSricpt, sizeof(CommonIntlCollatorSricpt) - 1 };
+static NodeNative nativeCommonIntlCollatorNative { "IntlCollator", CommonIntlCollatorSricpt, sizeof(CommonIntlCollatorSricpt) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_intl_collator, initializeCommonIntlCollatorApi, &nativeCommonIntlCollatorNative)

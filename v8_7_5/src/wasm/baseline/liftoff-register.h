@@ -43,43 +43,39 @@ static inline constexpr RegClass reg_class_for(ValueType type) {
                          : kNoReg;  // other (unsupported) types
 }
 
-// Maximum code of a gp cache register.
-static constexpr int kMaxGpRegCode =
-    8 * sizeof(kLiftoffAssemblerGpCacheRegs) -
-    base::bits::CountLeadingZeros(kLiftoffAssemblerGpCacheRegs) - 1;
-// Maximum code of an fp cache register.
-static constexpr int kMaxFpRegCode =
-    8 * sizeof(kLiftoffAssemblerFpCacheRegs) -
-    base::bits::CountLeadingZeros(kLiftoffAssemblerFpCacheRegs) - 1;
-// LiftoffRegister encodes both gp and fp in a unified index space.
-// [0 .. kMaxGpRegCode] encodes gp registers,
-// [kMaxGpRegCode+1 .. kMaxGpRegCode + kMaxFpRegCode] encodes fp registers.
-// I64 values on 32 bit platforms are stored in two registers, both encoded in
-// the same LiftoffRegister value.
-static constexpr int kAfterMaxLiftoffGpRegCode = kMaxGpRegCode + 1;
-static constexpr int kAfterMaxLiftoffFpRegCode =
-    kAfterMaxLiftoffGpRegCode + kMaxFpRegCode + 1;
-static constexpr int kAfterMaxLiftoffRegCode = kAfterMaxLiftoffFpRegCode;
-static constexpr int kBitsPerLiftoffRegCode =
-    32 - base::bits::CountLeadingZeros<uint32_t>(kAfterMaxLiftoffRegCode - 1);
-static constexpr int kBitsPerGpRegCode =
-    32 - base::bits::CountLeadingZeros<uint32_t>(kMaxGpRegCode);
-static constexpr int kBitsPerGpRegPair = 1 + 2 * kBitsPerGpRegCode;
+  // Maximum code of a gp cache register.
+  static constexpr int kMaxGpRegCode = 8 * sizeof(kLiftoffAssemblerGpCacheRegs) - base::bits::CountLeadingZeros(kLiftoffAssemblerGpCacheRegs) - 1;
+  // Maximum code of an fp cache register.
+  static constexpr int kMaxFpRegCode = 8 * sizeof(kLiftoffAssemblerFpCacheRegs) -  base::bits::CountLeadingZeros(kLiftoffAssemblerFpCacheRegs) - 1;
+  // LiftoffRegister encodes both gp and fp in a unified index space.
+  // [0 .. kMaxGpRegCode] encodes gp registers,
+  // [kMaxGpRegCode+1 .. kMaxGpRegCode + kMaxFpRegCode] encodes fp registers.
+  // I64 values on 32 bit platforms are stored in two registers, both encoded in
+  // the same LiftoffRegister value.
+  static constexpr int kAfterMaxLiftoffGpRegCode = kMaxGpRegCode + 1;
+  static constexpr int kAfterMaxLiftoffFpRegCode = kAfterMaxLiftoffGpRegCode + kMaxFpRegCode + 1;
+  static constexpr int kAfterMaxLiftoffRegCode = kAfterMaxLiftoffFpRegCode;
+  static constexpr int kBitsPerLiftoffRegCode = 32 - base::bits::CountLeadingZeros<uint32_t>(kAfterMaxLiftoffRegCode - 1);
+  static constexpr int kBitsPerGpRegCode = 32 - base::bits::CountLeadingZeros<uint32_t>(kMaxGpRegCode);
+  static constexpr int kBitsPerGpRegPair = 1 + 2 * kBitsPerGpRegCode;
+
+// int kMaxGpRegCode;
+// int kMaxFpRegCode;
+// int kAfterMaxLiftoffGpRegCode;
+// int kAfterMaxLiftoffFpRegCode;
+// int kAfterMaxLiftoffRegCode;
+// int kBitsPerLiftoffRegCode;
+// int kBitsPerGpRegCode;
+// int kBitsPerGpRegPair;
 
 class LiftoffRegister {
-  static constexpr int needed_bits =
-      Max(kNeedI64RegPair ? kBitsPerGpRegPair : 0, kBitsPerLiftoffRegCode);
-  using storage_t = std::conditional<
-      needed_bits <= 8, uint8_t,
-      std::conditional<needed_bits <= 16, uint16_t, uint32_t>::type>::type;
+  static constexpr int needed_bits = Max(kNeedI64RegPair ? kBitsPerGpRegPair : 0, kBitsPerLiftoffRegCode);
+  using storage_t = std::conditional<needed_bits <= 8, uint8_t, std::conditional<needed_bits <= 16, uint16_t, uint32_t>::type>::type;
 
-  static_assert(8 * sizeof(storage_t) >= needed_bits,
-                "chosen type is big enough");
+  static_assert(8 * sizeof(storage_t) >= needed_bits, "chosen type is big enough");
   // Check for smallest required data type being chosen.
   // Special case for uint8_t as there are no smaller types.
-  static_assert((8 * sizeof(storage_t) < 2 * needed_bits) ||
-                    (sizeof(storage_t) == sizeof(uint8_t)),
-                "chosen type is small enough");
+  static_assert((8 * sizeof(storage_t) < 2 * needed_bits) || (sizeof(storage_t) == sizeof(uint8_t)), "chosen type is small enough");
 
  public:
   explicit LiftoffRegister(Register reg) : LiftoffRegister(reg.code()) {

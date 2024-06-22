@@ -352,7 +352,7 @@ Page* InspectorOverlayImpl::overlayPage()
 
     ScriptForbiddenScope::AllowUserAgentScript allowScript;
 
-    static FrameLoaderClient* dummyFrameLoaderClient =  new EmptyFrameLoaderClient;
+    static FrameLoaderClient* dummyFrameLoaderClient = new EmptyFrameLoaderClient;
     Page::PageClients pageClients;
     fillWithEmptyClients(pageClients);
     ASSERT(!m_overlayChromeClient);

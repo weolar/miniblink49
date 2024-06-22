@@ -8,6 +8,8 @@
 #include "src/tracing/trace-event.h"
 #include "src/v8.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -23,7 +25,7 @@ TracingCpuProfilerImpl::~TracingCpuProfilerImpl() {
 }
 
 void TracingCpuProfilerImpl::OnTraceEnabled() {
-  bool enabled;
+  bool enabled = false;
   TRACE_EVENT_CATEGORY_GROUP_ENABLED(
       TRACE_DISABLED_BY_DEFAULT("v8.cpu_profiler"), &enabled);
   if (!enabled) return;
@@ -49,7 +51,7 @@ void TracingCpuProfilerImpl::OnTraceDisabled() {
 void TracingCpuProfilerImpl::StartProfiling() {
   base::MutexGuard lock(&mutex_);
   if (!profiling_enabled_ || profiler_) return;
-  bool enabled;
+  bool enabled = false;
   TRACE_EVENT_CATEGORY_GROUP_ENABLED(
       TRACE_DISABLED_BY_DEFAULT("v8.cpu_profiler.hires"), &enabled);
   int sampling_interval_us = enabled ? 100 : 1000;

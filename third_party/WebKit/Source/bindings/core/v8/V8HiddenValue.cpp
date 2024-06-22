@@ -23,11 +23,14 @@ v8::Local<v8::String> V8HiddenValue::name(v8::Isolate* isolate)    \
 V8_HIDDEN_VALUES(V8_DEFINE_METHOD);
 
 v8::Local<v8::Value> V8HiddenValue::getHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key)
-{	//zero
-#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
+{
+#if V8_MAJOR_VERSION > 4
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
-    v8::Local<v8::Private> privateKey =
-        v8::Private::ForApi(isolate, key);
+    if (context.IsEmpty()) {
+        OutputDebugStringA("V8HiddenValue::getHiddenValue fail\n");
+        return v8::Local<v8::Value>();
+    }
+    v8::Local<v8::Private> privateKey = v8::Private::ForApi(isolate, key);
     v8::Local<v8::Value> value;
     // Callsites interpret an empty handle has absence of a result.
     if (!v8CallBoolean(object->HasPrivate(context, privateKey)))
@@ -42,11 +45,16 @@ v8::Local<v8::Value> V8HiddenValue::getHiddenValue(v8::Isolate* isolate, v8::Loc
 
 bool V8HiddenValue::setHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key, v8::Local<v8::Value> value)
 {
-	//zero
-#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
+#if V8_MAJOR_VERSION > 4
     if (UNLIKELY(value.IsEmpty()))
         return false;
-    return v8CallBoolean(object->SetPrivate(isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key), value));
+
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    if (context.IsEmpty()) {
+        OutputDebugStringA("V8HiddenValue::setHiddenValue fail\n");
+        return false;
+    }
+    return v8CallBoolean(object->SetPrivate(context, v8::Private::ForApi(isolate, key), value));
 #else
     return object->SetHiddenValue(key, value);
 #endif
@@ -54,11 +62,16 @@ bool V8HiddenValue::setHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> o
 
 bool V8HiddenValue::deleteHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key)
 {
-	//zero
-#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
-    return v8CallBoolean(object->SetPrivate(
-        isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key),
-        v8::Undefined(isolate)));
+#if V8_MAJOR_VERSION > 4
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+//     if (context.IsEmpty())
+//         context = isolate->GetEnteredOrMicrotaskContext();
+//     if (context.IsEmpty())
+//         context = isolate->GetIncumbentContext();
+//     if (context.IsEmpty())
+//         return false;
+
+    return v8CallBoolean(object->SetPrivate(context, v8::Private::ForApi(isolate, key), v8::Undefined(isolate)));
 #else
     return object->DeleteHiddenValue(key);
 #endif

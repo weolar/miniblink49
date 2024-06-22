@@ -2001,11 +2001,11 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
                                     char **userp, char **passwdp,
                                     char **optionsp)
 {
-  char *at;
-  char *fragment;
+  char *at = 0;
+  char *fragment = 0;
   char *path = data->state.path;
-  char *query;
-  int rc;
+  char *query = 0;
+  int rc = 0;
   const char *protop = "";
   CURLcode result;
   bool rebuild_url = FALSE;
@@ -2418,6 +2418,8 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
     /* Override any scope that was set above.  */
     conn->scope_id = data->set.scope_id;
 
+  // https://github.com/curl/curl/commit/46e164069d1a5230e4e64cbd2ff46c46cce056bb#diff-8fb104c402dc51bdffef05a372f32aa2
+#if 1
   /* Remove the fragment part of the path. Per RFC 2396, this is always the
      last part of the URI. We are looking for the first '#' so that we deal
      gracefully with non conformant URI such as http://example.com#foo#bar. */
@@ -2439,6 +2441,10 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
    *   conn->host.name is B
    *   data->state.path is /C
    */
+#else
+  fragment = fragment;
+#endif
+
   return CURLE_OK;
 }
 

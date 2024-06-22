@@ -213,6 +213,36 @@ ItemPosition ComputedStyle::resolveJustification(const ComputedStyle& parentStyl
     return childStyle.justifySelfPosition();
 }
 
+static inline ContentPosition resolvedContentAlignmentPosition(const StyleContentAlignmentData& value, const StyleContentAlignmentData& normalValueBehavior)
+{
+    return (value.position() == ContentPositionNormal && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.position() : value.position();
+}
+
+static inline ContentDistributionType resolvedContentAlignmentDistribution(const StyleContentAlignmentData& value, const StyleContentAlignmentData& normalValueBehavior)
+{
+    return (value.position() == ContentPositionNormal && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.distribution() : value.distribution();
+}
+
+ContentPosition ComputedStyle::resolvedJustifyContentPosition(const StyleContentAlignmentData& normalValueBehavior) const
+{
+    return resolvedContentAlignmentPosition(justifyContent(), normalValueBehavior);
+}
+
+ContentDistributionType ComputedStyle::resolvedJustifyContentDistribution(const StyleContentAlignmentData& normalValueBehavior) const
+{
+    return resolvedContentAlignmentDistribution(justifyContent(), normalValueBehavior);
+}
+
+ContentPosition ComputedStyle::resolvedAlignContentPosition(const StyleContentAlignmentData& normalValueBehavior) const
+{
+    return resolvedContentAlignmentPosition(alignContent(), normalValueBehavior);
+}
+
+ContentDistributionType ComputedStyle::resolvedAlignContentDistribution(const StyleContentAlignmentData& normalValueBehavior) const
+{
+    return resolvedContentAlignmentDistribution(alignContent(), normalValueBehavior);
+}
+
 void ComputedStyle::inheritFrom(const ComputedStyle& inheritParent, IsAtShadowBoundary isAtShadowBoundary)
 {
     if (isAtShadowBoundary == AtShadowBoundary) {
@@ -1303,7 +1333,10 @@ Length ComputedStyle::lineHeight() const
     return lh;
 }
 
-void ComputedStyle::setLineHeight(const Length& specifiedLineHeight) { SET_VAR(inherited, line_height, specifiedLineHeight); }
+void ComputedStyle::setLineHeight(const Length& specifiedLineHeight)
+{
+    SET_VAR(inherited, line_height, specifiedLineHeight);
+}
 
 int ComputedStyle::computedLineHeight() const
 {

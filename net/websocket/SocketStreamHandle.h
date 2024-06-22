@@ -60,6 +60,7 @@ public:
     void threadFunction();
     void mainThreadRun();
     void mainThreadReadData();
+    void mainThreadFail();
 
     int getId() const { return m_id;}
 
@@ -71,7 +72,7 @@ private:
     
     bool readData(CURL*);
     bool sendData(CURL*);
-    bool waitForAvailableData(CURL*, long long selectTimeout);
+    int waitForAvailableData(CURL*, long long selectTimeout);
 
     void startThread();
     void stopThread();

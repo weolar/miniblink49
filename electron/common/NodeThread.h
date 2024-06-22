@@ -14,7 +14,7 @@
 
 #include "node/src/node.h"
 #include "node/src/env.h"
-#include "node/src/env-inl.h"
+//#include "node/src/env-inl.h"
 #include "node/uv/include/uv.h"
 
 namespace node {
@@ -30,21 +30,21 @@ struct NodeNative {
 };
 
 typedef struct _NodeArgc NodeArgc;
-typedef void(*NodeInitCallBack)(NodeArgc*);
+typedef void (*NodeInitCallBack)(NodeArgc*);
 class NodeBindings;
 
 typedef struct _NodeArgc {
-//     char** argv;
-//     int argc;
+    //     char** argv;
+    //     int argc;
     v8::Platform* v8platform;
-    uv_loop_t *childLoop;
+    uv_loop_t* childLoop;
     uv_async_t async;
     uv_thread_t thread;
     bool initType;
     HANDLE initEvent;
     node::Environment* childEnv;
-//     NodeInitCallBack preInitcall;
-//     NodeInitCallBack initcall;
+    //     NodeInitCallBack preInitcall;
+    //     NodeInitCallBack initcall;
     NodeBindings* m_nodeBinding;
 } NodeArgc;
 

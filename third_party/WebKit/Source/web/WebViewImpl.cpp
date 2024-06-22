@@ -93,7 +93,7 @@
 #include "modules/credentialmanager/CredentialManagerClient.h"
 #include "modules/encryptedmedia/MediaKeysController.h"
 #include "modules/storage/StorageNamespaceController.h"
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
 #include "modules/webgl/WebGLRenderingContext.h"
 #endif // MINIBLINK_NOT_IMPLEMENTED
 #include "platform/ContextMenu.h"
@@ -1040,6 +1040,28 @@ bool WebViewImpl::handleKeyEvent(const WebKeyboardEvent& event)
     LocalFrame* frame = toLocalFrame(focusedFrame.get());
 
     PlatformKeyboardEventBuilder evt(event);
+
+//     if (evt.windowsVirtualKeyCode() == 166) {
+//       LocalFrame* localFrame = mainFrameImpl()->frame();
+//       while (localFrame) {
+//         WebKeyboardEvent webEvent(event);
+//         webEvent.windowsKeyCode = 8;
+//         webEvent.nativeKeyCode = 8;
+//         webEvent.text[0] = 0x8;
+//         PlatformKeyboardEventBuilder platformEvt(webEvent);
+//         KeyboardEvent* irkeypress = KeyboardEvent::create(platformEvt, nullptr);
+//         irkeypress->setType(AtomicString("irkeypress"));
+// 
+//         localFrame->document()->dispatchEvent(irkeypress);
+// 
+//         irkeypress->setType(EventTypeNames::keypress);
+//         localFrame->document()->dispatchEvent(irkeypress);
+// 
+//         localFrame = (LocalFrame*)localFrame->tree().traverseNextWithWrap(false);
+//       }
+// 
+//       return false;
+//     }
 
     if (frame->eventHandler().keyEvent(evt)) {
         if (WebInputEvent::RawKeyDown == event.type) {
@@ -2058,6 +2080,123 @@ static String inputTypeToName(WebInputEvent::Type type)
     }
 }
 
+void printMsg(WebInputEvent::Type type) {
+    switch (type)
+    {
+    case blink::WebInputEvent::Undefined:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kUndefined\n");
+        break;
+
+    case blink::WebInputEvent::MouseDown:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseDown\n");
+        break;
+
+    case blink::WebInputEvent::MouseUp:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseUp\n");
+        break;
+    case blink::WebInputEvent::MouseMove:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseMove\n");
+        break;
+    case blink::WebInputEvent::MouseEnter:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseEnter\n");
+        break;
+    case blink::WebInputEvent::MouseLeave:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseLeave\n");
+        break;
+    case blink::WebInputEvent::ContextMenu:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kContextMenu\n");
+        break;
+
+    case blink::WebInputEvent::MouseWheel:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kMouseWheel\n");
+        break;
+    case blink::WebInputEvent::RawKeyDown:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kRawKeyDown\n");
+        break;
+
+    case blink::WebInputEvent::KeyDown:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kKeyDown\n");
+        break;
+    case blink::WebInputEvent::KeyUp:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kKeyUp\n");
+        break;
+    case blink::WebInputEvent::Char:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kChar\n");
+        break;
+
+    case blink::WebInputEvent::GestureScrollBegin:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureScrollBegin\n");
+        break;
+
+    case blink::WebInputEvent::GestureScrollEnd:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureScrollEnd\n");
+        break;
+    case blink::WebInputEvent::GestureScrollUpdate:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureScrollUpdate\n");
+        break;
+    case blink::WebInputEvent::GestureFlingStart:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureFlingStart\n");
+        break;
+    case blink::WebInputEvent::GestureFlingCancel:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureFlingCancel\n");
+        break;
+    case blink::WebInputEvent::GesturePinchBegin:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGesturePinchBegin\n");
+        break;
+
+    case blink::WebInputEvent::GesturePinchEnd:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGesturePinchEnd\n");
+        break;
+    case blink::WebInputEvent::GesturePinchUpdate:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGesturePinchUpdate\n");
+        break;
+
+    case blink::WebInputEvent::GestureTapDown:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureTapDown\n");
+        break;
+    case blink::WebInputEvent::GestureShowPress:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureShowPress\n");
+        break;
+    case blink::WebInputEvent::GestureTap:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureTap\n");
+        break;
+    case blink::WebInputEvent::GestureTapCancel:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureTapCancel\n");
+        break;
+    case blink::WebInputEvent::GestureLongPress:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureLongPress\n");
+        break;
+    case blink::WebInputEvent::GestureLongTap:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureLongTap\n");
+        break;
+    case blink::WebInputEvent::GestureTwoFingerTap:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureTwoFingerTap\n");
+        break;
+    case blink::WebInputEvent::GestureTapUnconfirmed:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureTapUnconfirmed\n");
+        break;
+    case blink::WebInputEvent::GestureDoubleTap:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kGestureDoubleTap\n");
+        break;
+
+    case blink::WebInputEvent::TouchStart:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kTouchStart\n");
+        break;
+
+    case blink::WebInputEvent::TouchMove:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kTouchMove\n");
+        break;
+    case blink::WebInputEvent::TouchEnd:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kTouchEnd\n");
+        break;
+    case blink::WebInputEvent::TouchCancel:
+        OutputDebugStringA("WebViewImpl::handleInputEvent, kTouchCancel\n");
+        break;
+    default:
+        break;
+    }
+}
+
 bool WebViewImpl::handleInputEvent(const WebInputEvent& inputEvent)
 {
     // TODO(dcheng): The fact that this is getting called when there is no local
@@ -2065,6 +2204,8 @@ bool WebViewImpl::handleInputEvent(const WebInputEvent& inputEvent)
     // routing code.
     if (!mainFrameImpl())
         return false;
+
+    //printMsg(inputEvent.type);
 
     WebAutofillClient* autofillClient = mainFrameImpl()->autofillClient();
     UserGestureNotifier notifier(autofillClient, &m_userGestureObserved);
@@ -3620,7 +3761,7 @@ WebDragOperation WebViewImpl::dragTargetDragEnterOrOver(const WebPoint& clientPo
     if (!(dropEffect & dragData.draggingSourceOperationMask()))
         dropEffect = DragOperationNone;
 
-     m_dragOperation = static_cast<WebDragOperation>(dropEffect);
+    m_dragOperation = static_cast<WebDragOperation>(dropEffect);
 
     return m_dragOperation;
 }
@@ -4230,11 +4371,11 @@ void WebViewImpl::applyViewportDeltas(
     }
 }
 
-void WebViewImpl::recordFrameTimingEvent(FrameTimingEventType eventType, int64_t FrameId, const WebVector<WebFrameTimingEvent>& events)
+void WebViewImpl::recordFrameTimingEvent(FrameTimingEventType eventType, int64_t frameId, const WebVector<WebFrameTimingEvent>& events)
 {
     Frame* frame = m_page ? m_page->mainFrame() : 0;
 
-    while (frame && frame->frameID() != FrameId) {
+    while (frame && frame->frameID() != frameId) {
         frame = frame->tree().traverseNext();
     }
 
@@ -4403,18 +4544,16 @@ bool WebViewImpl::shouldDisableDesktopWorkarounds()
 
 void WebViewImpl::forceNextWebGLContextCreationToFail()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     WebGLRenderingContext::forceNextWebGLContextCreationToFail();
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 void WebViewImpl::forceNextDrawingBufferCreationToFail()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     DrawingBuffer::forceNextDrawingBufferCreationToFail();
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 void WebViewImpl::setMainFrameTopContentInset(int offset) {

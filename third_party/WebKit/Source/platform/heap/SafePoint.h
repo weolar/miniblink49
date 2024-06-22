@@ -110,12 +110,12 @@ public:
 
 private:
     void doPark(ThreadState*, intptr_t* stackEnd);
-    static void parkAfterPushRegisters(SafePointBarrier* barrier, ThreadState* state, intptr_t* stackEnd)
+    static void __cdecl parkAfterPushRegisters(SafePointBarrier* barrier, ThreadState* state, intptr_t* stackEnd)
     {
         barrier->doPark(state, stackEnd);
     }
     void doEnterSafePoint(ThreadState*, intptr_t* stackEnd);
-    static void enterSafePointAfterPushRegisters(SafePointBarrier* barrier, ThreadState* state, intptr_t* stackEnd)
+    static void __cdecl enterSafePointAfterPushRegisters(SafePointBarrier* barrier, ThreadState* state, intptr_t* stackEnd)
     {
         barrier->doEnterSafePoint(state, stackEnd);
     }

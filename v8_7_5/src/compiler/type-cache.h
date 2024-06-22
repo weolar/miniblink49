@@ -15,7 +15,7 @@ namespace v8 {
 namespace internal {
 namespace compiler {
 
-class TypeCache final {
+class V8_EXPORT_PRIVATE TypeCache final {
  private:
   // This has to be first for the initialization magic to work.
   AccountingAllocator allocator;
@@ -120,11 +120,6 @@ class TypeCache final {
   // The String::length property always contains a smi in the range
   // [0, String::kMaxLength].
   Type const kStringLengthType = CreateRange(0.0, String::kMaxLength);
-
-  // The ConsString::length property always contains a smi in the range
-  // [ConsString::kMinLength, ConsString::kMaxLength].
-  Type const kConsStringLengthType =
-      CreateRange(ConsString::kMinLength, ConsString::kMaxLength);
 
   // A time value always contains a tagged number in the range
   // [-kMaxTimeInMs, kMaxTimeInMs].

@@ -25,6 +25,7 @@
 #include "src/base/cpu.h"
 #include "src/base/logging.h"
 #include "src/base/platform/platform.h"
+//#include "patch_code/api_xp.h" // SUPPORT_XP_CODE
 
 namespace {
 
@@ -39,13 +40,23 @@ int64_t ComputeThreadTicks() {
       &thread_info_count);
   CHECK_EQ(kr, KERN_SUCCESS);
 
-  v8::base::CheckedNumeric<int64_t> absolute_micros(
-      thread_info_data.user_time.seconds +
-      thread_info_data.system_time.seconds);
-  absolute_micros *= v8::base::Time::kMicrosecondsPerSecond;
-  absolute_micros += (thread_info_data.user_time.microseconds +
-                      thread_info_data.system_time.microseconds);
-  return absolute_micros.ValueOrDie();
+  // We can add the seconds into a {int64_t} without overflow.
+  CHECK_LE(thread_info_data.user_time.seconds,
+           std::numeric_limits<int64_t>::max() -
+               thread_info_data.system_time.seconds);
+  int64_t seconds =
+      thread_info_data.user_time.seconds + thread_info_data.system_time.seconds;
+  // Multiplying the seconds by {kMicrosecondsPerSecond}, and adding something
+  // in [0, 2 * kMicrosecondsPerSecond) must result in a valid {int64_t}.
+  static constexpr int64_t kSecondsLimit =
+      (std::numeric_limits<int64_t>::max() /
+       v8::base::Time::kMicrosecondsPerSecond) -
+      2;
+  CHECK_GT(kSecondsLimit, seconds);
+  int64_t micros = seconds * v8::base::Time::kMicrosecondsPerSecond;
+  micros += (thread_info_data.user_time.microseconds +
+             thread_info_data.system_time.microseconds);
+  return micros;
 }
 #elif V8_OS_POSIX
 // Helper function to get results from clock_gettime() and convert to a
@@ -69,8 +80,14 @@ V8_INLINE int64_t ClockNow(clockid_t clk_id) {
   if (clock_gettime(clk_id, &ts) != 0) {
     UNREACHABLE();
   }
-  v8::base::internal::CheckedNumeric<int64_t> result(ts.tv_sec);
-  result *= v8::base::Time::kMicrosecondsPerSecond;
+  // Multiplying the seconds by {kMicrosecondsPerSecond}, and adding something
+  // in [0, kMicrosecondsPerSecond) must result in a valid {int64_t}.
+  static constexpr int64_t kSecondsLimit =
+      (std::numeric_limits<int64_t>::max() /
+       v8::base::Time::kMicrosecondsPerSecond) -
+      1;
+  CHECK_GT(kSecondsLimit, ts.tv_sec);
+  int64_t result = int64_t{ts.tv_sec} * v8::base::Time::kMicrosecondsPerSecond;
 #if defined(V8_OS_AIX)
   if (clk_id == CLOCK_THREAD_CPUTIME_ID) {
     result += (tc.stime / v8::base::Time::kNanosecondsPerMicrosecond);
@@ -80,7 +97,7 @@ V8_INLINE int64_t ClockNow(clockid_t clk_id) {
 #else
   result += (ts.tv_nsec / v8::base::Time::kNanosecondsPerMicrosecond);
 #endif
-  return result.ValueOrDie();
+  return result;
 #else  // Monotonic clock not supported.
   return 0;
 #endif
@@ -761,12 +778,35 @@ ThreadTicks ThreadTicks::Now() {
 
 
 #if V8_OS_WIN
+
+typedef BOOL(__stdcall* PFN_QueryThreadCycleTime)(HANDLE ThreadHandle,
+                                                  PULONG64 CycleTime);
+static PFN_QueryThreadCycleTime s_QueryThreadCycleTime = NULL;
+
+inline BOOL QueryThreadCycleTimeIsLoaded() {
+  static BOOL s_is_init = FALSE;
+  if (!s_is_init) {
+    HMODULE handle = GetModuleHandle(L"Kernel32.dll");
+    s_QueryThreadCycleTime = (PFN_QueryThreadCycleTime)GetProcAddress(
+        handle, "QueryThreadCycleTime");
+    s_is_init = TRUE;
+  }
+  return NULL != s_QueryThreadCycleTime;
+}
+
+inline BOOL QueryThreadCycleTimeXp(HANDLE ThreadHandle, PULONG64 CycleTime) {
+  if (QueryThreadCycleTimeIsLoaded())
+    return s_QueryThreadCycleTime(ThreadHandle, CycleTime);
+
+  return FALSE;
+}
+
 ThreadTicks ThreadTicks::GetForThread(const HANDLE& thread_handle) {
   DCHECK(IsSupported());
 
   // Get the number of TSC ticks used by the current thread.
   ULONG64 thread_cycle_time = 0;
-  ::QueryThreadCycleTime(thread_handle, &thread_cycle_time);
+  QueryThreadCycleTimeXp(thread_handle, &thread_cycle_time); // SUPPORT_XP_CODE
 
   // Get the frequency of the TSC.
   double tsc_ticks_per_second = TSCTicksPerSecond();
@@ -783,6 +823,15 @@ ThreadTicks ThreadTicks::GetForThread(const HANDLE& thread_handle) {
 bool ThreadTicks::IsSupportedWin() {
   static bool is_supported = base::CPU().has_non_stop_time_stamp_counter() &&
                              !IsQPCReliable();
+#if 1 // def SUPPORT_XP_CODE
+  static bool is_to_find = false;
+  if (!is_to_find) {
+    HMODULE module = GetModuleHandle(L"Kernel32.dll");
+    FARPROC func = GetProcAddress(module, "QueryThreadCycleTime");
+    is_supported &= !!func;
+    is_to_find = true;
+  }
+#endif
   return is_supported;
 }
 

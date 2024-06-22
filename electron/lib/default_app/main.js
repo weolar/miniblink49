@@ -79,6 +79,7 @@ if (option.modules.length > 0) {
 function loadApplicationPackage(packagePath) {
     // Add a flag indicating app is started from default app.
     process.defaultApp = true;
+    console.log("loadApplicationPackage:" + packagePath);
 
     try {
         // Override app name and version.
@@ -118,6 +119,7 @@ function loadApplicationPackage(packagePath) {
             Module._resolveFilename(packagePath, module, true);
         } catch (e) {
             console.log(`default_app/main.js: Unable to find Electron app at ${packagePath}\n\n${e.message}`);
+            process.exit(1);
             return;
         }
 
@@ -138,11 +140,17 @@ function showErrorMessage(message) {
 }
 
 function loadApplicationByUrl(appUrl) {
-	console.log("default_app.js, loadApplicationByUrl: " + appUrl);
+    console.log("default_app.js, loadApplicationByUrl: " + appUrl);
     require('./default_app').load(appUrl);
 }
 
-function loadApplicationByJsUrl(appJsUrl) {
+function loadApplicationByJsUrl(packagePath, appJsUrl) {
+    packagePath = path.resolve(packagePath);
+    let packageJsonPath = packagePath;
+    packagePath = path.dirname(packagePath);
+    app.setAppPath(packagePath);
+    console.log("loadApplicationByJsUrl:" + packagePath);
+    
     require(appJsUrl);
 }
 
@@ -171,7 +179,7 @@ if (option.file && !option.webdriver) {
     } else if (extension === '.html' || extension === '.htm') {
         loadApplicationByUrl('file://' + path.resolve(file));
     } else if (extension === '.js') {
-        loadApplicationByJsUrl(path.resolve(file));
+        loadApplicationByJsUrl(file, path.resolve(file));
     } else {
         loadApplicationPackage(file);
     }

@@ -811,8 +811,7 @@ bool isWordTextBreak(TextBreakIterator* iterator)
     return ruleStatus != UBRK_WORD_NONE;
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
-    notImplemented();
-    return false;
+    return true; // 结尾是数字，getRuleStatus返回UBRK_WORD_NUMBER，汉字返回UBRK_WORD_KANA_LIMIT。暂时不知道其他语言
 }
 
 static TextBreakIterator* setUpIteratorWithRules(const char* breakRules, const UChar* string, int length)

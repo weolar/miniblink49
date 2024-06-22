@@ -25,6 +25,7 @@ class MODULES_EXPORT BodyStreamBuffer final : public GarbageCollectedFinalized<B
 public:
     static BodyStreamBuffer* create(PassOwnPtr<FetchDataConsumerHandle> handle) { return new BodyStreamBuffer(handle); }
     static BodyStreamBuffer* createEmpty();
+    ~BodyStreamBuffer();
 
     FetchDataConsumerHandle* handle() const;
     PassOwnPtr<FetchDataConsumerHandle> releaseHandle();
@@ -45,7 +46,7 @@ public:
     void didFetchDataLoadFinished();
 
 private:
-    explicit BodyStreamBuffer(PassOwnPtr<FetchDataConsumerHandle> handle) : m_handle(handle) { }
+    explicit BodyStreamBuffer(PassOwnPtr<FetchDataConsumerHandle> handle);
 
     void setDrainingStreamNotificationClient(DrainingStreamNotificationClient*);
 

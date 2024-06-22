@@ -6,6 +6,9 @@
 
 #include "src/globals.h"
 
+#include "src/objects-inl.h" // weolar
+#include "src/objects/dictionary-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 
@@ -160,8 +163,11 @@ Node* BinaryOpAssembler::Generate_AddWithFeedback(Node* context, Node* lhs,
       // need an Oddball check.
       GotoIfNot(IsStringInstanceType(rhs_instance_type),
                 &call_with_any_feedback);
+
+      var_type_feedback.Bind(SmiConstant(BinaryOperationFeedback::kString));
       var_result.Bind(
-          StringAdd(context, CAST(lhs), CAST(rhs), &var_type_feedback));
+          CallBuiltin(Builtins::kStringAdd_CheckNone, context, lhs, rhs));
+
       Goto(&end);
     }
   }

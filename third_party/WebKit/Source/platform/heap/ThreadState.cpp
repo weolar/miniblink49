@@ -939,7 +939,7 @@ void ThreadState::postGC(GCType gcType)
     TRACE_EVENT_CATEGORY_GROUP_ENABLED("blink_gc", &gcTracingEnabled);
 
     if (gcTracingEnabled) {
-        bool disabledByDefaultGCTracingEnabled;
+        bool disabledByDefaultGCTracingEnabled = false;
         TRACE_EVENT_CATEGORY_GROUP_ENABLED(TRACE_DISABLED_BY_DEFAULT("blink_gc"), &disabledByDefaultGCTracingEnabled);
 
         snapshot();

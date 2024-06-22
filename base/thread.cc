@@ -2,8 +2,7 @@
 
 #include <windows.h>
 
-typedef struct tagTHREADNAME_INFO
-{
+typedef struct tagTHREADNAME_INFO {
     DWORD dwType; // must be 0x1000
     LPCSTR szName; // pointer to name (in user addr space)
     DWORD dwThreadID; // thread ID (-1=caller thread)
@@ -13,6 +12,8 @@ typedef struct tagTHREADNAME_INFO
 namespace base {
 
 void SetThreadName(const char* szThreadName) {
+
+#if ENABLE_NOT_MEM_LOAD // 把dll通过内存加载的时候不能主动抛异常，否则会崩溃
     THREADNAME_INFO info;
     info.dwType = 0x1000;
     info.szName = szThreadName;
@@ -24,6 +25,7 @@ void SetThreadName(const char* szThreadName) {
     }
     __except (EXCEPTION_CONTINUE_EXECUTION) {
     }
+#endif
 }
 
 }

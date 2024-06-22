@@ -52,7 +52,7 @@ public:
         AllLayers = 0xff
     };
 
-    static void initBlink();
+    static void initBlink(bool ocEnable);
     static void shutdown();
 
     WebPage(void* foreignPtr);
@@ -63,6 +63,10 @@ public:
     bool init(HWND hWnd, COLORREF color);
 
     void close();
+    bool isValid();
+    void setWillDestroy();
+
+    int getId() const;
 
     static void gcAll();
     void gc();
@@ -70,6 +74,7 @@ public:
     void onDocumentReady();
 
     void setNeedAutoDrawToHwnd(bool b);
+    void setIsMouseKeyMessageEnable(bool b);
 
     static void connetDevTools(WebPage* frontEnd, WebPage* embedder);
     bool isDevtoolsConneted() const;
@@ -90,6 +95,7 @@ public:
     bool fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     bool fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     bool fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     bool fireTimerEvent();
 
     LRESULT fireInputEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -120,6 +126,7 @@ public:
     void setHwndRenderOffset(const blink::IntPoint& offset);
     blink::IntPoint getHwndRenderOffset() const;
     void setBackgroundColor(COLORREF c);
+    void setDragDropEnable(bool b);
 
     bool canGoBack();
     void goBack();
@@ -127,13 +134,20 @@ public:
     void goForward();
     void goToOffset(int offset);
     void goToIndex(int index);
+    int getNavigateIndex() const;
 
-    void didCommitProvisionalLoad(blink::WebLocalFrame* frame,
-        const blink::WebHistoryItem& history, blink::WebHistoryCommitType type, bool isSameDocument);
+    void didCommitProvisionalLoad(
+        blink::WebLocalFrame* frame,
+        const blink::WebHistoryItem& history, 
+        blink::WebHistoryCommitType type, 
+        bool isSameDocument
+        );
+    blink::WebHistoryItem historyItemForNewChildFrame(blink::WebFrame* frame);
 
     void setTransparent(bool transparent);
 
     HDC viewDC();
+    void releaseHdc();
     void paintToBit(void* bits, int pitch);
 
     void disablePaint();
@@ -141,6 +155,9 @@ public:
 
     void setContextMenuEnabled(bool b);
     bool getContextMenuEnabled() const;
+
+    void setTouchSimulateEnabled(bool b);
+    void setSystemTouchEnabled(bool b);
 
     void willEnterDebugLoop();
     void didExitDebugLoop();
@@ -155,6 +172,12 @@ public:
     blink::WebFrame* mainFrame();
 
     static WebPage* getSelfForCurrentContext();
+
+    net::WebCookieJarImpl* getCookieJar();
+
+    PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
+    void setCookieJarFullPath(const char* path);
+    void setLocalStorageFullPath(const char* path);
 
     WebFrameClientImpl* webFrameClientImpl();
 

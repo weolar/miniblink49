@@ -101,7 +101,9 @@ void PromiseTracker::setEnabled(bool enabled, bool captureStacks)
 void PromiseTracker::clear()
 {
     v8::HandleScope scope(m_isolate);
+#if V8_MAJOR_VERSION < 7
     m_promiseToId.Reset(m_isolate, v8::NativeWeakMap::New(m_isolate));
+#endif
     m_idToPromise.Clear();
 }
 
@@ -115,6 +117,9 @@ int PromiseTracker::circularSequentialId()
 
 int PromiseTracker::promiseId(v8::Local<v8::Object> promise, bool* isNewPromise)
 {
+#if V8_MAJOR_VERSION >= 7
+    return -1;
+#else
     v8::HandleScope scope(m_isolate);
     v8::Local<v8::NativeWeakMap> map = v8::Local<v8::NativeWeakMap>::New(m_isolate, m_promiseToId);
     v8::Local<v8::Value> value = map->Get(promise);
@@ -127,6 +132,7 @@ int PromiseTracker::promiseId(v8::Local<v8::Object> promise, bool* isNewPromise)
     map->Set(promise, v8::Int32::New(m_isolate, id));
     m_idToPromise.Set(id, promise);
     return id;
+#endif
 }
 
 void PromiseTracker::didReceiveV8PromiseEvent(ScriptState* scriptState, v8::Local<v8::Object> promise, v8::Local<v8::Value> parentPromise, int status)

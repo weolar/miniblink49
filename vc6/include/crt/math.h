@@ -321,6 +321,7 @@ _CRTIMP int    __cdecl _fpclassf(float);
 #define tanl(x)     ((long double)tan((double)(x)))
 #define tanhl(x)    ((long double)tanh((double)(x)))
 #else   /* __cplusplus */
+
 inline long double acosl(long double _X)
         {return (acos((double)_X)); }
 inline long double asinl(long double _X)

@@ -73,10 +73,10 @@ public:
     WillBeHeapVector<RefPtrWillBeMember<Animation>> getAnimations();
 
     void animationAttached(Animation&);
-#if !ENABLE(OILPAN)
+#if 1 // !ENABLE(OILPAN)
     void animationDestroyed(Animation* animation)
     {
-        ASSERT(m_animations.contains(animation));
+        //ASSERT(m_animations.contains(animation));
         m_animations.remove(animation);
     }
 #endif

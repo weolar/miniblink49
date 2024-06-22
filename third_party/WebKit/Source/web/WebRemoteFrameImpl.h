@@ -78,6 +78,8 @@ public:
         int argc,
         v8::Local<v8::Value> argv[]) override;
     v8::Local<v8::Context> mainWorldScriptContext() const override;
+    int32_t getScriptContextWorldId(v8::Local<v8::Context> scriptContext) const override;
+    v8::Local<v8::Context> getScriptContextFromWorldId(v8::Isolate* isolate, int worldId) const override;
     void reload(bool ignoreCache) override;
     void reloadWithOverrideURL(const WebURL& overrideUrl, bool ignoreCache) override;
     void loadRequest(const WebURLRequest&) override;

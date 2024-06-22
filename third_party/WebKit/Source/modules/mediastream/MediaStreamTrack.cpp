@@ -245,6 +245,12 @@ ExecutionContext* MediaStreamTrack::executionContext() const
     return ActiveDOMObject::executionContext();
 }
 
+ScriptWrappable* MediaStreamTrack::toScriptWrappable(ActiveDOMObject* object) const
+{
+    DebugBreak();
+    return nullptr;
+}
+
 DEFINE_TRACE(MediaStreamTrack)
 {
     visitor->trace(m_registeredMediaStreams);

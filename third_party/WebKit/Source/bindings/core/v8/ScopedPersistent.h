@@ -36,6 +36,8 @@
 
 namespace blink {
 
+const int kScopedPersistentWrapperClassId = 0x1222;
+
 template<typename T>
 class ScopedPersistent {
     WTF_MAKE_NONCOPYABLE(ScopedPersistent);
@@ -45,6 +47,7 @@ public:
     ScopedPersistent(v8::Isolate* isolate, v8::Local<T> handle)
         : m_handle(isolate, handle)
     {
+        m_handle.SetWrapperClassId(kScopedPersistentWrapperClassId);
     }
 
     ScopedPersistent(v8::Isolate* isolate, v8::MaybeLocal<T> maybe)
@@ -52,6 +55,8 @@ public:
         v8::Local<T> local;
         if (maybe.ToLocal(&local))
             m_handle.Reset(isolate, local);
+
+        m_handle.SetWrapperClassId(kScopedPersistentWrapperClassId);
     }
 
     ~ScopedPersistent()
@@ -67,6 +72,7 @@ public:
     template<typename P>
     void setWeak(P* parameters, void (*callback)(const v8::WeakCallbackInfo<P>&), v8::WeakCallbackType type = v8::WeakCallbackType::kParameter)
     {
+        m_handle.SetWrapperClassId(kScopedPersistentWrapperClassId);
         m_handle.SetWeak(parameters, callback, type);
     }
 
@@ -75,6 +81,7 @@ public:
 
     void set(v8::Isolate* isolate, v8::Local<T> handle)
     {
+        m_handle.SetWrapperClassId(kScopedPersistentWrapperClassId);
         m_handle.Reset(isolate, handle);
     }
 
@@ -100,14 +107,15 @@ public:
         return m_handle == other;
     }
 
-private:
-    // FIXME: This function does an unsafe handle access. Remove it.
-    friend class V8AbstractEventListener;
-    friend class V8PerIsolateData;
     ALWAYS_INLINE v8::Persistent<T>& getUnsafe()
     {
         return m_handle;
     }
+
+private:
+    // FIXME: This function does an unsafe handle access. Remove it.
+    friend class V8AbstractEventListener;
+    friend class V8PerIsolateData;
 
     v8::Persistent<T> m_handle;
 };

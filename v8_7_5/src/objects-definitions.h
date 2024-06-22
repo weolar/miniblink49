@@ -57,7 +57,6 @@ namespace internal {
   V(THIN_ONE_BYTE_STRING_TYPE)                           \
   V(UNCACHED_EXTERNAL_STRING_TYPE)                       \
   V(UNCACHED_EXTERNAL_ONE_BYTE_STRING_TYPE)              \
-  V(EMPTY_STRING_TYPE)                                   \
                                                          \
   V(SYMBOL_TYPE)                                         \
   V(HEAP_NUMBER_TYPE)                                    \
@@ -97,6 +96,7 @@ namespace internal {
   V(ASYNC_GENERATOR_REQUEST_TYPE)                        \
   V(CLASS_POSITIONS_TYPE)                                \
   V(DEBUG_INFO_TYPE)                                     \
+  V(ENUM_CACHE_TYPE)                                     \
   V(FUNCTION_TEMPLATE_INFO_TYPE)                         \
   V(FUNCTION_TEMPLATE_RARE_DATA_TYPE)                    \
   V(INTERCEPTOR_INFO_TYPE)                               \
@@ -286,8 +286,7 @@ namespace internal {
     UncachedExternalOneByteInternalizedString)                                 \
   V(THIN_STRING_TYPE, ThinString::kSize, thin_string, ThinString)              \
   V(THIN_ONE_BYTE_STRING_TYPE, ThinString::kSize, thin_one_byte_string,        \
-    ThinOneByteString)                                                         \
-  V(EMPTY_STRING_TYPE, kVariableSizeSentinel, empty_string, EmptyString)
+    ThinOneByteString)
 
 // A struct is a simple object a set of object-valued fields.  Including an
 // object type in this causes the compiler to generate most of the boilerplate
@@ -310,6 +309,7 @@ namespace internal {
     async_generator_request)                                                  \
   V(_, CLASS_POSITIONS_TYPE, ClassPositions, class_positions)                 \
   V(_, DEBUG_INFO_TYPE, DebugInfo, debug_info)                                \
+  V(_, ENUM_CACHE_TYPE, EnumCache, enum_cache)                                \
   V(_, FUNCTION_TEMPLATE_INFO_TYPE, FunctionTemplateInfo,                     \
     function_template_info)                                                   \
   V(_, FUNCTION_TEMPLATE_RARE_DATA_TYPE, FunctionTemplateRareData,            \

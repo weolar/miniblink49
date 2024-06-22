@@ -48,7 +48,8 @@ PluginQuirkWantsMozillaUserAgent = 1 << 0,
     PluginQuirkRequiresDefaultScreenDepth = 1 << 13,
     PluginQuirkDontCallSetWindowMoreThanOnce = 1 << 14,
     PluginQuirkIgnoreRightClickInWindowlessMode = 1 << 15,
-    PluginQuirkWantsChromeUserAgent = 1 << 16
+    PluginQuirkWantsChromeUserAgent = 1 << 16,
+    PluginQuirkEmulateIme = 1 << 17
 };
 
 class PluginQuirkSet {

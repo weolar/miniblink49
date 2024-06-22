@@ -29,12 +29,20 @@
 #include "third_party/WebKit/Source/core/frame/LocalDOMWindow.h"
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/core/dom/Document.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
+#include "third_party/WebKit/Source/wtf/Locker.h"
 #include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/public/web/WebInputEvent.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "skia/ext/bitmap_platform_device_win.h"
-#include "cc/trees/LayerTreeHost.h"
+#include "mc/trees/LayerTreeHost.h"
+#ifndef NO_USE_ORIG_CHROME
+#include "orig_chrome/content/OrigChromeMgr.h"
+#include "orig_chrome/content/LayerTreeWrap.h"
+#endif
+#include "content/browser/PostTaskHelper.h"
+#include "net/ActivatingObjCheck.h"
 
 using namespace blink;
 
@@ -43,11 +51,13 @@ namespace content {
 #define HIGH_BIT_MASK_SHORT 0x8000
 
 #define WM_INIT_MENU        (WM_USER + 201)
-#define WM_COMMIT           (WM_USER + 202)
 #define WM_PMW_KILLFOCUS    (WM_USER + 203)
 #define WM_PMW_MOUSEHWHEEL  (WM_USER + 204)
 
+bool g_popupMenuIniting = false;
+
 HWND PopupMenuWin::m_hPopup = NULL;
+bool PopupMenuWin::m_initialize = false;
     
 // Default Window animation duration in milliseconds
 static const int defaultAnimationDuration = 200;
@@ -60,12 +70,14 @@ const int smoothScrollAnimationDuration = 5000;
 
 static LPCWSTR kPopupWindowClassName = L"PopupWindowClass";
 
+WTF::RecursiveMutex g_popupMenuMutex;
+
 PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
-    : m_asynStartCreateWndTimer(this, &PopupMenuWin::asynStartCreateWnd)
+    //: m_asynStartCreateWndTimer(this, &PopupMenuWin::asynStartCreateWnd)
 {
     m_client = client;
     m_popupImpl = nullptr;
-    m_needsCommit = true;
+    m_allowBeginFrame = true;
     m_hasResize = true;
     m_needResize = true;
     m_initialize = false;
@@ -74,6 +86,9 @@ PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offse
     m_lastFrameTimeMonotonic = 0;
     m_memoryCanvas = nullptr;
     m_layerTreeHost = nullptr;
+#ifndef NO_USE_ORIG_CHROME
+    m_ccLayerTreeWrap = nullptr;
+#endif
     m_webViewImpl = webViewImpl;
     m_hParentWnd = hWnd;
     m_rect.setWidth(1);
@@ -81,6 +96,9 @@ PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offse
     m_offset.setX(offset.x());
     m_offset.setY(offset.y());
     m_lastFocusWnd = nullptr;
+
+    m_id = net::ActivatingObjCheck::inst()->genId();
+    net::ActivatingObjCheck::inst()->add(m_id);
 }
 
 PopupMenuWin::~PopupMenuWin()
@@ -100,20 +118,35 @@ PopupMenuWin::~PopupMenuWin()
 
 static void destroyWindowAsyn(HWND hWnd)
 {
-    //::SetWindowLongPtr(hWnd, 0, 0);
     ::DestroyWindow(hWnd);
 }
 
 void PopupMenuWin::closeWidgetSoon()
 {
+    g_popupMenuMutex.lock();
+
     m_client->onPopupMenuHide();
 
-    m_asynStartCreateWndTimer.stop();
-    m_layerTreeHost->applyActions(false);
+    //m_asynStartCreateWndTimer.stop();
+    if (m_layerTreeHost)
+        m_layerTreeHost->applyActions(false);
     m_initialize = false;
     m_isVisible = false;
-    ::SetPropW(m_hPopup, kPopupWindowClassName, nullptr);
-    ::ShowWindow(m_hPopup, SW_HIDE);
+
+    net::ActivatingObjCheck::inst()->remove(m_id);
+    g_popupMenuMutex.unlock();
+
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        delete m_ccLayerTreeWrap;
+    m_ccLayerTreeWrap = nullptr;
+#endif
+
+    HWND hPopup = m_hPopup;
+    postTaskToUiThread(FROM_HERE, m_hParentWnd, [hPopup] {
+        ::ShowWindow(hPopup, SW_HIDE);
+        ::SetPropW(hPopup, kPopupWindowClassName, nullptr);
+    });
 }
 
 void PopupMenuWin::registerClass()
@@ -127,7 +160,7 @@ void PopupMenuWin::registerClass()
     wcex.hIconSm = 0;
     wcex.style = CS_DROPSHADOW;
 
-    wcex.lpfnWndProc = PopupMenuWndProc;
+    wcex.lpfnWndProc = popupMenuWndProc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = sizeof(PopupMenuWin*); // For the PopupMenu pointer
     wcex.hInstance = NULL;
@@ -146,7 +179,8 @@ LRESULT PopupMenuWin::fireWheelEvent(UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (!m_hPopup)
         return 0;
-    return wndProc(m_hPopup, message, wParam, lParam);
+    wndProc(m_hPopup, message, wParam, lParam);
+    return 0;
 }
 
 bool PopupMenuWin::fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam)
@@ -157,22 +191,23 @@ bool PopupMenuWin::fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam)
     return true;
 }
 
-LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK PopupMenuWin::popupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    PopupMenuWin* self = nullptr;
-    //if (self = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(hWnd, GWL_USERDATA)))
-    self = (PopupMenuWin*)GetPropW(hWnd, kPopupWindowClassName);
-    if (self)
-        return self->wndProc(hWnd, message, wParam, lParam);
+    WTF::Locker<RecursiveMutex> locker(g_popupMenuMutex);
+    if (!m_initialize)
+        return 0;
 
+    PopupMenuWin* self = nullptr;
     if (message == WM_CREATE) {
         LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
         self = (PopupMenuWin*)createStruct->lpCreateParams;
-        // Associate the PopupMenu with the window.
-        //::SetWindowLongPtr(hWnd, GWL_USERDATA, reinterpret_cast<LONG_PTR>(popup));
         ::SetPropW(hWnd, kPopupWindowClassName, (HANDLE)self);
         return 0;
     }
+
+    self = (PopupMenuWin*)::GetPropW(hWnd, kPopupWindowClassName);
+    if (self)
+        return self->wndProc(hWnd, message, wParam, lParam);
 
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
@@ -184,75 +219,76 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     POINT ptCursor = { 0 };
     PlatformEventHandler::MouseEvtInfo info = { false, false, nullptr };
     HWND hFocusWnd = nullptr;
+    PlatformEventHandler* eventHandler = m_platformEventHandler;
+    blink::WebPagePopup* popupImpl = m_popupImpl;
+    PopupMenuWin* self = this;
+    int id = m_id;
 
-    //String out = String::format("PopupMenuWin wndProc: %x %04x\n", hWnd, message);
-    //OutputDebugStringA(out.utf8().data());
+//     String out = String::format("PopupMenuWin wndProc: %x %04x\n", hWnd, message);
+//     OutputDebugStringA(out.utf8().data());
 
     switch (message) {
     case WM_NCDESTROY:
         OutputDebugStringA("PopupMenuWin::wndProc WM_NCDESTROY\n");
         break;
-    case WM_CAPTURECHANGED: // 在多线程环境下，收不到WM_LBUTTONUP消息，只能这里来模拟
+    case WM_CAPTURECHANGED: { // 在多线程环境下，收不到WM_LBUTTONUP消息，只能这里来模拟
         ::GetCursorPos(&ptCursor);
         ::ScreenToClient(hWnd, &ptCursor);
         lParam = MAKELONG(ptCursor.x, ptCursor.y);
 
-        m_platformEventHandler->fireMouseEvent(hWnd, WM_LBUTTONDOWN, 0, lParam, info, &bHandle);
-        m_platformEventHandler->fireMouseEvent(hWnd, WM_LBUTTONUP, 0, lParam, info, &bHandle);
-        hide();
+        postTaskToMainThread(FROM_HERE, [self, id, eventHandler, hWnd, lParam, info] {
+            if (!m_initialize || !net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            BOOL bHandle = FALSE;
+            eventHandler->fireMouseEvent(hWnd, WM_LBUTTONDOWN, 0, lParam, info, &bHandle);
+            eventHandler->fireMouseEvent(hWnd, WM_LBUTTONUP, 0, lParam, info, &bHandle);
+            self->hide();
+        });
+
         if (bHandle)
             return 0;
-
+    }
         break;
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
-    case WM_LBUTTONUP: {
+    case WM_LBUTTONUP: 
         if (!m_initialize)
             break;
-        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, &bHandle);
+
+        postTaskToMainThread(FROM_HERE, [eventHandler, id, hWnd, message, wParam, lParam, info] {
+            if (!m_initialize || !net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            BOOL bHandle = FALSE;
+            eventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, &bHandle);
+        });
         if (bHandle)
             return 0;
         break;
-    }
+    
     case WM_PMW_MOUSEHWHEEL:
-    case WM_MOUSEWHEEL:
-        m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
+    case WM_MOUSEWHEEL: 
+        postTaskToMainThread(FROM_HERE, [eventHandler, id, hWnd, message, wParam, lParam] {
+            if (!m_initialize || !net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            eventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
+        });
         break;
 
     case WM_SYSKEYDOWN:
-    case WM_KEYDOWN: {
+    case WM_KEYDOWN: 
         if (!m_initialize)
             break;
-        unsigned int virtualKeyCode = wParam;
-        WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
 
-        bool handled = m_popupImpl->handleInputEvent(keyEvent);
-        if (handled)
+        postTaskToMainThread(FROM_HERE, [popupImpl, id, hWnd, message, wParam, lParam] {
+            if (!m_initialize || !net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
+            bool handled = popupImpl->handleInputEvent(keyEvent);
+        });
+        if (bHandle)
             return 0;
         break;
-    }
-    case WM_CHAR: {
-        lResult = 0;
-        switch (wParam) {
-        case 0x0D:   // Enter/Return
-            //m_popupImpl->close();
-//             index = focusedIndex();
-//             ASSERT(index >= 0);
-//             client()->valueChanged(index);
-            break;
-        case 0x1B:   // Escape
-            //m_popupImpl->close();
-            break;
-        case 0x09:   // TAB
-        case 0x08:   // Backspace
-        case 0x0A:   // Linefeed
-        default:     // Character
-            lResult = 1;
-            break;
-        }
-        break;
-    }
-
+    
     case WM_PAINT: {
         PAINTSTRUCT paintInfo;
         ::BeginPaint(popupHandle(), &paintInfo);
@@ -265,7 +301,6 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         //paint(clientRect(), (HDC)wParam);
         break;
     case WM_GETOBJECT:
-        //onGetObject(wParam, lParam, lResult);
         break;
 
     case WM_TIMER:
@@ -273,17 +308,24 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         m_lastFocusWnd = hFocusWnd;
         break;
     case WM_PMW_KILLFOCUS:
-    case WM_KILLFOCUS:
-        hide();
+    case WM_KILLFOCUS: {
+        postTaskToMainThread(FROM_HERE, [self, id] {
+            if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            self->hide();
+        });
+    }
         break;
-    case WM_INIT_MENU:
-        initialize();
-        break;
-    case WM_COMMIT:
-        beginMainFrame();
+    case WM_INIT_MENU: {
+        postTaskToMainThread(FROM_HERE, [self, id] {
+            if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            self->initialize();
+        });
+    }
         break;
     case WM_MOUSEACTIVATE:
-        lResult = MA_NOACTIVATE;
+        lResult = MA_NOACTIVATE; // 这句很重要！
         break;
     default:
         lResult = ::DefWindowProc(hWnd, message, wParam, lParam);
@@ -294,27 +336,35 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 void PopupMenuWin::beginMainFrame()
 {
-    m_isCommiting = false;
-    if (!m_needsCommit || !m_initialize)
+    if (!m_initialize)
         return;
-    m_needsCommit = false;
+    m_isCommiting = false;
+    if (!m_allowBeginFrame)
+        return;
+    m_allowBeginFrame = false;
     
-    blink::WebPagePopup* popup = m_popupImpl;
+    if (m_layerTreeHost) {
+        updataSize(false);
+        updataMcLayerTreeHost();
+    } else 
+        updataSize(true);
+}
 
-    updataSize();
-
+void PopupMenuWin::updataMcLayerTreeHost()
+{
     m_layerTreeHost->beginRecordActions(true);
 
     double lastFrameTimeMonotonic = WTF::currentTime();
     WebBeginFrameArgs frameTime(m_lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
-    popup->beginFrame(frameTime);
-    popup->layout();
+    m_popupImpl->beginFrame(frameTime);
+    m_popupImpl->layout();
+    m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
 
     if (0)
         m_layerTreeHost->showDebug();
 
     m_layerTreeHost->recordDraw();
-    
+
     m_layerTreeHost->preDrawFrame();
     updataPaint();
     m_layerTreeHost->postDrawFrame();
@@ -322,24 +372,45 @@ void PopupMenuWin::beginMainFrame()
     m_layerTreeHost->endRecordActions();
 }
 
-void PopupMenuWin::updataSize()
+void PopupMenuWin::updataSize(bool needShow)
 {
-    if (!m_needResize || !m_hPopup)
+    if (!m_initialize || !m_hPopup)
         return;
+
+    HWND hParentWnd = m_hParentWnd;
+    HWND hPopup = m_hPopup;
+    if (!m_needResize) {
+        postTaskToUiThread(FROM_HERE, m_hParentWnd, [hPopup, needShow] {
+            if (needShow)
+                ::ShowWindow(hPopup, SW_SHOWNOACTIVATE);
+        });
+        return;
+    }
     m_needResize = false;
-
-    blink::WebPagePopup* popup = m_popupImpl;
-
-    bool needsCommit = m_needsCommit;
+    
+    bool allowBeginFrame = m_allowBeginFrame;
     blink::IntSize size(m_rect.width(), m_rect.height());
+
     if (m_layerTreeHost)
         m_layerTreeHost->setViewportSize(size);
-    popup->resize(size);
-    m_needsCommit = needsCommit;
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        m_ccLayerTreeWrap->onHostResized(size.width(), size.height());
+#endif
+
+    m_popupImpl->resize(size);
+    m_allowBeginFrame = allowBeginFrame;
 
     POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
-    ::ClientToScreen(m_hParentWnd, &pos);
-    ::SetWindowPos(m_hPopup, HWND_TOP, pos.x, pos.y, m_rect.width(), m_rect.height(), /*SWP_SHOWWINDOW |*/ SWP_NOACTIVATE);
+    
+    int width = m_rect.width();
+    int height = m_rect.height();
+    postTaskToUiThread(FROM_HERE, m_hParentWnd, [pos, hPopup, hParentWnd, needShow, width, height] {
+        //::ClientToScreen(hParentWnd, (LPPOINT)&pos);
+        ::SetWindowPos(hPopup, HWND_TOP, pos.x, pos.y, width, height, /*SWP_SHOWWINDOW |*/ SWP_NOACTIVATE);
+        if (needShow)
+            ::ShowWindow(hPopup, SW_SHOWNOACTIVATE);
+    });
 }
 
 void PopupMenuWin::show(WebNavigationPolicy)
@@ -349,17 +420,24 @@ void PopupMenuWin::show(WebNavigationPolicy)
     m_isVisible = true;
     postCommit();
     
-    updataSize();
+    updataSize(false);
 }
 
 void PopupMenuWin::hide()
 {
+    if (!m_initialize)
+        return;
     m_isVisible = false;
     m_webViewImpl->hidePopups();
 }
 
-void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
+void PopupMenuWin::paint(HDC hdc, const RECT& rcPaint)
 {
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        m_ccLayerTreeWrap->firePaintEvent(hdc, rcPaint);
+#endif
+
     if (!m_memoryCanvas)
         return;
     skia::DrawToNativeContext(m_memoryCanvas, hdc, rcPaint.left, rcPaint.top, &rcPaint);
@@ -403,8 +481,7 @@ void PopupMenuWin::updataPaint()
     skia::EndPlatformPaint(m_memoryCanvas);
 
     if (m_isVisible && canShow) {
-        updataSize();
-        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+        updataSize(true);
     }
 }
 
@@ -449,41 +526,83 @@ LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lP
     return ::CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 }
 
-void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
+void PopupMenuWin::asynCreateWndOnMainThread()
 {
+    if (!m_initialize)
+        return;
+
+    m_client->onPopupMenuCreate(m_hPopup);
+
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        m_ccLayerTreeWrap->setHWND(m_hPopup);
+#endif
+}
+
+void PopupMenuWin::asynCreateWndOnUiThread()
+{
+    WTF::Locker<RecursiveMutex> locker(g_popupMenuMutex);
+    if (!m_initialize)
+        return;
+
     if (!m_hPopup) {
         registerClass();
 
         m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP/* | WS_DISABLED*/,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/nullptr, 0, 0, this);
-
-        //::SetTimer(m_hPopup, 0x123451, 100, nullptr);
         
         DWORD dwProcessID;
         DWORD dwThreadID;
-        dwThreadID = GetWindowThreadProcessId(m_hParentWnd, &dwProcessID);
+        dwThreadID = ::GetWindowThreadProcessId(m_hParentWnd, &dwProcessID);
 
-        g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), /*GetCurrentThreadId()*/dwThreadID);
+        //g_hMouseHook = ::SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), /*GetCurrentThreadId()*/dwThreadID);
     }
-    m_client->onPopupMenuCreate(m_hPopup);
+
+    int id = m_id;
+    PopupMenuWin* self = this;
+    postTaskToMainThread(FROM_HERE, [self, id] {
+        if (!net::ActivatingObjCheck::inst()->isActivating(id))
+            return;
+        self->asynCreateWndOnMainThread();
+    });
+
     initWndStyle(m_hPopup);
 
-    if (m_needsCommit)
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-
     m_lastFocusWnd = ::GetForegroundWindow();
+
+    postCommit();
 }
 
 WebWidget* PopupMenuWin::createWnd()
 {
-    if (!m_hPopup)
-        m_asynStartCreateWndTimer.startOneShot(0.0, FROM_HERE);
-    else {
-        if (m_needsCommit)
-            ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-        ::SetPropW(m_hPopup, kPopupWindowClassName, (HANDLE)this);
-        ::SetWindowPos(m_hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
-        ::ShowWindow(m_hPopup, SW_HIDE);
+    int id = m_id;
+    PopupMenuWin* self = (PopupMenuWin*)this;
+    if (!m_hPopup) {
+        postTaskToUiThread(FROM_HERE, m_hParentWnd, [self] {
+            self->asynCreateWndOnUiThread();
+        });
+    } else {
+        HWND hPopup = m_hPopup;
+
+        postTaskToUiThread(FROM_HERE, m_hParentWnd, [self, id, hPopup] {
+            WTF::Locker<RecursiveMutex> locker(g_popupMenuMutex);
+            if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+
+            ::SetPropW(hPopup, kPopupWindowClassName, (HANDLE)self);
+            ::SetWindowPos(hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
+            ::ShowWindow(hPopup, SW_HIDE);
+
+            postTaskToMainThread(FROM_HERE, [self, id, hPopup] {
+                if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                    return;
+#ifndef NO_USE_ORIG_CHROME
+                if (self->m_ccLayerTreeWrap)
+                    self->m_ccLayerTreeWrap->setHWND(hPopup);
+#endif
+                self->beginMainFrame();
+            });
+        });        
     }
 
     initialize();
@@ -492,14 +611,26 @@ WebWidget* PopupMenuWin::createWnd()
 
 void PopupMenuWin::initialize()
 {
-    if (m_initialize)
+    g_popupMenuMutex.lock();
+    if (m_initialize) {
+        g_popupMenuMutex.unlock();
         return;
+    }
     m_initialize = true;
+    g_popupMenuMutex.unlock();
+    
+#ifndef NO_USE_ORIG_CHROME
+    if (OrigChromeMgr::getInst())
+        m_ccLayerTreeWrap = new LayerTreeWrap(this, true);
+    else
+#endif
+        m_layerTreeHost = new mc::LayerTreeHost(this, nullptr);
 
-    m_layerTreeHost = new cc::LayerTreeHost(this, nullptr);
     m_popupImpl = WebPagePopup::create(this);
     m_platformEventHandler = new PlatformEventHandler(m_popupImpl, nullptr);
-    m_layerTreeHost->setWebGestureCurveTarget(m_webViewImpl);
+
+    if (m_layerTreeHost)
+        m_layerTreeHost->setWebGestureCurveTarget(m_webViewImpl);
     m_popupImpl->setFocus(true);
 }
 
@@ -513,10 +644,18 @@ WebWidget* PopupMenuWin::create(PopupMenuWinClient* client, HWND hWnd, blink::In
 
 void PopupMenuWin::postCommit()
 {
-    m_needsCommit = true;
+    m_allowBeginFrame = true;
     if (!m_isCommiting && m_hPopup) {
         m_isCommiting = true;
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+
+        int id = m_id;
+        PopupMenuWin* self = (PopupMenuWin*)this;
+
+        postTaskToMainThread(FROM_HERE, [self, id] {
+            if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            self->beginMainFrame();
+        });
     }
 }
 
@@ -564,8 +703,21 @@ void PopupMenuWin::scheduleAnimation()
     postCommit();
 }
 
+void PopupMenuWin::initializeLayerTreeView()
+{
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        m_ccLayerTreeWrap->initializeLayerTreeView();
+#endif
+}
+
 WebLayerTreeView* PopupMenuWin::layerTreeView()
 {
+    //g_popupMenuIniting = false;
+#ifndef NO_USE_ORIG_CHROME
+    if (m_ccLayerTreeWrap)
+        return m_ccLayerTreeWrap->layerTreeView();
+#endif
     return m_layerTreeHost;
 }
 
@@ -573,6 +725,83 @@ bool PopupMenuWin::initSetting()
 {
     return true;
 }
+
+#ifndef NO_USE_ORIG_CHROME
+
+void PopupMenuWin::onBeginPaint(HDC hdc, const RECT& damageRect)
+{
+
+}
+
+bool PopupMenuWin::onEndPaintStep1(HDC hdc, const RECT& damageRect)
+{
+    return false;
+}
+
+void PopupMenuWin::onEndPaintStep2(HDC hdc, const RECT& damageRect)
+{
+    WTF::Locker<RecursiveMutex> locker(g_popupMenuMutex);
+    if (!m_initialize)
+        return;
+
+    COLORREF color = ::GetPixel(hdc, 1, 1);
+
+    bool canShow = false;
+    if (m_hPopup && 0 != color) {
+        canShow = true;
+
+//         HBRUSH hbrush;
+//         hbrush = ::CreateSolidBrush(rand());
+//         ::SelectObject(hdc, hbrush);
+//         ::Rectangle(hdc, 0, 0, damageRect.right - damageRect.left, damageRect.bottom - damageRect.top);
+//         ::DeleteObject(hbrush);
+
+        HDC hScreenDC = ::GetDC(m_hPopup);
+        ::BitBlt(hScreenDC, 0, 0,
+            damageRect.right - damageRect.left, damageRect.bottom - damageRect.top,
+            hdc,
+            damageRect.left, damageRect.top, SRCCOPY);
+
+        ::ReleaseDC(m_hPopup, hScreenDC);
+    }
+
+    if (m_isVisible && canShow) {
+        int id = m_id;
+        PopupMenuWin* self = this;
+        postTaskToMainThread(FROM_HERE, [self, id] {
+            if (!net::ActivatingObjCheck::inst()->isActivating(id))
+                return;
+            self->updataSize(true);
+        });
+    }
+}
+
+void PopupMenuWin::onLayout()
+{
+    if (m_popupImpl)
+        m_popupImpl->layout();
+}
+
+void PopupMenuWin::onBeginMainFrame()
+{
+    if (!m_webViewImpl)
+        return;
+
+    double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
+
+    WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
+    m_popupImpl->beginFrame(frameArgs);
+    m_popupImpl->layout();
+
+    m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
+}
+
+COLORREF PopupMenuWin::getBackgroundColor()
+{
+    return 0xffffffff;
+}
+
+#endif
 
 DEFINE_TRACE(PopupMenuWin)
 {

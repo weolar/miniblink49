@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LocalDebuggerCommandArguments>E:\mycode\electron-v1.3.3\electron-v1.3.3-win32-ia32\demo\Hozz-master\src\browser.js</LocalDebuggerCommandArguments>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\out\$(Configuration)\</LocalDebuggerWorkingDirectory>
-  </PropertyGroup>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\out\$(Configuration)\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommandArguments>W:\mycode\mb49\out\miniblink-release\vscode\out\main.js</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>E:\mycode\vscode-master\src\main.js</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommand>W:\mycode\mb49\out\debug\electron.exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>W:\mycode\mb49\out\debug</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
-    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\out\$(Configuration)\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommandArguments>G:\test\web_test\ele_test\ziniao\app\src\main\main.js</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommandArguments>G:\test\web_test\ele_test\chiyanjiasu_mini\resources\app\src\main\index.js</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>G:\mycode\mb\out\Release\electron.exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>G:\mycode\mb\out\Release</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

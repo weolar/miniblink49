@@ -86,8 +86,8 @@ public:
     // loader, and therefore the methods of this class for receiving
     // asynchronous events from the loader won't be invoked.
     virtual void stop() override;
-
     virtual bool hasPendingActivity() const override;
+    virtual ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<EventSource*>(object); }
 
     DECLARE_VIRTUAL_TRACE();
 

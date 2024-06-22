@@ -335,7 +335,9 @@ static void installV8HTMLEmbedElementTemplate(v8::Local<v8::FunctionTemplate> fu
     functionTemplate->InstanceTemplate()->SetCallAsFunctionHandler(V8HTMLEmbedElement::legacyCallCustom);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8HTMLEmbedElement::domTemplate(v8::Isolate* isolate)

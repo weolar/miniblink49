@@ -16,8 +16,8 @@
 #include 'src/objects/js-regexp-string-iterator.h'
 #include 'src/objects/module.h'
 #include 'src/objects/stack-frame-info.h'
+#include 'src/builtins/builtins-regexp-gen.h'
 
-type Arguments constexpr 'CodeStubArguments*';
 type void;
 type never;
 
@@ -40,12 +40,12 @@ type int31 extends int32
 type uint31 extends uint32
     generates 'TNode<Uint32T>' constexpr 'uint31_t';
 type int16 extends int31
-    generates 'TNode<Int32T>' constexpr 'int16_t';
+    generates 'TNode<Int16T>' constexpr 'int16_t';
 type uint16 extends uint31
-    generates 'TNode<Uint32T>' constexpr 'uint16_t';
-type int8 extends int16 generates 'TNode<Int32T>' constexpr 'int8_t';
+    generates 'TNode<Uint16T>' constexpr 'uint16_t';
+type int8 extends int16 generates 'TNode<Int8T>' constexpr 'int8_t';
 type uint8 extends uint16
-    generates 'TNode<Uint32T>' constexpr 'uint8_t';
+    generates 'TNode<Uint8T>' constexpr 'uint8_t';
 type int64 generates 'TNode<Int64T>' constexpr 'int64_t';
 type intptr generates 'TNode<IntPtrT>' constexpr 'intptr_t';
 type uintptr generates 'TNode<UintPtrT>' constexpr 'uintptr_t';
@@ -56,10 +56,15 @@ type bint generates 'TNode<BInt>' constexpr 'BInt';
 type string constexpr 'const char*';
 
 type RawPtr generates 'TNode<RawPtrT>' constexpr 'void*';
-type AbstractCode extends HeapObject generates 'TNode<AbstractCode>';
-type Code extends AbstractCode generates 'TNode<Code>';
+type Code extends HeapObject generates 'TNode<Code>';
 type BuiltinPtr extends Smi generates 'TNode<BuiltinPtr>';
-type Context extends HeapObject generates 'TNode<Context>';
+extern class Context extends HeapObject {
+  length: Smi;
+  scope_info: ScopeInfo;
+  previous: Object;
+  extension: Object;
+  native_context: Object;
+}
 type NativeContext extends Context;
 extern class Oddball extends HeapObject {
   to_number_raw: float64;
@@ -115,12 +120,16 @@ type NaN extends HeapNumber;
 
 extern class Struct extends HeapObject {}
 
+@generatePrint
 extern class Tuple2 extends Struct {
-  value_1: Object;
-  value_2: Object;
+  value1: Object;
+  value2: Object;
 }
 
-extern class Tuple3 extends Tuple2 { value_3: Object; }
+@generatePrint
+extern class Tuple3 extends Tuple2 {
+  value3: Object;
+}
 
 // A direct string can be accessed directly through CSA without going into the
 // C++ runtime. See also: ToDirectStringAssembler.
@@ -138,7 +147,17 @@ extern class FixedDoubleArray extends FixedArrayBase {
   floats[length]: float64;
 }
 
+extern class WeakFixedArray extends HeapObject { length: Smi; }
+
 extern class ByteArray extends FixedArrayBase {}
+
+type BytecodeArray extends FixedArrayBase;
+
+@generatePrint
+extern class EnumCache extends Struct {
+  keys: FixedArray;
+  indices: FixedArray;
+}
 
 // These intrinsics should never be called from Torque code. They're used
 // internally by the 'new' operator and only declared here because it's simpler
@@ -158,13 +177,25 @@ extern class JSObject extends JSReceiver { elements: FixedArrayBase; }
 macro NewJSObject(
     map: Map, properties: FixedArrayBase | Smi,
     elements: FixedArrayBase): JSObject {
-  return new JSObject{map, properties, elements};
+  return new JSObject{map, properties_or_hash: properties, elements};
 }
 macro NewJSObject(implicit context: Context)(): JSObject {
   const objectFunction: JSFunction = GetObjectFunction();
   const map: Map = Cast<Map>(objectFunction.prototype_or_initial_map)
       otherwise unreachable;
-  return new JSObject{map, kEmptyFixedArray, kEmptyFixedArray};
+  return new JSObject{
+    map,
+    properties_or_hash: kEmptyFixedArray,
+    elements: kEmptyFixedArray
+  };
+}
+
+extern class JSFunction extends JSObject {
+  shared_function_info: SharedFunctionInfo;
+  context: Context;
+  feedback_cell: Smi;
+  weak code: Code;
+  weak prototype_or_initial_map: JSReceiver | Map;
 }
 
 extern class JSProxy extends JSReceiver {
@@ -175,6 +206,17 @@ extern class JSProxy extends JSReceiver {
 extern class JSProxyRevocableResult extends JSObject {
   proxy: Object;
   revoke: Object;
+}
+
+macro NewJSProxyRevocableResult(implicit context: Context)(
+    proxy: JSProxy, revoke: JSFunction): JSProxyRevocableResult {
+  return new JSProxyRevocableResult{
+    map: GetProxyRevocableResultMap(),
+    properties_or_hash: kEmptyFixedArray,
+    elements: kEmptyFixedArray,
+    proxy,
+    revoke
+  };
 }
 
 extern class JSGlobalProxy extends JSObject { native_context: Object; }
@@ -204,16 +246,35 @@ extern class JSArray extends JSObject {
 
 macro NewJSArray(implicit context: Context)(
     map: Map, elements: FixedArrayBase): JSArray {
-  return new JSArray{map, kEmptyFixedArray, elements, elements.length};
+  return new JSArray{
+    map,
+    properties_or_hash: kEmptyFixedArray,
+    elements,
+    length: elements.length
+  };
 }
 
 macro NewJSArray(implicit context: Context)(): JSArray {
   return new JSArray{
-    GetFastPackedSmiElementsJSArrayMap(),
-    kEmptyFixedArray,
-    kEmptyFixedArray,
-    0
+    map: GetFastPackedSmiElementsJSArrayMap(),
+    properties_or_hash: kEmptyFixedArray,
+    elements: kEmptyFixedArray,
+    length: 0
   };
+}
+
+struct HoleIterator {
+  Next(): Object labels NoMore() {
+    return Hole;
+  }
+}
+
+macro NewJSArray(implicit context: Context)(map: Map, length: Smi): JSArray {
+  const map = GetFastPackedSmiElementsJSArrayMap();
+  const i = HoleIterator{};
+  const elements = new FixedArray{map, length, objects: ...i};
+  return new
+  JSArray{map, properties_or_hash: kEmptyFixedArray, elements, length};
 }
 
 // A HeapObject with a JSArray map, and either fast packed elements, or fast
@@ -291,6 +352,11 @@ extern class PreparseData extends HeapObject {
   inner_length: int32;
 }
 
+extern class InterpreterData extends Struct {
+  bytecode_array: BytecodeArray;
+  interpreter_trampoline: Code;
+}
+
 extern class SharedFunctionInfo extends HeapObject {
   weak function_data: Object;
   name_or_scope_info: String | NoSharedNameSentinel | ScopeInfo;
@@ -306,14 +372,6 @@ extern class SharedFunctionInfo extends HeapObject {
 
 extern class SharedFunctionInfoWithID extends SharedFunctionInfo {
   unique_id: int32;
-}
-
-extern class JSFunction extends JSObject {
-  shared_function_info: SharedFunctionInfo;
-  context: Context;
-  feedback_cell: Smi;
-  weak code: Code;
-  weak prototype_or_initial_map: JSReceiver | Map;
 }
 
 extern class JSBoundFunction extends JSObject {
@@ -364,6 +422,8 @@ const ITERATOR_RESULT_MAP_INDEX: constexpr NativeContextSlot
     generates 'Context::ITERATOR_RESULT_MAP_INDEX';
 const JS_ARRAY_PACKED_SMI_ELEMENTS_MAP_INDEX: constexpr NativeContextSlot
     generates 'Context::JS_ARRAY_PACKED_SMI_ELEMENTS_MAP_INDEX';
+const PROXY_REVOCABLE_RESULT_MAP_INDEX: constexpr NativeContextSlot
+    generates 'Context::PROXY_REVOCABLE_RESULT_MAP_INDEX';
 extern operator '[]' macro LoadContextElement(
     NativeContext, NativeContextSlot): Object;
 extern operator '[]=' macro StoreContextElement(
@@ -412,8 +472,12 @@ extern class JSTypedArray extends JSArrayBufferView {
         Convert<uintptr>(externalPointer) >= Convert<uintptr>(backingStore));
 
     this.buffer = buffer;
-    this.elements = new
-    FixedTypedArrayBase{map, length, basePointer, externalPointer};
+    this.elements = new FixedTypedArrayBase{
+      map,
+      length,
+      base_pointer: basePointer,
+      external_pointer: externalPointer
+    };
   }
 
   length: Smi;
@@ -496,7 +560,16 @@ extern class ObjectTemplateInfo extends TemplateInfo {
 
 extern class PropertyArray extends HeapObject { length_and_hash: Smi; }
 
-type JSDataView extends JSArrayBufferView generates 'TNode<JSDataView>';
+extern class DependentCode extends WeakFixedArray {}
+
+extern class PropertyCell extends HeapObject {
+  name: Name;
+  property_details_raw: Smi;
+  value: Object;
+  dependent_code: DependentCode;
+}
+
+extern class JSDataView extends JSArrayBufferView {}
 
 type InstanceType generates 'TNode<Int32T>' constexpr 'InstanceType';
 type ElementsKind generates 'TNode<Int32T>' constexpr 'ElementsKind';
@@ -596,12 +669,36 @@ extern class StackFrameInfo extends Struct {
   script_name_or_source_url: Object;
   function_name: Object;
   flag: Smi;
+}
+
+extern class StackTraceFrame extends Struct {
+  frame_array: Object;
+  frame_index: Smi;
+  frame_info: Object;
   id: Smi;
 }
 
 extern class ClassPositions extends Struct {
   start: Smi;
   end: Smi;
+}
+
+type WasmInstanceObject extends JSObject;
+
+extern class WasmExportedFunctionData extends Struct {
+  wrapper_code: Code;
+  instance: WasmInstanceObject;
+  jump_table_offset: Smi;
+  function_index: Smi;
+}
+
+extern class WasmDebugInfo extends Struct {
+  instance: WasmInstanceObject;
+  interpreter_handle: Foreign | Undefined;
+  interpreted_functions: FixedArray;
+  locals_names: FixedArray;
+  c_wasm_entries: FixedArray;
+  c_wasm_entry_map: Foreign;  // Managed<wasm::SignatureMap>
 }
 
 extern class WasmExceptionTag extends Struct { index: Smi; }
@@ -672,6 +769,8 @@ const kAllFixedArrays: constexpr ExtractFixedArrayFlags
 const kFixedArrays: constexpr ExtractFixedArrayFlags
     generates 'CodeStubAssembler::ExtractFixedArrayFlag::kFixedArrays';
 
+const kFixedArrayMapRootIndex:
+    constexpr RootIndex generates 'RootIndex::kFixedArrayMap';
 const kFixedCOWArrayMapRootIndex:
     constexpr RootIndex generates 'RootIndex::kFixedCOWArrayMap';
 const kEmptyFixedArrayRootIndex:
@@ -707,6 +806,12 @@ const kTypedArrayTooShort: constexpr MessageTemplate
     generates 'MessageTemplate::kTypedArrayTooShort';
 const kInvalidCountValue: constexpr MessageTemplate
     generates 'MessageTemplate::kInvalidCountValue';
+const kProxyNonObject: constexpr MessageTemplate
+    generates 'MessageTemplate::kProxyNonObject';
+const kProxyHandlerOrTargetRevoked: constexpr MessageTemplate
+    generates 'MessageTemplate::kProxyHandlerOrTargetRevoked';
+const kConstructorNotFunction: constexpr MessageTemplate
+    generates 'MessageTemplate::kConstructorNotFunction';
 
 const kMaxArrayIndex:
     constexpr uint32 generates 'JSArray::kMaxArrayIndex';
@@ -828,11 +933,44 @@ extern class PromiseReaction extends Struct {
   promise_or_capability: JSPromise | PromiseCapability | Undefined;
 }
 
+extern class PromiseReactionJobTask extends Microtask {
+  argument: Object;
+  context: Context;
+  handler: Callable | Undefined;
+  promise_or_capability: JSPromise | PromiseCapability | Undefined;
+}
+
+extern class PromiseFulfillReactionJobTask extends PromiseReactionJobTask {}
+
+extern class PromiseRejectReactionJobTask extends PromiseReactionJobTask {}
+
+extern class PromiseResolveThenableJobTask extends Microtask {
+  context: Context;
+  promise_to_resolve: JSPromise;
+  then: JSReceiver;
+  thenable: JSReceiver;
+}
+
 extern class JSRegExp extends JSObject {
   data: FixedArray | Undefined;
   source: String | Undefined;
   flags: Smi | Undefined;
 }
+
+// Note: Although a condition for a FastJSRegExp is having a positive smi
+// lastIndex (see RegExpBuiltinsAssembler::BranchIfFastRegExp), it is possible
+// for this to change without transitioning the transient type. As a precaution,
+// validate the lastIndex is positive smi when used in fast paths.
+transient type FastJSRegExp extends JSRegExp;
+
+extern operator '.global' macro
+RegExpBuiltinsAssembler::FastFlagGetterGlobal(FastJSRegExp): bool;
+extern operator '.unicode' macro
+RegExpBuiltinsAssembler::FastFlagGetterUnicode(FastJSRegExp): bool;
+extern operator '.lastIndex' macro
+RegExpBuiltinsAssembler::FastLoadLastIndex(FastJSRegExp): Smi;
+extern operator '.lastIndex=' macro
+RegExpBuiltinsAssembler::FastStoreLastIndex(FastJSRegExp, Smi): void;
 
 extern class JSRegExpResult extends JSArray {
   index: Object;
@@ -844,6 +982,25 @@ extern class JSRegExpStringIterator extends JSObject {
   iterating_reg_exp: Object;
   iterated_string: String;
   flags: Smi;
+}
+
+const kRegExpMatchInfoFirstCaptureIndex:
+    constexpr int31 generates 'RegExpMatchInfo::kFirstCaptureIndex';
+macro GetStartOfCaptureIndex(captureIndex: constexpr int31): constexpr int31 {
+  return kRegExpMatchInfoFirstCaptureIndex + (captureIndex * 2);
+}
+
+extern class RegExpMatchInfo extends FixedArray {
+  GetStartOfCapture(implicit context: Context)(captureIndex: constexpr int31):
+      Smi {
+    const index: constexpr int31 = GetStartOfCaptureIndex(captureIndex);
+    return UnsafeCast<Smi>(this.objects[index]);
+  }
+  GetEndOfCapture(implicit context: Context)(captureIndex: constexpr int31):
+      Smi {
+    const index: constexpr int31 = GetStartOfCaptureIndex(captureIndex) + 1;
+    return UnsafeCast<Smi>(this.objects[index]);
+  }
 }
 
 extern class AccessorInfo extends Struct {
@@ -864,6 +1021,51 @@ extern class AccessorPair extends Struct {
 extern class BreakPoint extends Tuple2 {}
 extern class BreakPointInfo extends Tuple2 {}
 
+extern class WasmModuleObject extends JSObject {
+  native_module: Foreign;
+  export_wrappers: FixedArray;
+  script: Script;
+  weak_instance_list: WeakArrayList;
+  asm_js_offset_table: ByteArray;
+  break_point_infos: FixedArray;
+}
+
+extern class WasmTableObject extends JSObject {
+  elements: FixedArray;
+  maximum_length: Smi | HeapNumber | Undefined;
+  dispatch_tables: FixedArray;
+  raw_type: Smi;
+}
+
+extern class WasmMemoryObject extends JSObject {
+  array_buffer: JSArrayBuffer;
+  maximum_pages: Smi;
+  instances: WeakArrayList;
+}
+
+extern class WasmGlobalObject extends JSObject {
+  untagged_buffer: JSArrayBuffer;
+  tagged_buffer: FixedArray;
+  offset: Smi;
+  flags: Smi;
+}
+
+extern class WasmExceptionObject extends JSObject {
+  serialized_signature: ByteArray;  // PodArray<wasm::ValueType>
+  exception_tag: HeapObject;
+}
+
+extern class WasmExceptionPackage extends JSReceiver {}
+
+extern class WasmExportedFunction extends JSFunction {}
+
+extern class AsmWasmData extends Struct {
+  managed_native_module: Foreign;  // Managed<wasm::NativeModule>
+  export_wrappers: FixedArray;
+  asm_js_offset_table: ByteArray;
+  uses_bitset: HeapNumber;
+}
+
 extern macro Is64(): constexpr bool;
 
 extern macro SelectBooleanConstant(bool): Boolean;
@@ -873,17 +1075,18 @@ extern macro Print(constexpr string, Object);
 extern macro Comment(constexpr string);
 extern macro Print(Object);
 extern macro DebugBreak();
-extern macro ToInteger_Inline(Context, Object): Number;
-extern macro ToInteger_Inline(
+extern transitioning macro ToInteger_Inline(Context, Object): Number;
+extern transitioning macro ToInteger_Inline(
     Context, Object, constexpr ToIntegerTruncationMode): Number;
-extern macro ToLength_Inline(Context, Object): Number;
-extern macro ToNumber_Inline(Context, Object): Number;
-extern macro ToSmiIndex(implicit context: Context)(Object): PositiveSmi
-    labels IfRangeError;
-extern macro ToSmiLength(implicit context: Context)(Object): PositiveSmi
-    labels IfRangeError;
-extern macro ToString_Inline(Context, Object): String;
-extern macro ToThisString(implicit context: Context)(Object, String): String;
+extern transitioning macro ToLength_Inline(Context, Object): Number;
+extern transitioning macro ToNumber_Inline(Context, Object): Number;
+extern transitioning macro ToSmiIndex(implicit context: Context)(Object):
+    PositiveSmi labels IfRangeError;
+extern transitioning macro ToSmiLength(implicit context: Context)(Object):
+    PositiveSmi labels IfRangeError;
+extern transitioning macro ToString_Inline(Context, Object): String;
+extern transitioning macro ToThisString(implicit context: Context)(
+    Object, String): String;
 extern transitioning macro GetProperty(implicit context: Context)(
     Object, Object): Object;
 extern transitioning builtin SetProperty(implicit context: Context)(
@@ -1091,6 +1294,10 @@ extern operator '|' macro WordOr(uintptr, uintptr): uintptr;
 extern operator '+' macro Int32Add(int32, int32): int32;
 extern operator '+' macro ConstexprUint32Add(
     constexpr uint32, constexpr int32): constexpr uint32;
+extern operator '+' macro ConstexprInt31Add(
+    constexpr int31, constexpr int31): constexpr int31;
+extern operator '*' macro ConstexprInt31Mul(
+    constexpr int31, constexpr int31): constexpr int31;
 extern operator '-' macro Int32Sub(int32, int32): int32;
 extern operator '*' macro Int32Mul(int32, int32): int32;
 extern operator '%' macro Int32Mod(int32, int32): int32;
@@ -1152,10 +1359,6 @@ extern operator '.instanceType' macro LoadInstanceType(HeapObject):
 extern operator '.length_intptr' macro LoadStringLengthAsWord(String): intptr;
 extern operator '.length_uint32' macro LoadStringLengthAsWord32(String): uint32;
 extern operator '.length_smi' macro LoadStringLengthAsSmi(String): Smi;
-
-extern operator '.length' macro GetArgumentsLength(constexpr Arguments): intptr;
-extern operator '[]' macro GetArgumentValue(
-    constexpr Arguments, intptr): Object;
 
 extern builtin StringAdd_CheckNone(implicit context: Context)(
     String, String): String;
@@ -1363,6 +1566,12 @@ Cast<JSArgumentsObjectWithLength>(implicit context: Context)(o: HeapObject):
   }
 }
 
+Cast<FastJSRegExp>(implicit context: Context)(o: HeapObject): FastJSRegExp
+    labels CastError {
+  if (regexp::BranchIfFastRegExp(o)) return %RawDownCast<FastJSRegExp>(o);
+  goto CastError;
+}
+
 Cast<FastJSArray>(implicit context: Context)(o: HeapObject): FastJSArray
     labels CastError {
   const map: Map = o.map;
@@ -1461,6 +1670,7 @@ extern macro Int32Constant(constexpr ElementsKind): ElementsKind;
 extern macro IntPtrConstant(constexpr NativeContextSlot): NativeContextSlot;
 extern macro IntPtrConstant(constexpr ContextSlot): ContextSlot;
 extern macro IntPtrConstant(constexpr intptr): intptr;
+extern macro SingleCharacterStringConstant(constexpr string): String;
 
 extern macro BitcastWordToTaggedSigned(intptr): Smi;
 extern macro BitcastWordToTaggedSigned(uintptr): Smi;
@@ -1686,6 +1896,8 @@ UnsafeCast<Object>(o: Object): Object {
   return o;
 }
 
+const kFixedArrayMap: Map =
+    %RawDownCast<Map>(LoadRoot(kFixedArrayMapRootIndex));
 const kCOWMap: Map = %RawDownCast<Map>(LoadRoot(kFixedCOWArrayMapRootIndex));
 const kEmptyFixedArray: FixedArray =
     %RawDownCast<FixedArray>(LoadRoot(kEmptyFixedArrayRootIndex));
@@ -1709,6 +1921,11 @@ extern operator '.elements_kind' macro LoadElementsKind(JSTypedArray):
     ElementsKind;
 
 extern operator '.length' macro LoadFastJSArrayLength(FastJSArray): Smi;
+operator '.length=' macro StoreFastJSArrayLength(
+    array: FastJSArray, length: Smi) {
+  const array: JSArray = array;
+  array.length = length;
+}
 
 extern operator '.objects[]' macro LoadFixedArrayElement(
     FixedArray, intptr): Object;
@@ -1844,6 +2061,11 @@ macro GetFastPackedSmiElementsJSArrayMap(implicit context: Context)(): Map {
       LoadNativeContext(context)[JS_ARRAY_PACKED_SMI_ELEMENTS_MAP_INDEX]);
 }
 
+macro GetProxyRevocableResultMap(implicit context: Context)(): Map {
+  return UnsafeCast<Map>(
+      LoadNativeContext(context)[PROXY_REVOCABLE_RESULT_MAP_INDEX]);
+}
+
 extern transitioning macro Call(Context, Callable, Object): Object;
 extern transitioning macro Call(Context, Callable, Object, Object): Object;
 extern transitioning macro Call(
@@ -1964,6 +2186,18 @@ struct FastJSArrayWitness {
     }
   }
 
+  StoreHole(k: Smi) {
+    if (this.hasDoubles) {
+      const elements = Cast<FixedDoubleArray>(this.unstable.elements)
+          otherwise unreachable;
+      StoreFixedDoubleArrayHoleSmi(elements, k);
+    } else {
+      const elements = Cast<FixedArray>(this.unstable.elements)
+          otherwise unreachable;
+      StoreFixedArrayElementSmi(elements, k, Hole, SKIP_WRITE_BARRIER);
+    }
+  }
+
   LoadElementOrUndefined(implicit context: Context)(k: Smi): Object {
     try {
       return this.LoadElementNoHole(k) otherwise FoundHole;
@@ -2019,23 +2253,23 @@ struct FastJSArrayWitness {
     }
   }
 
-  stable: JSArray;
+  const stable: JSArray;
   unstable: FastJSArray;
-  map: Map;
-  hasDoubles: bool;
-  hasSmis: bool;
+  const map: Map;
+  const hasDoubles: bool;
+  const hasSmis: bool;
   arrayIsPushable: bool;
 }
 
 macro NewFastJSArrayWitness(array: FastJSArray): FastJSArrayWitness {
   let kind = array.map.elements_kind;
   return FastJSArrayWitness{
-    array,
-    array,
-    array.map,
-    !IsElementsKindLessThanOrEqual(kind, HOLEY_ELEMENTS),
-    IsElementsKindLessThanOrEqual(kind, HOLEY_SMI_ELEMENTS),
-    false
+    stable: array,
+    unstable: array,
+    map: array.map,
+    hasDoubles: !IsElementsKindLessThanOrEqual(kind, HOLEY_ELEMENTS),
+    hasSmis: IsElementsKindLessThanOrEqual(kind, HOLEY_SMI_ELEMENTS),
+    arrayIsPushable: false
   };
 }
 
@@ -2094,7 +2328,7 @@ macro ToBoolean(obj: Object): bool {
   }
 }
 
-macro ToIndex(input: Object, context: Context): Number
+transitioning macro ToIndex(input: Object, context: Context): Number
     labels RangeError {
   if (input == Undefined) {
     return 0;

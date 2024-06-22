@@ -11281,7 +11281,37 @@ GetNumaAvailableMemoryNode(
     __out PULONGLONG AvailableBytes
     );
 
+typedef union _INIT_ONCE {
+    void * Ptr;
+} INIT_ONCE, *PINIT_ONCE;
 
+typedef BOOL(WINAPI *PINIT_ONCE_FN) (PINIT_ONCE InitOnce, void* Parameter, void**Context);
+
+typedef struct _CONDITION_VARIABLE {
+    void* Ptr;
+} CONDITION_VARIABLE, *PCONDITION_VARIABLE;
+
+typedef struct _RTL_SRWLOCK {
+    PVOID Ptr;
+} RTL_SRWLOCK, SRWLOCK, *PSRWLOCK, *PRTL_SRWLOCK;
+
+typedef struct _RTL_RUN_ONCE {
+    void* Ptr;
+} RTL_RUN_ONCE, *PRTL_RUN_ONCE;
+
+typedef PRTL_RUN_ONCE LPINIT_ONCE;
+
+#define RTL_CONDITION_VARIABLE_LOCKMODE_SHARED 0x1
+#define RTL_RUN_ONCE_INIT {0}
+#define RUN_ONCE_INIT {0}
+#define RTL_SRWLOCK_INIT {0}
+#define SRWLOCK_INIT {0}
+#define INIT_ONCE_STATIC_INIT {0}
+
+#define RTL_RUN_ONCE_CHECK_ONLY 0x00000001UL
+#define RTL_RUN_ONCE_ASYNC 0x00000002UL
+#define STATUS_INVALID_PARAMETER ((DWORD )0xC000000DL)
+#define RTL_RUN_ONCE_INIT_FAILED 0x00000004UL
 
 #if !defined(RC_INVOKED) /* RC complains about long symbols in #ifs */
 #if defined(ISOLATION_AWARE_ENABLED) && (ISOLATION_AWARE_ENABLED != 0)

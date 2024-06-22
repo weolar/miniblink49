@@ -293,41 +293,42 @@ void StyleAdjuster::adjustStyleForAlignment(ComputedStyle& style, const Computed
             style.setAlignItemsPosition(ItemPositionStretch);
     }
 
-    // The 'auto' keyword computes to 'stretch' on absolutely-positioned elements,
-    // and to the computed value of align-items on the parent (minus
-    // any 'legacy' keywords) on all other boxes.
-    if (style.alignSelfPosition() == ItemPositionAuto) {
-        if (absolutePositioned)
-            style.setAlignSelfPosition(ItemPositionStretch);
-        else
-            style.setAlignSelf(parentStyle.alignItems());
-    }
-
-    // Block Containers: For table cells, the behavior of the 'auto' depends on the computed
-    // value of 'vertical-align', otherwise behaves as 'start'.
-    // Flex Containers: 'auto' computes to 'flex-start'.
-    // Grid Containers: 'auto' computes to 'start', and 'stretch' behaves like 'start'.
-    if ((style.justifyContentPosition() == ContentPositionAuto) && (style.justifyContentDistribution() == ContentDistributionDefault)) {
-        if (style.isDisplayFlexibleOrGridBox()) {
-            if (style.isDisplayFlexibleBox())
-                style.setJustifyContentPosition(ContentPositionFlexStart);
-            else
-                style.setJustifyContentPosition(ContentPositionStart);
-        }
-    }
-
-    // Block Containers: For table cells, the behavior of the 'auto' depends on the computed
-    // value of 'vertical-align', otherwise behaves as 'start'.
-    // Flex Containers: 'auto' computes to 'stretch'.
-    // Grid Containers: 'auto' computes to 'start', and 'stretch' behaves like 'start'.
-    if (style.alignContentPosition() == ContentPositionAuto && style.alignContentDistribution() == ContentDistributionDefault) {
-        if (style.isDisplayFlexibleOrGridBox()) {
-            if (style.isDisplayFlexibleBox())
-                style.setAlignContentDistribution(ContentDistributionStretch);
-            else
-                style.setAlignContentPosition(ContentPositionStart);
-        }
-    }
+    // https://chromium.googlesource.com/chromium/src/+/89b4a2addd0e3e82a1ca8213d31323fdc2e6395a%5E%21/#F4
+    // https://chromium.googlesource.com/chromium/src/+/8e62cf6142a2e1d917eb64a7ead637bd020b39cc%5E%21/#F47
+//     // The 'auto' keyword computes to 'stretch' on absolutely-positioned elements,
+//     // and to the computed value of align-items on the parent (minus
+//     // any 'legacy' keywords) on all other boxes.
+//     if (style.alignSelfPosition() == ItemPositionAuto) {
+//         if (absolutePositioned)
+//             style.setAlignSelfPosition(ItemPositionStretch);
+//         else
+//             style.setAlignSelf(parentStyle.alignItems());
+//     }
+//     // Block Containers: For table cells, the behavior of the 'auto' depends on the computed
+//     // value of 'vertical-align', otherwise behaves as 'start'.
+//     // Flex Containers: 'auto' computes to 'flex-start'.
+//     // Grid Containers: 'auto' computes to 'start', and 'stretch' behaves like 'start'.
+//     if ((style.justifyContentPosition() == ContentPositionAuto) && (style.justifyContentDistribution() == ContentDistributionDefault)) {
+//         if (style.isDisplayFlexibleOrGridBox()) {
+//             if (style.isDisplayFlexibleBox())
+//                 style.setJustifyContentPosition(ContentPositionFlexStart);
+//             else
+//                 style.setJustifyContentPosition(ContentPositionStart);
+//         }
+//     }
+// 
+//     // Block Containers: For table cells, the behavior of the 'auto' depends on the computed
+//     // value of 'vertical-align', otherwise behaves as 'start'.
+//     // Flex Containers: 'auto' computes to 'stretch'.
+//     // Grid Containers: 'auto' computes to 'start', and 'stretch' behaves like 'start'.
+//     if (style.alignContentPosition() == ContentPositionAuto && style.alignContentDistribution() == ContentDistributionDefault) {
+//         if (style.isDisplayFlexibleOrGridBox()) {
+//             if (style.isDisplayFlexibleBox())
+//                 style.setAlignContentDistribution(ContentDistributionStretch);
+//             else
+//                 style.setAlignContentPosition(ContentPositionStart);
+//         }
+//     }
 }
 
 void StyleAdjuster::adjustStyleForHTMLElement(ComputedStyle& style, const ComputedStyle& parentStyle, HTMLElement& element)

@@ -34,8 +34,8 @@ namespace interpreter {
 namespace {
 
 using compiler::Node;
-typedef CodeStubAssembler::Label Label;
-typedef CodeStubAssembler::Variable Variable;
+using Label = CodeStubAssembler::Label;
+using Variable = CodeStubAssembler::Variable;
 
 #define IGNITION_HANDLER(Name, BaseAssembler)                         \
   class Name##Assembler : public BaseAssembler {                      \
@@ -824,11 +824,9 @@ class InterpreterBinaryOpAssembler : public InterpreterAssembler {
                                OperandScale operand_scale)
       : InterpreterAssembler(state, bytecode, operand_scale) {}
 
-  typedef Node* (BinaryOpAssembler::*BinaryOpGenerator)(Node* context,
-                                                        Node* left, Node* right,
-                                                        Node* slot,
-                                                        Node* vector,
-                                                        bool lhs_is_smi);
+  using BinaryOpGenerator =
+      Node* (BinaryOpAssembler::*)(Node* context, Node* left, Node* right,
+                                   Node* slot, Node* vector, bool lhs_is_smi);
 
   void BinaryOpWithFeedback(BinaryOpGenerator generator) {
     Node* lhs = LoadRegisterAtOperandIndex(0);
@@ -1189,9 +1187,6 @@ class UnaryNumericOpAssembler : public InterpreterAssembler {
 
   void UnaryOpWithFeedback() {
     VARIABLE(var_value, MachineRepresentation::kTagged, GetAccumulator());
-    Node* slot_index = BytecodeOperandIdx(0);
-    Node* maybe_feedback_vector = LoadFeedbackVector();
-
     VARIABLE(var_result, MachineRepresentation::kTagged);
     VARIABLE(var_float_value, MachineRepresentation::kFloat64);
     TVARIABLE(Smi, var_feedback, SmiConstant(BinaryOperationFeedback::kNone));
@@ -1202,8 +1197,9 @@ class UnaryNumericOpAssembler : public InterpreterAssembler {
     // We might have to try again after ToNumeric conversion.
     BIND(&start);
     {
-      Label if_smi(this), if_heapnumber(this), if_bigint(this);
-      Label if_oddball(this), if_other(this);
+      Label if_smi(this), if_heapnumber(this), if_oddball(this);
+      Label if_bigint(this, Label::kDeferred);
+      Label if_other(this, Label::kDeferred);
       Node* value = var_value.value();
       GotoIf(TaggedIsSmi(value), &if_smi);
       Node* map = LoadMap(value);
@@ -1269,6 +1265,8 @@ class UnaryNumericOpAssembler : public InterpreterAssembler {
     }
 
     BIND(&end);
+    Node* slot_index = BytecodeOperandIdx(0);
+    Node* maybe_feedback_vector = LoadFeedbackVector();
     UpdateFeedback(var_feedback.value(), maybe_feedback_vector, slot_index);
     SetAccumulator(var_result.value());
     Dispatch();
@@ -1432,11 +1430,10 @@ IGNITION_HANDLER(Inc, IncDecAssembler) { IncWithFeedback(); }
 // Decrements value in the accumulator by one.
 IGNITION_HANDLER(Dec, IncDecAssembler) { DecWithFeedback(); }
 
-// LogicalNot
+// ToBooleanLogicalNot
 //
 // Perform logical-not on the accumulator, first casting the
 // accumulator to a boolean value if required.
-// ToBooleanLogicalNot
 IGNITION_HANDLER(ToBooleanLogicalNot, InterpreterAssembler) {
   Node* value = GetAccumulator();
   Variable result(this, MachineRepresentation::kTagged);
@@ -2489,6 +2486,7 @@ IGNITION_HANDLER(CreateEmptyArrayLiteral, InterpreterAssembler) {
 // CreateArrayFromIterable
 //
 // Spread the given iterable from the accumulator into a new JSArray.
+// TODO(neis): Turn this into an intrinsic when we're running out of bytecodes.
 IGNITION_HANDLER(CreateArrayFromIterable, InterpreterAssembler) {
   Node* iterable = GetAccumulator();
   Node* context = GetContext();
@@ -2634,9 +2632,8 @@ IGNITION_HANDLER(CreateClosure, InterpreterAssembler) {
   Label if_undefined(this);
   TNode<FixedArray> feedback_cell_array =
       LoadClosureFeedbackArray(LoadRegister(Register::function_closure()));
-  TNode<FeedbackCell> feedback_cell = CAST(LoadFixedArrayElement(
-      feedback_cell_array, slot,
-      ClosureFeedbackCellArray::kFeedbackCellStartIndex * kTaggedSize));
+  TNode<FeedbackCell> feedback_cell =
+      CAST(LoadFixedArrayElement(feedback_cell_array, slot));
 
   Label if_fast(this), if_slow(this, Label::kDeferred);
   Branch(IsSetWord32<CreateClosureFlags::FastNewClosureBit>(flags), &if_fast,

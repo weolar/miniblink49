@@ -49,7 +49,7 @@ static bool hasAspectRatio(const LayoutBox& child)
 
 static inline ContentDistributionType resolvedContentAlignmentDistribution(const StyleContentAlignmentData& value, const StyleContentAlignmentData& normalValueBehavior)
 {
-    return (value.position() == ContentPositionAuto && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.distribution() : value.distribution();
+    return (value.position() == ContentPositionNormal && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.distribution() : value.distribution();
 }
 
 static ContentDistributionType resolvedJustifyContentDistribution(const ComputedStyle& style, const StyleContentAlignmentData& normalValueBehavior)
@@ -59,7 +59,7 @@ static ContentDistributionType resolvedJustifyContentDistribution(const Computed
 
 static inline ContentPosition resolvedContentAlignmentPosition(const StyleContentAlignmentData& value, const StyleContentAlignmentData& normalValueBehavior)
 {
-    return (value.position() == ContentPositionAuto && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.position() : value.position();
+    return (value.position() == ContentPositionNormal && value.distribution() == ContentDistributionDefault) ? normalValueBehavior.position() : value.position();
 }
 
 static ContentPosition resolvedJustifyContentPosition(const ComputedStyle& style, const StyleContentAlignmentData& normalValueBehavior)
@@ -242,6 +242,14 @@ void LayoutFlexibleBox::computeChildPreferredLogicalWidths(LayoutObject& child, 
     }
 }
 
+static LayoutBox* safeGetNextSiblingBox(const LayoutBox* child)
+{
+    LayoutObject* sibling = child->nextSibling();
+    if (!sibling || !sibling->isBox())
+        return nullptr;
+    return toLayoutBox(sibling);
+}
+
 void LayoutFlexibleBox::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
     if (firstChild() && (firstChild()->isText()))
@@ -251,7 +259,7 @@ void LayoutFlexibleBox::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidt
     // the flex shorthand stops setting it to 0.
     // See https://bugs.webkit.org/show_bug.cgi?id=116117 and http://crbug.com/240765.
     float previousMaxContentFlexFraction = -1;
-    for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
+    for (LayoutBox* child = firstChildBox(); child; child = safeGetNextSiblingBox(child)) {
         if (child->isOutOfFlowPositioned())
             continue;
 
@@ -337,7 +345,7 @@ static const StyleContentAlignmentData& normalValueBehavior()
     // in the main axis is controlled by flex, stretch behaves as flex-start (ignoring
     // the specified fallback alignment, if any).
     // https://drafts.csswg.org/css-align/#distribution-flex
-    static const StyleContentAlignmentData normalBehavior = { ContentPositionAuto, ContentDistributionStretch };
+    static const StyleContentAlignmentData normalBehavior = { ContentPositionNormal, ContentDistributionStretch };
     return normalBehavior;
 }
 
@@ -516,7 +524,7 @@ void LayoutFlexibleBox::layoutBlock(bool relayoutChildren)
         layoutPositionedObjects(relayoutChildren || isDocumentElement());
 
         // FIXME: css3/flexbox/repaint-rtl-column.html seems to issue paint invalidations for more overflow than it needs to.
-        if (!firstChild() || (firstChild() && !(firstChild()->isText())))
+        if (!firstChild() || (!childrenInline() && !(firstChild()->isText())))
             computeOverflow(clientLogicalBottomAfterRepositioning());
         else {
             LayoutObject* child = firstChild();
@@ -562,7 +570,7 @@ LayoutUnit LayoutFlexibleBox::clientLogicalBottomAfterRepositioning()
     if (firstChild() && (firstChild()->isText()))
         return maxChildLogicalBottom;
 
-    for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
+    for (LayoutBox* child = firstChildBox(); child; child = safeGetNextSiblingBox(child)) {
         if (child->isOutOfFlowPositioned())
             continue;
         LayoutUnit childLogicalBottom = logicalTopForChild(*child) + logicalHeightForChild(*child) + marginAfterForChild(*child);
@@ -1220,7 +1228,7 @@ void LayoutFlexibleBox::prepareOrderIteratorAndMargins()
 
     OrderIteratorPopulator populator(m_orderIterator);
 
-    for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
+    for (LayoutBox* child = firstChildBox(); child; child = safeGetNextSiblingBox(child)) {
         populator.collectChild(child);
 
         if (child->isOutOfFlowPositioned())

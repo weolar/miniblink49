@@ -34,6 +34,7 @@ private:
         ASSERT(!m_client);
         ASSERT(!m_reader);
 
+        m_keeplive = this;
         m_client = client;
         // Passing |this| here is safe because |this| owns |m_reader|.
         m_reader = handle->obtainReader(this);
@@ -73,6 +74,7 @@ private:
                 break;
 
             case WebDataConsumerHandle::Done: {
+                m_keeplive = nullptr;
                 m_reader.clear();
                 long long size = m_blobData->length();
                 m_client->didFetchDataLoadedBlobHandle(BlobDataHandle::create(m_blobData.release(), size));
@@ -86,6 +88,7 @@ private:
             case WebDataConsumerHandle::Busy:
             case WebDataConsumerHandle::ResourceExhausted:
             case WebDataConsumerHandle::UnexpectedError:
+                m_keeplive = nullptr;
                 m_reader.clear();
                 m_blobData.clear();
                 m_client->didFetchDataLoadFailed();
@@ -116,6 +119,10 @@ public:
     FetchDataLoaderAsArrayBuffer()
         : m_client(nullptr) { }
 
+    ~FetchDataLoaderAsArrayBuffer()
+    {
+    }
+
     DEFINE_INLINE_VIRTUAL_TRACE()
     {
         FetchDataLoader::trace(visitor);
@@ -130,6 +137,7 @@ protected:
         ASSERT(!m_reader);
         m_client = client;
         m_rawData = adoptPtr(new ArrayBufferBuilder());
+        m_keeplive = this;
         m_reader = handle->obtainReader(this);
     }
 
@@ -159,6 +167,7 @@ protected:
                 break;
 
             case WebDataConsumerHandle::Done:
+                m_keeplive = nullptr;
                 m_reader.clear();
                 m_client->didFetchDataLoadedArrayBuffer(DOMArrayBuffer::create(m_rawData->toArrayBuffer()));
                 m_rawData.clear();
@@ -179,6 +188,7 @@ protected:
 
     void error()
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_rawData.clear();
         m_client->didFetchDataLoadFailed();
@@ -187,6 +197,7 @@ protected:
 
     void cancel() override
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_rawData.clear();
         m_client.clear();
@@ -219,6 +230,7 @@ protected:
         ASSERT(!m_reader);
         m_client = client;
         m_decoder = TextResourceDecoder::create("text/plain", UTF8Encoding());
+        m_keeplive = this;
         m_reader = handle->obtainReader(this);
     }
 
@@ -241,6 +253,7 @@ protected:
                 break;
 
             case WebDataConsumerHandle::Done:
+                m_keeplive = nullptr;
                 m_reader.clear();
                 m_builder.append(m_decoder->flush());
                 m_client->didFetchDataLoadedString(m_builder.toString());
@@ -263,6 +276,7 @@ protected:
 
     void error()
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_builder.clear();
         m_decoder.clear();
@@ -272,6 +286,7 @@ protected:
 
     void cancel() override
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_builder.clear();
         m_decoder.clear();
@@ -306,6 +321,7 @@ protected:
         ASSERT(!m_client);
         ASSERT(!m_reader);
         m_client = client;
+        m_keeplive = this;
         m_reader = handle->obtainReader(this);
     }
 
@@ -365,6 +381,7 @@ protected:
 
     void cleanup()
     {
+        m_keeplive = nullptr;
         m_reader.clear();
         m_client.clear();
         m_outStream.clear();

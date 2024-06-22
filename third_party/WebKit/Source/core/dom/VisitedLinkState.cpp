@@ -33,6 +33,7 @@
 #include "core/XLinkNames.h"
 #include "core/dom/ElementTraversal.h"
 #include "core/html/HTMLAnchorElement.h"
+#include "core/svg/SVGElement.h"
 #include "public/platform/Platform.h"
 
 namespace blink {
@@ -43,6 +44,8 @@ static inline const AtomicString& linkAttribute(const Element& element)
     if (element.isHTMLElement())
         return element.fastGetAttribute(HTMLNames::hrefAttr);
     ASSERT(element.isSVGElement());
+    if (toSVGElement(element).hasAttribute(SVGNames::hrefAttr))
+        return element.getAttribute(SVGNames::hrefAttr);
     return element.getAttribute(XLinkNames::hrefAttr);
 }
 

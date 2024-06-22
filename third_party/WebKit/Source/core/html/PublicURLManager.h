@@ -53,6 +53,7 @@ public:
 
     // ActiveDOMObject interface.
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
     DECLARE_VIRTUAL_TRACE();
 

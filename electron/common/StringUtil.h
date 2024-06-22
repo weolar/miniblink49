@@ -10,11 +10,13 @@ namespace atom {
 
 class StringUtil {
 public:
-    static std::wstring UTF8ToUTF16(const std::string& utf8) {
+    static std::wstring UTF8ToUTF16(const std::string& utf8)
+    {
         return MultiByteToUTF16(CP_UTF8, utf8);
     }
 
-    static std::wstring MultiByteToUTF16(int codepage, const std::string& utf8) {
+    static std::wstring MultiByteToUTF16(int codepage, const std::string& utf8)
+    {
         std::wstring utf16;
         size_t n = ::MultiByteToWideChar(codepage, 0, utf8.c_str(), utf8.size(), nullptr, 0);
         if (0 == n)
@@ -26,7 +28,8 @@ public:
         return utf16;
     }
 
-    static std::string UTF16ToUTF8(const std::wstring& utf16) {
+    static std::string UTF16ToUTF8(const std::wstring& utf16)
+    {
         std::string utf8;
         size_t n = ::WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), utf16.size(), NULL, 0, NULL, NULL);
         if (0 == n)
@@ -38,7 +41,8 @@ public:
         return utf8;
     }
 
-    static std::string urlDecode(const char* pszEncodedIn, size_t pszEncodedInLen) {
+    static std::string urlDecode(const char* pszEncodedIn, size_t pszEncodedInLen)
+    {
         size_t nBufferSize = pszEncodedInLen * 2;
         char* pszDecodedOut = (char*)malloc(nBufferSize);
         memset(pszDecodedOut, 0, nBufferSize);
@@ -52,8 +56,7 @@ public:
 
         for (unsigned int i = 0; i < pszEncodedInLen - 1; ++i) {
             switch (state) {
-            case STATE_SEARCH:
-            {
+            case STATE_SEARCH: {
                 if (pszEncodedIn[i] != '%') {
                     strncat(pszDecodedOut, &pszEncodedIn[i], 1);
                     //assert(strlen(pszDecodedOut) < nBufferSize);
@@ -62,11 +65,9 @@ public:
 
                 // We are now converting
                 state = STATE_CONVERTING;
-            }
-            break;
+            } break;
 
-            case STATE_CONVERTING:
-            {
+            case STATE_CONVERTING: {
                 // Conversion complete (i.e. don't convert again next iter)
                 state = STATE_SEARCH;
 
@@ -98,14 +99,91 @@ public:
 
                 // Skip the next character
                 i++;
-            }
-            break;
+            } break;
             }
         }
         std::string strDecodedOut(pszDecodedOut);
         free(pszDecodedOut);
         return strDecodedOut;
     }
+
+    static unsigned int hashString(const char* p)
+    {
+        int prime = 25013;
+        unsigned int h = 0;
+        unsigned int g;
+        for (; *p; p++) {
+            h = (h << 4) + *p;
+            g = h & 0xF0000000;
+            if (g) {
+                h ^= (g >> 24);
+                h ^= g;
+            }
+        }
+        return h % prime;
+    }
+
+    std::vector<std::string> splitstr(const std::string& str, char tag)
+    {
+        std::vector<std::string> li;
+        std::string subStr;
+
+        for (size_t i = 0; i < str.length(); i++) {
+            if (tag == str[i]) {
+                if (!subStr.empty()) {
+                    li.push_back(subStr);
+                    subStr.clear();
+                }
+            } else {
+                subStr.push_back(str[i]);
+            }
+        }
+
+        if (!subStr.empty())
+            li.push_back(subStr);
+
+        return li;
+    }
+
+    static std::string normalizePath(const std::string& path)
+    {
+        std::string ret;
+        for (size_t i = 0; i < path.size(); ++i) {
+            char c = path[i];
+            if (c >= 'A' && c <= 'Z')
+                c += ('a' - 'A');
+            if (c == '/')
+                c = '\\';
+            ret += c;
+        }
+
+        const char pre[] = "file:\\\\\\";
+        if (ret.size() > sizeof(pre) - 1) {
+            std::string temp = ret.substr(0, sizeof(pre) - 1);
+            if (temp == pre)
+                ret = ret.substr(sizeof(pre) - 1);
+        }
+
+        return ret;
+    }
+
+//     static void readJsFile(const wchar_t* path, std::vector<char>* buffer)
+//     {
+//         HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+//         if (INVALID_HANDLE_VALUE == hFile) {
+//             DebugBreak();
+//             return;
+//         }
+// 
+//         DWORD fileSizeHigh;
+//         const DWORD bufferSize = ::GetFileSize(hFile, &fileSizeHigh);
+// 
+//         DWORD numberOfBytesRead = 0;
+//         buffer->resize(bufferSize);
+//         BOOL b = ::ReadFile(hFile, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
+//         ::CloseHandle(hFile);
+//         b = b;
+//     }
 };
 
 } // atom

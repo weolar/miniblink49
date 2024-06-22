@@ -32,57 +32,70 @@ public:
 
     ~MenuItem();
 
-    v8::Isolate* getIsolate() const {
+    v8::Isolate* getIsolate() const
+    {
         return m_isolate;
     }
 
-    Menu* getMenu() const {
+    Menu* getMenu() const
+    {
         return m_menu;
     }
 
-    void setType(MenuItemType type) {
+    void setType(MenuItemType type)
+    {
         m_type = type;
     }
 
-    MenuItemType getType() const {
+    MenuItemType getType() const
+    {
         return m_type;
     }
 
-    Menu* getSubMenu() const {
+    Menu* getSubMenu() const
+    {
         return m_subMenu;
     }
 
     void setSubMenu(Menu* subMenu);
 
-    void setLabel(const std::string label) {
+    void setLabel(const std::string label)
+    {
         m_label = label;
     }
 
-    void setEnabled(bool b) {
+    void setEnabled(bool b)
+    {
         m_isEnabled = b;
     }
 
-    void setChecked(bool b) {
+    void setChecked(bool b)
+    {
         m_isChecked = b;
     }
 
-    bool getChecked() const {
+    bool getChecked() const
+    {
         return m_isChecked;
     }
 
-    void setClickCallback(v8::Local<v8::Value> callback) {
+    void setClickCallback(v8::Local<v8::Value> callback)
+    {
         m_clickCallbackValue.Reset(m_isolate, callback);
     }
 
-    v8::Local<v8::Value> getClickCallbackValue() const {
+    v8::Local<v8::Value> getClickCallbackValue() const
+    {
         return m_clickCallbackValue.Get(m_isolate);
     }
 
-    void setId(int id) {
+    void setId(int id)
+    {
         m_id = id;
     }
 
-    int getId() const {
+    int getId() const
+    {
         return m_id;
     }
 
@@ -109,7 +122,8 @@ private:
 class Menu : public mate::EventEmitter<Menu> {
 public:
     explicit Menu(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
-        : m_hideWndHelp(nullptr) {
+        : m_hideWndHelp(nullptr)
+    {
         gin::Wrappable<Menu>::InitWith(isolate, wrapper);
         //m_menuTemplate = nullptr;
         m_hMenu = NULL;
@@ -117,7 +131,8 @@ public:
         m_isAppOrPopupMenu = kNoInit;
     }
 
-    virtual ~Menu() override {
+    virtual ~Menu() override
+    {
         OutputDebugStringA("~Menu\n");
         ::DestroyMenu(m_hMenu);
         m_hMenu = nullptr;
@@ -126,7 +141,8 @@ public:
             m_appMenu = nullptr;
     }
 
-    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+    {
         m_liveMenuItem = new std::set<MenuItem*>();
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
@@ -145,14 +161,16 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "Menu"), prototype->GetFunction());
     }
 
-    void nullFunction() {
+    void nullFunction()
+    {
         DebugBreak();
     }
 
     // Set the global menubar.
-    void setApplicationMenuApi() {
+    void setApplicationMenuApi()
+    {
         HMENU hmenuBar = buildMenus(true);
-        
+
         WindowList::iterator winIt = WindowList::getInstance()->begin();
         for (; winIt != WindowList::getInstance()->end(); ++winIt) {
             WindowInterface* windowInterface = *winIt;
@@ -162,18 +180,22 @@ public:
         m_appMenu = this;
     }
 
-    void sendActionToFirstResponderApi(const std::string& action) {
+    void sendActionToFirstResponderApi(const std::string& action)
+    {
         DebugBreak();
     }
 
-    size_t getItemCountApi() const {
+    size_t getItemCountApi() const
+    {
         return m_items.size();
     }
 
-    void _appendeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void _appendeApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
     }
 
-    void _insertApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void _insertApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         if (2 != args.Length())
             return;
 
@@ -183,7 +205,11 @@ public:
         size_t pos = args[0]->ToUint32()->Value();
 
         v8::Object* v8Obj = v8::Object::Cast(*args[1]);
-        v8::Local<v8::Array> v8ObjProps = v8Obj->GetOwnPropertyNames();
+        v8::MaybeLocal<v8::Array> v8MaybeObjProps = v8Obj->GetOwnPropertyNames(isolate->GetCurrentContext());
+        if (v8MaybeObjProps.IsEmpty())
+            return;
+        v8::Local<v8::Array> v8ObjProps = v8MaybeObjProps.ToLocalChecked();
+
         size_t size = v8ObjProps->Length();
 
         std::string label;
@@ -213,7 +239,7 @@ public:
                 v8::String::Utf8Value utf8(outValue->ToString(isolate));
                 label = *utf8;
             }
-           
+
             if ("role" == keyNameStr && outValue->IsString()) {
                 v8::String::Utf8Value utf8(outValue->ToString(isolate));
                 role = *utf8;
@@ -226,7 +252,7 @@ public:
             if ("checked" == keyNameStr && outValue->IsBoolean()) {
                 item->setChecked(outValue->ToBoolean()->Value());
             }
-            
+
             if ("submenu" == keyNameStr) {
                 Menu* subMenu = nullptr;
                 if (!gin::Converter<Menu*>::FromV8(isolate, outValue, &subMenu))
@@ -247,8 +273,9 @@ public:
         m_items.insert(m_items.begin() + pos, item);
         m_isItemNeedRebuilt = true;
     }
-    
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {  
+
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         v8::Isolate* isolate = args.GetIsolate();
         if (args.IsConstructCall()) {
             new Menu(isolate, args.This());
@@ -257,10 +284,11 @@ public:
         }
     }
 
-    void _popupApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void _popupApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         Menu* self = this;
         if (!m_hideWndHelp) {
-            m_hideWndHelp = new HideWndHelp(L"HideParentWindowClass", [self] (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) ->LRESULT {
+            m_hideWndHelp = new HideWndHelp(L"HideParentWindowClass", [self](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) -> LRESULT {
                 return hideWndProc(hWnd, uMsg, wParam, lParam);
             });
         }
@@ -279,10 +307,12 @@ public:
         ::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, 0, m_hideWndHelp->getWnd(), NULL);
     }
 
-    void _clearApi() {
+    void _clearApi()
+    {
         clear();
     }
-    void clear() {
+    void clear()
+    {
         if (m_hMenu)
             ::DestroyMenu(m_hMenu);
         m_hMenu = nullptr;
@@ -294,10 +324,11 @@ public:
         m_items.clear();
     }
 
-    void onCommon(MenuItem* item, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    void onCommon(MenuItem* item, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
         MENUITEMINFOW info = { 0 };
         info.cbSize = sizeof(MENUITEMINFOW);
-        info.fMask = MIIM_STATE;     // information to get 
+        info.fMask = MIIM_STATE; // information to get
         int index = findItemIndex(item);
         BOOL b = ::GetMenuItemInfo(m_hMenu, (UINT)index, TRUE, &info);
 
@@ -314,11 +345,12 @@ public:
         }
 
         v8::Local<v8::Value> focusedWindow = WindowInterface::getFocusedWindow(isolate());
-        item->getMenu()->mate::EventEmitter<Menu>::emit("click", 
+        item->getMenu()->mate::EventEmitter<Menu>::emit("click",
             item->getClickCallbackValue(), focusedWindow /*, focusedWebContents*/);
     }
 
-    static Menu* getAppMenu() {
+    static Menu* getAppMenu()
+    {
         return m_appMenu;
     }
 
@@ -331,7 +363,8 @@ public:
 
     friend class MenuItem;
 
-    HMENU buildMenus(bool isAppOrPopupMenu) {
+    HMENU buildMenus(bool isAppOrPopupMenu)
+    {
         if (!m_isItemNeedRebuilt)
             return m_hMenu;
         m_isItemNeedRebuilt = false;
@@ -350,7 +383,8 @@ public:
     }
 
 private:
-    static HMENU buildMenu(Menu* menu, bool isAppOrPopupMenu) {
+    static HMENU buildMenu(Menu* menu, bool isAppOrPopupMenu)
+    {
         size_t size = menu->m_items.size();
         if (0 == size)
             return nullptr;
@@ -364,16 +398,18 @@ private:
         return menu->m_hMenu;
     }
 
-    int findItemIndex(MenuItem* item) {
+    int findItemIndex(MenuItem* item)
+    {
         for (size_t i = 0; i < m_items.size(); ++i) {
             MenuItem* it = m_items[i];
             if (it == item)
                 return i;
         }
         return -1;
-    }   
+    }
 
-    static LRESULT APIENTRY hideWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    static LRESULT APIENTRY hideWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
         MenuItem* item = nullptr;
 
         switch (uMsg) {
@@ -404,7 +440,8 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-MenuItem::MenuItem(v8::Isolate* isolate, Menu* menu) {
+MenuItem::MenuItem(v8::Isolate* isolate, Menu* menu)
+{
     m_isolate = isolate;
     m_type = ActionType;
     m_isEnabled = true;
@@ -416,7 +453,8 @@ MenuItem::MenuItem(v8::Isolate* isolate, Menu* menu) {
     Menu::m_liveMenuItem->insert(this);
 }
 
-MenuItem::~MenuItem() {
+MenuItem::~MenuItem()
+{
     Menu::m_liveMenuItem->erase(this);
 }
 
@@ -428,7 +466,8 @@ void MenuItem::setSubMenu(Menu* subMenu)
     m_type = SubmenuType;
 }
 
-void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
+void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const
+{
     int count = ::GetMenuItemCount(hMenu);
     if (count < 0 && (int)pos > count)
         return;
@@ -465,7 +504,8 @@ void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
     ::InsertMenuItem(hMenu, count, TRUE, &info);
 }
 
-void MenuItem::clear() {
+void MenuItem::clear()
+{
     if (m_hSubMenu)
         ::DestroyMenu(m_hSubMenu);
     m_hSubMenu = nullptr;
@@ -474,7 +514,8 @@ void MenuItem::clear() {
     m_subMenu = nullptr;
 }
 
-void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {
+void MenuEventNotif::onWindowDidCreated(WindowInterface* window)
+{
     HWND hParentWnd = window->getHWND();
     if (Menu::getAppMenu()) {
         HMENU hmenuBar = Menu::getAppMenu()->buildMenus(true);
@@ -482,7 +523,8 @@ void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {
     }
 }
 
-void MenuEventNotif::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
+void MenuEventNotif::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
     MenuItem* item = (MenuItem*)wParam;
     if (!Menu::m_liveMenuItem || Menu::m_liveMenuItem->find(item) == Menu::m_liveMenuItem->end())
         return;
@@ -496,14 +538,15 @@ std::set<MenuItem*>* Menu::m_liveMenuItem = nullptr;
 
 Menu* Menu::m_appMenu = nullptr;
 
-static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
+static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     Menu::init(env->isolate(), target);
 }
 
 static const char BrowserMenuNative[] = "exports = function {};";
 
-static NodeNative nativeBrowserMenuNative{ "Menu", BrowserMenuNative, sizeof(BrowserMenuNative) - 1 };
+static NodeNative nativeBrowserMenuNative { "Menu", BrowserMenuNative, sizeof(BrowserMenuNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_menu, initializeMenuApi, &nativeBrowserMenuNative)
 

@@ -5,6 +5,7 @@
 #include "src/base/platform/mutex.h"
 
 #include <errno.h>
+#include "../node/openssl/openssl/crypto/sync_xp.h" // SUPPORT_XP_CODE
 
 namespace v8 {
 namespace base {
@@ -209,19 +210,19 @@ Mutex::~Mutex() {
 
 
 void Mutex::Lock() {
-  AcquireSRWLockExclusive(&native_handle_);
+  AcquireSRWLockExclusiveXp(&native_handle_); // SUPPORT_XP_CODE
   AssertUnheldAndMark();
 }
 
 
 void Mutex::Unlock() {
   AssertHeldAndUnmark();
-  ReleaseSRWLockExclusive(&native_handle_);
+  ReleaseSRWLockExclusiveXp(&native_handle_); // SUPPORT_XP_CODE
 }
 
 
 bool Mutex::TryLock() {
-  if (!TryAcquireSRWLockExclusive(&native_handle_)) {
+  if (!TryAcquireSRWLockExclusiveXp(&native_handle_)) { // SUPPORT_XP_CODE
     return false;
   }
   AssertUnheldAndMark();
@@ -276,22 +277,22 @@ SharedMutex::SharedMutex() : native_handle_(SRWLOCK_INIT) {}
 
 SharedMutex::~SharedMutex() {}
 
-void SharedMutex::LockShared() { AcquireSRWLockShared(&native_handle_); }
+void SharedMutex::LockShared() { AcquireSRWLockSharedXp(&native_handle_); } // SUPPORT_XP_CODE
 
-void SharedMutex::LockExclusive() { AcquireSRWLockExclusive(&native_handle_); }
+void SharedMutex::LockExclusive() { AcquireSRWLockExclusiveXp(&native_handle_); } // SUPPORT_XP_CODE
 
-void SharedMutex::UnlockShared() { ReleaseSRWLockShared(&native_handle_); }
+void SharedMutex::UnlockShared() { ReleaseSRWLockSharedXp(&native_handle_); } // SUPPORT_XP_CODE
 
 void SharedMutex::UnlockExclusive() {
-  ReleaseSRWLockExclusive(&native_handle_);
+  ReleaseSRWLockExclusiveXp(&native_handle_);
 }
 
 bool SharedMutex::TryLockShared() {
-  return TryAcquireSRWLockShared(&native_handle_);
+  return TryAcquireSRWLockSharedXp(&native_handle_); // SUPPORT_XP_CODE
 }
 
 bool SharedMutex::TryLockExclusive() {
-  return TryAcquireSRWLockExclusive(&native_handle_);
+  return TryAcquireSRWLockExclusiveXp(&native_handle_); // SUPPORT_XP_CODE
 }
 
 #endif  // V8_OS_POSIX

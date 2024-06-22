@@ -74,7 +74,7 @@ void TimerBase::stop()
     m_repeatInterval = 0;
     m_nextFireTime = 0;
     if (m_cancellableTimerTask)
-        m_cancellableTimerTask->cancel();
+        m_cancellableTimerTask->cancel(m_webScheduler);
     m_cancellableTimerTask = nullptr;
 }
 
@@ -97,7 +97,8 @@ void TimerBase::setNextFireTime(double now, double delay)
     if (m_nextFireTime != newTime) {
         m_nextFireTime = newTime;
         if (m_cancellableTimerTask)
-            m_cancellableTimerTask->cancel();
+            m_cancellableTimerTask->cancel(m_webScheduler);
+        
         m_cancellableTimerTask = new CancellableTimerTask(this);
         if (newTime != m_unalignedNextFireTime) {
             // If the timer is being aligned, use postTimerTaskAt() to schedule it
@@ -113,6 +114,12 @@ void TimerBase::setNextFireTime(double now, double delay)
             m_webScheduler->postTimerTask(m_location, m_cancellableTimerTask, delayMs);
         }
     }
+}
+
+void TimerBase::CancellableTimerTask::cancel(WebScheduler* webSchedule)
+{
+    webSchedule->cancelTimerTask(this);
+    m_timer = nullptr;
 }
 
 NO_LAZY_SWEEP_SANITIZE_ADDRESS

@@ -86,6 +86,7 @@ public:
 #ifdef INSIDE_BLINK
     // Helpers for posting bound functions as tasks.
     void postTask(const WebTraceLocation&, PassOwnPtr<Function<void()>>);
+    void postTask2(const WebTraceLocation&, PassOwnPtr<Function<void()>>);
     void postDelayedTask(const WebTraceLocation&, PassOwnPtr<Function<void()>>, long long delayMs);
 #endif
 };

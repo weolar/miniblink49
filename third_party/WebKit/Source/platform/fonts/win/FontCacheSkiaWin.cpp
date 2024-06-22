@@ -101,10 +101,9 @@ FontCache::FontCache()
     SkFontMgr* fontManager;
 
     if (s_useDirectWrite) {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_DIRECTWRITE
         fontManager = SkFontMgr_New_DirectWrite(s_directWriteFactory);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-        notImplemented();
         s_useSubpixelPositioning = true;
     } else {
         fontManager = SkFontMgr_New_GDI();

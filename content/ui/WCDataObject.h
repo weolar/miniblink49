@@ -32,6 +32,8 @@
 #include <string>
 #include <vector>
 
+class SkBitmap;
+
 namespace content {
 
 struct StgMediumDeleter {
@@ -49,6 +51,8 @@ public:
 
     void writeString(const std::string& type, const std::string& data);
     void writeCustomPlainText(const std::string& customPlainText);
+    void writeBitmap(const char* data, size_t size);
+    //void writeHtml(const std::string& type, const std::string& data);
 
     //IUnknown
     virtual HRESULT __stdcall QueryInterface(REFIID riid, void** ppvObject);

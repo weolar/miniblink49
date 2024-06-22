@@ -346,7 +346,7 @@ typedef struct hb_user_data_key_t {
   char unused;
 } hb_user_data_key_t;
 
-typedef void (*hb_destroy_func_t) (void *user_data);
+typedef void (__cdecl *hb_destroy_func_t) (void *user_data);
 
 
 HB_END_DECLS

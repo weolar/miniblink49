@@ -13,31 +13,37 @@ namespace mate {
 gin::WrapperInfo Event::kWrapperInfo = { gin::kEmbedderNativeGin };
 DWORD Event::constructorTlsKey = 0;
 
-Event::Event(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+Event::Event(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+{
     m_callback = nullptr;
     gin::Wrappable<Event>::InitWith(isolate, wrapper);
 }
 
-Event::~Event() {
+Event::~Event()
+{
     if (m_callback)
         delete m_callback;
 }
 
-void Event::preventDefault(v8::Isolate* isolate) {
+void Event::preventDefault(v8::Isolate* isolate)
+{
     GetWrapper(isolate)->Set(gin::StringToV8(isolate, "defaultPrevented"), v8::True(isolate));
 }
 
-bool Event::sendReply(const std::string& json) {
+bool Event::sendReply(const std::string& json)
+{
     if (m_callback)
         (*m_callback)(json);
     return true;
 }
 
-std::string Event::returnValueGet() {
+std::string Event::returnValueGet()
+{
     return m_returnValue;
 }
 
-void Event::returnValueSet(std::string json) {
+void Event::returnValueSet(std::string json)
+{
     m_returnValue = json;
 
     if (m_callback)
@@ -45,19 +51,22 @@ void Event::returnValueSet(std::string json) {
 }
 
 // static
-Event* Event::create(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::function<void(std::string)>&& callback) {
+Event* Event::create(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::function<void(std::string)>&& callback)
+{
     Event::init(isolate);
 
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Persistent<v8::Function>* constructor = atom::V8PersistentTls::get(&constructorTlsKey);
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, *constructor);
 
-    v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance();
+    v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance(context).ToLocalChecked();
     Event* self = (Event*)WrappableBase::GetNativePtr(obj.ToLocalChecked(), &kWrapperInfo);
     self->m_callback = new std::function<void(std::string)>(std::move(callback));
     return self;
 }
 
-void Event::init(v8::Isolate* isolate) {
+void Event::init(v8::Isolate* isolate)
+{
     v8::Persistent<v8::Function>* constructor = atom::V8PersistentTls::get(&constructorTlsKey);
     if (!(*constructor).IsEmpty())
         return;
@@ -71,7 +80,8 @@ void Event::init(v8::Isolate* isolate) {
     (*constructor).Reset(isolate, prototype->GetFunction());
 }
 
-void accessorGetterCallback(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+void accessorGetterCallback(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
     v8::Isolate* isolate = info.GetIsolate();
     v8::Local<v8::Value> v8_result_value;
     if (!gin::TryConvertToV8(isolate, std::string("123456"), &v8_result_value))
@@ -84,7 +94,8 @@ void accessorGetterCallback(v8::Local<v8::String> property, const v8::PropertyCa
     info.GetReturnValue().Set(v8_result_value);
 }
 
-void accessorSetterCallback(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+void accessorSetterCallback(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+{
     v8::Isolate* isolate = info.GetIsolate();
     std::string arg;
     if (gin::ConvertFromV8(isolate, value, &arg))
@@ -92,7 +103,8 @@ void accessorSetterCallback(v8::Local<v8::String> property, v8::Local<v8::Value>
     arg = "hahah";
 }
 
-void Event::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void Event::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Isolate* isolate = args.GetIsolate();
 
     if (args.IsConstructCall()) {
@@ -102,9 +114,9 @@ void Event::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         Event* evt = new Event(isolate, args.This());
         args.GetReturnValue().Set(args.This());
 
-//         v8::Local<v8::Object> evtObj = evt->GetWrapper(isolate);
-//         evtObj->SetAccessor(v8::String::NewFromUtf8(isolate, "returnValue2"), accessorGetterCallback, accessorSetterCallback);
+        //         v8::Local<v8::Object> evtObj = evt->GetWrapper(isolate);
+        //         evtObj->SetAccessor(v8::String::NewFromUtf8(isolate, "returnValue2"), accessorGetterCallback, accessorSetterCallback);
     }
 }
 
-}  // namespace mate
+} // namespace mate

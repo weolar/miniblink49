@@ -16,8 +16,8 @@ class CString {
 public:
     CString(const WTF::String& str);
     CString(const blink::WebString& str);
-    CString(const utf8* str, size_t len);
-    CString(const wchar_t* str, size_t len);
+    CString(const utf8* str, size_t len, bool nullTermination);
+    CString(const wchar_t* str, size_t len, bool nullTermination);
     ~CString();
 
     CString& operator=(const WTF::String& str);
@@ -26,10 +26,9 @@ public:
 public:
     const utf8* string() const;
     const wchar_t* stringW() const;
-    //const WTF::String& original() const;
     
-    void setString(const utf8* str, size_t len = 0);
-    void setString(const wchar_t* str, size_t len = 0);
+    void setString(const utf8* str, size_t len, bool nullTermination);
+    void setString(const wchar_t* str, size_t len, bool nullTermination);
     void setString(const WTF::String& str);
 
     size_t length();
@@ -39,6 +38,7 @@ protected:
     std::vector<char> m_str;
 };
 
+void* createTempMem(size_t length);
 const char* createTempCharString(const char* str, size_t length);
 const wchar_t* createTempWCharString(const wchar_t* str, size_t length);
 jsKeys* createTempJsKeys(size_t length);

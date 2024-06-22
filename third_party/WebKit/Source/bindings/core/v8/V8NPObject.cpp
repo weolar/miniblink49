@@ -150,12 +150,10 @@ static void npObjectInvokeImpl(const v8::FunctionCallbackInfo<v8::Value>& info, 
     v8SetReturnValue(info, returnValue);
 }
 
-
 void npObjectMethodHandler(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     return npObjectInvokeImpl(info, InvokeMethod);
 }
-
 
 void npObjectInvokeDefaultHandler(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
@@ -193,7 +191,6 @@ public:
     static void Dispose(v8::Isolate* isolate, v8::Global<v8::FunctionTemplate> value, PrivateIdentifier* key) { }
     static void DisposeWeak(const v8::WeakCallbackInfo<WeakCallbackDataType>& data) { }
 };
-
 
 class V8NPTemplateMap {
 public:
@@ -285,10 +282,13 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
     return v8Undefined();
 }
 
-void npObjectNamedPropertyGetter(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+void npObjectNamedPropertyGetter(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
-    v8SetReturnValue(info, npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, name));
+    if (!name->IsString())
+        return;
+    v8::Local<v8::String> nameStr = name->ToString();
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), nameStr);
+    v8SetReturnValue(info, npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, nameStr));
 }
 
 void npObjectIndexedPropertyGetter(uint32_t index, const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -309,10 +309,13 @@ void npObjectGetIndexedProperty(v8::Local<v8::Object> self, uint32_t index, cons
     v8SetReturnValue(info, npObjectGetProperty(info.GetIsolate(), self, identifier, v8::Number::New(info.GetIsolate(), index)));
 }
 
-void npObjectQueryProperty(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Integer>& info)
+void npObjectQueryProperty(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Integer>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
-    if (npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, name).IsEmpty())
+    if (!name->IsString())
+        return;
+    v8::Local<v8::String> nameStr = name->ToString();
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), nameStr);
+    if (npObjectGetProperty(info.GetIsolate(), info.Holder(), identifier, nameStr).IsEmpty())
         return;
     v8SetReturnValueInt(info, 0);
 }
@@ -343,9 +346,12 @@ static v8::Local<v8::Value> npObjectSetProperty(v8::Local<v8::Object> self, NPId
 }
 
 
-void npObjectNamedPropertySetter(v8::Local<v8::String> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Value>& info)
+void npObjectNamedPropertySetter(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), name);
+    if (!name->IsString())
+        return;
+    v8::Local<v8::String> nameStr = name->ToString();
+    NPIdentifier identifier = getStringIdentifier(info.GetIsolate(), nameStr);
     v8SetReturnValue(info, npObjectSetProperty(info.Holder(), identifier, value, info.GetIsolate()));
 }
 
@@ -468,7 +474,7 @@ v8::Local<v8::Object> createV8ObjectForNPObject(v8::Isolate* isolate, NPObject* 
     if (npObjectDesc.IsEmpty()) {
         v8::Local<v8::FunctionTemplate> templ = v8::FunctionTemplate::New(isolate);
         templ->InstanceTemplate()->SetInternalFieldCount(npObjectInternalFieldCount);
-        templ->InstanceTemplate()->SetNamedPropertyHandler(npObjectNamedPropertyGetter, npObjectNamedPropertySetter, npObjectQueryProperty, 0, npObjectNamedPropertyEnumerator);
+        templ->InstanceTemplate()->SetNamedPropertyHandler(npObjectNamedPropertyGetter, npObjectNamedPropertySetter, npObjectQueryProperty, 0, npObjectNamedPropertyEnumerator, v8::Local<v8::Value>());
         templ->InstanceTemplate()->SetIndexedPropertyHandler(npObjectIndexedPropertyGetter, npObjectIndexedPropertySetter, 0, 0, npObjectIndexedPropertyEnumerator);
         templ->InstanceTemplate()->SetCallAsFunctionHandler(npObjectInvokeDefaultHandler);
         npObjectDesc.Set(isolate, templ);

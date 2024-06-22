@@ -56,6 +56,10 @@
 #include "public/platform/WebTransformAnimationCurve.h"
 #include "public/platform/WebTransformKeyframe.h"
 
+#ifndef NO_USE_ORIG_CHROME
+#include "orig_chrome/content/OrigChromeMgr.h"
+#endif
+
 #include <algorithm>
 #include <cmath>
 
@@ -226,8 +230,12 @@ bool CompositorAnimations::getAnimatedBoundingBox(FloatBox& box, const EffectMod
 
 bool CompositorAnimations::isCandidateForAnimationOnCompositor(const Timing& timing, const Element& targetElement, const Animation* animationToAdd, const EffectModel& effect, double animationPlaybackRate)
 {
-    return false; //weolar
-
+// #ifndef NO_USE_ORIG_CHROME
+//     if (!content::OrigChromeMgr::getInst())
+//         return false;
+// #else
+//     return false; //weolar
+// #endif
     const KeyframeEffectModelBase& keyframeEffect = toKeyframeEffectModelBase(effect);
 
     PropertyHandleSet properties = keyframeEffect.properties();

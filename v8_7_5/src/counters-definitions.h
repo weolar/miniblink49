@@ -30,6 +30,10 @@ namespace internal {
   HR(gc_scavenger_scavenge_main, V8.GCScavenger.ScavengeMain, 0, 10000, 101)   \
   HR(gc_scavenger_scavenge_roots, V8.GCScavenger.ScavengeRoots, 0, 10000, 101) \
   HR(gc_mark_compactor, V8.GCMarkCompactor, 0, 10000, 101)                     \
+  HR(gc_marking_sum, V8.GCMarkingSum, 0, 10000, 101)                           \
+  /* Range and bucket matches BlinkGC.MainThreadMarkingThroughput. */          \
+  HR(gc_main_thread_marking_throughput, V8.GCMainThreadMarkingThroughput, 0,   \
+     100000, 50)                                                               \
   HR(scavenge_reason, V8.GCScavengeReason, 0, 21, 22)                          \
   HR(young_generation_handling, V8.GCYoungGenerationHandling, 0, 2, 3)         \
   /* Asm/Wasm. */                                                              \
@@ -129,6 +133,27 @@ namespace internal {
   HT(gc_scavenger, V8.GCScavenger, 10000, MILLISECOND)                         \
   HT(gc_scavenger_background, V8.GCScavengerBackground, 10000, MILLISECOND)    \
   HT(gc_scavenger_foreground, V8.GCScavengerForeground, 10000, MILLISECOND)    \
+  /* TurboFan timers. */                                                       \
+  HT(turbofan_optimize_prepare, V8.TurboFanOptimizePrepare, 1000000,           \
+     MICROSECOND)                                                              \
+  HT(turbofan_optimize_execute, V8.TurboFanOptimizeExecute, 1000000,           \
+     MICROSECOND)                                                              \
+  HT(turbofan_optimize_finalize, V8.TurboFanOptimizeFinalize, 1000000,         \
+     MICROSECOND)                                                              \
+  HT(turbofan_optimize_total_foreground, V8.TurboFanOptimizeTotalForeground,   \
+     10000000, MICROSECOND)                                                    \
+  HT(turbofan_optimize_total_background, V8.TurboFanOptimizeTotalBackground,   \
+     10000000, MICROSECOND)                                                    \
+  HT(turbofan_optimize_total_time, V8.TurboFanOptimizeTotalTime, 10000000,     \
+     MICROSECOND)                                                              \
+  HT(turbofan_osr_prepare, V8.TurboFanOptimizeForOnStackReplacementPrepare,    \
+     1000000, MICROSECOND)                                                     \
+  HT(turbofan_osr_execute, V8.TurboFanOptimizeForOnStackReplacementExecute,    \
+     1000000, MICROSECOND)                                                     \
+  HT(turbofan_osr_finalize, V8.TurboFanOptimizeForOnStackReplacementFinalize,  \
+     1000000, MICROSECOND)                                                     \
+  HT(turbofan_osr_total_time,                                                  \
+     V8.TurboFanOptimizeForOnStackReplacementTotalTime, 10000000, MICROSECOND) \
   /* Wasm timers. */                                                           \
   HT(wasm_decode_asm_module_time, V8.WasmDecodeModuleMicroSeconds.asm,         \
      1000000, MICROSECOND)                                                     \
@@ -228,8 +253,6 @@ namespace internal {
   SC(total_preparse_skipped, V8.TotalPreparseSkipped)               \
   /* Amount of compiled source code. */                             \
   SC(total_compile_size, V8.TotalCompileSize)                       \
-  /* Amount of source code compiled with the full codegen. */       \
-  SC(total_full_codegen_source_size, V8.TotalFullCodegenSourceSize) \
   /* Number of contexts created from scratch. */                    \
   SC(contexts_created_from_scratch, V8.ContextsCreatedFromScratch)  \
   /* Number of contexts created by partial snapshot. */             \
@@ -249,15 +272,6 @@ namespace internal {
      V8.GCCompactorCausedByOldspaceExhaustion)                                 \
   SC(gc_last_resort_from_js, V8.GCLastResortFromJS)                            \
   SC(gc_last_resort_from_handles, V8.GCLastResortFromHandles)                  \
-  SC(ic_named_load_global_stub, V8.ICNamedLoadGlobalStub)                      \
-  SC(ic_store_normal_miss, V8.ICStoreNormalMiss)                               \
-  SC(ic_store_normal_hit, V8.ICStoreNormalHit)                                 \
-  SC(ic_binary_op_miss, V8.ICBinaryOpMiss)                                     \
-  SC(ic_compare_miss, V8.ICCompareMiss)                                        \
-  SC(ic_call_miss, V8.ICCallMiss)                                              \
-  SC(ic_keyed_call_miss, V8.ICKeyedCallMiss)                                   \
-  SC(ic_store_miss, V8.ICStoreMiss)                                            \
-  SC(ic_keyed_store_miss, V8.ICKeyedStoreMiss)                                 \
   SC(cow_arrays_converted, V8.COWArraysConverted)                              \
   SC(constructed_objects_runtime, V8.ConstructedObjectsRuntime)                \
   SC(megamorphic_stub_cache_updates, V8.MegamorphicStubCacheUpdates)           \
@@ -266,21 +280,9 @@ namespace internal {
   SC(string_add_runtime, V8.StringAddRuntime)                                  \
   SC(sub_string_runtime, V8.SubStringRuntime)                                  \
   SC(regexp_entry_runtime, V8.RegExpEntryRuntime)                              \
-  SC(math_exp_runtime, V8.MathExpRuntime)                                      \
-  SC(math_log_runtime, V8.MathLogRuntime)                                      \
-  SC(math_pow_runtime, V8.MathPowRuntime)                                      \
   SC(stack_interrupts, V8.StackInterrupts)                                     \
   SC(runtime_profiler_ticks, V8.RuntimeProfilerTicks)                          \
-  SC(runtime_calls, V8.RuntimeCalls)                                           \
-  SC(bounds_checks_eliminated, V8.BoundsChecksEliminated)                      \
-  SC(bounds_checks_hoisted, V8.BoundsChecksHoisted)                            \
-  SC(soft_deopts_requested, V8.SoftDeoptsRequested)                            \
-  SC(soft_deopts_inserted, V8.SoftDeoptsInserted)                              \
   SC(soft_deopts_executed, V8.SoftDeoptsExecuted)                              \
-  /* Number of write barriers in generated code. */                            \
-  /* TODO: This isn't functional at the moment, we should teach the */         \
-  /* compiler about this counter.  */                                          \
-  SC(write_barriers_static, V8.WriteBarriersStatic)                            \
   SC(new_space_bytes_available, V8.MemoryNewSpaceBytesAvailable)               \
   SC(new_space_bytes_committed, V8.MemoryNewSpaceBytesCommitted)               \
   SC(new_space_bytes_used, V8.MemoryNewSpaceBytesUsed)                         \
@@ -312,7 +314,7 @@ namespace internal {
 // a separate list to be able to relocate them.
 #define STATS_COUNTER_NATIVE_CODE_LIST(SC)                         \
   /* Number of write barriers executed at runtime. */              \
-  SC(write_barriers_dynamic, V8.WriteBarriersDynamic)              \
+  SC(write_barriers, V8.WriteBarriers)                             \
   SC(constructed_objects, V8.ConstructedObjects)                   \
   SC(fast_new_closure_total, V8.FastNewClosureTotal)               \
   SC(regexp_entry_native, V8.RegExpEntryNative)                    \

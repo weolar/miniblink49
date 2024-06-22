@@ -5,11 +5,15 @@
 #include "src/profiler/profiler-listener.h"
 
 #include "src/deoptimizer.h"
+#include "src/handles-inl.h"
 #include "src/objects-inl.h"
+#include "src/objects/code-inl.h"
+#include "src/objects/script-inl.h"
+#include "src/objects/shared-function-info-inl.h"
+#include "src/objects/string-inl.h"
 #include "src/profiler/cpu-profiler.h"
 #include "src/profiler/profile-generator-inl.h"
 #include "src/reloc-info.h"
-#include "src/snapshot/embedded-data.h"
 #include "src/source-position-table.h"
 #include "src/wasm/wasm-code-manager.h"
 
@@ -120,6 +124,10 @@ void ProfilerListener::CodeCreateEvent(CodeEventListener::LogEventsAndTags tag,
       int position = it.source_position().ScriptOffset();
       int line_number = script->GetLineNumber(position) + 1;
       int inlining_id = it.source_position().InliningId();
+
+      // TODO(953309): Fix this.
+      if (line_number == 0) continue;
+
       line_table->SetPosition(it.code_offset(), line_number, inlining_id);
 
       if (inlining_id != SourcePosition::kNotInlined) {

@@ -136,7 +136,9 @@ static void installV8PromiseRejectionEventTemplate(v8::Local<v8::FunctionTemplat
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8PromiseRejectionEvent::domTemplate(v8::Isolate* isolate)
@@ -173,20 +175,28 @@ void V8PromiseRejectionEvent::derefObject(ScriptWrappable* scriptWrappable)
 #endif
 }
 
-void V8PromiseRejectionEvent::visitDOMWrapper(v8::Isolate*, ScriptWrappable*, const v8::Persistent<v8::Object>&)
+static void visitDOMWrapperCustom(v8::Isolate* isolate, ScriptWrappable* scriptWrappable, const v8::Persistent<v8::Object>& wrapper)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+    PromiseRejectionEvent* event = scriptWrappable->toImpl<PromiseRejectionEvent>();
+    event->setWrapperReference(isolate, wrapper);
 }
 
-void constructorCallback(const v8::FunctionCallbackInfo<v8::Value>&)
+void V8PromiseRejectionEvent::visitDOMWrapper(v8::Isolate* isolate, ScriptWrappable* scriptWrappable, const v8::Persistent<v8::Object>& wrapper)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+    visitDOMWrapperCustom(isolate, scriptWrappable, wrapper);
 }
 
-void V8PromiseRejectionEvent::promiseAttributeGetterCustom(const v8::FunctionCallbackInfo<v8::Value>&) { notImplemented(); }
+void V8PromiseRejectionEvent::promiseAttributeGetterCustom(const v8::FunctionCallbackInfo<v8::Value>& info)
+{ 
+    v8::Isolate* isolate = info.GetIsolate();
+    PromiseRejectionEvent* event = V8PromiseRejectionEvent::toImpl(info.Holder());
+    ScriptPromise promise = event->promise(ScriptState::current(isolate));
+    if (promise.isEmpty()) {
+        v8SetReturnValue(info, v8::Null(isolate));
+        return;
+    }
+
+    v8SetReturnValue(info, promise.v8Value());
+}
 
 } // namespace blink

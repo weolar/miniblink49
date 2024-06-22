@@ -20,6 +20,7 @@
 #include "platform/TraceEvent.h"
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
+#include "wke/wkeGlobalVar.h"
 
 namespace blink {
 
@@ -41,10 +42,40 @@ const WrapperTypeInfo& Navigator::s_wrapperTypeInfo = V8Navigator::wrapperTypeIn
 
 namespace NavigatorV8Internal {
 
+static bool setStringValueOrUndefine(const v8::FunctionCallbackInfo<v8::Value>& info, std::string* str)
+{
+    if (!str)
+        return false;
+
+    if (*str == wke::kUndefineStrValue) {
+        v8SetReturnValueUndefined(info);
+        return true;
+    }
+
+    v8SetReturnValueString(info, str->c_str(), info.GetIsolate());
+    return true;
+}
+
+static bool setIntValueOrUndefine(const v8::FunctionCallbackInfo<v8::Value>& info, int val)
+{
+    if (wke::kUndefineIntValue == val) {
+        v8SetReturnValueUndefined(info);
+        return true;
+    }
+
+    if (wke::kUnuseIntValue == val)
+        return false;
+
+    v8SetReturnValueUnsigned(info, val);
+    return true;
+}
+
 static void vendorSubAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorVendorSub.get()))
+        return;
     v8SetReturnValueString(info, impl->vendorSub(), info.GetIsolate());
 }
 
@@ -60,6 +91,8 @@ static void productSubAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>&
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorProductSub.get()))
+        return;
     v8SetReturnValueString(info, impl->productSub(), info.GetIsolate());
 }
 
@@ -90,6 +123,8 @@ static void maxTouchPointsAttributeGetter(const v8::FunctionCallbackInfo<v8::Val
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setIntValueOrUndefine(info, wke::g_navigatorMaxTouchPoints))
+        return;
     v8SetReturnValueInt(info, NavigatorEvents::maxTouchPoints(*impl));
 }
 
@@ -104,6 +139,8 @@ static void hardwareConcurrencyAttributeGetter(const v8::FunctionCallbackInfo<v8
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setIntValueOrUndefine(info, wke::g_navigatorHardwareConcurrency))
+        return;
     v8SetReturnValueUnsigned(info, impl->hardwareConcurrency());
 }
 
@@ -118,6 +155,8 @@ static void appCodeNameAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorAppCodeName.get()))
+        return;
     v8SetReturnValueString(info, impl->appCodeName(), info.GetIsolate());
 }
 
@@ -132,6 +171,8 @@ static void appNameAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& in
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorAppName.get()))
+        return;
     v8SetReturnValueString(info, impl->appName(), info.GetIsolate());
 }
 
@@ -146,6 +187,8 @@ static void appVersionAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>&
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorAppVersion.get()))
+        return;
     v8SetReturnValueString(info, impl->appVersion(), info.GetIsolate());
 }
 
@@ -174,6 +217,8 @@ static void productAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& in
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorProduct.get()))
+        return;
     v8SetReturnValueString(info, impl->product(), info.GetIsolate());
 }
 
@@ -202,6 +247,8 @@ static void languageAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& i
 {
     v8::Local<v8::Object> holder = info.Holder();
     Navigator* impl = V8Navigator::toImpl(holder);
+    if (setStringValueOrUndefine(info, wke::g_navigatorLanguage.get()))
+        return;
     v8SetReturnValueStringOrNull(info, impl->language(), info.GetIsolate());
 }
 
@@ -224,7 +271,12 @@ static void languagesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& 
             return;
         }
     }
-    Vector<String> cppValue(impl->languages());
+
+    Vector<String> languages = impl->languages();
+    if (wke::g_navigatorLanguages)
+        languages = *(wke::g_navigatorLanguages);
+
+    Vector<String> cppValue(languages);
     v8::Local<v8::Value> v8Value(toV8(cppValue, holder, info.GetIsolate()));
     V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, propertyName, v8Value);
     v8SetReturnValue(info, v8Value);
@@ -265,6 +317,36 @@ static void cookieEnabledAttributeGetterCallback(const v8::FunctionCallbackInfo<
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void deviceMemoryAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    if (wke::kUndefineIntValue == wke::g_navigatorDeviceMemory) {
+        v8SetReturnValueUndefined(info);
+        return;
+    }
+
+    v8SetReturnValueUnsigned(info, wke::g_navigatorDeviceMemory);
+}
+
+static void oscpuAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    if (!wke::g_navigatorOscpu || *wke::g_navigatorOscpu == wke::kUndefineStrValue) {
+        v8SetReturnValueUndefined(info);
+        return;
+    }
+
+    v8SetReturnValueString(info, wke::g_navigatorOscpu->c_str(), info.GetIsolate());
+}
+
+static void buildIDAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    if (!wke::g_navigatorBuildID || *wke::g_navigatorBuildID == wke::kUndefineStrValue) {
+        v8SetReturnValueUndefined(info);
+        return;
+    }
+
+    v8SetReturnValueString(info, wke::g_navigatorBuildID->c_str(), info.GetIsolate());
+}
+
 static void getStorageUpdatesMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     Navigator* impl = V8Navigator::toImpl(info.Holder());
@@ -297,6 +379,9 @@ static const V8DOMConfiguration::AccessorConfiguration V8NavigatorAccessors[] = 
     {"languages", NavigatorV8Internal::languagesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"onLine", NavigatorV8Internal::onLineAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"cookieEnabled", NavigatorV8Internal::cookieEnabledAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"deviceMemory", NavigatorV8Internal::deviceMemoryAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"oscpu", NavigatorV8Internal::oscpuAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"buildID", NavigatorV8Internal::buildIDAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 };
 
 static const V8DOMConfiguration::MethodConfiguration V8NavigatorMethods[] = {
@@ -318,7 +403,9 @@ void V8Navigator::installV8NavigatorTemplate(v8::Local<v8::FunctionTemplate> fun
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Navigator::domTemplate(v8::Isolate* isolate)

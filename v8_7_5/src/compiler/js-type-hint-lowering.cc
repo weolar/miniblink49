@@ -11,6 +11,8 @@
 #include "src/feedback-vector.h"
 #include "src/type-hints.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -37,9 +39,6 @@ bool BinaryOperationHintToNumberOperationHint(
       return true;
     case BinaryOperationHint::kAny:
     case BinaryOperationHint::kNone:
-    case BinaryOperationHint::kConsOneByteString:
-    case BinaryOperationHint::kConsTwoByteString:
-    case BinaryOperationHint::kConsString:
     case BinaryOperationHint::kString:
     case BinaryOperationHint::kBigInt:
       break;

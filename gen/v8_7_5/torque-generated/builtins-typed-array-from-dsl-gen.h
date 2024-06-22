@@ -21,8 +21,8 @@ class TypedArrayBuiltinsFromDSLAssembler {
       return std::tuple_cat(std::make_tuple(sizeLog2), std::make_tuple(map), std::make_tuple(kind));
     }
   };
-  compiler::TNode<BuiltinPtr> UnsafeCast54FT9ATContext12JSTypedArray5ATSmi20UT5ATSmi10HeapObject(compiler::TNode<Context> p_context, compiler::TNode<Object> p_o);
-  compiler::TNode<BuiltinPtr> UnsafeCast76FT9ATContext12JSTypedArray5ATSmi20UT5ATSmi10HeapObject20UT5ATSmi10HeapObject(compiler::TNode<Context> p_context, compiler::TNode<Object> p_o);
+  compiler::TNode<BuiltinPtr> UnsafeCast52FT7Context12JSTypedArray5ATSmi20UT5ATSmi10HeapObject(compiler::TNode<Context> p_context, compiler::TNode<Object> p_o);
+  compiler::TNode<BuiltinPtr> UnsafeCast74FT7Context12JSTypedArray5ATSmi20UT5ATSmi10HeapObject20UT5ATSmi10HeapObject(compiler::TNode<Context> p_context, compiler::TNode<Object> p_o);
   compiler::TNode<JSTypedArray> EnsureAttached(compiler::TNode<JSTypedArray> p_array, compiler::CodeAssemblerLabel* label_Detached);
   struct AttachedJSTypedArrayWitness {
     compiler::TNode<JSTypedArray> stable;

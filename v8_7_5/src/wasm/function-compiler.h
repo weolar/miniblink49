@@ -52,6 +52,7 @@ struct WasmCompilationResult {
   MOVE_ONLY_WITH_DEFAULT_CONSTRUCTORS(WasmCompilationResult);
 
   bool succeeded() const { return code_desc.buffer != nullptr; }
+  bool failed() const { return !succeeded(); }
   operator bool() const { return succeeded(); }
 
   CodeDesc code_desc;
@@ -69,13 +70,13 @@ class V8_EXPORT_PRIVATE WasmCompilationUnit final {
  public:
   static ExecutionTier GetDefaultExecutionTier(const WasmModule*);
 
-  WasmCompilationUnit(WasmEngine*, int index, ExecutionTier);
+  WasmCompilationUnit(int index, ExecutionTier);
 
   ~WasmCompilationUnit();
 
   WasmCompilationResult ExecuteCompilation(
-      CompilationEnv*, const std::shared_ptr<WireBytesStorage>&, Counters*,
-      WasmFeatures* detected);
+      WasmEngine*, CompilationEnv*, const std::shared_ptr<WireBytesStorage>&,
+      Counters*, WasmFeatures* detected);
 
   ExecutionTier tier() const { return tier_; }
 
@@ -88,7 +89,6 @@ class V8_EXPORT_PRIVATE WasmCompilationUnit final {
   friend class compiler::TurbofanWasmCompilationUnit;
   friend class compiler::InterpreterCompilationUnit;
 
-  WasmEngine* const wasm_engine_;
   const int func_index_;
   ExecutionTier tier_;
 

@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
 // Windows Timer Primer
 //
 // A good article:  http://www.ddj.com/windows/184416651
@@ -37,11 +36,11 @@
 #include "base/time/time.h"
 
 #pragma comment(lib, "winmm.lib")
-#include <windows.h>
 #include <mmsystem.h>
+#include <windows.h>
 
 #include "base/basictypes.h"
-#include "base/lock.h"
+//#include "base/lock.h"
 
 using base::Time;
 using base::TimeDelta;
@@ -51,14 +50,16 @@ namespace {
 
 // From MSDN, FILETIME "Contains a 64-bit value representing the number of
 // 100-nanosecond intervals since January 1, 1601 (UTC)."
-int64 FileTimeToMicroseconds(const FILETIME& ft) {
+int64 FileTimeToMicroseconds(const FILETIME& ft)
+{
     // Need to bit_cast to fix alignment, then divide by 10 to convert
     // 100-nanoseconds to milliseconds. This only works on little-endian
     // machines.
     return bit_cast<int64, FILETIME>(ft) / 10;
 }
 
-void MicrosecondsToFileTime(int64 us, FILETIME* ft) {
+void MicrosecondsToFileTime(int64 us, FILETIME* ft)
+{
     //DCHECK_GE(us, 0LL) << "Time is less than 0, negative values are not " "representable in FILETIME";
 
     // Multiply by 10 to convert milliseconds to 100-nanoseconds. Bit_cast will
@@ -66,7 +67,8 @@ void MicrosecondsToFileTime(int64 us, FILETIME* ft) {
     *ft = bit_cast<FILETIME, int64>(us * 10);
 }
 
-int64 CurrentWallclockMicroseconds() {
+int64 CurrentWallclockMicroseconds()
+{
     FILETIME ft;
     ::GetSystemTimeAsFileTime(&ft);
     return FileTimeToMicroseconds(ft);
@@ -78,14 +80,15 @@ const int kMaxMillisecondsToAvoidDrift = 60 * Time::kMillisecondsPerSecond;
 int64 initial_time = 0;
 TimeTicks initial_ticks;
 
-void InitializeClock() {
+void InitializeClock()
+{
     initial_ticks = TimeTicks::Now();
     initial_time = CurrentWallclockMicroseconds();
 }
 
-}  // namespace
+} // namespace
 
-   // Time -----------------------------------------------------------------------
+// Time -----------------------------------------------------------------------
 
 // The internal representation of Time uses FILETIME, whose epoch is 1601-01-01
 // 00:00:00 UTC.  ((1970-1601)*365+89)*24*60*60*1000*1000, where 89 is the
@@ -98,7 +101,8 @@ bool Time::high_resolution_timer_enabled_ = false;
 int Time::high_resolution_timer_activated_ = 0;
 
 // static
-Time Time::Now() {
+Time Time::Now()
+{
     if (initial_time == 0)
         InitializeClock();
 
@@ -129,23 +133,25 @@ Time Time::Now() {
 }
 
 // static
-Time Time::NowFromSystemTime() {
+Time Time::NowFromSystemTime()
+{
     // Force resync.
     InitializeClock();
     return Time(initial_time);
 }
 
 // static
-Time Time::FromFileTime(FILETIME ft) {
+Time Time::FromFileTime(FILETIME ft)
+{
     if (bit_cast<int64, FILETIME>(ft) == 0)
         return Time();
-    if (ft.dwHighDateTime == std::numeric_limits<DWORD>::max() &&
-        ft.dwLowDateTime == std::numeric_limits<DWORD>::max())
+    if (ft.dwHighDateTime == std::numeric_limits<DWORD>::max() && ft.dwLowDateTime == std::numeric_limits<DWORD>::max())
         return Max();
     return Time(FileTimeToMicroseconds(ft));
 }
 
-FILETIME Time::ToFileTime() const {
+FILETIME Time::ToFileTime() const
+{
     if (is_null())
         return bit_cast<FILETIME, int64>(0);
     if (is_max()) {
@@ -160,7 +166,8 @@ FILETIME Time::ToFileTime() const {
 }
 
 // static
-void Time::EnableHighResolutionTimer(bool enable) {
+void Time::EnableHighResolutionTimer(bool enable)
+{
     // Test for single-threaded access.
     static DWORD my_thread = ::GetCurrentThreadId();
     if (::GetCurrentThreadId() != my_thread)
@@ -173,7 +180,8 @@ void Time::EnableHighResolutionTimer(bool enable) {
 }
 
 // static
-bool Time::ActivateHighResolutionTimer(bool activating) {
+bool Time::ActivateHighResolutionTimer(bool activating)
+{
     if (!high_resolution_timer_enabled_ && activating)
         return false;
 
@@ -184,8 +192,7 @@ bool Time::ActivateHighResolutionTimer(bool activating) {
     if (activating) {
         result = timeBeginPeriod(kMinTimerIntervalMs);
         high_resolution_timer_activated_++;
-    }
-    else {
+    } else {
         result = timeEndPeriod(kMinTimerIntervalMs);
         high_resolution_timer_activated_--;
     }
@@ -193,7 +200,8 @@ bool Time::ActivateHighResolutionTimer(bool activating) {
 }
 
 // static
-bool Time::IsHighResolutionTimerInUse() {
+bool Time::IsHighResolutionTimerInUse()
+{
     // Note:  we should track the high_resolution_timer_activated_ value
     // under a lock if we want it to be accurate in a system with multiple
     // message loops.  We don't do that - because we don't want to take the
@@ -203,7 +211,8 @@ bool Time::IsHighResolutionTimerInUse() {
 }
 
 // static
-Time Time::FromExploded(bool is_local, const Exploded& exploded) {
+Time Time::FromExploded(bool is_local, const Exploded& exploded)
+{
     // Create the system struct representing our exploded time. It will either be
     // in local time or UTC.
     SYSTEMTIME st;
@@ -222,8 +231,7 @@ Time Time::FromExploded(bool is_local, const Exploded& exploded) {
     if (is_local) {
         SYSTEMTIME utc_st;
         success = TzSpecificLocalTimeToSystemTime(NULL, &st, &utc_st) && SystemTimeToFileTime(&utc_st, &ft);
-    }
-    else {
+    } else {
         success = !!SystemTimeToFileTime(&st, &ft);
     }
 
@@ -234,7 +242,8 @@ Time Time::FromExploded(bool is_local, const Exploded& exploded) {
     return Time(FileTimeToMicroseconds(ft));
 }
 
-void Time::Explode(bool is_local, Exploded* exploded) const {
+void Time::Explode(bool is_local, Exploded* exploded) const
+{
     if (us_ < 0LL) {
         // We are not able to convert it to FILETIME.
         ZeroMemory(exploded, sizeof(*exploded));
@@ -256,8 +265,7 @@ void Time::Explode(bool is_local, Exploded* exploded) const {
         // daylight saving time, it will take daylight saving time into account,
         // even if the time you are converting is in standard time.
         success = FileTimeToSystemTime(&utc_ft, &utc_st) && SystemTimeToTzSpecificLocalTime(NULL, &utc_st, &st);
-    }
-    else {
+    } else {
         success = !!FileTimeToSystemTime(&utc_ft, &st);
     }
 
@@ -283,11 +291,13 @@ namespace {
 // We define a wrapper to adapt between the __stdcall and __cdecl call of the
 // mock function, and to avoid a static constructor.  Assigning an import to a
 // function pointer directly would require setup code to fetch from the IAT.
-DWORD timeGetTimeWrapper() {
+DWORD timeGetTimeWrapper()
+{
     return timeGetTime();
 }
 
-DWORD(*tick_function)(void) = &timeGetTimeWrapper;
+DWORD (*tick_function)
+(void) = &timeGetTimeWrapper;
 
 // Accumulation of time lost due to rollover (in milliseconds).
 int64 rollover_ms = 0;
@@ -301,22 +311,32 @@ DWORD last_seen_now = 0;
 // easy to use a Singleton without even knowing it, and that may lead to many
 // gotchas). Its impact on startup time should be negligible due to low-level
 // nature of time code.
-base::Lock rollover_lock;
+/*base::Lock*/ CRITICAL_SECTION* rollover_lock = nullptr;
 
 // We use timeGetTime() to implement TimeTicks::Now().  This can be problematic
 // because it returns the number of milliseconds since Windows has started,
 // which will roll over the 32-bit value every ~49 days.  We try to track
 // rollover ourselves, which works if TimeTicks::Now() is called at least every
 // 49 days.
-TimeDelta RolloverProtectedNow() {
-    base::AutoLock locked(rollover_lock);
+TimeDelta RolloverProtectedNow()
+{
+    //base::AutoLock locked(rollover_lock);
+    if (!rollover_lock) {
+        rollover_lock = new CRITICAL_SECTION();
+        ::InitializeCriticalSectionAndSpinCount(rollover_lock, 2000);
+    }
+    ::EnterCriticalSection(rollover_lock);
+
     // We should hold the lock while calling tick_function to make sure that
     // we keep last_seen_now stay correctly in sync.
     DWORD now = tick_function();
     if (now < last_seen_now)
-        rollover_ms += 0x100000000I64;  // ~49.7 days.
+        rollover_ms += 0x100000000I64; // ~49.7 days.
     last_seen_now = now;
-    return TimeDelta::FromMilliseconds(now + rollover_ms);
+    TimeDelta result = TimeDelta::FromMilliseconds(now + rollover_ms);
+
+    ::LeaveCriticalSection(rollover_lock);
+    return result;
 }
 
 // bool IsBuggyAthlon(const base::CPU& cpu) {
@@ -324,8 +344,6 @@ TimeDelta RolloverProtectedNow() {
 //     // unreliable.  Fallback to low-res clock.
 //     return cpu.vendor_name() == "AuthenticAMD" && cpu.family() == 15;
 // }
-
-
 
 // Overview of time counters:
 // (1) CPU cycle counter. (Retrieved via RDTSC)
@@ -358,24 +376,28 @@ TimeDelta RolloverProtectedNow() {
 class HighResNowSingleton {
 public:
     HighResNowSingleton()
-        : ticks_per_second_(0),
-        skew_(0) {
+        : ticks_per_second_(0)
+        , skew_(0)
+    {
         InitializeClock();
 
-//             base::CPU cpu;
-//             if (IsBuggyAthlon(cpu))
-//                 DisableHighResClock();
+        //             base::CPU cpu;
+        //             if (IsBuggyAthlon(cpu))
+        //                 DisableHighResClock();
     }
 
-    bool IsUsingHighResClock() {
+    bool IsUsingHighResClock()
+    {
         return ticks_per_second_ != 0;
     }
 
-    void DisableHighResClock() {
+    void DisableHighResClock()
+    {
         ticks_per_second_ = 0;
     }
 
-    TimeDelta Now() {
+    TimeDelta Now()
+    {
         if (IsUsingHighResClock())
             return TimeDelta::FromMicroseconds(UnreliableNow());
 
@@ -383,7 +405,8 @@ public:
         return RolloverProtectedNow();
     }
 
-    int64 GetQPCDriftMicroseconds() {
+    int64 GetQPCDriftMicroseconds()
+    {
         if (!IsUsingHighResClock())
             return 0;
         int64 val = ((UnreliableNow() - ReliableNow()) - skew_);
@@ -392,7 +415,8 @@ public:
         return val;
     }
 
-    int64 QPCValueToMicroseconds(LONGLONG qpc_value) {
+    int64 QPCValueToMicroseconds(LONGLONG qpc_value)
+    {
         if (!ticks_per_second_)
             return 0;
 
@@ -400,43 +424,45 @@ public:
         // overflow and precision issues. Think twice before simplifying!
         int64 whole_seconds = qpc_value / ticks_per_second_;
         int64 leftover_ticks = qpc_value % ticks_per_second_;
-        int64 microseconds = (whole_seconds * Time::kMicrosecondsPerSecond) +
-            ((leftover_ticks * Time::kMicrosecondsPerSecond) /
-                ticks_per_second_);
+        int64 microseconds = (whole_seconds * Time::kMicrosecondsPerSecond) + ((leftover_ticks * Time::kMicrosecondsPerSecond) / ticks_per_second_);
         return microseconds;
     }
 
 private:
     // Synchronize the QPC clock with GetSystemTimeAsFileTime.
-    void InitializeClock() {
+    void InitializeClock()
+    {
         LARGE_INTEGER ticks_per_sec = { 0 };
         if (!QueryPerformanceFrequency(&ticks_per_sec))
-            return;  // Broken, we don't guarantee this function works.
+            return; // Broken, we don't guarantee this function works.
         ticks_per_second_ = ticks_per_sec.QuadPart;
 
         skew_ = UnreliableNow() - ReliableNow();
     }
 
     // Get the number of microseconds since boot in an unreliable fashion.
-    int64 UnreliableNow() {
+    int64 UnreliableNow()
+    {
         LARGE_INTEGER now;
         QueryPerformanceCounter(&now);
         return QPCValueToMicroseconds(now.QuadPart);
     }
 
     // Get the number of microseconds since boot in a reliable fashion.
-    int64 ReliableNow() {
+    int64 ReliableNow()
+    {
         return RolloverProtectedNow().InMicroseconds();
     }
 
-    int64 ticks_per_second_;  // 0 indicates QPF failed and we're broken.
-    int64 skew_;  // Skew between lo-res and hi-res clocks (for debugging).
+    int64 ticks_per_second_; // 0 indicates QPF failed and we're broken.
+    int64 skew_; // Skew between lo-res and hi-res clocks (for debugging).
 };
 
 // static base::LazyInstance<HighResNowSingleton>::Leaky
 //     leaky_high_res_now_singleton = LAZY_INSTANCE_INITIALIZER;
 
-HighResNowSingleton* GetHighResNowSingleton() {
+HighResNowSingleton* GetHighResNowSingleton()
+{
     //return leaky_high_res_now_singleton.Pointer();
     HighResNowSingleton* leaky_high_res_now_singleton = nullptr;
     if (!leaky_high_res_now_singleton)
@@ -444,39 +470,47 @@ HighResNowSingleton* GetHighResNowSingleton() {
     return leaky_high_res_now_singleton;
 }
 
-TimeDelta HighResNowWrapper() {
+TimeDelta HighResNowWrapper()
+{
     return GetHighResNowSingleton()->Now();
 }
 
-typedef TimeDelta(*NowFunction)(void);
+typedef TimeDelta (*NowFunction)(void);
 NowFunction now_function = RolloverProtectedNow;
 
-bool CPUReliablySupportsHighResTime() {
-//         base::CPU cpu;
-//         if (!cpu.has_non_stop_time_stamp_counter())
-//             return false;
-// 
-//         if (IsBuggyAthlon(cpu))
-//             return false;
+bool CPUReliablySupportsHighResTime()
+{
+    //         base::CPU cpu;
+    //         if (!cpu.has_non_stop_time_stamp_counter())
+    //             return false;
+    //
+    //         if (IsBuggyAthlon(cpu))
+    //             return false;
 
     return true;
 }
 
-}  // namespace
+} // namespace
 
-   // static
+// static
 TimeTicks::TickFunctionType TimeTicks::SetMockTickFunction(
-    TickFunctionType ticker) {
-    base::AutoLock locked(rollover_lock);
+    TickFunctionType ticker)
+{
+    //base::AutoLock locked(rollover_lock);
+    ::EnterCriticalSection(rollover_lock);
+
     TickFunctionType old = tick_function;
     tick_function = ticker;
     rollover_ms = 0;
     last_seen_now = 0;
+
+    ::LeaveCriticalSection(rollover_lock);
     return old;
 }
 
 // static
-bool TimeTicks::SetNowIsHighResNowIfSupported() {
+bool TimeTicks::SetNowIsHighResNowIfSupported()
+{
     if (!CPUReliablySupportsHighResTime()) {
         return false;
     }
@@ -486,59 +520,141 @@ bool TimeTicks::SetNowIsHighResNowIfSupported() {
 }
 
 // static
-TimeTicks TimeTicks::Now() {
+TimeTicks TimeTicks::Now()
+{
     return TimeTicks() + now_function();
 }
 
 // static
-TimeTicks TimeTicks::HighResNow() {
+TimeTicks TimeTicks::HighResNow()
+{
     return TimeTicks() + HighResNowWrapper();
 }
 
 // static
-bool TimeTicks::IsHighResNowFastAndReliable() {
+bool TimeTicks::IsHighResNowFastAndReliable()
+{
     return CPUReliablySupportsHighResTime();
 }
 
 // static
-TimeTicks TimeTicks::ThreadNow() {
+TimeTicks TimeTicks::ThreadNow()
+{
     //NOTREACHED();
     DebugBreak();
     return TimeTicks();
 }
 
 // static
-TimeTicks TimeTicks::NowFromSystemTraceTime() {
+TimeTicks TimeTicks::NowFromSystemTraceTime()
+{
     return HighResNow();
 }
 
 // static
-int64 TimeTicks::GetQPCDriftMicroseconds() {
+int64 TimeTicks::GetQPCDriftMicroseconds()
+{
     return GetHighResNowSingleton()->GetQPCDriftMicroseconds();
 }
 
 // static
-TimeTicks TimeTicks::FromQPCValue(LONGLONG qpc_value) {
+TimeTicks TimeTicks::FromQPCValue(LONGLONG qpc_value)
+{
     return TimeTicks(GetHighResNowSingleton()->QPCValueToMicroseconds(qpc_value));
 }
 
 // static
-bool TimeTicks::IsHighResClockWorking() {
+bool TimeTicks::IsHighResClockWorking()
+{
     return GetHighResNowSingleton()->IsUsingHighResClock();
 }
 
-TimeTicks TimeTicks::UnprotectedNow() {
+TimeTicks TimeTicks::UnprotectedNow()
+{
     if (now_function == HighResNowWrapper) {
         return Now();
-    }
-    else {
+    } else {
         return TimeTicks() + TimeDelta::FromMilliseconds(timeGetTime());
     }
+}
+
+TimeTicks TimeTicks::SnappedToNextTick(TimeTicks tick_phase, TimeDelta tick_interval) const
+{
+    // |interval_offset| is the offset from |this| to the next multiple of
+    // |tick_interval| after |tick_phase|, possibly negative if in the past.
+    TimeDelta interval_offset = (tick_phase - *this) % tick_interval;
+
+    // If |this| is exactly on the interval (i.e. offset==0), don't adjust.
+    // Otherwise, if |tick_phase| was in the past, adjust forward to the next
+    // tick after |this|.
+    if (!interval_offset.is_zero() && tick_phase < *this)
+        interval_offset += tick_interval;
+
+    return *this + interval_offset;
+}
+
+namespace base {
+
+// static
+bool base::ThreadTicks::IsSupportedWin()
+{
+    //   static bool is_supported = GetQueryThreadCycleTimeFunction() &&
+    //     base::CPU().has_non_stop_time_stamp_counter() &&
+    //     !IsBuggyAthlon(base::CPU());
+    //   return is_supported;
+    DebugBreak();
+    return false;
+}
+
+// static
+ThreadTicks ThreadTicks::Now()
+{
+    DebugBreak();
+    return ThreadTicks(0);
+    //   DCHECK(IsSupported());
+    //
+    //   // Get the number of TSC ticks used by the current thread.
+    //   ULONG64 thread_cycle_time = 0;
+    //   GetQueryThreadCycleTimeFunction()(::GetCurrentThread(), &thread_cycle_time);
+    //
+    //   // Get the frequency of the TSC.
+    //   double tsc_ticks_per_second = TSCTicksPerSecond();
+    //   if (tsc_ticks_per_second == 0)
+    //     return ThreadTicks();
+    //
+    //   // Return the CPU time of the current thread.
+    //   double thread_time_seconds = thread_cycle_time / tsc_ticks_per_second;
+    //   return ThreadTicks(static_cast<int64>(
+    //     thread_time_seconds * Time::kMicrosecondsPerSecond));
+}
+
+std::ostream& operator<<(std::ostream& os, TimeTicks time_ticks)
+{
+    // This function formats a TimeTicks object as "bogo-microseconds".
+    // The origin and granularity of the count are platform-specific, and may very
+    // from run to run. Although bogo-microseconds usually roughly correspond to
+    // real microseconds, the only real guarantee is that the number never goes
+    // down during a single run.
+    //   const TimeDelta as_time_delta = time_ticks - TimeTicks();
+    //   return os << as_time_delta.InMicroseconds() << " bogo-microseconds";
+    DebugBreak();
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, ThreadTicks thread_ticks)
+{
+    //   const TimeDelta as_time_delta = thread_ticks - ThreadTicks();
+    //   return os << as_time_delta.InMicroseconds() << " bogo-thread-microseconds";
+    DebugBreak();
+    return os;
+}
+
 }
 
 // TimeDelta ------------------------------------------------------------------
 
 // static
-TimeDelta TimeDelta::FromQPCValue(LONGLONG qpc_value) {
+TimeDelta TimeDelta::FromQPCValue(LONGLONG qpc_value)
+{
     return TimeDelta(GetHighResNowSingleton()->QPCValueToMicroseconds(qpc_value));
 }

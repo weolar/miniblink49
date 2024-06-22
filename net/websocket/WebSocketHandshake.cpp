@@ -232,6 +232,9 @@ CString WebSocketHandshake::clientHandshakeMessage() const
 
 PassRefPtr<WebSocketHandshakeRequest> WebSocketHandshake::clientHandshakeRequest() const
 {
+    if (!m_context)
+        return nullptr;
+
     PassRefPtr<WebSocketHandshakeRequest> request = WebSocketHandshakeRequest::create(m_url);
     request->addHeaderField("Connection", "Upgrade");
     request->addHeaderField("Host", hostName(m_url, m_secure).utf8().data());
@@ -460,7 +463,7 @@ const char* WebSocketHandshake::readHTTPHeaders(const char* start, const char* e
     bool sawSecWebSocketProtocolHeaderField = false;
     const char* p = start;
     for (; p < end; /*p++*/) {
-        size_t consumedLength = parseHTTPHeader(p, end - p, m_failureReason, name, value);
+        size_t consumedLength = blink::parseHTTPHeader(p, end - p, m_failureReason, name, value);
         if (!consumedLength)
             return 0;
         p += consumedLength;

@@ -4,15 +4,22 @@
 
 #include "third_party/WebKit/public/web/WebDragOperation.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
+#include "third_party/WebKit/public/platform/WebDragData.h"
+#include "third_party/WebKit/public/platform/WebTraceLocation.h"
+#include "third_party/WebKit/Source/wtf/PassOwnPtr.h"
+#include "third_party/WebKit/Source/wtf/Functional.h"
+
 #include "base/COMPtr.h"
 #include <shlobj.h>
 #include <functional>
+#include <vector>
 
 namespace blink {
 class WebViewImpl;
 class WebImage;
 class WebLocalFrame;
 struct WebPoint;
+class Task;
 }
 
 typedef struct _wkeWebDragData wkeWebDragData;
@@ -68,11 +75,14 @@ public:
     IDataObject* getDragData() const { return m_dragData.get(); }
 
 private:
-    
+    void postMainThreadTask(const blink::WebTraceLocation& location, WTF::PassOwnPtr<WTF::Function<void()>> func);
+    void runMainThreadTasks();
     void simulateDrag();
 
     long m_refCount;
     int m_taskCount;
+
+    bool m_isDragTargetDragEnter;
 
     blink::WebViewImpl* m_webViewImpl;
 
@@ -92,6 +102,9 @@ private:
     std::function<void(void)> m_notifOnDragging;
 
     COMPtr<IDataObject> m_tempDataObjectForSimulate;
+
+    WTF::Mutex m_tasksLock;
+    std::vector<blink::Task*> m_tasks;
 };
 
 }

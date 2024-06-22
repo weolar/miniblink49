@@ -1,3 +1,5 @@
+const {app} = require('electron');
+
 const hasCrypto = (process.versions.openssl != '0');
 
 const http = require('http');
@@ -58,6 +60,18 @@ function Net() {
 Net.request = function(options) {
 	return new ClientRequest(options);
 }
+
+Net.isOnline = function() {
+	return app.isOnline();
+}
+
+Object.defineProperty(Net, 'online', {
+	get:function() {
+		return app.isOnline();
+	}
+})
+
+
 
 exports.net = Net;
 

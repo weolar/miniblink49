@@ -304,7 +304,9 @@ static void installV8SVGFEDisplacementMapElementTemplate(v8::Local<v8::FunctionT
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_CHANNEL_A", SVGFEDisplacementMapElementV8Internal::SVG_CHANNEL_AConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFEDisplacementMapElement::domTemplate(v8::Isolate* isolate)

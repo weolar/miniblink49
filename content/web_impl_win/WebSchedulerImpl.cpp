@@ -55,7 +55,8 @@ void WebSchedulerImpl::postIdleTaskAfterWakeup(const blink::WebTraceLocation& lo
 
 void WebSchedulerImpl::postLoadingTask(const blink::WebTraceLocation& location, blink::WebThread::Task* task) 
 {
-    m_thread->postDelayedTaskWithPriorityCrossThread(location, task, 0, WebThreadImpl::kDefaultPriority);
+    //m_thread->postDelayedTaskWithPriorityCrossThread(location, task, 0, WebThreadImpl::kDefaultPriority);
+    m_thread->postDelayedTask(location, task, 0);
 }
 
 void WebSchedulerImpl::postTimerTask(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs)
@@ -73,6 +74,11 @@ void WebSchedulerImpl::suspendTimerQueue()
 void WebSchedulerImpl::resumeTimerQueue() 
 {
     m_thread->resumeTimerQueue();
+}
+
+void WebSchedulerImpl::cancelTimerTask(blink::WebThread::Task* task)
+{
+    m_thread->cancelTimerTask(task);
 }
 
 void WebSchedulerImpl::postIdleTask(const blink::WebTraceLocation&, PassOwnPtr<IdleTask>) { notImplemented(); }

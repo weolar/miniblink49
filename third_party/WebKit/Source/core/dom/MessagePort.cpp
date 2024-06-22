@@ -60,6 +60,9 @@ MessagePort::MessagePort(ExecutionContext& executionContext)
 
 MessagePort::~MessagePort()
 {
+    if (m_started && (!m_closed))
+        DebugBreak();
+
     close();
     if (m_scriptStateForConversion)
         m_scriptStateForConversion->disposePerContextData();
@@ -134,6 +137,10 @@ void MessagePort::messageAvailable()
 
 void MessagePort::start()
 {
+//     m_closed = !hasEventListeners();
+//     if (m_closed)
+//         return;
+
     // Do nothing if we've been cloned or closed.
     if (!isEntangled())
         return;

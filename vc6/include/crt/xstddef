@@ -5,7 +5,9 @@
  #include <yvals.h>
 #endif
 #include <cstddef>
+#if defined(__cplusplus)
 #include <xtr1common>
+#endif
 
 /* Define _CRTIMP */
 #ifndef _CRTIMP
@@ -147,7 +149,7 @@ enum _Uninitialized {_Noinit};
 		// FUNCTIONS
 _CRTIMP void __cdecl _Nomemory();
 
-
+#if defined(__cplusplus)
 // TEMPLATE CLASS _Arg_types
 template<class... _Types>
 struct _Arg_types
@@ -245,6 +247,7 @@ struct _Always_false
 {	// false value that probably won't be optimized away
     static const bool value = false;
 };
+#endif
 
 _STD_END
 #ifdef  _MSC_VER

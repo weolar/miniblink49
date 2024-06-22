@@ -14,84 +14,93 @@ namespace atom {
 
 namespace api {
 
-static int kKeyWeakMapClassNameCount = 0;
+    static int kKeyWeakMapClassNameCount = 0;
 
-template<typename K>
-class KeyWeakMap : public gin::Wrappable<KeyWeakMap<K>> {
-public:
-    static v8::Local<v8::Object> create(v8::Isolate* isolate) {
-        v8::Persistent<v8::Function>* constructor = V8PersistentTls::get(&constructorTlsKey);
-        v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, *constructor);
-        v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance();
-        return obj.ToLocalChecked();
-    }
+    template <typename K>
+    class KeyWeakMap : public gin::Wrappable<KeyWeakMap<K>> {
+    public:
+        static v8::Local<v8::Object> create(v8::Isolate* isolate)
+        {
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+            v8::Persistent<v8::Function>* constructor = V8PersistentTls::get(&constructorTlsKey);
+            v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, *constructor);
+            v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance(context).ToLocalChecked();
+            return obj.ToLocalChecked();
+        }
 
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        v8::Isolate* isolate = args.GetIsolate();
-        if (args.IsConstructCall()) {
-            if (args.Length() > 1)
+        static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+        {
+            v8::Isolate* isolate = args.GetIsolate();
+            if (args.IsConstructCall()) {
+                if (args.Length() > 1)
+                    return;
+
+                KeyWeakMap* self = new KeyWeakMap(isolate, args.This());
+                args.GetReturnValue().Set(args.This());
+            }
+        }
+
+        static void init(v8::Isolate* isolate)
+        {
+            v8::Persistent<v8::Function>* constructor = V8PersistentTls::get(&constructorTlsKey);
+            if (!(*constructor).IsEmpty())
                 return;
 
-            KeyWeakMap* self = new KeyWeakMap(isolate, args.This());
-            args.GetReturnValue().Set(args.This());
+            ++kKeyWeakMapClassNameCount;
+            char className[24] = { 0 };
+            sprintf(className, "KeyWeakMap%d", kKeyWeakMapClassNameCount);
+
+            v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, &KeyWeakMap<K>::newFunction);
+            prototype->SetClassName(gin::StringToV8(isolate, className));
+            gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
+            builder.SetMethod("set", &KeyWeakMap<K>::set);
+            builder.SetMethod("get", &KeyWeakMap<K>::get);
+            builder.SetMethod("has", &KeyWeakMap<K>::has);
+            builder.SetMethod("remove", &KeyWeakMap<K>::remove);
+            (*constructor).Reset(isolate, prototype->GetFunction());
         }
-    }
 
-    static void init(v8::Isolate* isolate) {
-        v8::Persistent<v8::Function>* constructor = V8PersistentTls::get(&constructorTlsKey);
-        if (!(*constructor).IsEmpty())
-            return;
+        static gin::WrapperInfo kWrapperInfo;
 
-        ++kKeyWeakMapClassNameCount;
-        char className[24] = { 0 };
-        sprintf(className, "KeyWeakMap%d", kKeyWeakMapClassNameCount);
+    protected:
+        explicit KeyWeakMap(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+        {
+            gin::Wrappable<KeyWeakMap<K>>::InitWith(isolate, wrapper);
+        }
+        virtual ~KeyWeakMap() override { }
 
-        v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, &KeyWeakMap<K>::newFunction);
-        prototype->SetClassName(gin::StringToV8(isolate, className));
-        gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("set", &KeyWeakMap<K>::set);
-        builder.SetMethod("get", &KeyWeakMap<K>::get);
-        builder.SetMethod("has", &KeyWeakMap<K>::has);
-        builder.SetMethod("remove", &KeyWeakMap<K>::remove);
-        (*constructor).Reset(isolate, prototype->GetFunction());
-    }
+    private:
+        // API for KeyWeakMap.
+        void set(v8::Isolate* isolate, const K& key, v8::Local<v8::Object> object)
+        {
+            m_keyWeakMap.set(isolate, key, object);
+        }
 
-    static gin::WrapperInfo kWrapperInfo;
+        v8::Local<v8::Object> get(v8::Isolate* isolate, const K& key)
+        {
+            return m_keyWeakMap.get(isolate, key).ToLocalChecked();
+        }
 
-protected:
-    explicit KeyWeakMap(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
-        gin::Wrappable<KeyWeakMap<K>>::InitWith(isolate, wrapper);
-    }
-    virtual ~KeyWeakMap() override {}
+        bool has(const K& key)
+        {
+            return m_keyWeakMap.has(key);
+        }
 
-private:
-    // API for KeyWeakMap.
-    void set(v8::Isolate* isolate, const K& key, v8::Local<v8::Object> object) {
-        m_keyWeakMap.set(isolate, key, object);
-    }
+        void remove(const K& key)
+        {
+            m_keyWeakMap.remove(key);
+        }
 
-    v8::Local<v8::Object> get(v8::Isolate* isolate, const K& key) {
-        return m_keyWeakMap.get(isolate, key).ToLocalChecked();
-    }
+        //static v8::Persistent<v8::Function> constructor;
+        static DWORD constructorTlsKey;
 
-    bool has(const K& key) {
-        return m_keyWeakMap.has(key);
-    }
+        atom::KeyWeakMap<K> m_keyWeakMap;
 
-    void remove(const K& key) {
-        m_keyWeakMap.remove(key);
-    }
+        DISALLOW_COPY_AND_ASSIGN(KeyWeakMap);
+    };
 
-    //static v8::Persistent<v8::Function> constructor;
-    static DWORD constructorTlsKey;
+} // namespace api
 
-    atom::KeyWeakMap<K> m_keyWeakMap;
-    
-    DISALLOW_COPY_AND_ASSIGN(KeyWeakMap);
-};
+} // namespace atom
 
-}  // namespace api
-
-}  // namespace atom
-
-#endif  // ATOM_COMMON_API_ATOM_API_KEY_WEAK_MAP_H_
+#endif // ATOM_COMMON_API_ATOM_API_KEY_WEAK_MAP_H_

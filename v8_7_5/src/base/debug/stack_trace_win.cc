@@ -25,6 +25,42 @@
 #include "src/base/logging.h"
 #include "src/base/macros.h"
 
+inline BOOL SymGetSearchPathWXp(HANDLE process, PWSTR search_path,
+                                DWORD search_path_length) {
+  typedef BOOL(WINAPI * PFN_SymGetSearchPathW)(
+      HANDLE process, PWSTR search_path, DWORD search_path_length);
+  static PFN_SymGetSearchPathW s_SymGetSearchPathW;
+  static BOOL s_is_init = FALSE;
+
+  if (!s_is_init) {
+    HMODULE shell32 = LoadLibraryW(L"Dbghelp.dll");
+    s_SymGetSearchPathW =
+        (PFN_SymGetSearchPathW)(GetProcAddress(shell32, "SymGetSearchPathW"));
+    s_is_init = TRUE;
+  }
+  if (s_SymGetSearchPathW)
+    return s_SymGetSearchPathW(process, search_path, search_path_length);
+
+  return FALSE;
+}
+
+inline BOOL SymSetSearchPathWXp(HANDLE process, PCWSTR search_path) {
+  typedef BOOL(WINAPI * PFN_SymSetSearchPathW)(HANDLE process,
+                                               PCWSTR search_path);
+  static PFN_SymSetSearchPathW s_SymSetSearchPathW;
+  static BOOL s_is_init = FALSE;
+
+  if (!s_is_init) {
+    HMODULE shell32 = LoadLibraryW(L"Dbghelp.dll");
+    s_SymSetSearchPathW =
+        (PFN_SymSetSearchPathW)(GetProcAddress(shell32, "SymSetSearchPathW"));
+    s_is_init = TRUE;
+  }
+  if (s_SymSetSearchPathW) return s_SymSetSearchPathW(process, search_path);
+
+  return FALSE;
+}
+
 namespace v8 {
 namespace base {
 namespace debug {
@@ -74,7 +110,7 @@ bool InitializeSymbols() {
 
   // Note: The below function takes buffer size as number of characters,
   // not number of bytes!
-  if (!SymGetSearchPathW(GetCurrentProcess(), symbols_path.get(),
+  if (!SymGetSearchPathWXp(GetCurrentProcess(), symbols_path.get(), // SUPPORT_XP_CODE
                          kSymbolsArraySize)) {
     g_init_error = GetLastError();
     return false;
@@ -88,7 +124,7 @@ bool InitializeSymbols() {
   std::wstring new_path(
       std::wstring(symbols_path.get()) + L";" +
       exe_path_wstring.substr(0, exe_path_wstring.find_last_of(L"\\/")));
-  if (!SymSetSearchPathW(GetCurrentProcess(), new_path.c_str())) {
+  if (!SymSetSearchPathWXp(GetCurrentProcess(), new_path.c_str())) { // SUPPORT_XP_CODE
     g_init_error = GetLastError();
     return false;
   }

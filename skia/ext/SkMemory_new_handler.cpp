@@ -50,8 +50,8 @@ struct MemoryHead {
     size_t size;
 };
 
-const size_t magicNum0 = 0x1122dd44;
-const size_t magicNum1 = 0x11227788;
+const size_t magicNum0 = 0x1122dd55;
+const size_t magicNum1 = 0x11447788;
 
 void* sk_realloc_throw(void* addr, size_t size) {
     if (0 == size)

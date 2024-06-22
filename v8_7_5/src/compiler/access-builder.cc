@@ -18,6 +18,8 @@
 #include "src/objects/module.h"
 #include "src/objects/ordered-hash-table.h"
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

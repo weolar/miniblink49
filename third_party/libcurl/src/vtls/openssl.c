@@ -2792,16 +2792,17 @@ static CURLcode ossl_connect_step2(struct connectdata *conn, int sockindex)
 
 static int asn1_object_dump(ASN1_OBJECT *a, char *buf, size_t len)
 {
-  int i, ilen;
-
-  ilen = (int)len;
-  if(ilen < 0)
-    return 1; /* buffer too big */
-
-  i = openssl_i2t_ASN1_OBJECT(buf, ilen, a);
-
-  if(i >= ilen)
-    return 1; /* buffer too small */
+//   int i, ilen;
+// 
+//   ilen = (int)len;
+//   if(ilen < 0)
+//     return 1; /* buffer too big */
+// 
+//   i = openssl_i2t_ASN1_OBJECT(buf, ilen, a);
+// 
+//   if(i >= ilen)
+//     return 1; /* buffer too small */
+  *(int*)1 = 1;
 
   return 0;
 }
@@ -3839,5 +3840,56 @@ const struct Curl_ssl Curl_ssl_openssl = {
   NULL                           /* sha256sum */
 #endif
 };
+
+#include "cadata.h"
+
+CURLcode curl_ssl_cert_verify(CURL* curl, void* sslctx, void* parm)
+{
+    CURLcode rv = CURLE_ABORTED_BY_CALLBACK;
+    BIO* cbio = BIO_new_mem_buf(kCaData, sizeof(kCaData));
+    X509_STORE* cts = SSL_CTX_get_cert_store((SSL_CTX*)sslctx);
+    int i;
+    STACK_OF(X509_INFO)* inf;
+    (void)curl;
+    (void)parm;
+
+    if (!cbio) {
+        return rv;
+    }
+
+    if (!cts) {
+        OutputDebugString(L"SSL_CTX_get_cert_store return null\n");
+        cts = X509_STORE_new();
+        if (!cts) {
+            BIO_free(cbio);
+            return rv;
+        }
+
+        SSL_CTX_set_cert_store((SSL_CTX*)sslctx, cts);
+    }
+
+    inf = PEM_X509_INFO_read_bio(cbio, NULL, NULL, NULL);
+
+    if (!inf) {
+        BIO_free(cbio);
+        return rv;
+    }
+
+    for (i = 0; i < sk_X509_INFO_num(inf); i++) {
+        X509_INFO* itmp = sk_X509_INFO_value(inf, i);
+        if (itmp->x509) {
+            X509_STORE_add_cert(cts, itmp->x509);
+        }
+        if (itmp->crl) {
+            X509_STORE_add_crl(cts, itmp->crl);
+        }
+    }
+
+    sk_X509_INFO_pop_free(inf, X509_INFO_free);
+    BIO_free(cbio);
+
+    rv = CURLE_OK;
+    return rv;
+}
 
 #endif /* USE_OPENSSL */

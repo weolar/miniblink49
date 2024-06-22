@@ -361,15 +361,6 @@ void MacroAssembler::RecordWrite(Register object, Register address,
 
   bind(&done);
 
-  {
-    // Count number of write barriers in generated code.
-    isolate()->counters()->write_barriers_static()->Increment();
-    UseScratchRegisterScope temps(this);
-    Register scratch = temps.Acquire();
-    IncrementCounter(isolate()->counters()->write_barriers_dynamic(), 1,
-                     scratch, value);
-  }
-
   // Clobber clobbered registers when running with the debug-code flag
   // turned on to provoke errors.
   if (emit_debug_code()) {
@@ -1463,6 +1454,21 @@ void TurboAssembler::AddPair(Register dst_low, Register dst_high,
   Addu(scratch1, left_low, right_low);
   Sltu(scratch3, scratch1, left_low);
   Addu(scratch2, left_high, right_high);
+  Addu(dst_high, scratch2, scratch3);
+  Move(dst_low, scratch1);
+}
+
+void TurboAssembler::AddPair(Register dst_low, Register dst_high,
+                             Register left_low, Register left_high,
+                             int32_t imm,
+                             Register scratch1, Register scratch2) {
+  BlockTrampolinePoolScope block_trampoline_pool(this);
+  Register scratch3 = t8;
+  li(dst_low, Operand(imm));
+  sra(dst_high, dst_low, 31);
+  Addu(scratch1, left_low, dst_low);
+  Sltu(scratch3, scratch1, left_low);
+  Addu(scratch2, left_high, dst_high);
   Addu(dst_high, scratch2, scratch3);
   Move(dst_low, scratch1);
 }

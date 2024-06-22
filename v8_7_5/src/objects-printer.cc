@@ -66,7 +66,21 @@
 #include "src/wasm/wasm-objects-inl.h"
 
 namespace v8 {
+
 namespace internal {
+
+// void Tuple2::Tuple2Print(std::basic_ostream<char, std::char_traits<char> >&) {
+//   DebugBreak();
+// }
+// 
+// void Tuple3::Tuple3Print(std::basic_ostream<char, std::char_traits<char> >&) {
+//   DebugBreak();
+// }
+// 
+// void EnumCache::EnumCachePrint(
+//     std::basic_ostream<char, std::char_traits<char> >&) {
+//   DebugBreak();
+// }
 
 #ifdef OBJECT_PRINT
 
@@ -228,13 +242,19 @@ void HeapObject::HeapObjectPrint(std::ostream& os) {  // NOLINT
     case JS_ERROR_TYPE:
     // TODO(titzer): debug printing for more wasm objects
     case WASM_EXCEPTION_TYPE:
-    case WASM_GLOBAL_TYPE:
-    case WASM_MEMORY_TYPE:
-    case WASM_TABLE_TYPE:
       JSObject::cast(*this)->JSObjectPrint(os);
       break;
     case WASM_MODULE_TYPE:
       WasmModuleObject::cast(*this)->WasmModuleObjectPrint(os);
+      break;
+    case WASM_MEMORY_TYPE:
+      WasmMemoryObject::cast(*this)->WasmMemoryObjectPrint(os);
+      break;
+    case WASM_TABLE_TYPE:
+      WasmTableObject::cast(*this)->WasmTableObjectPrint(os);
+      break;
+    case WASM_GLOBAL_TYPE:
+      WasmGlobalObject::cast(*this)->WasmGlobalObjectPrint(os);
       break;
     case WASM_INSTANCE_TYPE:
       WasmInstanceObject::cast(*this)->WasmInstanceObjectPrint(os);
@@ -422,7 +442,6 @@ void HeapObject::HeapObjectPrint(std::ostream& os) {  // NOLINT
     case WEAK_ARRAY_LIST_TYPE:
       WeakArrayList::cast(*this)->WeakArrayListPrint(os);
       break;
-    case EMPTY_STRING_TYPE:
     case INTERNALIZED_STRING_TYPE:
     case EXTERNAL_INTERNALIZED_STRING_TYPE:
     case ONE_BYTE_INTERNALIZED_STRING_TYPE:
@@ -669,6 +688,8 @@ void JSObject::PrintElements(std::ostream& os) {  // NOLINT
     case PACKED_SMI_ELEMENTS:
     case HOLEY_ELEMENTS:
     case PACKED_ELEMENTS:
+    case PACKED_FROZEN_ELEMENTS:
+    case PACKED_SEALED_ELEMENTS:
     case FAST_STRING_WRAPPER_ELEMENTS: {
       PrintFixedArrayElements(os, FixedArray::cast(elements()));
       break;
@@ -1364,7 +1385,6 @@ void JSArrayBuffer::JSArrayBufferPrint(std::ostream& os) {  // NOLINT
   if (was_detached()) os << "\n - detached";
   if (is_shared()) os << "\n - shared";
   if (is_wasm_memory()) os << "\n - is_wasm_memory";
-  if (is_growable()) os << "\n - growable";
   JSObjectPrintBody(os, *this, !was_detached());
 }
 
@@ -1767,21 +1787,6 @@ void PrototypeInfo::PrototypeInfoPrint(std::ostream& os) {  // NOLINT
   os << "\n";
 }
 
-void Tuple2::Tuple2Print(std::ostream& os) {  // NOLINT
-  PrintHeader(os, "Tuple2");
-  os << "\n - value1: " << Brief(value1());
-  os << "\n - value2: " << Brief(value2());
-  os << "\n";
-}
-
-void Tuple3::Tuple3Print(std::ostream& os) {  // NOLINT
-  PrintHeader(os, "Tuple3");
-  os << "\n - value1: " << Brief(value1());
-  os << "\n - value2: " << Brief(value2());
-  os << "\n - value3: " << Brief(value3());
-  os << "\n";
-}
-
 void ClassPositions::ClassPositionsPrint(std::ostream& os) {  // NOLINT
   PrintHeader(os, "ClassPositions");
   os << "\n - start position: " << start();
@@ -1873,6 +1878,7 @@ void WasmExportedFunctionData::WasmExportedFunctionDataPrint(
   PrintHeader(os, "WasmExportedFunctionData");
   os << "\n - wrapper_code: " << Brief(wrapper_code());
   os << "\n - instance: " << Brief(instance());
+  os << "\n - jump_table_offset: " << jump_table_offset();
   os << "\n - function_index: " << function_index();
   os << "\n";
 }
@@ -1889,6 +1895,42 @@ void WasmModuleObject::WasmModuleObjectPrint(std::ostream& os) {  // NOLINT
   if (has_breakpoint_infos()) {
     os << "\n - breakpoint_infos: " << Brief(breakpoint_infos());
   }
+  os << "\n";
+}
+
+void WasmTableObject::WasmTableObjectPrint(std::ostream& os) {  // NOLINT
+  PrintHeader(os, "WasmTableObject");
+  os << "\n - elements: " << Brief(elements());
+  os << "\n - maximum_length: " << Brief(maximum_length());
+  os << "\n - dispatch_tables: " << Brief(dispatch_tables());
+  os << "\n - raw_type: " << raw_type();
+  os << "\n";
+}
+
+void WasmGlobalObject::WasmGlobalObjectPrint(std::ostream& os) {  // NOLINT
+  PrintHeader(os, "WasmGlobalObject");
+  os << "\n - untagged_buffer: " << Brief(untagged_buffer());
+  os << "\n - tagged_buffer: " << Brief(tagged_buffer());
+  os << "\n - offset: " << offset();
+  os << "\n - flags: " << flags();
+  os << "\n - type: " << type();
+  os << "\n - is_mutable: " << is_mutable();
+  os << "\n";
+}
+
+void WasmMemoryObject::WasmMemoryObjectPrint(std::ostream& os) {  // NOLINT
+  PrintHeader(os, "WasmMemoryObject");
+  os << "\n - array_buffer: " << Brief(array_buffer());
+  os << "\n - maximum_pages: " << maximum_pages();
+  os << "\n - instances: " << Brief(instances());
+  os << "\n";
+}
+
+void WasmExceptionObject::WasmExceptionObjectPrint(
+    std::ostream& os) {  // NOLINT
+  PrintHeader(os, "WasmExceptionObject");
+  os << "\n - serialized_signature: " << Brief(serialized_signature());
+  os << "\n - exception_tag: " << Brief(exception_tag());
   os << "\n";
 }
 

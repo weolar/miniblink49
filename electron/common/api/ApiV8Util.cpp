@@ -25,7 +25,7 @@ namespace std {
 //   }
 // };
 
-}  // namespace std
+} // namespace std
 
 // v8::Persistent<v8::Function> atom::api::KeyWeakMap<int32_t>::constructor;
 // v8::Persistent<v8::Function> atom::api::KeyWeakMap<std::pair<int32_t, int32_t>>::constructor;
@@ -37,9 +37,10 @@ gin::WrapperInfo atom::api::KeyWeakMap<std::pair<int32_t, int32_t>>::kWrapperInf
 
 namespace gin {
 
-template<typename Type1, typename Type2>
+template <typename Type1, typename Type2>
 struct Converter<std::pair<Type1, Type2>> {
-    static bool FromV8(v8::Isolate* isolate, v8::Local<v8::Value> val, std::pair<Type1, Type2>* out) {
+    static bool FromV8(v8::Isolate* isolate, v8::Local<v8::Value> val, std::pair<Type1, Type2>* out)
+    {
         if (!val->IsArray())
             return false;
 
@@ -50,13 +51,14 @@ struct Converter<std::pair<Type1, Type2>> {
     }
 };
 
-}  // namespace gin
+} // namespace gin
 
 namespace {
 
 v8::Local<v8::Value> getHiddenValue(v8::Isolate* isolate,
     v8::Local<v8::Object> object,
-    v8::Local<v8::String> key) {
+    v8::Local<v8::String> key)
+{
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Private> privateKey = v8::Private::ForApi(isolate, key);
     v8::Local<v8::Value> value;
@@ -71,7 +73,8 @@ v8::Local<v8::Value> getHiddenValue(v8::Isolate* isolate,
 void setHiddenValue(v8::Isolate* isolate,
     v8::Local<v8::Object> object,
     v8::Local<v8::String> key,
-    v8::Local<v8::Value> value) {
+    v8::Local<v8::Value> value)
+{
     if (value.IsEmpty())
         return;
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
@@ -81,7 +84,8 @@ void setHiddenValue(v8::Isolate* isolate,
 
 void deleteHiddenValue(v8::Isolate* isolate,
     v8::Local<v8::Object> object,
-    v8::Local<v8::String> key) {
+    v8::Local<v8::String> key)
+{
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Private> privateKey = v8::Private::ForApi(isolate, key);
     // Actually deleting the value would make force the object into
@@ -90,27 +94,31 @@ void deleteHiddenValue(v8::Isolate* isolate,
     object->SetPrivate(context, privateKey, v8::Undefined(isolate));
 }
 
-int32_t getObjectHash(v8::Local<v8::Object> object) {
+int32_t getObjectHash(v8::Local<v8::Object> object)
+{
     return object->GetIdentityHash();
 }
 
-void takeHeapSnapshot(v8::Isolate* isolate) {
+void takeHeapSnapshot(v8::Isolate* isolate)
+{
     //isolate->GetHeapProfiler()->TakeHeapSnapshot();
 }
 
-void newV8UtilFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void newV8UtilFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Isolate* isolate = args.GetIsolate();
     args.GetReturnValue().Set(args.This());
 }
 
-void initializeCommonV8UtilApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
+void initializeCommonV8UtilApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     v8::Isolate* isolate = env->isolate();
 
     atom::api::KeyWeakMap<int32_t>::init(isolate);
     atom::api::KeyWeakMap<std::pair<int32_t, int32_t>>::init(isolate);
 
-    v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newV8UtilFunction);    
+    v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newV8UtilFunction);
     prototype->SetClassName(v8::String::NewFromUtf8(isolate, "V8Util"));
     gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
     builder.SetMethod("getHiddenValue", &getHiddenValue);
@@ -126,11 +134,10 @@ void initializeCommonV8UtilApi(v8::Local<v8::Object> exports, v8::Local<v8::Valu
     exports->Set(v8::String::NewFromUtf8(isolate, "v8Util"), prototype->GetFunction());
 }
 
-}  // namespace
+} // namespace
 
-static const char CommonV8UtilSricpt[] =
-"exports = {};";
+static const char CommonV8UtilSricpt[] = "exports = {};";
 
-static NodeNative nativeCommonV8UtilNative{ "v8Util", CommonV8UtilSricpt, sizeof(CommonV8UtilSricpt) - 1 };
+static NodeNative nativeCommonV8UtilNative { "v8Util", CommonV8UtilSricpt, sizeof(CommonV8UtilSricpt) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_v8_util, initializeCommonV8UtilApi, &nativeCommonV8UtilNative)

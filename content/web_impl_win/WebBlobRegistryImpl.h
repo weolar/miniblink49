@@ -57,6 +57,7 @@ public:
     virtual void unregisterStreamURL(const blink::WebURL&) override;
 
     void check() const;
+    void derefBlobDataWrap(net::BlobDataWrap* dataWrap);
 
 private:
     HashMap<String, net::BlobDataWrap*> m_datasSet;

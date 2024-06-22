@@ -193,9 +193,9 @@ class PropertyDescriptorObject;
 enum WriteBarrierMode {
   SKIP_WRITE_BARRIER,
   UPDATE_WEAK_WRITE_BARRIER,
+  UPDATE_EPHEMERON_KEY_WRITE_BARRIER,
   UPDATE_WRITE_BARRIER
 };
-
 
 // PropertyNormalizationMode is used to specify whether to keep
 // inobject properties when normalizing properties of a JSObject.
@@ -354,7 +354,6 @@ class ZoneForwardList;
   V(DescriptorArray)                           \
   V(EmbedderDataArray)                         \
   V(EphemeronHashTable)                        \
-  V(EnumCache)                                 \
   V(ExternalOneByteString)                     \
   V(ExternalString)                            \
   V(ExternalTwoByteString)                     \
@@ -642,8 +641,8 @@ class Object {
   Handle<FieldType> OptimalType(Isolate* isolate,
                                 Representation representation);
 
-  static Handle<Object> NewStorageFor(Isolate* isolate, Handle<Object> object,
-                                      Representation representation);
+  V8_EXPORT_PRIVATE static Handle<Object> NewStorageFor(
+      Isolate* isolate, Handle<Object> object, Representation representation);
 
   static Handle<Object> WrapForRead(Isolate* isolate, Handle<Object> object,
                                     Representation representation);
@@ -653,20 +652,19 @@ class Object {
   inline bool HasValidElements();
 
   // ECMA-262 9.2.
-  bool BooleanValue(Isolate* isolate);
+  V8_EXPORT_PRIVATE bool BooleanValue(Isolate* isolate);
   Object ToBoolean(Isolate* isolate);
 
   // ES6 section 7.2.11 Abstract Relational Comparison
-  V8_WARN_UNUSED_RESULT static Maybe<ComparisonResult> Compare(
-      Isolate* isolate, Handle<Object> x, Handle<Object> y);
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static Maybe<ComparisonResult>
+  Compare(Isolate* isolate, Handle<Object> x, Handle<Object> y);
 
   // ES6 section 7.2.12 Abstract Equality Comparison
-  V8_WARN_UNUSED_RESULT static Maybe<bool> Equals(Isolate* isolate,
-                                                  Handle<Object> x,
-                                                  Handle<Object> y);
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static Maybe<bool> Equals(
+      Isolate* isolate, Handle<Object> x, Handle<Object> y);
 
   // ES6 section 7.2.13 Strict Equality Comparison
-  bool StrictEquals(Object that);
+  V8_EXPORT_PRIVATE bool StrictEquals(Object that);
 
   // ES6 section 7.1.13 ToObject
   // Convert to a JSObject if needed.
@@ -717,8 +715,8 @@ class Object {
   V8_WARN_UNUSED_RESULT static inline MaybeHandle<String> ToString(
       Isolate* isolate, Handle<Object> input);
 
-  static Handle<String> NoSideEffectsToString(Isolate* isolate,
-                                              Handle<Object> input);
+  V8_EXPORT_PRIVATE static Handle<String> NoSideEffectsToString(
+      Isolate* isolate, Handle<Object> input);
 
   // ES6 section 7.1.14 ToPropertyKey
   V8_WARN_UNUSED_RESULT static inline MaybeHandle<Object> ToPropertyKey(
@@ -783,13 +781,14 @@ class Object {
   // In some cases, an exception is thrown regardless of the ShouldThrow
   // argument.  These cases are either in accordance with the spec or not
   // covered by it (eg., concerning API callbacks).
-  V8_WARN_UNUSED_RESULT static Maybe<bool> SetProperty(
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static Maybe<bool> SetProperty(
       LookupIterator* it, Handle<Object> value, StoreOrigin store_origin,
       Maybe<ShouldThrow> should_throw = Nothing<ShouldThrow>());
-  V8_WARN_UNUSED_RESULT static MaybeHandle<Object> SetProperty(
-      Isolate* isolate, Handle<Object> object, Handle<Name> name,
-      Handle<Object> value, StoreOrigin store_origin = StoreOrigin::kMaybeKeyed,
-      Maybe<ShouldThrow> should_throw = Nothing<ShouldThrow>());
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static MaybeHandle<Object>
+  SetProperty(Isolate* isolate, Handle<Object> object, Handle<Name> name,
+              Handle<Object> value,
+              StoreOrigin store_origin = StoreOrigin::kMaybeKeyed,
+              Maybe<ShouldThrow> should_throw = Nothing<ShouldThrow>());
   V8_WARN_UNUSED_RESULT static inline MaybeHandle<Object> SetPropertyOrElement(
       Isolate* isolate, Handle<Object> object, Handle<Name> name,
       Handle<Object> value,
@@ -850,12 +849,16 @@ class Object {
   // Returns the permanent hash code associated with this object depending on
   // the actual object type. May create and store a hash code if needed and none
   // exists.
-  Smi GetOrCreateHash(Isolate* isolate);
+  V8_EXPORT_PRIVATE Smi GetOrCreateHash(Isolate* isolate);
 
   // Checks whether this object has the same value as the given one.  This
   // function is implemented according to ES5, section 9.12 and can be used
   // to implement the Object.is function.
   V8_EXPORT_PRIVATE bool SameValue(Object other);
+
+  // A part of SameValue which handles Number vs. Number case.
+  // Treats NaN == NaN and +0 != -0.
+  inline static bool SameNumberValue(double number1, double number2);
 
   // Checks whether this object has the same value as the given one.
   // +0 and -0 are treated equal. Everything else is the same as SameValue.
@@ -914,7 +917,7 @@ class Object {
   // to a HeapObject.
   inline bool IsCleared() const { return false; }
 
-  DECL_VERIFIER(Object)
+  EXPORT_DECL_VERIFIER(Object)
 
 #ifdef VERIFY_HEAP
   // Verify a pointer is a valid object pointer.
@@ -924,12 +927,12 @@ class Object {
   inline void VerifyApiCallResultType();
 
   // Prints this object without details.
-  void ShortPrint(FILE* out = stdout) const;
+  V8_EXPORT_PRIVATE void ShortPrint(FILE* out = stdout) const;
 
   // Prints this object without details to a message accumulator.
-  void ShortPrint(StringStream* accumulator) const;
+  V8_EXPORT_PRIVATE void ShortPrint(StringStream* accumulator) const;
 
-  void ShortPrint(std::ostream& os) const;  // NOLINT
+  V8_EXPORT_PRIVATE void ShortPrint(std::ostream& os) const;  // NOLINT
 
   inline static Object cast(Object object) { return object; }
   inline static Object unchecked_cast(Object object) { return object; }
@@ -939,10 +942,10 @@ class Object {
 
 #ifdef OBJECT_PRINT
   // For our gdb macros, we should perhaps change these in the future.
-  void Print() const;
+  V8_EXPORT_PRIVATE void Print() const;
 
   // Prints this object with details.
-  void Print(std::ostream& os) const;  // NOLINT
+  V8_EXPORT_PRIVATE void Print(std::ostream& os) const;  // NOLINT
 #else
   void Print() const { ShortPrint(); }
   void Print(std::ostream& os) const { ShortPrint(os); }  // NOLINT
@@ -990,8 +993,8 @@ class Object {
       Isolate* isolate, Handle<Object> input);
   V8_WARN_UNUSED_RESULT static MaybeHandle<Object> ConvertToPropertyKey(
       Isolate* isolate, Handle<Object> value);
-  V8_WARN_UNUSED_RESULT static MaybeHandle<String> ConvertToString(
-      Isolate* isolate, Handle<Object> input);
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static MaybeHandle<String>
+  ConvertToString(Isolate* isolate, Handle<Object> input);
   V8_WARN_UNUSED_RESULT static MaybeHandle<Object> ConvertToNumberOrNumeric(
       Isolate* isolate, Handle<Object> input, Conversion mode);
   V8_WARN_UNUSED_RESULT static MaybeHandle<Object> ConvertToInteger(

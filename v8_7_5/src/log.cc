@@ -234,7 +234,7 @@ void CodeEventLogger::CodeCreateEvent(LogEventsAndTags tag,
                                       const wasm::WasmCode* code,
                                       wasm::WasmName name) {
   name_buffer_->Init(tag);
-  if (name.is_empty()) {
+  if (name.empty()) {
     name_buffer_->AppendBytes("<wasm-unknown>");
   } else {
     name_buffer_->AppendBytes(name.start(), name.length());
@@ -1228,7 +1228,7 @@ void Logger::CodeCreateEvent(CodeEventListener::LogEventsAndTags tag,
   AppendCodeCreateHeader(msg, tag, AbstractCode::Kind::WASM_FUNCTION,
                          code->instructions().start(),
                          code->instructions().length(), &timer_);
-  if (name.is_empty()) {
+  if (name.empty()) {
     msg << "<unknown wasm>";
   } else {
     msg.AppendString(name);
@@ -2061,6 +2061,7 @@ void ExistingCodeLogger::LogCompiledFunctions() {
   // During iteration, there can be heap allocation due to
   // GetScriptLineNumber call.
   for (int i = 0; i < compiled_funcs_count; ++i) {
+    SharedFunctionInfo::EnsureSourcePositionsAvailable(isolate_, sfis[i]);
     if (sfis[i]->function_data()->IsInterpreterData()) {
       LogExistingFunction(
           sfis[i],

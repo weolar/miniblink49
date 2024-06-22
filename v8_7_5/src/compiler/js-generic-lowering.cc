@@ -17,6 +17,8 @@
 #include "src/objects/feedback-cell.h"
 #include "src/objects/scope-info.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -31,7 +33,8 @@ CallDescriptor::Flags FrameStateFlagForCall(Node* node) {
 
 }  // namespace
 
-JSGenericLowering::JSGenericLowering(JSGraph* jsgraph) : jsgraph_(jsgraph) {}
+JSGenericLowering::JSGenericLowering(JSGraph* jsgraph, Editor* editor)
+    : AdvancedReducer(editor), jsgraph_(jsgraph) {}
 
 JSGenericLowering::~JSGenericLowering() = default;
 
@@ -308,6 +311,7 @@ void JSGenericLowering::LowerJSStoreInArrayLiteral(Node* node) {
       Builtins::CallableFor(isolate(), Builtins::kStoreInArrayLiteralIC);
   CallDescriptor::Flags flags = FrameStateFlagForCall(node);
   FeedbackParameter const& p = FeedbackParameterOf(node->op());
+  RelaxControls(node);
   node->InsertInput(zone(), 3, jsgraph()->SmiConstant(p.feedback().index()));
   node->InsertInput(zone(), 4, jsgraph()->HeapConstant(p.feedback().vector()));
   ReplaceWithStubCall(node, callable, flags);

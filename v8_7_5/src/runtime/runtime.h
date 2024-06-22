@@ -119,6 +119,9 @@ namespace internal {
 #define FOR_EACH_INTRINSIC_DEBUG(F, I)          \
   F(ClearStepping, 0, 1)                        \
   F(CollectGarbage, 1, 1)                       \
+  F(DebugAsyncFunctionEntered, 1, 1)            \
+  F(DebugAsyncFunctionFinished, 2, 1)           \
+  F(DebugAsyncFunctionSuspended, 1, 1)          \
   F(DebugBreakAtEntry, 1, 1)                    \
   F(DebugCollectCoverage, 0, 1)                 \
   F(DebugGetLoadedScriptIds, 0, 1)              \
@@ -126,9 +129,6 @@ namespace internal {
   F(DebugPopPromise, 0, 1)                      \
   F(DebugPrepareStepInSuspendedGenerator, 0, 1) \
   F(DebugPushPromise, 1, 1)                     \
-  F(DebugAsyncFunctionEntered, 1, 1)            \
-  F(DebugAsyncFunctionFinished, 2, 1)           \
-  F(DebugAsyncFunctionSuspended, 1, 1)          \
   F(DebugToggleBlockCoverage, 1, 1)             \
   F(DebugTogglePreciseCoverage, 1, 1)           \
   F(FunctionGetInferredName, 1, 1)              \
@@ -137,12 +137,13 @@ namespace internal {
   F(GetGeneratorScopeDetails, 2, 1)             \
   F(GetHeapUsage, 0, 1)                         \
   F(HandleDebuggerStatement, 0, 1)              \
-  F(IncBlockCounter, 2, 1)                      \
   F(IsBreakOnException, 1, 1)                   \
+  F(LiveEditPatchScript, 2, 1)                  \
+  F(ProfileCreateSnapshotDataBlob, 0, 1)        \
   F(ScheduleBreak, 0, 1)                        \
   F(ScriptLocationFromLine2, 4, 1)              \
   F(SetGeneratorScopeVariableValue, 4, 1)       \
-  F(LiveEditPatchScript, 2, 1)
+  F(IncBlockCounter, 2, 1)
 
 #define FOR_EACH_INTRINSIC_FORIN(F, I) \
   F(ForInEnumerate, 1, 1)              \
@@ -516,7 +517,6 @@ namespace internal {
   F(WasmGetNumberOfInstances, 1, 1)           \
   F(WasmNumInterpretedCalls, 1, 1)            \
   F(WasmTraceMemory, 1, 1)                    \
-  F(WasmMemoryHasFullGuardRegion, 1, 1)       \
   F(SetWasmThreadsEnabled, 1, 1)
 
 #define FOR_EACH_INTRINSIC_TYPEDARRAY(F, I) \
@@ -705,14 +705,14 @@ class Runtime : public AllStatic {
       Isolate* isolate, Handle<JSReceiver> receiver, Handle<Object> key,
       LanguageMode language_mode);
 
-  V8_WARN_UNUSED_RESULT static MaybeHandle<Object> SetObjectProperty(
-      Isolate* isolate, Handle<Object> object, Handle<Object> key,
-      Handle<Object> value, StoreOrigin store_origin,
-      Maybe<ShouldThrow> should_throw = Nothing<ShouldThrow>());
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static MaybeHandle<Object>
+  SetObjectProperty(Isolate* isolate, Handle<Object> object, Handle<Object> key,
+                    Handle<Object> value, StoreOrigin store_origin,
+                    Maybe<ShouldThrow> should_throw = Nothing<ShouldThrow>());
 
-  V8_WARN_UNUSED_RESULT static MaybeHandle<Object> GetObjectProperty(
-      Isolate* isolate, Handle<Object> object, Handle<Object> key,
-      bool* is_found_out = nullptr);
+  V8_EXPORT_PRIVATE V8_WARN_UNUSED_RESULT static MaybeHandle<Object>
+  GetObjectProperty(Isolate* isolate, Handle<Object> object, Handle<Object> key,
+                    bool* is_found_out = nullptr);
 
   V8_WARN_UNUSED_RESULT static MaybeHandle<Object> HasProperty(
       Isolate* isolate, Handle<Object> object, Handle<Object> key);
@@ -768,7 +768,6 @@ V8_EXPORT_PRIVATE std::ostream& operator<<(std::ostream&, Runtime::FunctionId);
 class AllocateDoubleAlignFlag : public BitField<bool, 0, 1> {};
 
 class DeclareGlobalsEvalFlag : public BitField<bool, 0, 1> {};
-class DeclareGlobalsNativeFlag : public BitField<bool, 1, 1> {};
 
 // A set of bits returned by Runtime_GetOptimizationStatus.
 // These bits must be in sync with bits defined in test/mjsunit/mjsunit.js

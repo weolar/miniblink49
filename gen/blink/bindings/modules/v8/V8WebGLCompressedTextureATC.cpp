@@ -73,7 +73,9 @@ static void installV8WebGLCompressedTextureATCTemplate(v8::Local<v8::FunctionTem
     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8WebGLCompressedTextureATCConstants, WTF_ARRAY_LENGTH(V8WebGLCompressedTextureATCConstants));
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WebGLCompressedTextureATC::domTemplate(v8::Isolate* isolate)

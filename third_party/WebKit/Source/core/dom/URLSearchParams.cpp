@@ -68,7 +68,9 @@ URLSearchParams::URLSearchParams(URLSearchParams* searchParams)
     m_params = searchParams->m_params;
 }
 
-URLSearchParams::~URLSearchParams() {}
+URLSearchParams::~URLSearchParams()
+{
+}
 
 DEFINE_TRACE(URLSearchParams)
 {

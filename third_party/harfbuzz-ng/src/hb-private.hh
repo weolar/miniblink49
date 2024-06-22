@@ -355,7 +355,7 @@ _hb_unsigned_int_mul_overflows (unsigned int count, unsigned int size)
 
 
 /* Type of bsearch() / qsort() compare function */
-typedef int (*hb_compare_func_t) (const void *, const void *);
+typedef int (__cdecl*hb_compare_func_t) (const void *, const void *);
 
 
 

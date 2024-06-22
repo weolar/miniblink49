@@ -46,8 +46,14 @@ RandomNumberGenerator::RandomNumberGenerator() {
   // Use rand_s() to gather entropy on Windows. See:
   // https://code.google.com/p/v8/issues/detail?id=2905
   unsigned first_half, second_half;
+  errno_t result = 0;
   first_half = rand();
+  DCHECK_EQ(0, result);
+
+  result = 0;
   second_half = rand();
+  DCHECK_EQ(0, result);
+
   SetSeed((static_cast<int64_t>(first_half) << 32) + second_half);
 #else
   // Gather entropy from /dev/urandom if available.

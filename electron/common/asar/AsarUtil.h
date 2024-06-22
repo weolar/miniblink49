@@ -21,13 +21,13 @@ Archive* GetOrCreateAsarArchive(const base::FilePath& path);
 
 // Separates the path to Archive out.
 bool GetAsarArchivePath(const base::FilePath& full_path,
-                        base::FilePath* asar_path,
-                        base::FilePath* relative_path);
+    base::FilePath* asar_path,
+    base::FilePath* relative_path);
 
 // Same with base::ReadFileToString but supports asar Archive.
 bool ReadFileToString(const base::FilePath& path, std::string* contents);
 bool ReadFileToString(const wchar_t* path, std::string* buffer);
 
-}  // namespace asar
+} // namespace asar
 
-#endif  // ATOM_COMMON_ASAR_ASAR_UTIL_H_
+#endif // ATOM_COMMON_ASAR_ASAR_UTIL_H_

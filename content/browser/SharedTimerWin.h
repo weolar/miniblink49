@@ -4,8 +4,11 @@
 
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/browser/CheckReEnter.h"
+#include "node/nodeblink.h"
 
 #include <mmsystem.h>
+
+void nodeRunNoWait();
 
 // These aren't in winuser.h with the MSVS 2003 Platform SDK, 
 // so use default values in that case.
@@ -29,74 +32,142 @@ PfnCreateTimerQueue pCreateTimerQueue = nullptr;
 PfnDeleteTimerQueueTimer pDeleteTimerQueueTimer = nullptr;
 PfnCreateTimerQueueTimer pCreateTimerQueueTimer = nullptr;
 
+#ifndef NO_USE_ORIG_CHROME
+
+namespace base {
+extern DWORD s_disableDispatchMessageReentry;
+}
+
+#endif
+
 namespace content {
+
+typedef void(WINAPI* PfnUiThreadHeartbeatCallback)();
+PfnUiThreadHeartbeatCallback g_uiThreadHeartbeatCallback = nullptr;
 
 const LPCWSTR kTimerWindowClassName = L"MiniBlinkTimerWindowClass";
  
-static UINT timerID;
+static UINT s_timerID;
 static void sharedTimerFiredFunction();
 
-static HANDLE timer;
-static HWND timerWindowHandle = 0;
+static HANDLE s_timer;
+static HWND s_timerWindowHandle = 0;
 
-static UINT timerFiredMessage = 0;
-static HANDLE timerQueue;
-static bool highResTimerActive;
-static bool processingCustomTimerMessage = false;
-static LONG pendingTimers;
-static double lastIntervalInMS = 0;
+static UINT s_timerFiredMessage = 0;
+static HANDLE s_timerQueue;
+static HANDLE s_timerThreadHandle = nullptr;
+static bool s_highResTimerActive;
+static bool s_processingCustomTimerMessage = false;
+static LONG s_pendingTimers = 0;
+static double s_lastIntervalInMS = 0;
 
-const int timerResolution = 1; // To improve timer resolution, we call timeBeginPeriod/timeEndPeriod with this value to increase timer resolution to 1ms.
-const int highResolutionThresholdMsec = 16; // Only activate high-res timer for sub-16ms timers (Windows can fire timers at 16ms intervals without changing the system resolution).
-const int stopHighResTimerInMsec = 300; // Stop high-res timer after 0.3 seconds to lessen power consumption (we don't use a smaller time since oscillating between high and low resolution breaks timer accuracy on XP).
+static LONG s_pendingSharedTimers = 0;
+
+const int kTimerResolution = 1; // To improve s_timer resolution, we call timeBeginPeriod/timeEndPeriod with this value to increase s_timer resolution to 1ms.
+const int kHighResolutionThresholdMsec = 16; // Only activate high-res s_timer for sub-16ms timers (Windows can fire timers at 16ms intervals without changing the system resolution).
+const int kStopHighResTimerInMsec = 300; // Stop high-res s_timer after 0.3 seconds to lessen power consumption (we don't use a smaller time since oscillating between high and low resolution breaks s_timer accuracy on XP).
 
 enum {
     sharedTimerID = 1000,
     endHighResTimerID = 1001,
+    lowResTimerID = 1002,
 };
+DWORD s_timerWindowWndProcThreadId = 0;
 
-static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static void initializeOffScreenTimerWindow();
+const bool kShouldUseHighResolutionTimers = true;
+const bool kShouldUseHighResolutionThreadTimers = true;
+
+static LRESULT CALLBACK timerWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (0 != CheckReEnter::getEnterCount())
+    if (s_timerWindowWndProcThreadId != ::GetCurrentThreadId()) // win10好像有bug，会意外的在别的线程本函数被调用
         return 0;
-    CheckReEnter::incrementEnterCount();
 
     LRESULT result = 0;
     if (message == WM_TIMER) {
         if (wParam == sharedTimerID) {
-            //KillTimer(timerWindowHandle, sharedTimerID);
+            InterlockedExchange(&s_pendingSharedTimers, 0);
+            
+            if (kShouldUseHighResolutionTimers)
+                ::KillTimer(s_timerWindowHandle, sharedTimerID);
             sharedTimerFiredFunction();
         } else if (wParam == endHighResTimerID) {
-            //KillTimer(timerWindowHandle, endHighResTimerID);
-            highResTimerActive = false;
-            timeEndPeriod(timerResolution);
+            if (kShouldUseHighResolutionTimers)
+                ::KillTimer(s_timerWindowHandle, endHighResTimerID);
+            s_highResTimerActive = false;
+            timeEndPeriod(kTimerResolution);
+        } else if (wParam == lowResTimerID) {
+            sharedTimerFiredFunction();
         }
-    } else if (message == timerFiredMessage) {
-        InterlockedExchange(&pendingTimers, 0);
-        processingCustomTimerMessage = true;
+    } else if (message == s_timerFiredMessage || WM_NULL == message) {
+        InterlockedExchange(&s_pendingTimers, 0);
+        s_processingCustomTimerMessage = true;
         sharedTimerFiredFunction();
-        processingCustomTimerMessage = false;
+        s_processingCustomTimerMessage = false;
     } else
-        result = DefWindowProc(hWnd, message, wParam, lParam);
+        result = ::DefWindowProc(hWnd, message, wParam, lParam);
 
-    CheckReEnter::decrementEnterCount();
     return result;
 }
 
 static void sharedTimerFiredFunction()
 {
+#ifndef NO_USE_ORIG_CHROME
+    if (base::s_disableDispatchMessageReentry == ::GetCurrentThreadId())
+        return;
+#endif
+    static int s_enterCount = 0;
+    if (0 != s_enterCount)
+        return;
+    ++s_enterCount;
+#if ENABLE_NODEJS
+    nodeRunNoWait();
+#endif
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
     threadImpl->fire();
+    --s_enterCount;
 }
 
 static void NTAPI queueTimerProc(PVOID, BOOLEAN)
 {
-    if (InterlockedIncrement(&pendingTimers) == 1)
-        ::PostMessage(timerWindowHandle, timerFiredMessage, 0, 0);
+    if (s_pendingTimers > 100000) // 太大说明主线程卡死了
+        return;
+    if (InterlockedIncrement(&s_pendingTimers) == 1)
+        ::PostMessage(s_timerWindowHandle, /*s_timerFiredMessage*/WM_NULL, s_timerFiredMessage, s_timerFiredMessage);
 }
 
-static void initializeOffScreenTimerWindow();
+static DWORD NTAPI threadTimerProc(void* param)
+{
+    DWORD displayFrequency = 16;
+
+    HMONITOR monitor = ::MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
+    MONITORINFOEXW monitorInfo;
+    monitorInfo.cbSize = sizeof(MONITORINFOEX);
+    BOOL result = ::GetMonitorInfo(monitor, &monitorInfo);
+    if (result) {
+        DEVMODE displayInfo;
+        displayInfo.dmSize = sizeof(DEVMODE);
+        displayInfo.dmDriverExtra = 0;
+        result = ::EnumDisplaySettings(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, &displayInfo);
+        if (result && displayInfo.dmDisplayFrequency > 1)
+            displayFrequency = (DWORD)(1000 / displayInfo.dmDisplayFrequency);
+    }
+
+    if (displayFrequency < 16)
+        displayFrequency = 16;
+
+    while (true) {
+        queueTimerProc(nullptr, false);
+
+        if (g_uiThreadHeartbeatCallback)
+            g_uiThreadHeartbeatCallback();
+
+        ::Sleep(displayFrequency);
+    }
+
+    return 0;
+}
 
 void setSharedTimerFireInterval(double interval)
 {
@@ -107,77 +178,91 @@ void setSharedTimerFireInterval(double interval)
     else
         intervalInMS = static_cast<unsigned>(interval);
 
-    if (lastIntervalInMS == intervalInMS)
+    if (s_lastIntervalInMS == intervalInMS)
         return;
-    lastIntervalInMS = intervalInMS;
+    s_lastIntervalInMS = intervalInMS;
+    bool isTimerSet = false;
 
     initializeOffScreenTimerWindow();
-    bool timerSet = false;
+
+    if (!s_timerThreadHandle) {
+        DWORD threadIdentifier = 0;
+        s_timerThreadHandle = ::CreateThread(0, 0, threadTimerProc, nullptr, 0, &threadIdentifier);
+    }
 
     // shouldUseHighResolutionTimers begin
-#if 0
-    if (interval < highResolutionThresholdMsec) {
-        if (!highResTimerActive) {
-            highResTimerActive = true;
-            timeBeginPeriod(timerResolution);
-        }
-        SetTimer(timerWindowHandle, endHighResTimerID, stopHighResTimerInMsec, 0);
-    }
-
-    DWORD queueStatus = LOWORD(GetQueueStatus(QS_PAINT | QS_MOUSEBUTTON | QS_KEY | QS_RAWINPUT));
-
-    // Win32 has a tri-level queue with application messages > user input > WM_PAINT/WM_TIMER.
-
-    // If the queue doesn't contains input events, we use a higher priorty timer event posting mechanism.
-    if (!(queueStatus & (QS_MOUSEBUTTON | QS_KEY | QS_RAWINPUT))) {
-        if (intervalInMS < USER_TIMER_MINIMUM && !processingCustomTimerMessage && !(queueStatus & QS_PAINT)) {
-            // Call PostMessage immediately if the timer is already expired, unless a paint is pending.
-            // (we prioritize paints over timers)
-            if (InterlockedIncrement(&pendingTimers) == 1)
-                PostMessage(timerWindowHandle, timerFiredMessage, 0, 0);
-            timerSet = true;
-        } else {
-            // Otherwise, delay the PostMessage via a CreateTimerQueueTimer
-            if (!timerQueue)
-                timerQueue = ::pCreateTimerQueue();
-            if (timer)
-                ::pDeleteTimerQueueTimer(timerQueue, timer, 0);
-            timerSet = ::pCreateTimerQueueTimer(&timer, timerQueue, queueTimerProc, 0, intervalInMS, 0, WT_EXECUTEINTIMERTHREAD | WT_EXECUTEONLYONCE);
-        }
-    }
-    // shouldUseHighResolutionTimers end
-#endif
-    if (timerSet) {
-        if (timerID) {
-            ::KillTimer(timerWindowHandle, timerID);
-            timerID = 0;
-        }
-    } else {
-        timerID = SetTimer(timerWindowHandle, sharedTimerID, intervalInMS, 0);
-        timer = 0;
-    }
+//     if (kShouldUseHighResolutionTimers) {
+//         if (interval < kHighResolutionThresholdMsec) {
+//             if (!s_highResTimerActive) {
+//                 s_highResTimerActive = true;
+//                 timeBeginPeriod(kTimerResolution);
+//             }
+//             SetTimer(s_timerWindowHandle, endHighResTimerID, kStopHighResTimerInMsec, 0);
+//         }
+// 
+//         DWORD queueStatus = LOWORD(GetQueueStatus(QS_PAINT | QS_MOUSEBUTTON | QS_KEY | QS_RAWINPUT));
+// 
+//         // Win32 has a tri-level queue with application messages > user input > WM_PAINT/WM_TIMER.
+// 
+//         // If the queue doesn't contains input events, we use a higher priorty s_timer event posting mechanism.
+//         if (!(queueStatus & (QS_MOUSEBUTTON | QS_KEY | QS_RAWINPUT))) {
+//             if (intervalInMS < USER_TIMER_MINIMUM && !s_processingCustomTimerMessage && !(queueStatus & QS_PAINT)) {
+//                 // Call PostMessage immediately if the s_timer is already expired, unless a paint is pending.
+//                 // (we prioritize paints over timers)
+//                 if (InterlockedIncrement(&s_pendingTimers) == 1)
+//                     PostMessage(s_timerWindowHandle, s_timerFiredMessage, 0, 0);
+//                 isTimerSet = true;
+//             } else {
+//                 // Otherwise, delay the PostMessage via a CreateTimerQueueTimer
+//                 if (kShouldUseHighResolutionThreadTimers) {
+//                     if (!s_timerThreadHandle) {
+//                         DWORD threadIdentifier = 0;
+//                         s_timerThreadHandle = ::CreateThread(0, 0, threadTimerProc, nullptr, 0, &threadIdentifier);
+//                     }
+// 
+//                 } else {
+//                     if (!s_timerQueue)
+//                         s_timerQueue = ::pCreateTimerQueue();
+//                     if (s_timer)
+//                         ::pDeleteTimerQueueTimer(s_timerQueue, s_timer, 0);
+//                     isTimerSet = ::pCreateTimerQueueTimer(&s_timer, s_timerQueue, queueTimerProc, 0, intervalInMS, 0, WT_EXECUTEINTIMERTHREAD | WT_EXECUTEONLYONCE);
+//                 }
+//             }
+//         }
+//     } else {
+//         if (isTimerSet) {
+//             if (s_timerID) {
+//                 ::KillTimer(s_timerWindowHandle, s_timerID);
+//                 s_timerID = 0;
+//             }
+//         } else {
+//             s_timerID = ::SetTimer(s_timerWindowHandle, sharedTimerID, /*intervalInMS*/1, 0);
+//             s_timer = 0;
+//         }
+//     }
 }
 
 void stopSharedTimer()
 {
-    if (timerQueue && timer) {
-        ::pDeleteTimerQueueTimer(timerQueue, timer, 0);
-        timer = 0;
+    if (s_timerQueue && s_timer) {
+        ::pDeleteTimerQueueTimer(s_timerQueue, s_timer, 0);
+        s_timer = 0;
     }
 
-    if (timerID) {
-        ::KillTimer(timerWindowHandle, timerID);
-        timerID = 0;
+    if (s_timerID) {
+        ::KillTimer(s_timerWindowHandle, s_timerID);
+        s_timerID = 0;
     }
 
-    ::DestroyWindow(timerWindowHandle);
+    ::DestroyWindow(s_timerWindowHandle);
     ::UnregisterClassW(kTimerWindowClassName, NULL);
 }
 
 static void initializeOffScreenTimerWindow()
 {
-    if (timerWindowHandle)
+    if (s_timerWindowHandle)
         return;
+    s_timerWindowWndProcThreadId = ::GetCurrentThreadId();
 
     HMODULE hMod = GetModuleHandle(L"Kernel32.dll");
     pCreateTimerQueue = (PfnCreateTimerQueue)::GetProcAddress(hMod, "CreateTimerQueue");
@@ -186,12 +271,12 @@ static void initializeOffScreenTimerWindow()
 
     WNDCLASSEX wcex = { 0 };
     wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.lpfnWndProc = TimerWindowWndProc;
+    wcex.lpfnWndProc = timerWindowWndProc;
     wcex.hInstance = ::GetModuleHandle(NULL);
     wcex.lpszClassName = kTimerWindowClassName;
     ::RegisterClassEx(&wcex);
 
-    timerWindowHandle = CreateWindowExW(
+    s_timerWindowHandle = CreateWindowExW(
         0,        // window ex-style
         kTimerWindowClassName,    // window class name
         L"OffScreenTimer", // window caption
@@ -204,9 +289,10 @@ static void initializeOffScreenTimerWindow()
         NULL,           // window menu handle
         GetModuleHandleW(NULL),           // program instance handle
         NULL);         // creation parameters
-                       //::SetTimer(timerWindowHandle, (UINT_PTR)timerWindowHandle, 50, 0);
+                       //::SetTimer(s_timerWindowHandle, (UINT_PTR)s_timerWindowHandle, 50, 0);
 
-    timerFiredMessage = RegisterWindowMessage(L"com.weolar.Miniblink.TimerFired");
+    s_timerFiredMessage = ::RegisterWindowMessage(L"com.weolar.Miniblink.TimerFired");
+    //::SetTimer(s_timerWindowHandle, lowResTimerID, 16, 0);
 }
 
 }

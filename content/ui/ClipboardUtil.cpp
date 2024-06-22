@@ -81,6 +81,13 @@ FORMATETC* ClipboardUtil::getCustomTextsType()
     return &urlFormat;
 }
 
+FORMATETC* ClipboardUtil::htmlFormat()
+{
+    static CLIPFORMAT cf = (CLIPFORMAT)RegisterClipboardFormat(L"HTML Format");
+    static FORMATETC htmlFormat = { cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    return &htmlFormat;
+}
+
 bool ClipboardUtil::getWebLocData(IDataObject* dataObject, std::string& url, std::string* title)
 {
     bool succeeded = false;

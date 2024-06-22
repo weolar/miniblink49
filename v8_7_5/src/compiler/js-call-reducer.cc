@@ -29,6 +29,8 @@
 #include "src/objects/ordered-hash-table.h"
 #include "src/vector-slot-pair.h"
 
+#include "src/objects/ordered-hash-table-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -2908,6 +2910,14 @@ Reduction JSCallReducer::ReduceCallApiFunction(
                    : Builtins::
                          kCallFunctionTemplate_CheckAccessAndCompatibleReceiver)
             : Builtins::kCallFunctionTemplate_CheckCompatibleReceiver;
+
+    // The CallFunctionTemplate builtin requires the {receiver} to be
+    // an actual JSReceiver, so make sure we do the proper conversion
+    // first if necessary.
+    receiver = holder = effect =
+        graph()->NewNode(simplified()->ConvertReceiver(p.convert_mode()),
+                         receiver, global_proxy, effect, control);
+
     Callable callable = Builtins::CallableFor(isolate(), builtin_name);
     auto call_descriptor = Linkage::GetStubCallDescriptor(
         graph()->zone(), callable.descriptor(),
@@ -2916,6 +2926,8 @@ Reduction JSCallReducer::ReduceCallApiFunction(
                       jsgraph()->HeapConstant(callable.code()));
     node->ReplaceInput(1, jsgraph()->HeapConstant(function_template_info));
     node->InsertInput(graph()->zone(), 2, jsgraph()->Constant(argc));
+    node->ReplaceInput(3, receiver);       // Update receiver input.
+    node->ReplaceInput(6 + argc, effect);  // Update effect input.
     NodeProperties::ChangeOp(node, common()->Call(call_descriptor));
     return Changed(node);
   }
@@ -3787,7 +3799,7 @@ Reduction JSCallReducer::ReduceJSConstruct(Node* node) {
   // Try to specialize JSConstruct {node}s with constant {target}s.
   HeapObjectMatcher m(target);
   if (m.HasValue()) {
-    HeapObjectRef target_ref = m.Ref(broker()).AsHeapObject();
+    HeapObjectRef target_ref = m.Ref(broker());
 
     // Raise a TypeError if the {target} is not a constructor.
     if (!target_ref.map().is_constructor()) {
@@ -6887,14 +6899,13 @@ Reduction JSCallReducer::ReduceRegExpPrototypeTest(Node* node) {
   }
 
   // Compute property access info for "exec" on {resolution}.
-  PropertyAccessInfo ai_exec;
   AccessInfoFactory access_info_factory(broker(), dependencies(),
                                         graph()->zone());
-  if (!access_info_factory.ComputePropertyAccessInfo(
-          MapHandles(regexp_maps.begin(), regexp_maps.end()),
-          factory()->exec_string(), AccessMode::kLoad, &ai_exec)) {
-    return NoChange();
-  }
+  PropertyAccessInfo ai_exec = access_info_factory.ComputePropertyAccessInfo(
+      MapHandles(regexp_maps.begin(), regexp_maps.end()),
+      factory()->exec_string(), AccessMode::kLoad);
+  if (ai_exec.IsInvalid()) return NoChange();
+
   // If "exec" has been modified on {regexp}, we can't do anything.
   if (ai_exec.IsDataConstant()) {
     if (!ai_exec.constant().is_identical_to(
@@ -6912,10 +6923,6 @@ Reduction JSCallReducer::ReduceRegExpPrototypeTest(Node* node) {
     if (!constant.is_identical_to(isolate()->regexp_exec_function())) {
       return NoChange();
     }
-
-    // Protect the prototype chain from changes.
-    dependencies()->DependOnStablePrototypeChains(
-        ai_exec.receiver_maps(), JSObjectRef(broker(), holder));
 
     // Protect the exec method change in the holder.
     Handle<Object> exec_on_proto;
@@ -6937,7 +6944,8 @@ Reduction JSCallReducer::ReduceRegExpPrototypeTest(Node* node) {
   Handle<JSObject> holder;
   if (ai_exec.holder().ToHandle(&holder)) {
     dependencies()->DependOnStablePrototypeChains(
-        ai_exec.receiver_maps(), JSObjectRef(broker(), holder));
+        ai_exec.receiver_maps(), kStartAtPrototype,
+        JSObjectRef(broker(), holder));
   }
 
   effect = InsertMapChecksIfUnreliableReceiverMaps(

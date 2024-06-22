@@ -41,7 +41,6 @@
 #include "core/dom/Element.h"
 #include "platform/RuntimeEnabledFeatures.h"
 
-
 namespace blink {
 
 class Dictionary;

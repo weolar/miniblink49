@@ -9,8 +9,8 @@
 
 namespace blink {
 
-using PushAllRegistersCallback = void (*)(SafePointBarrier*, ThreadState*, intptr_t*);
-extern "C" void pushAllRegisters(SafePointBarrier*, ThreadState*, PushAllRegistersCallback);
+using PushAllRegistersCallback = void(__cdecl*)(SafePointBarrier*, ThreadState*, intptr_t*);
+extern "C" void __cdecl pushAllRegisters(SafePointBarrier*, ThreadState*, PushAllRegistersCallback);
 
 static double lockingTimeout()
 {

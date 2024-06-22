@@ -19,6 +19,8 @@ class OrderedHashMap;
 
 class JSCollection : public JSObject {
  public:
+  DECL_CAST(JSCollection)
+
   // [table]: the backing hash table
   DECL_ACCESSORS(table, Object)
 
@@ -100,8 +102,9 @@ class JSWeakCollection : public JSObject {
   DECL_ACCESSORS(table, Object)
 
   static void Initialize(Handle<JSWeakCollection> collection, Isolate* isolate);
-  static void Set(Handle<JSWeakCollection> collection, Handle<Object> key,
-                  Handle<Object> value, int32_t hash);
+  V8_EXPORT_PRIVATE static void Set(Handle<JSWeakCollection> collection,
+                                    Handle<Object> key, Handle<Object> value,
+                                    int32_t hash);
   static bool Delete(Handle<JSWeakCollection> collection, Handle<Object> key,
                      int32_t hash);
   static Handle<JSArray> GetEntries(Handle<JSWeakCollection> holder,
@@ -116,7 +119,7 @@ class JSWeakCollection : public JSObject {
   class BodyDescriptorImpl;
 
   // Visit the whole object.
-  typedef BodyDescriptorImpl BodyDescriptor;
+  using BodyDescriptor = BodyDescriptorImpl;
 
   OBJECT_CONSTRUCTORS(JSWeakCollection, JSObject);
 };

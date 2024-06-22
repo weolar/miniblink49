@@ -11,6 +11,9 @@
 #include "src/base/format-macros.h"
 #include "src/base/logging.h"
 
+#undef max
+#undef min
+
 // No-op macro which is used to work around MSVC's funky VA_ARGS support.
 #define EXPAND(x) x
 
@@ -391,8 +394,7 @@ inline void* AlignedAddress(void* address, size_t alignment) {
   return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(address) &
                                  ~static_cast<uintptr_t>(alignment - 1));
 }
-#undef min
-#undef max
+
 // Bounds checks for float to integer conversions, which does truncation. Hence,
 // the range of legal values is (min - 1, max + 1).
 template <typename int_t, typename float_t, typename biggest_int_t = int64_t>

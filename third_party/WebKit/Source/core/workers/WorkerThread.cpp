@@ -38,6 +38,7 @@
 #include "core/workers/WorkerClients.h"
 #include "core/workers/WorkerReportingProxy.h"
 #include "core/workers/WorkerThreadStartupData.h"
+#include "core/timing/GcTimeScheduler.h"
 #include "platform/Task.h"
 #include "platform/ThreadSafeFunctional.h"
 #include "platform/heap/SafePoint.h"
@@ -51,11 +52,13 @@
 #include "wtf/WeakPtr.h"
 #include "wtf/text/WTFString.h"
 
+#pragma optimize("", off)
+#pragma clang optimize off
+
 namespace blink {
 
 namespace {
 const double kLongIdlePeriodSecs = 1.0;
-
 } // namespace
 
 class WorkerMicrotaskRunner : public WebThread::TaskObserver {
@@ -129,6 +132,17 @@ public:
             return;
         }
 
+        WorkerScriptController* script = workerGlobalScope->script();
+        if (!script)
+            return;
+        ScriptState* scriptState = script->scriptState();
+        if (!scriptState)
+            return;
+        ScriptState::Scope scope(scriptState);
+
+#if V8_MAJOR_VERSION >= 7
+        blink::V8PerIsolateData::from(scriptState->isolate())->leakV8References();
+#endif
         if (m_isInstrumented)
             InspectorInstrumentation::willPerformExecutionContextTask(workerGlobalScope, m_task.get());
         m_task->performTask(workerGlobalScope);
@@ -163,6 +177,7 @@ WorkerThread::WorkerThread(PassRefPtr<WorkerLoaderProxy> workerLoaderProxy, Work
     , m_isolate(nullptr)
     , m_shutdownEvent(adoptPtr(Platform::current()->createWaitableEvent()))
     , m_terminationEvent(adoptPtr(Platform::current()->createWaitableEvent()))
+    , m_gcTimeScheduler(adoptPtr(new GcTimeScheduler()))
 {
     MutexLocker lock(threadSetMutex());
     workerThreads().add(this);
@@ -240,7 +255,9 @@ void WorkerThread::initialize(PassOwnPtr<WorkerThreadStartupData> startupData)
     WorkerScriptController* script = m_workerGlobalScope->script();
     if (!script->isExecutionForbidden())
         script->initializeContextIfNeeded();
-    m_workerGlobalScope->workerInspectorController()->workerContextInitialized(startMode == PauseWorkerGlobalScopeOnStart);
+
+    if (m_workerGlobalScope->workerInspectorController())
+        m_workerGlobalScope->workerInspectorController()->workerContextInitialized(startMode == PauseWorkerGlobalScopeOnStart);
 
     OwnPtr<CachedMetadataHandler> handler(workerGlobalScope()->createWorkerScriptCachedMetadataHandler(scriptURL, cachedMetaData.get()));
     bool success = script->evaluate(ScriptSourceCode(sourceCode, scriptURL), nullptr, handler.get(), v8CacheOptions);
@@ -375,27 +392,53 @@ bool WorkerThread::isCurrentThread()
 
 void WorkerThread::performIdleWork(double deadlineSeconds)
 {
-    if (m_shutdown) // weolar
+    if (m_shutdown)
         return;
     
-    double gcDeadlineSeconds = deadlineSeconds;
+//     double gcDeadlineSeconds = deadlineSeconds;
+// 
+//     // The V8 GC does some GC steps (e.g. compaction) only when the idle notification is ~1s.
+//     // TODO(rmcilroy): Refactor so extending the deadline like this this isn't needed.
+//     if (m_webScheduler->canExceedIdleDeadlineIfRequired())
+//         gcDeadlineSeconds = Platform::current()->monotonicallyIncreasingTime() + kLongIdlePeriodSecs;
+// 
+//     if (doIdleGc(gcDeadlineSeconds))
+//         m_webScheduler->postIdleTaskAfterWakeup(FROM_HERE, WTF::bind<double>(&WorkerThread::performIdleWork, this));
+//     else
+//         m_webScheduler->postIdleTask(FROM_HERE, WTF::bind<double>(&WorkerThread::performIdleWork, this));
 
-    // The V8 GC does some GC steps (e.g. compaction) only when the idle notification is ~1s.
-    // TODO(rmcilroy): Refactor so extending the deadline like this this isn't needed.
-    if (m_webScheduler->canExceedIdleDeadlineIfRequired())
-        gcDeadlineSeconds = Platform::current()->monotonicallyIncreasingTime() + kLongIdlePeriodSecs;
+    class IdleWorker : public blink::WebThread::Task {
+    public:
+        IdleWorker(WorkerThread* workerThread) {
+            m_workerThread = workerThread;
+        }
 
-    if (doIdleGc(gcDeadlineSeconds))
-        m_webScheduler->postIdleTaskAfterWakeup(FROM_HERE, WTF::bind<double>(&WorkerThread::performIdleWork, this));
-    else
-        m_webScheduler->postIdleTask(FROM_HERE, WTF::bind<double>(&WorkerThread::performIdleWork, this));
+        virtual ~IdleWorker() override {
+        }
+
+        virtual void run() override { m_workerThread->performIdleWork(0); }
+    private:
+        WorkerThread* m_workerThread;
+    };
+
+    if (m_gcTimeScheduler->needGc())
+        doIdleGc(Platform::current()->monotonicallyIncreasingTime() + kLongIdlePeriodSecs);
+    backingThread().platformThread().postDelayedTask(FROM_HERE, new IdleWorker(this), 1000);
 }
 
 bool WorkerThread::doIdleGc(double deadlineSeconds)
 {
+    WorkerScriptController* script = m_workerGlobalScope->script();
+    ScriptState::Scope scope(script->scriptState());
+
     bool gcFinished = false;
-    if (deadlineSeconds > Platform::current()->monotonicallyIncreasingTime())
-        gcFinished = isolate()->IdleNotificationDeadline(deadlineSeconds);
+    if (deadlineSeconds > Platform::current()->monotonicallyIncreasingTime()) {
+        isolate()->LowMemoryNotification();
+#if V8_MAJOR_VERSION >= 7
+        blink::V8PerIsolateData::from(isolate())->leakV8References();
+#endif
+        gcFinished = true;
+    }
     return gcFinished;
 }
 

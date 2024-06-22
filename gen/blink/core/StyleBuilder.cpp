@@ -745,14 +745,14 @@ void StyleBuilder::applyProperty(CSSPropertyID property, StyleResolverState& sta
             StyleBuilderFunctions::applyValueCSSPropertyWebkitPrintColorAdjust(state, value);
         return;
 
-//     case CSSPropertyScrollBlocksOn:
-//         if (isInitial)
-//             StyleBuilderFunctions::applyInitialCSSPropertyScrollBlocksOn(state);
-//         else if (isInherit)
-//             StyleBuilderFunctions::applyInheritCSSPropertyScrollBlocksOn(state);
-//         else
-//             StyleBuilderFunctions::applyValueCSSPropertyScrollBlocksOn(state, value);
-//         return;
+    case CSSPropertyScrollBlocksOn:
+        if (isInitial)
+            StyleBuilderFunctions::applyInitialCSSPropertyScrollBlocksOn(state);
+        else if (isInherit)
+            StyleBuilderFunctions::applyInheritCSSPropertyScrollBlocksOn(state);
+        else
+            StyleBuilderFunctions::applyValueCSSPropertyScrollBlocksOn(state, value);
+        return;
 
     case CSSPropertyStrokeDasharray:
         if (isInitial)
@@ -2806,10 +2806,14 @@ void StyleBuilder::applyProperty(CSSPropertyID property, StyleResolverState& sta
             StyleBuilderFunctions::applyValueCSSPropertyVisibility(state, value);
         return;
 
-	case CSSPropertyVariable:
-		ASSERT(!isInitial && !isInherit);
-		StyleBuilderFunctions::applyValueCSSPropertyVariable(state, value);
-		return;
+    case CSSPropertyImeMode:
+        OutputDebugStringA("");
+        return;
+
+    case CSSPropertyVariable:
+        ASSERT(!isInitial && !isInherit);
+        StyleBuilderFunctions::applyValueCSSPropertyVariable(state, value);
+        return;
 
     case CSSPropertyWebkitBorderEndColor:
     case CSSPropertyWebkitBorderBeforeStyle:
@@ -2855,6 +2859,9 @@ void StyleBuilder::applyProperty(CSSPropertyID property, StyleResolverState& sta
     //case CSSPropertyEnableBackground:
     case CSSPropertyWebkitFontSizeDelta:
     case CSSPropertyFilter:
+    case CSSPropertyGridColumnGap:
+        return;
+    case CSSPropertyFontFeatureSettings:
         return;
     default:
         ASSERT_NOT_REACHED();

@@ -342,7 +342,7 @@ static void webkitIDBTransactionConstructorGetterCallback(v8::Local<v8::Name> pr
 
 static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, ExceptionState& exceptionState)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
         return;
@@ -368,8 +368,9 @@ static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, 
         return;
     }
     v8SetReturnValue(info, result.v8Value());
-#endif
+#else
     DebugBreak();
+#endif
 }
 
 static void fetchMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -389,7 +390,7 @@ static void fetchMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
 
 static void webkitRequestFileSystemMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitRequestFileSystem", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 2)) {
         setMinimumArityTypeError(exceptionState, 2, info.Length());
@@ -430,8 +431,9 @@ static void webkitRequestFileSystemMethod(const v8::FunctionCallbackInfo<v8::Val
         }
     }
     WorkerGlobalScopeFileSystem::webkitRequestFileSystem(*impl, type, size, successCallback, errorCallback);
-#endif
+#else
     DebugBreak();
+#endif
 }
 
 static void webkitRequestFileSystemMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -444,7 +446,7 @@ static void webkitRequestFileSystemMethodCallback(const v8::FunctionCallbackInfo
 
 static void webkitRequestFileSystemSyncMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitRequestFileSystemSync", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 2)) {
         setMinimumArityTypeError(exceptionState, 2, info.Length());
@@ -468,8 +470,9 @@ static void webkitRequestFileSystemSyncMethod(const v8::FunctionCallbackInfo<v8:
         return;
     }
     v8SetReturnValue(info, result.release());
-#endif
+#else
     DebugBreak();
+#endif
 }
 
 static void webkitRequestFileSystemSyncMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -486,7 +489,7 @@ static void webkitResolveLocalFileSystemURLMethod(const v8::FunctionCallbackInfo
         V8ThrowException::throwException(createMinimumArityTypeErrorForMethod(info.GetIsolate(), "webkitResolveLocalFileSystemURL", "WorkerGlobalScope", 2, info.Length()), info.GetIsolate());
         return;
     }
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     WorkerGlobalScope* impl = V8WorkerGlobalScope::toImpl(info.Holder());
     V8StringResource<> url;
     EntryCallback* successCallback;
@@ -511,8 +514,9 @@ static void webkitResolveLocalFileSystemURLMethod(const v8::FunctionCallbackInfo
         }
     }
     WorkerGlobalScopeFileSystem::webkitResolveLocalFileSystemURL(*impl, url, successCallback, errorCallback);
-#endif
+#else
     DebugBreak();
+#endif
 }
 
 static void webkitResolveLocalFileSystemURLMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -524,7 +528,7 @@ static void webkitResolveLocalFileSystemURLMethodCallback(const v8::FunctionCall
 
 static void webkitResolveLocalFileSystemSyncURLMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitResolveLocalFileSystemSyncURL", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
@@ -544,8 +548,9 @@ static void webkitResolveLocalFileSystemSyncURLMethod(const v8::FunctionCallback
         return;
     }
     v8SetReturnValue(info, result.release());
-#endif
+#else
     DebugBreak();
+#endif
 }
 
 static void webkitResolveLocalFileSystemSyncURLMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -596,17 +601,13 @@ void V8WorkerGlobalScopePartial::installV8WorkerGlobalScopeTemplate(v8::Local<v8
     V8WorkerGlobalScope::installV8WorkerGlobalScopeTemplate(functionTemplate, isolate);
 
     v8::Local<v8::Signature> defaultSignature;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-    if (!RuntimeEnabledFeatures::globalCacheStorageEnabled())
-#endif
+    if (false/*!RuntimeEnabledFeatures::globalCacheStorageEnabled()*/)
         defaultSignature = V8DOMConfiguration::installDOMClassTemplate(isolate, functionTemplate, "WorkerGlobalScope", v8::Local<v8::FunctionTemplate>(), V8WorkerGlobalScope::internalFieldCount, 0, 0, 0, 0, 0, 0);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     else
         defaultSignature = V8DOMConfiguration::installDOMClassTemplate(isolate, functionTemplate, "WorkerGlobalScope", v8::Local<v8::FunctionTemplate>(), V8WorkerGlobalScope::internalFieldCount,
-            V8WorkerGlobalScopeAttributes, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAttributes),
-            V8WorkerGlobalScopeAccessors, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAccessors),
+            nullptr, 0, //V8WorkerGlobalScopeAttributes, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAttributes),
+            nullptr, 0, //V8WorkerGlobalScopeAccessors, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAccessors),
             V8WorkerGlobalScopeMethods, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeMethods));
-#endif
 
     v8::Local<v8::ObjectTemplate> instanceTemplate = functionTemplate->InstanceTemplate();
     ALLOW_UNUSED_LOCAL(instanceTemplate);

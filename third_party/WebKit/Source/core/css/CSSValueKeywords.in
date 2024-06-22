@@ -1055,3 +1055,17 @@ calc
 // none
 mandatory
 proximity
+
+//
+// CSS3 intrinsic dimension keywords
+//
+-webkit-min-content
+-webkit-max-content
+-webkit-fill-available
+-webkit-fit-content
+min-content
+max-content
+fit-content
+
+-internal-variable-value
+var

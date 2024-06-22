@@ -340,6 +340,8 @@ public:
         return gcState() == Sweeping || gcState() == SweepingAndPreciseGCScheduled || gcState() == SweepingAndIdleGCScheduled;
     }
 
+    v8::Isolate* isolate() const { return m_isolate; }
+
     // A GC runs in the following sequence.
     //
     // 1) All threads park at safe points.

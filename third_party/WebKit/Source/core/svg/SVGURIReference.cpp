@@ -28,20 +28,23 @@
 namespace blink {
 
 SVGURIReference::SVGURIReference(SVGElement* element)
-    : m_href(SVGAnimatedString::create(element, XLinkNames::hrefAttr, SVGString::create()))
+    : m_xlinkHref(SVGAnimatedString::create(element, XLinkNames::hrefAttr, SVGString::create()))
+    , m_svgHref(SVGAnimatedString::create(element, HTMLNames::hrefAttr, SVGString::create()))
 {
     ASSERT(element);
-    element->addToPropertyMap(m_href);
+    element->addToPropertyMap(m_xlinkHref);
+    element->addToPropertyMap(m_svgHref);
 }
 
 DEFINE_TRACE(SVGURIReference)
 {
-    visitor->trace(m_href);
+    visitor->trace(m_xlinkHref);
+    visitor->trace(m_svgHref);
 }
 
 bool SVGURIReference::isKnownAttribute(const QualifiedName& attrName)
 {
-    return attrName.matches(XLinkNames::hrefAttr);
+    return attrName.matches(XLinkNames::hrefAttr) || attrName.matches(SVGNames::hrefAttr);
 }
 
 AtomicString SVGURIReference::fragmentIdentifierFromIRIString(const String& url, const TreeScope& treeScope)
@@ -108,6 +111,22 @@ Element* SVGURIReference::targetElementFromIRIString(const String& iri, const Tr
 void SVGURIReference::addSupportedAttributes(HashSet<QualifiedName>& supportedAttributes)
 {
     supportedAttributes.add(XLinkNames::hrefAttr);
+    supportedAttributes.add(HTMLNames::hrefAttr);
+}
+
+const String& SVGURIReference::hrefString() const
+{
+    if (m_svgHref->isSpecified())
+        return m_svgHref->currentValue()->value();
+
+    return m_xlinkHref->currentValue()->value();
+}
+
+SVGAnimatedString* SVGURIReference::href() const
+{
+    if (m_svgHref->isSpecified())
+        return m_svgHref.get();
+    return m_xlinkHref.get();
 }
 
 }

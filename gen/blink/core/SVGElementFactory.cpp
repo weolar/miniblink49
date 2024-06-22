@@ -575,7 +575,7 @@ PassRefPtrWillBeRawPtr<SVGElement> SVGElementFactory::createSVGElement(
     if (ConstructorFunction function = g_constructors->get(localName))
         return function(document, createdByParser);
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 //def MINIBLINK_NOT_IMPLEMENTED
     if (document.registrationContext() && CustomElement::isValidName(localName)) {
         RefPtrWillBeRawPtr<Element> element = document.registrationContext()->createCustomTagElement(document, QualifiedName(nullAtom, localName, svgNamespaceURI));
         ASSERT_WITH_SECURITY_IMPLICATION(element->isSVGElement());

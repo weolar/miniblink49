@@ -461,7 +461,9 @@ static void installV8NotificationTemplate(v8::Local<v8::FunctionTemplate> functi
     functionTemplate->SetNativeDataProperty(v8AtomicString(isolate, "permission"), NotificationV8Internal::permissionAttributeGetterCallback, 0, v8::External::New(isolate, 0), static_cast<v8::PropertyAttribute>(v8::None), v8::Local<v8::AccessorSignature>(), static_cast<v8::AccessControl>(v8::DEFAULT));
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Notification::domTemplate(v8::Isolate* isolate)

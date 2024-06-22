@@ -82,6 +82,30 @@ void NetworkStateNotifier::setWebConnectionTypeImpl(WebConnectionType type)
     }
 }
 
+void NetworkStateNotifier::setDownlink(float f)
+{
+    MutexLocker locker(m_mutex);
+    m_downlink = f;
+}
+
+void NetworkStateNotifier::setEffectiveType(const String& type)
+{
+    MutexLocker locker(m_mutex);
+    m_effectiveType = type;
+}
+
+void NetworkStateNotifier::setRtt(int rtt)
+{
+    MutexLocker locker(m_mutex);
+    m_rtt = rtt;
+}
+
+void NetworkStateNotifier::setSaveData(bool b)
+{
+    MutexLocker locker(m_mutex);
+    m_saveData = b;
+}
+
 void NetworkStateNotifier::addObserver(NetworkStateObserver* observer, ExecutionContext* context)
 {
     ASSERT(context->isContextThread());

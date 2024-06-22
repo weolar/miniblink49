@@ -14,35 +14,112 @@
 #include "base/logging.h"
 #include "gin/debug_impl.h"
 #include "gin/v8_initializer.h"
-//#include "v8/src/base/sys-info.h"
-#include "sys-info.h"
+//#include "src/base/sys-info.h"
+//#include "sys-info.h"
+#include "v8.h"
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#include "base/message_loop/message_loop.h"
-#include "gin/function_template.h"
-#include "gin/per_isolate_data.h"
-#include "gin/run_microtasks_observer.h"
-#include "gin/v8_isolate_memory_dump_provider.h"
-#endif // MINIBLINK_NOT_IMPLEMENTED
+namespace v8 {
+namespace base {
 
-// namespace v8 {
-//     namespace base {
+class SysInfo final {
+public:
+    // Returns the number of logical processors/core on the current machine.
+    static int V8CALL NumberOfProcessors();
+
+    // Returns the number of bytes of physical memory on the current machine.
+    static int64_t V8CALL AmountOfPhysicalMemory();
+
+    // Returns the number of bytes of virtual memory of this process. A return
+    // value of zero means that there is no limit on the available virtual memory.
+    static int64_t V8CALL AmountOfVirtualMemory();
+};
+
+}  // namespace base
+}  // namespace v8
+
+// void readFile(const wchar_t* path, std::vector<char>* buffer)
+// {
+//     HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+//     if (INVALID_HANDLE_VALUE == hFile) {
+//         DebugBreak();
+//         return;
+//     }
 // 
-//         class SysInfo final {
-//         public:
-//             // Returns the number of logical processors/core on the current machine.
-//             static int NumberOfProcessors();
+//     DWORD fileSizeHigh;
+//     const DWORD bufferSize = ::GetFileSize(hFile, &fileSizeHigh);
 // 
-//             // Returns the number of bytes of physical memory on the current machine.
-//             static int64_t AmountOfPhysicalMemory();
+//     DWORD numberOfBytesRead = 0;
+//     buffer->resize(bufferSize);
+//     BOOL b = ::ReadFile(hFile, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
+//     ::CloseHandle(hFile);
+// }
 // 
-//             // Returns the number of bytes of virtual memory of this process. A return
-//             // value of zero means that there is no limit on the available virtual memory.
-//             static int64_t AmountOfVirtualMemory();
-//         };
+// //一个函数，实现在js中调用C++函数
+// void testAlert(const v8::FunctionCallbackInfo<v8::Value>& args)
+// {
+//     //     v8::String::Utf8Value str(args[0]);
+//     //     printf("day--：%s\n", *str);
+//     v8::Local<v8::Value> str = args[0];
+//     v8::Local<v8::String> info = str->ToString(args.GetIsolate());
 // 
-//     }  // namespace base
-// }  // namespace v8
+//     std::vector<char> buffer(1000);
+//     info->WriteUtf8(args.GetIsolate(), buffer.data());
+//     buffer.push_back('\n');
+//     buffer.push_back('\0');
+// 
+//     std::string temp = buffer.data();
+//     temp += "\n";
+//     OutputDebugStringA(temp.c_str());
+//     OutputDebugStringA("");
+// }
+// 
+// int testQueenMain(v8::Isolate* isolate)
+// {
+//     std::vector<char> buffer;
+//     readFile(L"G:\\test\\web_test\\zzz_test\\queen8.js", &buffer);
+//     buffer.push_back('\0');
+// 
+//     // Initialize V8.
+//     //     v8::V8::InitializeICUDefaultLocation(argv[0]);
+//     //     v8::V8::InitializeExternalStartupData(argv[0]);
+//     //     std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
+//     //     v8::V8::InitializePlatform(platform.get());
+//     //     v8::V8::Initialize();
+// 
+//     // Create a new Isolate and make it the current one.
+//     //     v8::Isolate::CreateParams create_params;
+//     //     create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+//     //     v8::Isolate* isolate = v8::Isolate::New(create_params);
+// 
+//     {
+//         //v8::Isolate::Scope isolate_scope(isolate);
+// 
+//         // Create a stack-allocated handle scope.
+//         v8::HandleScope handle_scope(isolate);
+// 
+//         v8::Local<v8::ObjectTemplate> global_templ = v8::ObjectTemplate::New(isolate);
+//         global_templ->Set(v8::String::NewFromUtf8(isolate, "alert"), v8::FunctionTemplate::New(isolate, testAlert));
+// 
+//         // Create a new context.
+//         v8::Local<v8::Context> context = v8::Context::New(isolate, nullptr, global_templ);
+//         // Enter the context for compiling and running the hello world script.
+//         v8::Context::Scope context_scope(context);
+//         // Create a string containing the JavaScript source code.
+//         v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, buffer.data(), v8::NewStringType::kNormal).ToLocalChecked();
+// 
+//         // Compile the source code.
+//         v8::Local<v8::Script> script = v8::Script::Compile(context, source).ToLocalChecked();
+//         // Run the script to get the result.
+//         //v8::Local<v8::Value> result = script->Run(context).ToLocalChecked();
+//         script->Run(context);
+// 
+//         // Convert the result to an UTF8 string and print it.
+//         //v8::String::Utf8Value utf8(isolate, result);
+//         //printf("%s\n", *utf8);
+//     }
+// 
+//     return 0;
+// }
 
 namespace gin {
 
@@ -59,12 +136,14 @@ IsolateHolder::IsolateHolder(AccessMode access_mode)
   v8::ArrayBuffer::Allocator* allocator = g_array_buffer_allocator;
   CHECK(allocator); // << "You need to invoke gin::IsolateHolder::Initialize first";
   v8::Isolate::CreateParams params;
+#if V8_MAJOR_VERSION != 7
   params.entry_hook = DebugImpl::GetFunctionEntryHook();
+#endif
   params.code_event_handler = DebugImpl::GetJitCodeEventHandler();
-  params.constraints.ConfigureDefaults(v8::base::SysInfo::AmountOfPhysicalMemory(),
-    v8::base::SysInfo::AmountOfVirtualMemory());
+  params.constraints.ConfigureDefaults(v8::base::SysInfo::AmountOfPhysicalMemory(), v8::base::SysInfo::AmountOfVirtualMemory());
   params.array_buffer_allocator = allocator;
   isolate_ = v8::Isolate::New(params);
+
 #ifdef MINIBLINK_NOT_IMPLEMENTED
   isolate_data_.reset(new PerIsolateData(isolate_, allocator));
   isolate_memory_dump_provider_.reset(new V8IsolateMemoryDumpProvider(this));
@@ -80,6 +159,7 @@ IsolateHolder::IsolateHolder(AccessMode access_mode)
       callback(code_range, size);
   }
 #endif
+  //testQueenMain(isolate_);
 }
 
 IsolateHolder::~IsolateHolder() {
@@ -117,7 +197,10 @@ void IsolateHolder::Initialize(ScriptMode mode,
 }
 
 IsolateHolder::MemoryHead* IsolateHolder::GetPointerHead(void* pointer) {
-    return ((MemoryHead*)pointer) - 1;
+    MemoryHead* head = ((MemoryHead*)pointer) - 1;
+    if (head->magicNum != gin::IsolateHolder::magicNum0)
+        DebugBreak();
+    return head;
 }
 
 size_t IsolateHolder::GetPointerMemSize(void* pointer) {

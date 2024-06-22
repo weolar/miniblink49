@@ -118,7 +118,9 @@ static void installV8BluetoothGATTRemoteServerTemplate(v8::Local<v8::FunctionTem
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8BluetoothGATTRemoteServer::domTemplate(v8::Isolate* isolate)

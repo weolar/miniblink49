@@ -7,6 +7,8 @@
 #include "src/handles-inl.h"
 #include "src/isolate.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace wasm {

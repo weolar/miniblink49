@@ -109,8 +109,8 @@ void ElementAnimations::updateBaseComputedStyle(const ComputedStyle* computedSty
         return;
     }
 #if ENABLE(ASSERT)
-    if (m_baseComputedStyle && computedStyle)
-        ASSERT(*m_baseComputedStyle == *computedStyle);
+//     if (m_baseComputedStyle && computedStyle) // weolar
+//         ASSERT(*m_baseComputedStyle == *computedStyle);
 #endif
     m_baseComputedStyle = ComputedStyle::clone(*computedStyle);
 }

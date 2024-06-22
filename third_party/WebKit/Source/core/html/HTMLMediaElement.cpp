@@ -1032,8 +1032,8 @@ void HTMLMediaElement::startPlayerLoad()
     if (!requestURL.pass().isEmpty())
         requestURL.setPass(String());
 
-    m_player->load(loadType(), requestURL, corsMode());
-#ifndef MINIBLINK_NO_CHANGE
+    m_player->load(loadType(), requestURL, corsMode(), isHTMLAudioElement());
+#if 1 // ndef MINIBLINK_NO_CHANGE
     configureMediaControls();
 #endif
 }
@@ -2880,6 +2880,13 @@ bool HTMLMediaElement::potentiallyPlaying() const
     // when it ran out of buffered data. A movie in this state is "potentially playing", modulo the
     // checks in couldPlayIfEnoughData().
     bool pausedToBuffer = m_readyStateMaximum >= HAVE_FUTURE_DATA && m_readyState < HAVE_FUTURE_DATA;
+
+//     char* output = (char*)malloc(0x100);
+//     sprintf(output, "potentiallyPlaying: readyState:%d, !paused():%d, !endedPlayback():%d, !stoppedDueToErrors():%d\n", 
+//         m_readyState, !paused(), !endedPlayback(), !stoppedDueToErrors());
+//     OutputDebugStringA(output);
+//     free(output);
+
     return (pausedToBuffer || m_readyState >= HAVE_FUTURE_DATA) && couldPlayIfEnoughData() && !isBlockedOnMediaController();
 }
 
@@ -2905,8 +2912,17 @@ bool HTMLMediaElement::endedPlayback(LoopCondition loopCondition) const
     // of playback is forwards, Either the media element does not have a loop attribute specified,
     // or the media element has a current media controller.
     double now = currentTime();
-    if (directionOfPlayback() == Forward)
-        return dur > 0 && now >= dur && (loopCondition == LoopCondition::Ignored || !loop() || m_mediaController);
+    if (directionOfPlayback() == Forward) {
+        bool b = dur > 0 && now >= dur && (loopCondition == LoopCondition::Ignored || !loop() || m_mediaController);
+
+//         char* output = (char*)malloc(0x100);
+//         sprintf(output, "HTMLMediaElement::endedPlayback: dur:%f, now:%f, !loop():%d, bool:%d\n",
+//                 dur, now, !loop(), b);
+//         OutputDebugStringA(output);
+//         free(output);
+
+        return b;
+    }
 
     // or the current playback position is the earliest possible position and the direction
     // of playback is backwards
@@ -2932,6 +2948,12 @@ void HTMLMediaElement::updatePlayState()
 
     bool isPlaying = webMediaPlayer() && !webMediaPlayer()->paused();
     bool shouldBePlaying = potentiallyPlaying();
+
+//     char* output = (char*)malloc(0x100);
+//     sprintf(output, "HTMLMediaElement::updatePlayState: shouldBePlaying:%d, isPlaying:%d\n",
+//         shouldBePlaying, isPlaying);
+//     OutputDebugStringA(output);
+//     free(output);
 
     WTF_LOG(Media, "HTMLMediaElement::updatePlayState(%p) - shouldBePlaying = %s, isPlaying = %s",
         this, boolString(shouldBePlaying), boolString(isPlaying));

@@ -66,29 +66,33 @@ typedef long _Atomic_flag_t;
 #define _InterlockedOr InterlockedOr
 #define _InterlockedXor InterlockedXor
 
+#if defined(__cplusplus)
 extern "C" {
+#endif
 
-    WINBASEAPI __int64 WINAPI InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
+WINBASEAPI __int64 WINAPI InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
 
-    char WINAPI InterlockedExchange8(char volatile * _Target, char _Value);
-    char WINAPI InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand);
-    char WINAPI InterlockedExchangeAdd8(char volatile * _Addend, char _Value);
-    char WINAPI InterlockedAnd8(char volatile * _Value, char _Mask);
-    char WINAPI InterlockedOr8(char volatile * _Value, char _Mask);
-    char WINAPI InterlockedXor8(char volatile * _Value, char _Mask);
+char WINAPI InterlockedExchange8(char volatile * _Target, char _Value);
+char WINAPI InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand);
+char WINAPI InterlockedExchangeAdd8(char volatile * _Addend, char _Value);
+char WINAPI InterlockedAnd8(char volatile * _Value, char _Mask);
+char WINAPI InterlockedOr8(char volatile * _Value, char _Mask);
+char WINAPI InterlockedXor8(char volatile * _Value, char _Mask);
 
-    short WINAPI InterlockedExchange16(short volatile * _Target, short _Value);
-    short WINAPI InterlockedCompareExchange16(short volatile * _Destination, short _Exchange, short _Comparand);
-    short WINAPI InterlockedExchangeAdd16(short volatile * _Addend, short _Value);
-    short WINAPI InterlockedAnd16(short volatile * _Value, short _Mask);
-    short WINAPI InterlockedOr16(short volatile * _Value, short _Mask);
-    short WINAPI InterlockedXor16(short volatile * _Value, short _Mask);
+short WINAPI InterlockedExchange16(short volatile * _Target, short _Value);
+short WINAPI InterlockedCompareExchange16(short volatile * _Destination, short _Exchange, short _Comparand);
+short WINAPI InterlockedExchangeAdd16(short volatile * _Addend, short _Value);
+short WINAPI InterlockedAnd16(short volatile * _Value, short _Mask);
+short WINAPI InterlockedOr16(short volatile * _Value, short _Mask);
+short WINAPI InterlockedXor16(short volatile * _Value, short _Mask);
 
-    long WINAPI InterlockedAnd(long volatile * _Value, long _Mask);
-    long WINAPI InterlockedOr(long volatile * _Value, long _Mask);
-    long WINAPI InterlockedXor(long volatile * _Value, long _Mask);
+long WINAPI InterlockedAnd(long volatile * _Value, long _Mask);
+long WINAPI InterlockedOr(long volatile * _Value, long _Mask);
+long WINAPI InterlockedXor(long volatile * _Value, long _Mask);
 
+#if defined(__cplusplus)
 }
+#endif
 
 // #pragma intrinsic(InterlockedCompareExchange64)
 // 

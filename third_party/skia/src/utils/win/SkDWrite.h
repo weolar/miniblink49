@@ -12,7 +12,7 @@
 #include "SkFontStyle.h"
 
 #include <dwrite.h>
-#include <winsdkver.h>
+//#include <winsdkver.h>
 
 class SkString;
 

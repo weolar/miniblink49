@@ -146,11 +146,12 @@ ScriptValue WebGL2RenderingContextBase::getInternalformatParameter(ScriptState* 
             if (length <= 0)
                 return WebGLAny(scriptState, DOMInt32Array::create(0));
 
-            scoped_ptr<GLint[]> values(new GLint[length]);
+            Vector<GLint> values;
+            values.resize(length);
             for (GLint ii = 0; ii < length; ++ii)
                 values[ii] = 0;
-            webContext()->getInternalformativ(target, internalformat, GL_SAMPLES, length, values.get());
-            return WebGLAny(scriptState, DOMInt32Array::create(values.get(), length));
+            webContext()->getInternalformativ(target, internalformat, GL_SAMPLES, length, values.data());
+            return WebGLAny(scriptState, DOMInt32Array::create(values.data(), length));
         }
     default:
         synthesizeGLError(GL_INVALID_ENUM, "getInternalformatParameter", "invalid parameter name");
@@ -1630,10 +1631,11 @@ String WebGL2RenderingContextBase::getActiveUniformBlockName(WebGLProgram* progr
         synthesizeGLError(GL_INVALID_VALUE, "getActiveUniformBlockName", "invalid uniform block index");
         return String();
     }
-    scoped_ptr<GLchar[]> name(new GLchar[maxNameLength]);
+    Vector<GLchar> name;
+    name.resize(maxNameLength);
     GLsizei length;
-    webContext()->getActiveUniformBlockName(objectOrZero(program), uniformBlockIndex, maxNameLength, &length, name.get());
-    return String(name.get(), length);
+    webContext()->getActiveUniformBlockName(objectOrZero(program), uniformBlockIndex, maxNameLength, &length, name.data());
+    return String(name.data(), length);
 }
 
 void WebGL2RenderingContextBase::uniformBlockBinding(WebGLProgram* program, GLuint uniformBlockIndex, GLuint uniformBlockBinding)

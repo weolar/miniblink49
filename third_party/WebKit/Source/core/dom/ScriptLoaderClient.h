@@ -41,6 +41,7 @@ public:
     virtual bool asyncAttributeValue() const = 0;
     virtual bool deferAttributeValue() const = 0;
     virtual bool hasSourceAttribute() const = 0;
+    virtual bool hasNomoduleAttribute() const = 0;
 };
 
 }

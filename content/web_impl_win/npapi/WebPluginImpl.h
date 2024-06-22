@@ -76,6 +76,7 @@ enum PluginStatus {
 };
 
 class PluginMessageThrottlerWin;
+class WebPluginIMEWin;
 
 class PluginRequest {
     WTF_MAKE_NONCOPYABLE(PluginRequest); WTF_MAKE_FAST_ALLOCATED(PluginRequest);
@@ -102,6 +103,8 @@ public:
     WebPluginImpl(blink::WebLocalFrame* parentFrame, const blink::WebPluginParams&);
     virtual ~WebPluginImpl();
 
+    bool getImeStatus(int* inputType, blink::IntRect* caretRect);
+
     virtual bool initialize(blink::WebPluginContainer*);
     virtual void destroy() override;
 
@@ -126,7 +129,7 @@ public:
     virtual bool supportsEditCommands() const override;
     // Returns true if this plugin supports input method, which implements
     // setComposition() and confirmComposition() below.
-    virtual bool supportsInputMethod() const override { return false; }
+    virtual bool supportsInputMethod() const override { return true; }
 
     virtual bool canProcessDrag() const override { return false; }
 
@@ -173,8 +176,8 @@ public:
     virtual bool executeEditCommand(const blink::WebString& name) { return false; }
     virtual bool executeEditCommand(const blink::WebString& name, const blink::WebString& value) { return false; }
 
-    virtual bool setComposition(const blink::WebString& text, const blink::WebVector<blink::WebCompositionUnderline>& underlines, int selectionStart, int selectionEnd) { return false; }
-    virtual bool confirmComposition(const blink::WebString& text, blink::WebWidget::ConfirmCompositionBehavior selectionBehavior) { return false; }
+    virtual bool setComposition(const blink::WebString& text, const blink::WebVector<blink::WebCompositionUnderline>& underlines, int selectionStart, int selectionEnd) override;
+    virtual bool confirmComposition(const blink::WebString& text, blink::WebWidget::ConfirmCompositionBehavior selectionBehavior) override;
     virtual void extendSelectionAndDelete(int before, int after) { }
     virtual blink::WebURL linkAtPosition(const blink::WebPoint& position) const { return blink::WebURL(); }
 
@@ -231,6 +234,7 @@ public:
 
     bool handleMouseEvent(const blink::WebMouseEvent& evt);
     bool handleKeyboardEvent(const blink::WebKeyboardEvent& evt);
+    bool handleKeyboardCharEventForEmulateIme(int windowsKeyCode);
 
     void invalidateRect(const blink::IntRect&);
 
@@ -370,8 +374,9 @@ private:
 
     bool dispatchNPEvent(NPEvent&);
 
-    void updatePluginWidget(const blink::IntRect& windowRect, const blink::IntRect& clipRect);
+    void updatePluginWidget(const blink::IntRect& windowRect, const blink::IntRect& clipRect, bool isVisible);
     void paintMissingPluginIcon(blink::WebCanvas*, const blink::IntRect&);
+    void setRgnIfNeeded(const blink::IntRect& windowRect, const blink::IntRect& oldWindowRect, const blink::IntRect& oldClipRect);
 
     void paintIntoTransformedContext(HDC);
     PassRefPtr<blink::Image> snapshot();
@@ -425,7 +430,16 @@ private:
     static WebPluginImpl* s_currentPluginView;
 
     SkCanvas* m_memoryCanvas;
+    void* m_memoryPixels;
+    SIZE m_memoryCanvasSize;
     wke::CWebView* m_wkeWebview;
+
+    Vector<blink::IntRect> m_cutOutsRects;
+    bool m_cutOutsRectsDirty;
+
+    int m_pluginViewWndProcReentryCount;
+
+    WebPluginIMEWin* m_pluginIme;
 };
 
 } // namespace content

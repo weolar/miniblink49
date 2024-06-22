@@ -31,6 +31,16 @@
 #include "platform/heap/Handle.h"
 #include "wtf/RefCounted.h"
 
+typedef unsigned GLenum;
+typedef int GC3Dint;
+typedef int GLint;
+typedef float GLfloat;
+typedef int GLsizei;
+typedef intptr_t GLintptr;
+typedef unsigned int GLuint;
+typedef unsigned char GLboolean;
+#define GL_FLOAT 0x1406
+
 namespace blink {
 class WebGraphicsContext3D;
 }

@@ -12,6 +12,8 @@
 #include "src/compiler/node.h"
 #include "src/zone/zone.h"
 
+#include "src/objects-inl.h" // weolar
+
 // Loop peeling is an optimization that copies the body of a loop, creating
 // a new copy of the body called the "peeled iteration" that represents the
 // first iteration. Beginning with a loop as follows:

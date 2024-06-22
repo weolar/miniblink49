@@ -86,7 +86,9 @@ static void installV8MediaErrorTemplate(v8::Local<v8::FunctionTemplate> function
     static_assert(4 == MediaError::MEDIA_ERR_SRC_NOT_SUPPORTED, "the value of MediaError_MEDIA_ERR_SRC_NOT_SUPPORTED does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8MediaError::domTemplate(v8::Isolate* isolate)

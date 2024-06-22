@@ -12,6 +12,7 @@
 #include "src/allocation.h"
 #include "src/checks.h"
 #include "src/globals.h"
+#include "src/memcopy.h"
 
 namespace v8 {
 namespace internal {
@@ -51,11 +52,15 @@ class Vector {
   constexpr size_t size() const { return length_; }
 
   // Returns whether or not the vector is empty.
-  constexpr bool is_empty() const { return length_ == 0; }
+  constexpr bool empty() const { return length_ == 0; }
 
   // Returns the pointer to the start of the data in the vector.
   constexpr T* start() const { return start_; }
 
+ protected:
+  void set_start(T* start) { start_ = start; }
+
+ public:
   // Access individual vector elements - checks bounds in debug mode.
   T& operator[](size_t index) const {
     DCHECK_LT(index, length_);
@@ -140,9 +145,6 @@ class Vector {
     return Vector<const T>::cast(*this);
   }
 
-  // Factory method for creating empty vectors.
-  static Vector<T> empty() { return Vector<T>(nullptr, 0); }
-
   template <typename S>
   static constexpr Vector<T> cast(Vector<S> input) {
     return Vector<T>(reinterpret_cast<T*>(input.start()),
@@ -214,7 +216,7 @@ class OwnedVector {
   constexpr size_t size() const { return length_; }
 
   // Returns whether or not the vector is empty.
-  constexpr bool is_empty() const { return length_ == 0; }
+  constexpr bool empty() const { return length_ == 0; }
 
   // Returns the pointer to the start of the data in the vector.
   T* start() const {

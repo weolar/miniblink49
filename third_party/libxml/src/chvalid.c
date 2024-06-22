@@ -164,7 +164,7 @@ const xmlChRangeGroup xmlIsIdeographicGroup =
  *
  * Returns: true if character valid, false otherwise
  */
-int
+int __cdecl
 xmlCharInRange (unsigned int val, const xmlChRangeGroup *rptr) {
     int low, high, mid;
     const xmlChSRange *sptr;
@@ -222,7 +222,7 @@ xmlCharInRange (unsigned int val, const xmlChRangeGroup *rptr) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsBaseChar(unsigned int ch) {
     return(xmlIsBaseCharQ(ch));
 }
@@ -237,7 +237,7 @@ xmlIsBaseChar(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsBlank(unsigned int ch) {
     return(xmlIsBlankQ(ch));
 }
@@ -252,7 +252,7 @@ xmlIsBlank(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsChar(unsigned int ch) {
     return(xmlIsCharQ(ch));
 }
@@ -267,7 +267,7 @@ xmlIsChar(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsCombining(unsigned int ch) {
     return(xmlIsCombiningQ(ch));
 }
@@ -282,7 +282,7 @@ xmlIsCombining(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsDigit(unsigned int ch) {
     return(xmlIsDigitQ(ch));
 }
@@ -297,7 +297,7 @@ xmlIsDigit(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsExtender(unsigned int ch) {
     return(xmlIsExtenderQ(ch));
 }
@@ -312,7 +312,7 @@ xmlIsExtender(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsIdeographic(unsigned int ch) {
     return(xmlIsIdeographicQ(ch));
 }
@@ -327,7 +327,7 @@ xmlIsIdeographic(unsigned int ch) {
  *
  * Returns true if argument valid, false otherwise
  */
-int
+int __cdecl
 xmlIsPubidChar(unsigned int ch) {
     return(xmlIsPubidCharQ(ch));
 }

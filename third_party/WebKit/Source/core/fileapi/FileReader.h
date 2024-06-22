@@ -80,6 +80,7 @@ public:
     // ActiveDOMObject
     virtual void stop() override;
     virtual bool hasPendingActivity() const override;
+    virtual ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<FileReader*>(object); }
 
     // EventTarget
     virtual const AtomicString& interfaceName() const override;

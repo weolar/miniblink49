@@ -31,8 +31,11 @@
 
 #include "platform/image-decoders/ImageDecoder.h"
 
-#include "webp/decode.h"
-#include "webp/demux.h"
+// #include "webp/decode.h"
+// #include "webp/demux.h"
+
+#include "third_party/libwebp/webp/decode.h"
+#include "third_party/libwebp/webp/demux.h"
 
 namespace blink {
 

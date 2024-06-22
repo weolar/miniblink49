@@ -364,8 +364,10 @@ static void constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
     USVStringOrURLSearchParams init;
     if (!info[0]->IsUndefined()) {
         V8USVStringOrURLSearchParams::toImpl(info.GetIsolate(), info[0], init, false, exceptionState);
-        if (exceptionState.hadException())
+        if (exceptionState.hadException()) {
+            exceptionState.throwIfNeeded();
             return;
+        }
     } else {
         init.setUSVString(String(""));
     }
@@ -475,7 +477,9 @@ static void installV8URLSearchParamsTemplate(v8::Local<v8::FunctionTemplate> fun
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 

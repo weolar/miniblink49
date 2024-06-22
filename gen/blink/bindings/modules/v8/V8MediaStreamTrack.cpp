@@ -341,7 +341,9 @@ static void installV8MediaStreamTrackTemplate(v8::Local<v8::FunctionTemplate> fu
     V8DOMConfiguration::installMethod(isolate, functionTemplate, v8::Local<v8::Signature>(), v8::None, getSourcesMethodConfiguration);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8MediaStreamTrack::domTemplate(v8::Isolate* isolate)

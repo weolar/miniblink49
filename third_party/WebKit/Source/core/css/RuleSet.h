@@ -93,13 +93,23 @@ public:
 
     DECLARE_TRACE();
 
+    // This number is picked fairly arbitrary. If lowered, be aware that there
+    // might be sites and extensions using style rules with selector lists
+    // exceeding the number of simple selectors to fit in this bitfield.
+    // See https://crbug.com/312913 and https://crbug.com/704562
+    static const size_t kSelectorIndexBits = 13;
+
+    // This number was picked fairly arbitrarily. We can probably lower it if we
+    // need to. Some simple testing showed <100,000 RuleData's on large sites.
+    static const size_t kPositionBits = 18;
+
 private:
     RawPtrWillBeMember<StyleRule> m_rule;
-    unsigned m_selectorIndex : 12;
+    unsigned m_selectorIndex : 12; // kSelectorIndexBits
     unsigned m_isLastInArray : 1; // We store an array of RuleData objects in a primitive array.
     // This number was picked fairly arbitrarily. We can probably lower it if we need to.
     // Some simple testing showed <100,000 RuleData's on large sites.
-    unsigned m_position : 18;
+    unsigned m_position : kPositionBits/*18*/;
     unsigned m_specificity : 24;
     unsigned m_containsUncommonAttributeSelector : 1;
     unsigned m_linkMatchType : 2; //  CSSSelector::LinkMatchMask

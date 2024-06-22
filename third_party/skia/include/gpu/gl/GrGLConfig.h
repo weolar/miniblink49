@@ -21,7 +21,7 @@
 #endif
 
 #if !defined(GR_GL_FUNCTION_TYPE)
-    #define GR_GL_FUNCTION_TYPE
+    #define GR_GL_FUNCTION_TYPE __stdcall
 #endif
 
 /**

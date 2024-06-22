@@ -34,8 +34,8 @@
 #include "platform/blob/BlobData.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 #include "net/BlobResourceLoader.h"
-
-using namespace blink;
+#include "net/WebURLLoaderManager.h"
+#include "net/DownloadFileBlobCache.h"
 
 namespace content {
 
@@ -47,20 +47,20 @@ WebBlobRegistryImpl::BuilderImpl::~BuilderImpl()
 { 
 }
 
-void WebBlobRegistryImpl::BuilderImpl::appendData(const WebThreadSafeData&)
+void WebBlobRegistryImpl::BuilderImpl::appendData(const blink::WebThreadSafeData&)
 {
 
 }
-void WebBlobRegistryImpl::BuilderImpl::appendFile(const WebString& path, uint64_t offset, uint64_t length, double expectedModificationTime)
+void WebBlobRegistryImpl::BuilderImpl::appendFile(const blink::WebString& path, uint64_t offset, uint64_t length, double expectedModificationTime)
 {
 
 }
 
-void WebBlobRegistryImpl::BuilderImpl::appendBlob(const WebString& uuid, uint64_t offset, uint64_t length)
+void WebBlobRegistryImpl::BuilderImpl::appendBlob(const blink::WebString& uuid, uint64_t offset, uint64_t length)
 {
 
 }
-void WebBlobRegistryImpl::BuilderImpl::appendFileSystemURL(const WebURL&, uint64_t offset, uint64_t length, double expectedModificationTime)
+void WebBlobRegistryImpl::BuilderImpl::appendFileSystemURL(const blink::WebURL&, uint64_t offset, uint64_t length, double expectedModificationTime)
 {
 
 }
@@ -77,62 +77,47 @@ WebBlobRegistryImpl::WebBlobRegistryImpl()
 
 WebBlobRegistryImpl::~WebBlobRegistryImpl() { }
 
-void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobData& data)
+// node.dll!blink::BlobDataHandle::create(WTF::PassOwnPtr<blink::BlobData> data, __int64 size) 行 215	C++
+// node.dll!blink::Blob::slice(__int64 start, __int64 end, const WTF::String & contentType, blink::ExceptionState & exceptionState) 行 147	C++
+// node.dll!blink::File::slice(__int64 start, __int64 end, const WTF::String & contentType, blink::ExceptionState & exceptionState) 行 269	C++
+// node.dll!blink::Blob::slice(__int64 start, __int64 end, blink::ExceptionState & exceptionState) 行 83	C++
+// 会走到这里。此时data里的item是一个blob，关联到例如某个input打开的文件。
+// 注意的是，dataItem.length是切片的长度，而blob本身也有长度
+// 还有种情况，是xhr.response也可能为blob（ResourceResponse::setDownloadedFilePath里添加）
+
+void WebBlobRegistryImpl::registerBlobData(const blink::WebString& uuid, const blink::WebBlobData& data)
 {
     String uuidString = uuid;
     size_t i = 0;
-    WebBlobData::Item dataItem;
+    blink::WebBlobData::Item dataItem;
     net::BlobDataWrap* dataWrap = new net::BlobDataWrap();
     dataWrap->m_contentType = data.contentType();
     dataWrap->m_ref = 1;
 
     while (data.itemAt(i++, dataItem)) {
-        if (blink::WebBlobData::Item::TypeBlob == dataItem.type) {
-            net::BlobDataWrap* blobData = getBlobDataFromUUID(dataItem.blobUUID);
+        blink::WebBlobData::Item* newItem = new blink::WebBlobData::Item(dataItem);
+//         String out = String::format("WebBlobRegistryImpl::registerBlobData, dataWrap:%p, newItem:%p, %d %d %s\n",
+//             dataWrap, newItem, (long)dataItem.offset, (long)dataItem.length, uuidString.utf8().data());
+//         OutputDebugStringA(out.utf8().data());
 
-            String out = String::format("WebBlobRegistryImpl::registerBlobData -- : %p, %s\n", blobData, dataItem.blobUUID.utf8().data());
-            OutputDebugStringA(out.utf8().data());
+        dataWrap->appendItem(newItem); // WebURLLoaderManager和BlobResourceLoader可能会展开这个blob
 
-            // 目前只支持1 == blobData->items().size()的情况
-            for (size_t i = 0; i < blobData->items().size(); ++i) {
-                blink::WebBlobData::Item* it = blobData->items()[i];
-                it->length = dataItem.length;
-                it->offset = dataItem.offset;
-                dataWrap->appendItem(new WebBlobData::Item(*it));
-            }
-        } else
-            dataWrap->appendItem(new WebBlobData::Item(dataItem));
-    }
-
-    String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
-    OutputDebugStringA(out.utf8().data());
-
-    check();
-
-    const Vector<blink::WebBlobData::Item*>& items = dataWrap->items();
-
-    HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
-    for (; it != m_datasSet.end(); ++it) {
-        net::BlobDataWrap* dataWrapValue = it->value;
-        const Vector<blink::WebBlobData::Item*>& valueItems = dataWrapValue->items();
-        for (size_t i = 0; i < valueItems.size(); ++i) {
-            blink::WebBlobData::Item* valueiIem = valueItems[i];
-            
-            for (size_t i = 0; i < items.size(); ++i) {
-                blink::WebBlobData::Item* item = items[i];
-
-                if ((String)item->filePath == (String)valueiIem->filePath) {
-                    item->length = valueiIem->length;
-                    item->offset = valueiIem->offset;
-                }
-            }
+        if (blink::WebBlobData::Item::TypeFile == dataItem.type) {
+            net::BlobTempFileInfo* blobTempFileInfo = net::DownloadFileBlobCache::inst()->getBlobTempFileInfoByTempFilePath(dataItem.filePath);
+            if (blobTempFileInfo) // 拖拽一张本地图片，也会走到这
+                blobTempFileInfo->ref();
         }
     }
+
+//     String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
+//     OutputDebugStringA(out.utf8().data());
+
+    check();
 
     m_datasSet.add(uuidString, dataWrap);
 }
 
-WebBlobRegistry::Builder* WebBlobRegistryImpl::createBuilder(const WebString& uuid, const WebString& contentType)
+blink::WebBlobRegistry::Builder* WebBlobRegistryImpl::createBuilder(const blink::WebString& uuid, const blink::WebString& contentType)
 { 
     DebugBreak();
     return new WebBlobRegistryImpl::BuilderImpl();
@@ -146,8 +131,8 @@ void WebBlobRegistryImpl::check() const
         net::BlobDataWrap* dataWrapValue = it->value;
         const Vector<blink::WebBlobData::Item*>& valueItems = dataWrapValue->items();
         for (size_t i = 0; i < valueItems.size(); ++i) {
-            blink::WebBlobData::Item* valueiIem = valueItems[i];
-            if (!valueiIem)
+            blink::WebBlobData::Item* valueItem = valueItems[i];
+            if (!valueItem)
                 DebugBreak();
         }
     }
@@ -182,7 +167,6 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
         for (size_t i = 0; i < items.size(); ++i) {
             blink::WebBlobData::Item* item = items[i];
             if ((String)item->filePath == tempPath) {
-                //item->offset = 0;
                 if (-1 == item->length || item->length > length)
                     item->length = length;
 
@@ -195,7 +179,7 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
     check();
 }
 
-void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
+void WebBlobRegistryImpl::addBlobDataRef(const blink::WebString& uuid)
 {
     MutexLocker locker(m_lock);
 
@@ -208,13 +192,20 @@ void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
     check();
 }
 
-void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
+void WebBlobRegistryImpl::removeBlobDataRef(const blink::WebString& uuid)
 {
     MutexLocker locker(m_lock);
 
     net::BlobDataWrap* dataWrap = getBlobDataFromUUID(uuid);
     if (!dataWrap)
         return;
+
+    derefBlobDataWrap(dataWrap);
+}
+
+void WebBlobRegistryImpl::derefBlobDataWrap(net::BlobDataWrap* dataWrap)
+{
+    MutexLocker locker(m_lock);
 
     dataWrap->m_ref--;
     if (0 != dataWrap->m_ref)
@@ -238,7 +229,7 @@ void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
 }
 
 // 从uuid对应的data取出，再建立url到data的对应，相当于一个data有两个uuid
-void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebString& uuid)
+void WebBlobRegistryImpl::registerPublicBlobURL(const blink::WebURL& url, const blink::WebString& uuid)
 {
     MutexLocker locker(m_lock);
 
@@ -248,15 +239,15 @@ void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebStri
     net::BlobDataWrap* dataWrap = (it->value);
     dataWrap->m_ref++;
 
-    String out = String::format("WebBlobRegistryImpl::registerPublicBlobURL: %p %s\n", dataWrap, url.string().utf8().data());
-    OutputDebugStringA(out.utf8().data());
+//     String out = String::format("WebBlobRegistryImpl::registerPublicBlobURL: %p %s\n", dataWrap, url.string().utf8().data());
+//     OutputDebugStringA(out.utf8().data());
 
     m_datasSet.set(url.string(), dataWrap);
 
     check();
 }
 
-void WebBlobRegistryImpl::revokePublicBlobURL(const WebURL& url)
+void WebBlobRegistryImpl::revokePublicBlobURL(const blink::WebURL& url)
 {
     MutexLocker locker(m_lock);
 
@@ -266,19 +257,19 @@ void WebBlobRegistryImpl::revokePublicBlobURL(const WebURL& url)
     check();
 }
 
-void WebBlobRegistryImpl::registerStreamURL(const WebURL& url, const WebString&) {  }
+void WebBlobRegistryImpl::registerStreamURL(const blink::WebURL& url, const blink::WebString&) {  }
 
-void WebBlobRegistryImpl::registerStreamURL(const WebURL& url, const WebURL& srcURL) {  }
+void WebBlobRegistryImpl::registerStreamURL(const blink::WebURL& url, const blink::WebURL& srcURL) {  }
 
-void WebBlobRegistryImpl::addDataToStream(const WebURL& url, const char* data, size_t length) {  }
+void WebBlobRegistryImpl::addDataToStream(const blink::WebURL& url, const char* data, size_t length) {  }
 
-void WebBlobRegistryImpl::flushStream(const WebURL& url) {  }
+void WebBlobRegistryImpl::flushStream(const blink::WebURL& url) {  }
 
-void WebBlobRegistryImpl::finalizeStream(const WebURL& url) {  }
+void WebBlobRegistryImpl::finalizeStream(const blink::WebURL& url) {  }
 
 // Tell the registry that construction of this stream has been aborted and
 // so it won't receive any more data.
-void WebBlobRegistryImpl::abortStream(const WebURL& url)
+void WebBlobRegistryImpl::abortStream(const blink::WebURL& url)
 {
 //     HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
 //     for (; it != m_datasSet.end(); ++it) {
@@ -300,6 +291,6 @@ void WebBlobRegistryImpl::abortStream(const WebURL& url)
 }
 
 // Unregisters a stream referred by the URL.
-void WebBlobRegistryImpl::unregisterStreamURL(const WebURL& url) {  }
+void WebBlobRegistryImpl::unregisterStreamURL(const blink::WebURL& url) {  }
 
 } // namespace content

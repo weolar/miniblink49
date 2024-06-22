@@ -900,6 +900,25 @@ static void isSameNodeMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& 
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void getPtrForTestMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
+    Node* impl = V8Node::toImpl(info.Holder());
+
+    V8StringResource<TreatNullAsNullString> cppValue = info[0];
+    if (!cppValue.prepare())
+        return;
+    String text = cppValue;
+
+    char* output = (char*)malloc(0x100);
+    sprintf(output, "getPtrForTestMethodCallback: %p, %s\n", impl, text.utf8().data());
+    OutputDebugStringA(output);
+    free(output);
+
+    v8SetReturnValueUnsigned(info, (unsigned int)impl);
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
 } // namespace NodeV8Internal
 
 static const V8DOMConfiguration::AccessorConfiguration V8NodeAccessors[] = {
@@ -935,6 +954,7 @@ static const V8DOMConfiguration::MethodConfiguration V8NodeMethods[] = {
     {"replaceChild", NodeV8Internal::replaceChildMethodCallback, NodeV8Internal::replaceChildMethodCallbackForMainWorld, 2, V8DOMConfiguration::ExposedToAllScripts},
     {"removeChild", NodeV8Internal::removeChildMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
     {"isSameNode", NodeV8Internal::isSameNodeMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
+    {"getPtrForTest", NodeV8Internal::getPtrForTestMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
 };
 
 static void installV8NodeTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
@@ -991,7 +1011,9 @@ static void installV8NodeTemplate(v8::Local<v8::FunctionTemplate> functionTempla
     static_assert(0x20 == Node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC, "the value of Node_DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Node::domTemplate(v8::Isolate* isolate)

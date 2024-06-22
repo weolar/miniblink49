@@ -410,7 +410,9 @@ static void installV8ResponseTemplate(v8::Local<v8::FunctionTemplate> functionTe
     V8DOMConfiguration::installMethod(isolate, functionTemplate, v8::Local<v8::Signature>(), v8::None, redirectMethodConfiguration);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Response::domTemplate(v8::Isolate* isolate)

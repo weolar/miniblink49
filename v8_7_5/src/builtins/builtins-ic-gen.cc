@@ -5,6 +5,8 @@
 #include "src/builtins/builtins.h"
 #include "src/ic/accessor-assembler.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

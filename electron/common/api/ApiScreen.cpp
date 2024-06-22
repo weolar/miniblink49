@@ -11,19 +11,22 @@
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "gin/dictionary.h"
-#include <windows.h>
 #include "base/strings/string_util.h"
+#include <windows.h>
+#include <cmath>
 
 namespace {
 
-void setEmptyRECT(RECT* rc) {
+void setEmptyRECT(RECT* rc)
+{
     rc->left = 0;
     rc->top = 0;
     rc->right = 0;
     rc->bottom = 0;
 }
 
-RECT scaleToEnclosingRect(const RECT& rect, float x_scale, float y_scale) {
+RECT scaleToEnclosingRect(const RECT& rect, float x_scale, float y_scale)
+{
     if (x_scale == 1.f && y_scale == 1.f)
         return rect;
 
@@ -31,10 +34,10 @@ RECT scaleToEnclosingRect(const RECT& rect, float x_scale, float y_scale) {
     // haven't checked to ensure that the clamping behavior of the helper
     // functions doesn't degrade performance, and callers shouldn't be passing
     // values that cause overflow anyway.
-//     DCHECK(base::IsValueInRangeForNumericType<int>(std::floor(rect.x() * x_scale)));
-//     DCHECK(base::IsValueInRangeForNumericType<int>(std::floor(rect.y() * y_scale)));
-//     DCHECK(base::IsValueInRangeForNumericType<int>(std::ceil(rect.right() * x_scale)));
-//     DCHECK(base::IsValueInRangeForNumericType<int>(std::ceil(rect.bottom() * y_scale)));
+    //     DCHECK(base::IsValueInRangeForNumericType<int>(std::floor(rect.x() * x_scale)));
+    //     DCHECK(base::IsValueInRangeForNumericType<int>(std::floor(rect.y() * y_scale)));
+    //     DCHECK(base::IsValueInRangeForNumericType<int>(std::ceil(rect.right() * x_scale)));
+    //     DCHECK(base::IsValueInRangeForNumericType<int>(std::ceil(rect.bottom() * y_scale)));
     int x = static_cast<int>(std::floor(rect.left * x_scale));
     int y = static_cast<int>(std::floor(rect.right * y_scale));
     int r = rect.left == rect.right ? x : static_cast<int>(std::ceil(rect.right * x_scale));
@@ -76,12 +79,14 @@ public:
         TOUCH_SUPPORT_UNAVAILABLE,
     };
 
-    Display() 
-        : Display(-1) {
+    Display()
+        : Display(-1)
+    {
     }
 
     Display(uint32_t id)
-        : m_id(id) {
+        : m_id(id)
+    {
         setEmptyRECT(&m_screenRect);
         setEmptyRECT(&m_screenWorkRect);
         setEmptyRECT(&m_workArea);
@@ -116,7 +121,8 @@ private:
 class DisplayInfo {
 public:
     DisplayInfo(const MONITORINFOEX& monitor_info, float device_scale_factor)
-        : DisplayInfo(monitor_info, device_scale_factor, GetRotationForDevice(monitor_info.szDevice)) {
+        : DisplayInfo(monitor_info, device_scale_factor, GetRotationForDevice(monitor_info.szDevice))
+    {
     }
 
     DisplayInfo(const MONITORINFOEX& monitor_info, float device_scale_factor, Display::Rotation rotation)
@@ -124,10 +130,12 @@ public:
         , rotation_(rotation)
         , screen_rect_(monitor_info.rcMonitor)
         , screen_work_rect_(monitor_info.rcWork)
-        , device_scale_factor_(device_scale_factor) {
+        , device_scale_factor_(device_scale_factor)
+    {
     }
 
-    static uint32_t getHash(const char* str, uint32_t len) {
+    static uint32_t getHash(const char* str, uint32_t len)
+    {
         uint32_t hash = 1315423911;
         uint32_t i = 0;
 
@@ -139,12 +147,14 @@ public:
     }
 
     // static
-    static uint32_t DeviceIdFromDeviceName(const wchar_t* deviceName) {
+    static uint32_t DeviceIdFromDeviceName(const wchar_t* deviceName)
+    {
         std::string deviceNameA = base::WideToUTF8(deviceName);
         return static_cast<uint32_t>(getHash(deviceNameA.c_str(), deviceNameA.length()));
     }
 
-    static Display::Rotation GetRotationForDevice(const wchar_t* device_name) {
+    static Display::Rotation GetRotationForDevice(const wchar_t* device_name)
+    {
         DEVMODE mode;
         ::ZeroMemory(&mode, sizeof(mode));
         mode.dmSize = sizeof(mode);
@@ -184,15 +194,16 @@ private:
 // It holds a display and additional parameters used for DPI calculations.
 class ScreenWinDisplay {
 public:
-    ScreenWinDisplay() {
+    ScreenWinDisplay()
+    {
         setEmptyRECT(&pixel_bounds_);
     }
 
     //explicit ScreenWinDisplay(const DisplayInfo& display_info);
-    ScreenWinDisplay(const Display& display, const DisplayInfo& display_info) 
+    ScreenWinDisplay(const Display& display, const DisplayInfo& display_info)
         : display_(display)
-        , pixel_bounds_(display_info.screen_rect()) {
-
+        , pixel_bounds_(display_info.screen_rect())
+    {
     }
 
     const Display& display() const { return display_; }
@@ -205,15 +216,18 @@ private:
 
 class ScreenWin {
 public:
-    void Initialize() {
+    void Initialize()
+    {
         updateFromDisplayInfos(getDisplayInfosFromSystem());
     }
 
-    static float getMonitorScaleFactor(HMONITOR monitor) {
+    static float getMonitorScaleFactor(HMONITOR monitor)
+    {
         return 1.0f;
     }
 
-    static MONITORINFOEX monitorInfoFromHMONITOR(HMONITOR monitor) {
+    static MONITORINFOEX monitorInfoFromHMONITOR(HMONITOR monitor)
+    {
         MONITORINFOEX monitor_info;
         ::ZeroMemory(&monitor_info, sizeof(monitor_info));
         monitor_info.cbSize = sizeof(monitor_info);
@@ -221,26 +235,29 @@ public:
         return monitor_info;
     }
 
-
-    static BOOL CALLBACK EnumMonitorCallback(HMONITOR monitor, HDC hdc, LPRECT rect, LPARAM data) {
+    static BOOL CALLBACK EnumMonitorCallback(HMONITOR monitor, HDC hdc, LPRECT rect, LPARAM data)
+    {
         std::vector<DisplayInfo>* display_infos = reinterpret_cast<std::vector<DisplayInfo>*>(data);
         DCHECK(display_infos);
         display_infos->push_back(DisplayInfo(monitorInfoFromHMONITOR(monitor), getMonitorScaleFactor(monitor)));
         return TRUE;
     }
 
-    static std::vector<DisplayInfo> getDisplayInfosFromSystem() {
+    static std::vector<DisplayInfo> getDisplayInfosFromSystem()
+    {
         std::vector<DisplayInfo> display_infos;
         ::EnumDisplayMonitors(nullptr, nullptr, EnumMonitorCallback, reinterpret_cast<LPARAM>(&display_infos));
         DCHECK(static_cast<size_t>(::GetSystemMetrics(SM_CMONITORS)) == display_infos.size());
         return display_infos;
     }
 
-    MONITORINFOEX monitorInfoFromWindow(HWND hwnd, DWORD default_options) const {
+    MONITORINFOEX monitorInfoFromWindow(HWND hwnd, DWORD default_options) const
+    {
         return monitorInfoFromHMONITOR(::MonitorFromWindow(hwnd, default_options));
     }
 
-    Display createDisplayFromDisplayInfo(const DisplayInfo& display_info) {
+    Display createDisplayFromDisplayInfo(const DisplayInfo& display_info)
+    {
         Display display(display_info.id());
         float scale_factor = display_info.device_scale_factor();
         display.setDeviceScaleFactor(scale_factor);
@@ -249,7 +266,7 @@ public:
         display.setRotation(display_info.rotation());
         return display;
     }
-    
+
     // Windows historically has had a hard time handling displays of DPIs higher
     // than 96. Handling multiple DPI displays means we have to deal with Windows'
     // monitor physical coordinates and map into Chrome's DIP coordinates.
@@ -267,7 +284,8 @@ public:
     // insufficient room to lay out its children. In these cases, a DIP point could
     // map to multiple screen points due to overlap. The first discovered screen
     // will take precedence.
-    std::vector<ScreenWinDisplay> DisplayInfosToScreenWinDisplays(const std::vector<DisplayInfo>& display_infos) {
+    std::vector<ScreenWinDisplay> DisplayInfosToScreenWinDisplays(const std::vector<DisplayInfo>& display_infos)
+    {
         // Layout and create the ScreenWinDisplays.
         std::vector<Display> displays;
         for (const auto& display_info : display_infos)
@@ -281,12 +299,13 @@ public:
         return screen_win_displays;
     }
 
-
-    void updateFromDisplayInfos(const std::vector<DisplayInfo>& display_infos) {
+    void updateFromDisplayInfos(const std::vector<DisplayInfo>& display_infos)
+    {
         screen_win_displays_ = DisplayInfosToScreenWinDisplays(display_infos);
     }
 
-    ScreenWinDisplay getScreenWinDisplay(const MONITORINFOEX& monitor_info) const {
+    ScreenWinDisplay getScreenWinDisplay(const MONITORINFOEX& monitor_info) const
+    {
         uint32_t id = DisplayInfo::DeviceIdFromDeviceName(monitor_info.szDevice);
         std::vector<ScreenWinDisplay>::const_iterator screen_win_display = screen_win_displays_.begin();
         for (; screen_win_display != screen_win_displays_.end(); ++screen_win_display) {
@@ -300,17 +319,19 @@ public:
         return ScreenWinDisplay();
     }
 
-    ScreenWinDisplay getPrimaryScreenWinDisplay() const {
+    ScreenWinDisplay getPrimaryScreenWinDisplay() const
+    {
         MONITORINFOEX monitor_info = monitorInfoFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
         ScreenWinDisplay screen_win_display = getScreenWinDisplay(monitor_info);
         Display display = screen_win_display.display();
         // The Windows primary monitor is defined to have an origin of (0, 0).
-//         DCHECK(0 == display.bounds().origin().x());
-//         DCHECK(0 == display.bounds().origin().y());
+        //         DCHECK(0 == display.bounds().origin().x());
+        //         DCHECK(0 == display.bounds().origin().y());
         return screen_win_display;
     }
 
-    std::vector<Display> screenWinDisplaysToDisplays(const std::vector<ScreenWinDisplay>& screen_win_displays) const {
+    std::vector<Display> screenWinDisplaysToDisplays(const std::vector<ScreenWinDisplay>& screen_win_displays) const
+    {
         std::vector<Display> displays;
         for (const auto& screen_win_display : screen_win_displays)
             displays.push_back(screen_win_display.display());
@@ -318,7 +339,8 @@ public:
         return displays;
     }
 
-    std::vector<Display> getAllDisplays() const {
+    std::vector<Display> getAllDisplays() const
+    {
         return screenWinDisplaysToDisplays(screen_win_displays_);
     }
 
@@ -328,12 +350,14 @@ private:
 
 class Screen : public mate::EventEmitter<Screen> {
 public:
-    explicit Screen(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    explicit Screen(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+    {
         gin::Wrappable<Screen>::InitWith(isolate, wrapper);
         m_screen.Initialize();
     }
 
-    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+    {
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Screen"));
@@ -343,19 +367,22 @@ public:
         builder.SetMethod("getAllDisplays", &Screen::getAllDisplaysApi);
         builder.SetMethod("getDisplayNearestPoint", &Screen::getDisplayNearestPointApi);
         builder.SetMethod("getDisplayMatching", &Screen::getDisplayMatchingApi);
+        builder.SetMethod("addListener", &Screen::addListenerApi);        
 
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "Screen"), prototype->GetFunction());
     }
 
-    void nullFunction() {
+    void nullFunction()
+    {
     }
 
-    void getCursorScreenPointApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getCursorScreenPointApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         POINT pt;
         ::GetCursorPos(&pt);
-//         gfx::Point cursor_pos_pixels(pt);
-//         return ScreenToDIPPoint(cursor_pos_pixels);
+        //         gfx::Point cursor_pos_pixels(pt);
+        //         return ScreenToDIPPoint(cursor_pos_pixels);
         base::DictionaryValue point;
         point.SetInteger("x", pt.x);
         point.SetInteger("y", pt.y);
@@ -363,7 +390,8 @@ public:
         args.GetReturnValue().Set(v8Value);
     }
 
-    void getPrimaryDisplayApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getPrimaryDisplayApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         //return screen_->GetPrimaryDisplay();
         ScreenWinDisplay screenWinDisplay = m_screen.getPrimaryScreenWinDisplay();
         base::DictionaryValue* display = createDisplayDictionaryValue(screenWinDisplay.display());
@@ -373,7 +401,8 @@ public:
         delete display;
     }
 
-    static base::DictionaryValue* createRectDictionaryValue(const RECT& rc) {
+    static base::DictionaryValue* createRectDictionaryValue(const RECT& rc)
+    {
         base::DictionaryValue* out = new base::DictionaryValue();
         out->SetInteger("x", rc.left);
         out->SetInteger("y", rc.top);
@@ -382,14 +411,16 @@ public:
         return out;
     }
 
-    static base::DictionaryValue* createSizeDictionaryValue(const SIZE& size) {
+    static base::DictionaryValue* createSizeDictionaryValue(const SIZE& size)
+    {
         base::DictionaryValue* out = new base::DictionaryValue();
         out->SetInteger("width", size.cx);
         out->SetInteger("height", size.cy);
         return out;
     }
 
-    static base::DictionaryValue* createDisplayDictionaryValue(const Display& display) {
+    static base::DictionaryValue* createDisplayDictionaryValue(const Display& display)
+    {
         // id Integer - 与display 相关的唯一性标志.
         // rotation Integer - 可以是 0, 1, 2, 3, 每个代表了屏幕旋转的度数 0, 90, 180, 270.
         // scaleFactor Number - Output device's pixel scale factor.
@@ -416,45 +447,57 @@ public:
         return out;
     }
 
-    void getAllDisplaysApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getAllDisplaysApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         std::vector<Display> display = m_screen.getAllDisplays();
 
         base::ListValue displays;
-       
+
         for (std::vector<Display>::const_iterator it = display.begin(); it != display.end(); ++it) {
             base::DictionaryValue* displayDictionaryValue = createDisplayDictionaryValue(*it);
             displays.Append(displayDictionaryValue);
         }
-        
+
         v8::Local<v8::Value> v8Value = gin::Converter<base::ListValue>::ToV8(args.GetIsolate(), displays);
         args.GetReturnValue().Set(v8Value);
     }
 
     // const gfx::Point& point
-    void getDisplayNearestPointApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getDisplayNearestPointApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         //return screen_->GetDisplayNearestPoint(point);
         getPrimaryDisplayApi(args);
     }
 
     // const gfx::Rect& match_rect
-    void getDisplayMatchingApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getDisplayMatchingApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         //return screen_->GetDisplayMatching(match_rect);
         getPrimaryDisplayApi(args);
     }
 
-    void onDisplayAdded(const Display& new_display) {
+    void addListenerApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
+        OutputDebugStringA("Screen.addListener\n");
+    }
+
+    void onDisplayAdded(const Display& new_display)
+    {
         //Emit("display-added", new_display);
     }
 
-    void onDisplayRemoved(const Display& old_display) {
+    void onDisplayRemoved(const Display& old_display)
+    {
         //Emit("display-removed", old_display);
     }
 
-    void OnDisplayMetricsChanged(const Display& display, uint32_t changed_metrics) {
+    void OnDisplayMetricsChanged(const Display& display, uint32_t changed_metrics)
+    {
         //Emit("display-metrics-changed", display, MetricsToArray(changed_metrics));
     }
-    
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         v8::Isolate* isolate = args.GetIsolate();
         if (args.IsConstructCall()) {
             new Screen(isolate, args.This());
@@ -473,14 +516,15 @@ public:
 v8::Persistent<v8::Function> Screen::constructor;
 gin::WrapperInfo Screen::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-void initializeScreenApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> target, v8::Local<v8::Context> context, void* priv) {
+void initializeCommonScreenApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> target, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     Screen::init(env->isolate(), exports);
 }
 
-}  // namespace
+} // namespace
 
 static const char CommonScreenNative[] = "console.log('CommonScreenNative');;";
-static NodeNative nativeCommonScreenNative{ "Screen", CommonScreenNative, sizeof(CommonScreenNative) - 1 };
+static NodeNative nativeCommonScreenNative { "Screen", CommonScreenNative, sizeof(CommonScreenNative) - 1 };
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_screen, initializeScreenApi, &nativeCommonScreenNative)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_screen, initializeCommonScreenApi, &nativeCommonScreenNative)

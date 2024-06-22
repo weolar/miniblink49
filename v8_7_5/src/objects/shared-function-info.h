@@ -13,7 +13,7 @@
 #include "src/objects/slots.h"
 #include "src/objects/smi.h"
 #include "src/objects/struct.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"
+//#include "testing/gtest/include/gtest/gtest_prod.h"
 #include "torque-generated/class-definitions-from-dsl.h"
 
 // Has to be the last include (doesn't have include guards):
@@ -132,9 +132,8 @@ class UncompiledData : public HeapObject {
   DEFINE_FIELD_OFFSET_CONSTANTS(HeapObject::kHeaderSize, UNCOMPILED_DATA_FIELDS)
 #undef UNCOMPILED_DATA_FIELDS
 
-  typedef FixedBodyDescriptor<kStartOfPointerFieldsOffset,
-                              kEndOfTaggedFieldsOffset, kSize>
-      BodyDescriptor;
+  using BodyDescriptor = FixedBodyDescriptor<kStartOfPointerFieldsOffset,
+                                             kEndOfTaggedFieldsOffset, kSize>;
 
   // Clear uninitialized padding space.
   inline void clear_padding();
@@ -154,7 +153,7 @@ class UncompiledDataWithoutPreparseData : public UncompiledData {
   static const int kSize = UncompiledData::kSize;
 
   // No extra fields compared to UncompiledData.
-  typedef UncompiledData::BodyDescriptor BodyDescriptor;
+  using BodyDescriptor = UncompiledData::BodyDescriptor;
 
   OBJECT_CONSTRUCTORS(UncompiledDataWithoutPreparseData, UncompiledData);
 };
@@ -193,11 +192,10 @@ class UncompiledDataWithPreparseData : public UncompiledData {
   // Make sure the size is aligned
   STATIC_ASSERT(IsAligned(kSize, kTaggedSize));
 
-  typedef SubclassBodyDescriptor<
+  using BodyDescriptor = SubclassBodyDescriptor<
       UncompiledData::BodyDescriptor,
       FixedBodyDescriptor<kStartOfPointerFieldsOffset, kEndOfTaggedFieldsOffset,
-                          kSize>>
-      BodyDescriptor;
+                          kSize>>;
 
   OBJECT_CONSTRUCTORS(UncompiledDataWithPreparseData, UncompiledData);
 };
@@ -207,15 +205,8 @@ class InterpreterData : public Struct {
   DECL_ACCESSORS(bytecode_array, BytecodeArray)
   DECL_ACCESSORS(interpreter_trampoline, Code)
 
-// Layout description.
-#define INTERPRETER_DATA_FIELDS(V)             \
-  V(kBytecodeArrayOffset, kTaggedSize)         \
-  V(kInterpreterTrampolineOffset, kTaggedSize) \
-  /* Total size. */                            \
-  V(kSize, 0)
-
-  DEFINE_FIELD_OFFSET_CONSTANTS(Struct::kHeaderSize, INTERPRETER_DATA_FIELDS)
-#undef INTERPRETER_DATA_FIELDS
+  DEFINE_FIELD_OFFSET_CONSTANTS(Struct::kHeaderSize,
+                                TORQUE_GENERATED_INTERPRETER_DATA_FIELDS)
 
   DECL_CAST(InterpreterData)
   DECL_PRINTER(InterpreterData)
@@ -229,14 +220,16 @@ class InterpreterData : public Struct {
 class SharedFunctionInfo : public HeapObject {
  public:
   NEVER_READ_ONLY_SPACE
-  static constexpr Object const kNoSharedNameSentinel = Smi::kZero;
+
+  V8_EXPORT_PRIVATE static constexpr Object const kNoSharedNameSentinel =
+      Smi::kZero;
 
   // [name]: Returns shared name if it exists or an empty string otherwise.
   inline String Name() const;
   inline void SetName(String name);
 
   // Get the code object which represents the execution of this function.
-  Code GetCode() const;
+  V8_EXPORT_PRIVATE Code GetCode() const;
 
   // Get the abstract code associated with the function, which will either be
   // a Code object or a BytecodeArray.
@@ -263,7 +256,6 @@ class SharedFunctionInfo : public HeapObject {
   static const int kInitialLength = kEntriesStart + kEntryLength;
 
   static const int kNotFound = -1;
-  static const uint16_t kInvalidLength = static_cast<uint16_t>(-1);
 
   // [scope_info]: Scope info.
   DECL_ACCESSORS(scope_info, ScopeInfo)
@@ -306,8 +298,7 @@ class SharedFunctionInfo : public HeapObject {
   // Use up to 2^16-2 parameters (16 bits of values, where one is reserved for
   // kDontAdaptArgumentsSentinel). The value is only reliable when the function
   // has been compiled.
-  inline uint16_t GetLength() const;
-  inline bool HasLength() const;
+  inline uint16_t length() const;
   inline void set_length(int value);
 
   // [internal formal parameter count]: The declared number of parameters.
@@ -339,6 +330,7 @@ class SharedFunctionInfo : public HeapObject {
   DECL_ACCESSORS(function_data, Object)
 
   inline bool IsApiFunction() const;
+  inline bool is_class_constructor() const;
   inline FunctionTemplateInfo get_api_func_data();
   inline void set_api_func_data(FunctionTemplateInfo data);
   inline bool HasBytecodeArray() const;
@@ -386,7 +378,7 @@ class SharedFunctionInfo : public HeapObject {
 
   // Break infos are contained in DebugInfo, this is a convenience method
   // to simplify access.
-  bool HasBreakInfo() const;
+  V8_EXPORT_PRIVATE bool HasBreakInfo() const;
   bool BreakAtEntry() const;
 
   // Coverage infos are contained in DebugInfo, this is a convenience method
@@ -476,6 +468,9 @@ class SharedFunctionInfo : public HeapObject {
   // is only executed once.
   DECL_BOOLEAN_ACCESSORS(is_oneshot_iife)
 
+  // Whether or not the number of expected properties may change.
+  DECL_BOOLEAN_ACCESSORS(are_properties_final)
+
   // Indicates that the function represented by the shared function info
   // cannot observe the actual parameters passed at a call site, which
   // means the function doesn't use the arguments object, doesn't use
@@ -542,8 +537,8 @@ class SharedFunctionInfo : public HeapObject {
 
   // Flush compiled data from this function, setting it back to CompileLazy and
   // clearing any compiled metadata.
-  static void DiscardCompiled(Isolate* isolate,
-                              Handle<SharedFunctionInfo> shared_info);
+  V8_EXPORT_PRIVATE static void DiscardCompiled(
+      Isolate* isolate, Handle<SharedFunctionInfo> shared_info);
 
   // Discard the compiled metadata. If called during GC then
   // |gc_notify_updated_slot| should be used to record any slot updates.
@@ -553,8 +548,10 @@ class SharedFunctionInfo : public HeapObject {
           gc_notify_updated_slot =
               [](HeapObject object, ObjectSlot slot, HeapObject target) {});
 
-  // Returns true if the function has old bytecode that could be flushed.
-  inline bool ShouldFlushBytecode();
+  // Returns true if the function has old bytecode that could be flushed. This
+  // function shouldn't access any flags as it is used by concurrent marker.
+  // Hence it takes the mode as an argument.
+  inline bool ShouldFlushBytecode(BytecodeFlushMode mode);
 
   // Check whether or not this function is inlineable.
   bool IsInlineable();
@@ -571,8 +568,10 @@ class SharedFunctionInfo : public HeapObject {
   static void InitFromFunctionLiteral(Handle<SharedFunctionInfo> shared_info,
                                       FunctionLiteral* lit, bool is_toplevel);
 
-  // Sets the expected number of properties based on estimate from parser.
-  void SetExpectedNofPropertiesFromEstimate(FunctionLiteral* literal);
+  // Updates the expected number of properties based on estimate from parser.
+  void UpdateExpectedNofPropertiesFromEstimate(FunctionLiteral* literal);
+  void UpdateAndFinalizeExpectedNofPropertiesFromEstimate(
+      FunctionLiteral* literal);
 
   // Sets the FunctionTokenOffset field based on the given token position and
   // start position.
@@ -583,7 +582,7 @@ class SharedFunctionInfo : public HeapObject {
       Isolate* isolate, Handle<SharedFunctionInfo> shared_info);
 
   // Hash based on function literal id and script id.
-  uint32_t Hash();
+  V8_EXPORT_PRIVATE uint32_t Hash();
 
   inline bool construct_as_builtin() const;
 
@@ -619,10 +618,10 @@ class SharedFunctionInfo : public HeapObject {
   // Iterate over all shared function infos in a given script.
   class ScriptIterator {
    public:
-    ScriptIterator(Isolate* isolate, Script script);
+    V8_EXPORT_PRIVATE ScriptIterator(Isolate* isolate, Script script);
     ScriptIterator(Isolate* isolate,
                    Handle<WeakFixedArray> shared_function_infos);
-    SharedFunctionInfo Next();
+    V8_EXPORT_PRIVATE SharedFunctionInfo Next();
     int CurrentIndex() const { return index_ - 1; }
 
     // Reset the iterator to run on |script|.
@@ -638,8 +637,8 @@ class SharedFunctionInfo : public HeapObject {
   // Iterate over all shared function infos on the heap.
   class GlobalIterator {
    public:
-    explicit GlobalIterator(Isolate* isolate);
-    SharedFunctionInfo Next();
+    V8_EXPORT_PRIVATE explicit GlobalIterator(Isolate* isolate);
+    V8_EXPORT_PRIVATE SharedFunctionInfo Next();
 
    private:
     Script::Iterator script_iterator_;
@@ -687,7 +686,7 @@ class SharedFunctionInfo : public HeapObject {
   V(HasReportedBinaryCoverageBit, bool, 1, _)                \
   V(IsNamedExpressionBit, bool, 1, _)                        \
   V(IsTopLevelBit, bool, 1, _)                               \
-  V(IsOneshotIIFEBit, bool, 1, _)                            \
+  V(IsOneshotIIFEOrPropertiesAreFinalBit, bool, 1, _)        \
   V(IsSafeToSkipArgumentsAdaptorBit, bool, 1, _)
   DEFINE_BIT_FIELDS(FLAGS_BIT_FIELDS)
 #undef FLAGS_BIT_FIELDS
@@ -720,15 +719,23 @@ class SharedFunctionInfo : public HeapObject {
   // function.
   DECL_ACCESSORS(outer_scope_info, HeapObject)
 
+  // [is_oneshot_iife_or_properties_are_final]: This bit is used to track
+  // two mutually exclusive cases. Either this SharedFunctionInfo is
+  // a oneshot_iife or we have finished parsing its properties. These cases
+  // are mutually exclusive because the properties final bit is only used by
+  // class constructors to handle lazily parsed properties and class
+  // constructors can never be oneshot iifes.
+  DECL_BOOLEAN_ACCESSORS(is_oneshot_iife_or_properties_are_final)
+
   inline void set_kind(FunctionKind kind);
 
   inline void set_needs_home_object(bool value);
 
+  inline uint16_t get_property_estimate_from_literal(FunctionLiteral* literal);
+
   friend class Factory;
   friend class V8HeapExplorer;
-  FRIEND_TEST(PreParserTest, LazyFunctionLength);
-
-  inline uint16_t length() const;
+  //FRIEND_TEST(PreParserTest, LazyFunctionLength);
 
   // Find the index of this function in the parent script. Slow path of
   // FunctionLiteralId.

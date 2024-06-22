@@ -62,6 +62,7 @@ private:
     void performBasicFetch();
     void performNetworkError(const String& message);
     void performHTTPFetch(bool corsFlag, bool corsPreflightFlag);
+    void performDataFetch();
     void failed(const String& message);
     void notifyFinished();
     Document* document() const;
@@ -121,6 +122,34 @@ void FetchManager::Loader::didReceiveResponse(unsigned long, const ResourceRespo
             break;
         }
     }
+
+//     if (response.url().protocolIsData()) {
+//         if (fetch_request_data_->Url() == response.CurrentRequestUrl()) {
+//             // A direct request to data.
+//             tainting = FetchRequestData::kBasicTainting;
+//         } else {
+//             // A redirect to data: scheme occured.
+//             // Redirects to data URLs are rejected by the spec because
+//             // same-origin data-URL flag is unset, except for no-cors mode.
+//             // TODO(hiroshige): currently redirects to data URLs in no-cors
+//             // mode is also rejected by Chromium side.
+//             switch (fetch_request_data_->Mode()) {
+//             case RequestMode::kNoCors:
+//                 tainting = FetchRequestData::kOpaqueTainting;
+//                 break;
+//             case RequestMode::kSameOrigin:
+//             case RequestMode::kCors:
+//             case RequestMode::kCorsWithForcedPreflight:
+//             case RequestMode::kNavigate:
+//                 PerformNetworkError("Fetch API cannot load " +
+//                     fetch_request_data_->Url().GetString() +
+//                     ". Redirects to data: URL are allowed only when "
+//                     "mode is \"no-cors\".");
+//                 return;
+//             }
+//         }
+//     }
+
     FetchResponseData* responseData = FetchResponseData::createWithBuffer(BodyStreamBuffer::create(createFetchDataConsumerHandleFromWebHandle(handle)));
     responseData->setStatus(response.httpStatusCode());
     responseData->setStatusMessage(response.httpStatusText());
@@ -141,10 +170,13 @@ void FetchManager::Loader::didReceiveResponse(unsigned long, const ResourceRespo
         taintedResponse = responseData->createOpaqueFilteredResponse();
         break;
     }
-    Response* r = Response::create(m_resolver->executionContext(), taintedResponse);
-    r->headers()->setGuard(Headers::ImmutableGuard);
-    m_resolver->resolve(r);
-    m_resolver.clear();
+
+    if (m_resolver.get()) {
+        Response* r = Response::create(m_resolver->executionContext(), taintedResponse);
+        r->headers()->setGuard(Headers::ImmutableGuard);
+        m_resolver->resolve(r);
+        m_resolver.clear();
+    }
 }
 
 void FetchManager::Loader::didFinishLoading(unsigned long, double)
@@ -297,6 +329,8 @@ void FetchManager::Loader::performBasicFetch()
     if (m_request->url().protocolIsInHTTPFamily()) {
         // "Return the result of performing an HTTP fetch using |request|."
         performHTTPFetch(false, false);
+    } else if (m_request->url().protocolIsData()) {
+        performDataFetch();     
     } else {
         // FIXME: implement other protocols.
         performNetworkError("Fetch API cannot load " + m_request->url().string() + ". URL scheme \"" + m_request->url().protocol() + "\" is not supported.");
@@ -392,6 +426,38 @@ void FetchManager::Loader::performHTTPFetch(bool corsFlag, bool corsPreflightFla
     m_loader = ThreadableLoader::create(*executionContext(), this, request, threadableLoaderOptions, resourceLoaderOptions);
     if (!m_loader)
         performNetworkError("Can't create ThreadableLoader");
+}
+
+// performDataFetch() is almost the same as performHTTPFetch(), except for:
+// - We set AllowCrossOriginRequests to allow requests to data: URLs in
+//   'same-origin' mode.
+// - We reject non-GET method.
+void FetchManager::Loader::performDataFetch()
+{
+    ASSERT(m_request->url().protocolIsData());
+
+    ResourceRequest request(m_request->url());
+    request.setRequestContext(m_request->context());
+    request.setUseStreamOnResponse(true);
+    request.setHTTPMethod(m_request->method());
+    // request.setFetchRedirectMode(WebURLRequest::FetchRedirectModeError);
+
+    // We intentionally skip 'setExternalRequestStateFromRequestorAddressSpace',
+    // as 'data:' can never be external.
+    ResourceLoaderOptions resourceLoaderOptions;
+    resourceLoaderOptions.dataBufferingPolicy = DoNotBufferData;
+    resourceLoaderOptions.securityOrigin = m_request->origin().get();
+
+    ThreadableLoaderOptions threadableLoaderOptions;
+    threadableLoaderOptions.contentSecurityPolicyEnforcement =
+        ContentSecurityPolicy::shouldBypassMainWorld(executionContext())
+        ? DoNotEnforceContentSecurityPolicy
+        : EnforceConnectSrcDirective;
+    threadableLoaderOptions.crossOriginRequestPolicy = AllowCrossOriginRequests;
+
+    //InspectorInstrumentation::willStartFetch(m_executionContext, this);
+    m_loader = ThreadableLoader::create(*executionContext(), this, request, threadableLoaderOptions, resourceLoaderOptions);
+
 }
 
 void FetchManager::Loader::failed(const String& message)

@@ -171,9 +171,11 @@ static void mainThreadadjustAmountOfExternalAllocatedMemory(void* sizePtr)
 static void adjustAmountOfExternalAllocatedMemory(int size)
 {
     if (!v8::Isolate::GetCurrent()) {
-        callOnMainThreadFunction(mainThreadadjustAmountOfExternalAllocatedMemory, (void*)size);
+        //callOnMainThreadFunction(mainThreadadjustAmountOfExternalAllocatedMemory, (void*)size);
         return;
     }
+    static int s_memoryCount = 0;
+    s_memoryCount += size;
     v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(size);
 }
 

@@ -142,6 +142,8 @@ void CSSVariableResolver::resolveAndApplyVariableReferences(StyleResolverState& 
 	bool usesRemUnits = false;
 	CSSParserTokenRange range(tokens);
 	CSSParserValueList valueList(range, usesRemUnits);
+    if (!valueList.size())
+        return; // Parser error
     CSSPropertyParser::parseValue(id, false, &valueList, context, parsedProperties, StyleRule::Type::Style);
 
     unsigned parsedPropertiesCount = parsedProperties.size();

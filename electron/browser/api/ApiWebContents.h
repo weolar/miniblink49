@@ -3,10 +3,16 @@
 #define browser_api_ApiWebContents_h
 
 #include "node/nodeblink.h"
-#include "wke.h"
-#include "gin/dictionary.h"
+#include "browser/api/WindowState.h"
 #include "common/api/EventEmitter.h"
+#include "node/src/env.h"
+#include "../mbvip/core/mb.h"
+#include "gin/dictionary.h"
 #include <set>
+
+namespace node {
+class Environment;
+}
 
 namespace base {
 class ListValue;
@@ -14,14 +20,28 @@ class ListValue;
 
 namespace atom {
 
+static const int kNotSetXYFlag = 400/*-8467*/;
+
 class NodeBindings;
 class WebContents;
 class WindowInterface;
 
+inline static bool isRectEqual(const RECT& a, const RECT& b)
+{
+    return (a.left == b.left) && (a.top == b.top) && (a.right == b.right) && (a.bottom == b.bottom);
+}
+
+inline static bool isPointInRect(const RECT& a, const POINT& b)
+{
+    return b.x >= a.left && b.x <= a.right
+        && b.y >= a.top && b.y <= a.bottom;
+}
+
 class WebContentsObserver {
 public:
-    virtual void onWebContentsCreated(WebContents* contents) {}
-    virtual void onWebContentsDeleted(WebContents* contents) {}
+    virtual void onWebContentsCreated(WebContents* contents) { }
+    virtual void onWebContentsDeleted(WebContents* contents) { }
+    virtual void onWebContentsReadyToShow(WebContents* contents) { }
 };
 
 class WebContents : public mate::EventEmitter<WebContents> {
@@ -52,7 +72,8 @@ public:
         int maxWidth;
         int maxHeight;
 
-        CreateWindowParam() {
+        CreateWindowParam()
+        {
             x = 0;
             y = 0;
             width = 0;
@@ -83,26 +104,36 @@ public:
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target, node::Environment* env);
     static WebContents* create(v8::Isolate* isolate, gin::Dictionary options, WindowInterface* owner);
 
-    explicit WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper);
+    explicit WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, const gin::Dictionary& options);
     ~WebContents();
 
+    void destroyed();
     void addObserver(WebContentsObserver* observer);
     void removeObserver(WebContentsObserver* observer);
 
-    wkeWebView getWkeView() const { return m_view; }
+    mbWebView getMbView() const { return m_view; }
     WindowInterface* getOwner() const { return m_owner; }
 
-    void onNewWindowInBlinkThread(int width, int height, const CreateWindowParam* createWindowParam);
+    //void onNewWindowInUiThread(int x, int y, int width, int height, const CreateWindowParam* createWindowParam);
 
     void rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams);
     void rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
     void anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams);
-    static void rendererSendMessageToRenderer(wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args);
+    static void rendererSendMessageToRenderer(mbWebView view, mbWebFrameHandle frame, const std::string& channel, const base::ListValue& args);
+
+    int getIdApi() const;
+    static WebContents* fromId(int id);
 
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void getSessionApi(const v8::FunctionCallbackInfo<v8::Value>& info) const;
+    void zoomFactorApi(const v8::FunctionCallbackInfo<v8::Value>& info) const;
+    bool canGoBackApi() const;
+    bool canGoForwardApi() const;
+    void setZoomLevelApi(float level);
+    float getZoomLevelApi() const;
+    void printToPDFApi();
 
-    int getIdApi() const;
     void _loadURLApi(const std::string& url);
     int getProcessIdApi() const;
     bool equalApi() const;
@@ -110,7 +141,7 @@ private:
     static void getFocusedWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info);
     static void getAllWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info);
     static void fromIdApi(const v8::FunctionCallbackInfo<v8::Value>& info);
-
+    
     std::string _getURLApi();
 
     std::string getTitleApi();
@@ -183,41 +214,67 @@ private:
     void capturePageApi();
     void setEmbedderApi();
     bool isDestroyedApi() const;
-    
+    void reloadIgnoringCacheApi();
+
     void nullFunction();
 
-    static void staticDidCreateScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId);
-    void onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId);
-    static void staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int worldId);
-    void onWillReleaseScriptContextCallback(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int worldId);
+    static void __stdcall staticDidCreateScriptContextCallback(mbWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId);
+    void onDidCreateScriptContext(mbWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId);
+    static void __stdcall staticOnWillReleaseScriptContextCallback(mbWebView webView, void* param, void* frame, void* context, int worldId);
+    void onWillReleaseScriptContextCallback(mbWebView webView, void* frame, v8::Local<v8::Context>* context, int worldId);
+    static mbDownloadOpt __stdcall staticOnDownloadCallback(mbWebView, void*, size_t, const char*, const char*, const char*, mbNetJob, mbNetJobDataBind*);
+    static void MB_CALL_TYPE onDocumentReadyInBlinkThread(mbWebView webView, void* param, mbWebFrameHandle frameId);
+    static BOOL MB_CALL_TYPE onNavigationCallback(mbWebView webView, void* param, mbNavigationType navigationType, const utf8* url);
+    static mbWebView MB_CALL_TYPE onCreateViewCallback(mbWebView webView, void* param, mbNavigationType navigationType, const utf8* url, const mbWindowFeatures* windowFeatures);
 
     void onUrlChange(const std::string& url) { m_url = url; }
-    void onTitleChange(const std::string& title) { m_title = title; }
+    static void MB_CALL_TYPE onTitleChanged(mbWebView webView, void* param, const utf8* title);
+    static void MB_CALL_TYPE onURLChanged(mbWebView webView, void* param, const utf8* url, BOOL canGoBack, BOOL canGoForward);
+    static void MB_CALL_TYPE onLoadingFinishCallback(mbWebView webView, void* param, mbWebFrameHandle frameId, const utf8* url, mbLoadingResult result, const utf8* failedReason);
+
+    void setCreateWindowParam(CreateWindowParam* createWindowParam)
+    {
+        m_createWindowParam = createWindowParam;
+    }
 
 public:
     static v8::Persistent<v8::Function> constructor;
     static gin::WrapperInfo kWrapperInfo;
 
 private:
-    friend class Window;
+    friend class BrowserView;
+    friend class BrowserWindow;
 
     NodeBindings* m_nodeBinding;
     int m_id;
     std::set<WebContentsObserver*> m_observers;
-    wkeWebView m_view;
+    mbWebView m_view;
     WindowInterface* m_owner;
 
+    CreateWindowParam* m_createWindowParam;
+
     bool m_isNodeIntegration;
+    bool m_isNodeIntegrationInSubframes;
+    bool m_isContextIsolation;
     bool m_isLoading;
+
+    bool m_canGoBack;
+    bool m_canGoForward;
 
     std::string m_ua;
     std::string m_url;
     std::string m_title;
+    std::string m_preloadScriptPath;
+    std::string m_sessionName;
     int m_frameRate;
 
     v8::Persistent<v8::Object> m_liveSelf;
 };
 
 } // atom
+
+namespace gin {
+v8::Local<v8::Value> ConvertToV8(v8::Isolate* isolate, const atom::WebContents& content);
+}
 
 #endif // browser_api_ApiWebContents_h

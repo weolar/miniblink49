@@ -42,6 +42,8 @@
 /* header files for imported files */
 #include "wtypes.h"
 
+typedef DWORD SHCOLSTATEF;
+
 #ifdef __cplusplus
 extern "C"{
 #endif 

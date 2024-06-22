@@ -254,7 +254,7 @@ xmlAddEntity(xmlDtdPtr dtd, const xmlChar *name, int type,
  *
  * Returns NULL if not, otherwise the entity
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlGetPredefinedEntity(const xmlChar *name) {
     if (name == NULL) return(NULL);
     switch (name[0]) {
@@ -295,7 +295,7 @@ xmlGetPredefinedEntity(const xmlChar *name) {
  *
  * Returns a pointer to the entity or NULL in case of error
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlAddDtdEntity(xmlDocPtr doc, const xmlChar *name, int type,
 	        const xmlChar *ExternalID, const xmlChar *SystemID,
 		const xmlChar *content) {
@@ -344,7 +344,7 @@ xmlAddDtdEntity(xmlDocPtr doc, const xmlChar *name, int type,
  *
  * Returns a pointer to the entity or NULL in case of error
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlAddDocEntity(xmlDocPtr doc, const xmlChar *name, int type,
 	        const xmlChar *ExternalID, const xmlChar *SystemID,
 	        const xmlChar *content) {
@@ -397,7 +397,7 @@ xmlAddDocEntity(xmlDocPtr doc, const xmlChar *name, int type,
  *
  * Returns a pointer to the entity or NULL in case of error
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlNewEntity(xmlDocPtr doc, const xmlChar *name, int type,
 	     const xmlChar *ExternalID, const xmlChar *SystemID,
 	     const xmlChar *content) {
@@ -444,7 +444,7 @@ xmlGetEntityFromTable(xmlEntitiesTablePtr table, const xmlChar *name) {
  * 
  * Returns A pointer to the entity structure or NULL if not found.
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlGetParameterEntity(xmlDocPtr doc, const xmlChar *name) {
     xmlEntitiesTablePtr table;
     xmlEntityPtr ret;
@@ -475,7 +475,7 @@ xmlGetParameterEntity(xmlDocPtr doc, const xmlChar *name) {
  * 
  * Returns A pointer to the entity structure or NULL if not found.
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlGetDtdEntity(xmlDocPtr doc, const xmlChar *name) {
     xmlEntitiesTablePtr table;
 
@@ -499,7 +499,7 @@ xmlGetDtdEntity(xmlDocPtr doc, const xmlChar *name) {
  * 
  * Returns A pointer to the entity structure or NULL if not found.
  */
-xmlEntityPtr
+xmlEntityPtr XMLCALL
 xmlGetDocEntity(xmlDocPtr doc, const xmlChar *name) {
     xmlEntityPtr cur;
     xmlEntitiesTablePtr table;
@@ -550,7 +550,7 @@ xmlGetDocEntity(xmlDocPtr doc, const xmlChar *name) {
  *
  * Returns A newly allocated string with the substitution done.
  */
-xmlChar *
+xmlChar * XMLCALL
 xmlEncodeEntitiesReentrant(xmlDocPtr doc, const xmlChar *input) {
     const xmlChar *cur = input;
     xmlChar *buffer = NULL;
@@ -704,7 +704,7 @@ xmlEncodeEntitiesReentrant(xmlDocPtr doc, const xmlChar *input) {
  *
  * Returns A newly allocated string with the substitution done.
  */
-xmlChar *
+xmlChar * XMLCALL
 xmlEncodeSpecialChars(xmlDocPtr doc ATTRIBUTE_UNUSED, const xmlChar *input) {
     const xmlChar *cur = input;
     xmlChar *buffer = NULL;
@@ -784,7 +784,7 @@ xmlEncodeSpecialChars(xmlDocPtr doc ATTRIBUTE_UNUSED, const xmlChar *input) {
  *
  * Returns the xmlEntitiesTablePtr just created or NULL in case of error.
  */
-xmlEntitiesTablePtr
+xmlEntitiesTablePtr XMLCALL
 xmlCreateEntitiesTable(void) {
     return((xmlEntitiesTablePtr) xmlHashCreate(0));
 }
@@ -809,7 +809,7 @@ xmlFreeEntityWrapper(xmlEntityPtr entity,
  *
  * Deallocate the memory used by an entities hash table.
  */
-void
+void XMLCALL
 xmlFreeEntitiesTable(xmlEntitiesTablePtr table) {
     xmlHashFree(table, (xmlHashDeallocator) xmlFreeEntityWrapper);
 }
@@ -859,7 +859,7 @@ xmlCopyEntity(xmlEntityPtr ent) {
  * 
  * Returns the new xmlEntitiesTablePtr or NULL in case of error.
  */
-xmlEntitiesTablePtr
+xmlEntitiesTablePtr XMLCALL
 xmlCopyEntitiesTable(xmlEntitiesTablePtr table) {
     return(xmlHashCopy(table, (xmlHashCopier) xmlCopyEntity));
 }
@@ -915,7 +915,7 @@ xmlDumpEntityContent(xmlBufferPtr buf, const xmlChar *content) {
  *
  * This will dump the content of the entity table as an XML DTD definition
  */
-void
+void XMLCALL
 xmlDumpEntityDecl(xmlBufferPtr buf, xmlEntityPtr ent) {
     if ((buf == NULL) || (ent == NULL)) return;
     switch (ent->etype) {
@@ -1013,7 +1013,7 @@ xmlDumpEntityDeclScan(xmlEntityPtr ent, xmlBufferPtr buf) {
  *
  * This will dump the content of the entity table as an XML DTD definition
  */
-void
+void XMLCALL
 xmlDumpEntitiesTable(xmlBufferPtr buf, xmlEntitiesTablePtr table) {
     xmlHashScan(table, (xmlHashScanner)xmlDumpEntityDeclScan, buf);
 }

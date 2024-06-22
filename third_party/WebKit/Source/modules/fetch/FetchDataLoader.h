@@ -71,6 +71,8 @@ public:
 
     virtual void cancel() = 0;
 
+    Persistent<FetchDataLoader> m_keeplive;
+
     DEFINE_INLINE_VIRTUAL_TRACE() { }
 };
 

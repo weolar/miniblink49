@@ -32,6 +32,7 @@
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
 #include "content/web_impl_win/npapi/PluginMessageThrottlerWin.h"
+#include "content/web_impl_win/npapi/WebPluginImeWin.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
@@ -145,7 +146,11 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
     , m_memoryCanvas(nullptr)
+    , m_memoryPixels(nullptr)
     , m_wkeWebview(nullptr)
+    , m_cutOutsRectsDirty(true)
+    , m_pluginViewWndProcReentryCount(0)
+    , m_pluginIme(nullptr)
 {
 #ifndef NDEBUG
     webPluginImplCount.increment();
@@ -202,6 +207,9 @@ WebPluginImpl::~WebPluginImpl()
 #ifndef NDEBUG
     webPluginImplCount.decrement();
 #endif
+
+    if (m_pluginIme)
+        delete m_pluginIme;
 }
 
 void WebPluginImpl::popPopupsStateTimerFired(blink::Timer<WebPluginImpl>*)
@@ -262,6 +270,9 @@ bool WebPluginImpl::start()
 
     ASSERT(m_plugin);
     ASSERT(m_plugin->pluginFuncs()->newp);
+
+    if (m_plugin->quirks().contains(PluginQuirkEmulateIme))
+        WebPluginIMEWin::hookGetProcAddress(m_plugin->module());
 
     NPError npErr;
     {
@@ -652,8 +663,6 @@ NPError WebPluginImpl::setValue(NPPVariable variable, void* value)
     switch (variable) {
     case NPPVpluginWindowBool:
         m_isWindowed = value;
-        //m_isWindowed = false; // weolar
-
         return NPERR_NO_ERROR;
     case NPPVpluginTransparentBool:
         m_isTransparent = value;

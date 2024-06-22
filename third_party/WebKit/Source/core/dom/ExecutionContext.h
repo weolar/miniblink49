@@ -125,6 +125,9 @@ public:
     virtual void tasksWereSuspended() { }
     virtual void tasksWereResumed() { }
 
+    bool isContextSuspended() const { return m_isContextSuspended; }
+    bool isContextDestroyed() const { return m_isContextDestroyed; }
+
     bool activeDOMObjectsAreSuspended() const { return m_activeDOMObjectsAreSuspended; }
     bool activeDOMObjectsAreStopped() const { return m_activeDOMObjectsAreStopped; }
 
@@ -186,6 +189,9 @@ private:
 
     bool m_activeDOMObjectsAreSuspended;
     bool m_activeDOMObjectsAreStopped;
+
+    bool m_isContextSuspended;
+    bool m_isContextDestroyed;
 
     OwnPtrWillBeMember<PublicURLManager> m_publicURLManager;
 

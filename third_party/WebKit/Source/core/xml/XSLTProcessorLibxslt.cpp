@@ -140,7 +140,7 @@ static inline void setXSLTLoadCallBack(xsltDocLoaderFunc func, XSLTProcessor* pr
     globalResourceFetcher = fetcher;
 }
 
-static int writeToStringBuilder(void* context, const char* buffer, int len)
+static int XMLCALL writeToStringBuilder(void* context, const char* buffer, int len)
 {
     StringBuilder& resultOutput = *static_cast<StringBuilder*>(context);
 

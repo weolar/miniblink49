@@ -508,7 +508,7 @@ enum ItemPositionType {
 };
 
 enum ContentPosition {
-    ContentPositionAuto,
+    ContentPositionNormal,
     ContentPositionBaseline,
     ContentPositionLastBaseline,
     ContentPositionCenter,

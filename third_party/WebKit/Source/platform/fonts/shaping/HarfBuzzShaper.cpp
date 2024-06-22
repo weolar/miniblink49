@@ -806,34 +806,6 @@ struct CandidateRun {
     UScriptCode script;
 };
 
-static const int32_t countPropsVectors = 5520;
-static const int32_t propsVectorsColumns = 3;
-
-#define UPROPS_SCRIPT_MASK 0x000000ff
-#define UPROPS_SCRIPT_X_MASK 0x00c000ff
-#define UPROPS_SCRIPT_X_WITH_COMMON 0x400000
-#define UPROPS_SCRIPT_X_WITH_INHERITED 0x800000
-#define UPROPS_SCRIPT_X_WITH_OTHER 0xc00000
-#define U_FAILURE(x) ((x)>U_ZERO_ERROR)
-
-UScriptCode uscript_getScript(UChar32 c, UErrorCode *pErrorCode)
-{
-    if (pErrorCode == NULL || U_FAILURE(*pErrorCode))
-        return USCRIPT_INVALID_CODE;
-    
-    if ((uint32_t)c > 0x10ffff) {
-        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return USCRIPT_INVALID_CODE;
-    }
-
-    return USCRIPT_COMMON;
-}
-
-UBool uscript_hasScript(UChar32 c, UScriptCode sc)
-{
-    return false;
-}
-
 static inline bool collectCandidateRuns(const UChar* normalizedBuffer,
     size_t bufferLength, const Font* font, Vector<CandidateRun>* runs, bool isSpaceNormalize)
 {

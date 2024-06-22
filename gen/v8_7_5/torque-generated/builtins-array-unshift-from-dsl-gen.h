@@ -12,8 +12,8 @@ namespace internal {
 class ArrayUnshiftBuiltinsFromDSLAssembler {
  public:
   explicit ArrayUnshiftBuiltinsFromDSLAssembler(compiler::CodeAssemblerState* state) : state_(state), ca_(state) { USE(state_, ca_); }
-  void TryFastArrayUnshift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, CodeStubArguments* p_arguments, compiler::CodeAssemblerLabel* label_Slow);
-  compiler::TNode<Number> GenericArrayUnshift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, CodeStubArguments* p_arguments);
+  void TryFastArrayUnshift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, BaseBuiltinsFromDSLAssembler::Arguments p_arguments, compiler::CodeAssemblerLabel* label_Slow);
+  compiler::TNode<Number> GenericArrayUnshift(compiler::TNode<Context> p_context, compiler::TNode<Object> p_receiver, BaseBuiltinsFromDSLAssembler::Arguments p_arguments);
  private:
   compiler::CodeAssemblerState* const state_;
   compiler::CodeAssembler ca_;

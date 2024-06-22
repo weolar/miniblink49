@@ -40,18 +40,43 @@ const CommandLine::CharType kSwitchValueSeparator[] = FILE_PATH_LITERAL("=");
 const char16 kWhitespaceUTF16[] = L" ";
 const char kWhitespaceASCII[] = " ";
 
-std::wstring UTF8ToWide(const std::string& src) {
-    std::wstring output;
-    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()), false);
-    output.append((const wchar_t*)out.data(), out.size());
-    return output;
+std::string utf16ToChar(string16 src, UINT codePage) {
+    std::string result;
+
+    int n = ::WideCharToMultiByte(codePage, 0, src.c_str(), src.size(), NULL, 0, NULL, NULL);
+    if (0 == n)
+        return "";
+
+    std::vector<char> charBuf(n + 5);
+    memset(charBuf.data(), 0, sizeof(char) * (n + 5));
+
+    ::WideCharToMultiByte(codePage, 0, src.c_str(), src.size(), charBuf.data(), n, NULL, NULL);
+    result = charBuf.data();
+    
+    return result;
+}
+
+std::wstring charToWide(const std::string& src, UINT codePage) {
+    std::wstring result;
+    size_t n = ::MultiByteToWideChar(codePage, 0, src.c_str(), src.size(), nullptr, 0);
+    if (0 == n)
+        return L"";
+
+    std::vector<wchar_t> wcharBuf(n + 5);
+    memset(wcharBuf.data(), 0, sizeof(wchar_t) * (n + 5));
+
+    ::MultiByteToWideChar(codePage, 0, src.c_str(), src.size(), &wcharBuf[0], n);
+    result = wcharBuf.data();
+
+    return result;
+}
+
+std::wstring UTF8ToWide(const std::string& utf8) {
+    return charToWide(utf8, CP_UTF8);
 }
 
 std::wstring ASCIIToWide(const std::string& ascii) {
-    //DCHECK(base::IsStringASCII(ascii)) << ascii;
-    WTF::String str(ascii.data(), ascii.size());
-    Vector<UChar> ustring = WTF::ensureUTF16UChar(str, false);
-    return std::wstring(ustring.data(), ustring.size());
+    return charToWide(ascii, CP_ACP);
 }
 // 
 // std::wstring ASCIIToWide(const StringPiece& ascii) {
@@ -65,10 +90,7 @@ std::wstring ASCIIToWide(const std::string& ascii) {
 // }
 
 std::string UTF16ToASCII(const string16& utf16) {
-    //DCHECK(IsStringASCII(utf16)) << UTF16ToUTF8(utf16);
-    WTF::String str(utf16.data(), utf16.size());
-    CString ascii = str.ascii();
-    return std::string(ascii.data());
+    return utf16ToChar(utf16, CP_ACP);
 }
 
 enum TrimPositions {

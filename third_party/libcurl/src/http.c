@@ -3091,6 +3091,44 @@ static void print_http_error(struct Curl_easy *data)
   failf(data, "The requested URL returned error: %d", k->httpcode);
 }
 
+void remove_origin_when_redirected(struct curl_slist** headers)
+{
+  struct curl_slist* item = *headers;
+  struct curl_slist* last = NULL;
+  while (item) {
+    if (0 != checkprefix("Origin:", item->data)) {
+      item->data[0] = 0;
+      break;
+    }
+    last = item;
+    item = item->next;
+  }
+}
+
+// newurl: http://a.com/
+// oldurl: http://b.com/#123
+// return: http://a.com/#123
+char* fix_add_fragment(char* newurl, const char* oldurl)
+{
+  if (!oldurl)
+    return strdup(newurl);
+
+  size_t newlen = strlen(newurl);
+  size_t oldlen = strlen(oldurl);
+  const char* fragment = strchr(oldurl, '#');
+  if (!fragment)
+    return strdup(newurl);
+
+  size_t fragmentlen = oldlen - (fragment - oldurl);
+  size_t retlen = newlen + fragmentlen;
+  char* returl = (char*)malloc(retlen + 1);
+
+  strncpy(returl, newurl, newlen);
+  strncpy(returl + newlen, fragment, fragmentlen);
+  returl[retlen] = '\0';
+  return returl;
+}
+
 /*
  * Read any HTTP header lines from the server and pass them to the client app.
  */
@@ -3875,6 +3913,9 @@ CURLcode Curl_http_readwrite_headers(struct Curl_easy *data,
         if(data->set.http_follow_location) {
           DEBUGASSERT(!data->req.newurl);
           data->req.newurl = strdup(data->req.location); /* clone */
+          //data->req.newurl = fix_add_fragment(data->req.location, data->change.url);
+
+          remove_origin_when_redirected(&data->set.headers);
           if(!data->req.newurl)
             return CURLE_OUT_OF_MEMORY;
 

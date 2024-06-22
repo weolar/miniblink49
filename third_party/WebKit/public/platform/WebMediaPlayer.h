@@ -55,6 +55,8 @@ class WebKeyboardEvent;
 struct WebPoint;
 #endif
 
+using WebSetSinkIdCallbacks = WebCallbacks<void, WebSetSinkIdError>;
+
 class WebMediaPlayer {
 public:
     enum NetworkState {
@@ -106,7 +108,7 @@ public:
 
     virtual ~WebMediaPlayer() { }
 
-    virtual void load(LoadType, const WebURL&, CORSMode) = 0;
+    virtual void load(LoadType, const WebURL&, CORSMode, bool) = 0;
 
     // Playback controls.
     virtual void play() = 0;

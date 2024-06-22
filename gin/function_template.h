@@ -17,22 +17,22 @@ namespace gin {
 class PerIsolateData;
 
 enum CreateFunctionTemplateFlags {
-  HolderIsFirstArgument = 1 << 0,
+    HolderIsFirstArgument = 1 << 0,
 };
 
 namespace internal {
 
 template<typename T>
 struct CallbackParamTraits {
-  typedef T LocalType;
+    typedef T LocalType;
 };
 template<typename T>
 struct CallbackParamTraits<const T&> {
-  typedef T LocalType;
+    typedef T LocalType;
 };
 template<typename T>
 struct CallbackParamTraits<const T*> {
-  typedef T* LocalType;
+    typedef T* LocalType;
 };
 
 
@@ -43,44 +43,47 @@ struct CallbackParamTraits<const T*> {
 // This simple base class is used so that we can share a single object template
 // among every CallbackHolder instance.
 class GIN_EXPORT CallbackHolderBase {
- public:
-  v8::Local<v8::External> GetHandle(v8::Isolate* isolate);
+public:
+    v8::Local<v8::External> GetHandle(v8::Isolate* isolate);
 
- protected:
-  explicit CallbackHolderBase(v8::Isolate* isolate);
-  virtual ~CallbackHolderBase();
+protected:
+    explicit CallbackHolderBase(v8::Isolate* isolate);
+    virtual ~CallbackHolderBase();
 
- private:
-  static void FirstWeakCallback(
-      const v8::WeakCallbackInfo<CallbackHolderBase>& data);
-  static void SecondWeakCallback(
-      const v8::WeakCallbackInfo<CallbackHolderBase>& data);
+private:
+    static void FirstWeakCallback(
+        const v8::WeakCallbackInfo<CallbackHolderBase>& data);
+    static void SecondWeakCallback(
+        const v8::WeakCallbackInfo<CallbackHolderBase>& data);
 
-  v8::Global<v8::External> v8_ref_;
+    v8::Global<v8::External> v8_ref_;
 
-  DISALLOW_COPY_AND_ASSIGN(CallbackHolderBase);
+    DISALLOW_COPY_AND_ASSIGN(CallbackHolderBase);
 };
 
 template<typename Sig>
 class CallbackHolder : public CallbackHolderBase {
- public:
-  CallbackHolder(v8::Isolate* isolate,
-                 const base::Callback<Sig>& callback,
-                 int flags)
-      : CallbackHolderBase(isolate), callback(callback), flags(flags) {}
-  base::Callback<Sig> callback;
-  int flags;
- private:
-  virtual ~CallbackHolder() {}
+public:
+    CallbackHolder(v8::Isolate* isolate,
+        const base::Callback<Sig>& callback,
+        int flags)
+        : CallbackHolderBase(isolate), callback(callback), flags(flags)
+    {
+    }
+    base::Callback<Sig> callback;
+    int flags;
+private:
+    virtual ~CallbackHolder() {}
 
-  DISALLOW_COPY_AND_ASSIGN(CallbackHolder);
+    DISALLOW_COPY_AND_ASSIGN(CallbackHolder);
 };
 
 template<typename ClassType, typename Type>
 class CallbackHolderGetSet : public CallbackHolderBase {
 public:
     CallbackHolderGetSet(v8::Isolate* isolate, const base::Callback<Type(ClassType)>& get_callback, const base::Callback<void(ClassType, Type)>& set_callback)
-        : CallbackHolderBase(isolate), get_callback_(get_callback), set_callback_(set_callback) {
+        : CallbackHolderBase(isolate), get_callback_(get_callback), set_callback_(set_callback)
+    {
     }
     base::Callback<Type(ClassType)> get_callback_;
     base::Callback<void(ClassType, Type)> set_callback_;
@@ -92,36 +95,40 @@ private:
 
 template<typename T>
 bool GetNextArgument(Arguments* args, int create_flags, bool is_first,
-                     T* result) {
-  bool b = false;
-  if (is_first && (create_flags & HolderIsFirstArgument) != 0) {
-    b = args->GetHolder(result);
-  } else {
-    b = args->GetNext(result);
-  }
-  if (!b)
-      OutputDebugStringA("GetNextArgument failed!\n");
-  return b;
+    T* result)
+{
+    bool b = false;
+    if (is_first && (create_flags & HolderIsFirstArgument) != 0) {
+        b = args->GetHolder(result);
+    } else {
+        b = args->GetNext(result);
+    }
+    if (!b)
+        OutputDebugStringA("GetNextArgument failed!\n");
+    return b;
 }
 
 // For advanced use cases, we allow callers to request the unparsed Arguments
 // object and poke around in it directly.
 inline bool GetNextArgument(Arguments* args, int create_flags, bool is_first,
-                            Arguments* result) {
-  *result = *args;
-  return true;
+    Arguments* result)
+{
+    *result = *args;
+    return true;
 }
 inline bool GetNextArgument(Arguments* args, int create_flags, bool is_first,
-                            Arguments** result) {
-  *result = args;
-  return true;
+    Arguments** result)
+{
+    *result = args;
+    return true;
 }
 
 // It's common for clients to just need the isolate, so we make that easy.
 inline bool GetNextArgument(Arguments* args, int create_flags,
-                            bool is_first, v8::Isolate** result) {
-  *result = args->isolate();
-  return true;
+    bool is_first, v8::Isolate** result)
+{
+    *result = args->isolate();
+    return true;
 }
 
 // Classes for generating and storing an argument pack of integer indices
@@ -131,33 +138,34 @@ struct IndicesHolder {};
 
 template <size_t requested_index, size_t... indices>
 struct IndicesGenerator {
-  using type = typename IndicesGenerator<requested_index - 1,
-                                         requested_index - 1,
-                                         indices...>::type;
+    using type = typename IndicesGenerator<requested_index - 1,
+        requested_index - 1,
+        indices...>::type;
 };
 template <size_t... indices>
 struct IndicesGenerator<0, indices...> {
-  using type = IndicesHolder<indices...>;
+    using type = IndicesHolder<indices...>;
 };
 
 // Class template for extracting and storing single argument for callback
 // at position |index|.
 template <size_t index, typename ArgType>
 struct ArgumentHolder {
-  using ArgLocalType = typename CallbackParamTraits<ArgType>::LocalType;
+    using ArgLocalType = typename CallbackParamTraits<ArgType>::LocalType;
 
-  ArgLocalType value;
-  bool ok;
+    ArgLocalType value;
+    bool ok;
 
-  ArgumentHolder(Arguments* args, int create_flags)
-      : ok(GetNextArgument(args, create_flags, index == 0, &value)) {
-    if (!ok) {
-      // Ideally we would include the expected c++ type in the error
-      // message which we can access via typeid(ArgType).name()
-      // however we compile with no-rtti, which disables typeid.
-      args->ThrowError();
+    ArgumentHolder(Arguments* args, int create_flags)
+        : ok(GetNextArgument(args, create_flags, index == 0, &value))
+    {
+        if (!ok) {
+            // Ideally we would include the expected c++ type in the error
+            // message which we can access via typeid(ArgType).name()
+            // however we compile with no-rtti, which disables typeid.
+            args->ThrowError();
+        }
     }
-  }
 };
 
 template <>
@@ -168,7 +176,8 @@ struct ArgumentHolder<1, const v8::FunctionCallbackInfo<v8::Value>&> {
 
     ArgumentHolder(Arguments* args, int create_flags)
         : value(*args->getInfo())
-        , ok(true) {
+        , ok(true)
+    {
 
     }
 };
@@ -181,44 +190,48 @@ class Invoker {};
 template <size_t... indices, typename... ArgTypes>
 class Invoker<IndicesHolder<indices...>, ArgTypes...>
     : public ArgumentHolder<indices, ArgTypes>... {
- public:
-  // Invoker<> inherits from ArgumentHolder<> for each argument.
-  // C++ has always been strict about the class initialization order,
-  // so it is guaranteed ArgumentHolders will be initialized (and thus, will
-  // extract arguments from Arguments) in the right order.
-  Invoker(Arguments* args, int create_flags)
-      : ArgumentHolder<indices, ArgTypes>(args, create_flags)..., args_(args) {
-    // GCC thinks that create_flags is going unused, even though the
-    // expansion above clearly makes use of it. Per jyasskin@, casting
-    // to void is the commonly accepted way to convince the compiler
-    // that you're actually using a parameter/varible.
-    (void)create_flags;
-  }
+public:
+    // Invoker<> inherits from ArgumentHolder<> for each argument.
+    // C++ has always been strict about the class initialization order,
+    // so it is guaranteed ArgumentHolders will be initialized (and thus, will
+    // extract arguments from Arguments) in the right order.
+    Invoker(Arguments* args, int create_flags)
+        : ArgumentHolder<indices, ArgTypes>(args, create_flags)..., args_(args) {
+        // GCC thinks that create_flags is going unused, even though the
+        // expansion above clearly makes use of it. Per jyasskin@, casting
+        // to void is the commonly accepted way to convince the compiler
+        // that you're actually using a parameter/varible.
+        (void)create_flags;
+    }
 
-  bool IsOK() {
-    return And(ArgumentHolder<indices, ArgTypes>::ok...);
-  }
+    bool IsOK()
+    {
+        return And(ArgumentHolder<indices, ArgTypes>::ok...);
+    }
 
-  template <typename ReturnType>
-  void DispatchToCallback(base::Callback<ReturnType(ArgTypes...)> callback) {
-    args_->Return(callback.Run(ArgumentHolder<indices, ArgTypes>::value...));
-  }
+    template <typename ReturnType>
+    void DispatchToCallback(base::Callback<ReturnType(ArgTypes...)> callback)
+    {
+        args_->Return(callback.Run(ArgumentHolder<indices, ArgTypes>::value...));
+    }
 
-  // In C++, you can declare the function foo(void), but you can't pass a void
-  // expression to foo. As a result, we must specialize the case of Callbacks
-  // that have the void return type.
-  void DispatchToCallback(base::Callback<void(ArgTypes...)> callback) {
-    callback.Run(ArgumentHolder<indices, ArgTypes>::value...);
-  }
+    // In C++, you can declare the function foo(void), but you can't pass a void
+    // expression to foo. As a result, we must specialize the case of Callbacks
+    // that have the void return type.
+    void DispatchToCallback(base::Callback<void(ArgTypes...)> callback)
+    {
+        callback.Run(ArgumentHolder<indices, ArgTypes>::value...);
+    }
 
- private:
-  static bool And() { return true; }
-  template <typename... T>
-  static bool And(bool arg1, T... args) {
-    return arg1 && And(args...);
-  }
+private:
+    static bool And() { return true; }
+    template <typename... T>
+    static bool And(bool arg1, T... args)
+    {
+        return arg1 && And(args...);
+    }
 
-  Arguments* args_;
+    Arguments* args_;
 };
 
 // DispatchToCallback converts all the JavaScript arguments to C++ types and
@@ -228,27 +241,83 @@ struct Dispatcher {};
 
 template <typename ReturnType, typename... ArgTypes>
 struct Dispatcher<ReturnType(ArgTypes...)> {
-  static void DispatchToCallback(
-      const v8::FunctionCallbackInfo<v8::Value>& info) {
-    Arguments args(info);
-    v8::Local<v8::External> v8_holder;
-    CHECK(args.GetData(&v8_holder));
-    CallbackHolderBase* holder_base = reinterpret_cast<CallbackHolderBase*>(
-        v8_holder->Value());
+    static void DispatchToCallback(
+        const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        Arguments args(info);
+        v8::Local<v8::External> v8_holder;
+        CHECK(args.GetData(&v8_holder));
+        CallbackHolderBase* holder_base = reinterpret_cast<CallbackHolderBase*>(
+            v8_holder->Value());
 
-    typedef CallbackHolder<ReturnType(ArgTypes...)> HolderT;
-    HolderT* holder = static_cast<HolderT*>(holder_base);
+        typedef CallbackHolder<ReturnType(ArgTypes...)> HolderT;
+        HolderT* holder = static_cast<HolderT*>(holder_base);
 
-    using Indices = typename IndicesGenerator<sizeof...(ArgTypes)>::type;
-    Invoker<Indices, ArgTypes...> invoker(&args, holder->flags);
-    if (invoker.IsOK())
-      invoker.DispatchToCallback(holder->callback);
-  }
+        using Indices = typename IndicesGenerator<sizeof...(ArgTypes)>::type;
+        Invoker<Indices, ArgTypes...> invoker(&args, holder->flags);
+        if (invoker.IsOK())
+            invoker.DispatchToCallback(holder->callback);
+        else {
+            const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+                v8::StackTrace::kLineNumber
+                | v8::StackTrace::kColumnOffset
+                | v8::StackTrace::kScriptId
+                | v8::StackTrace::kScriptNameOrSourceURL
+                | v8::StackTrace::kFunctionName);
+
+            int stackNum = 50;
+            v8::HandleScope handleScope(info.GetIsolate());
+            v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(info.GetIsolate(), stackNum, options));
+            int count = stackTrace->GetFrameCount();
+
+            char* output = (char*)malloc(0x100);
+            sprintf(output, "DispatchToCallback fail: %d\n", count);
+            OutputDebugStringA(output);
+            free(output);
+
+            for (int i = 0; i < count; ++i) {
+                v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(info.GetIsolate(), i);
+                int frameCount = stackTrace->GetFrameCount();
+                int line = stackFrame->GetLineNumber();
+                v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+                v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+                std::string scriptNameWTF;
+                std::string funcNameWTF;
+
+                if (!scriptName.IsEmpty()) {
+                    v8::String::Utf8Value scriptNameUtf8(scriptName);
+                    scriptNameWTF = *scriptNameUtf8;
+                }
+
+                if (!funcName.IsEmpty()) {
+                    v8::String::Utf8Value funcNameUtf8(funcName);
+                    funcNameWTF = *funcNameUtf8;
+                }
+                std::vector<char> output;
+                output.resize(1000);
+                sprintf(&output[0], "line:%d, [", line);
+                OutputDebugStringA(&output[0]);
+
+                if (!scriptNameWTF.empty()) {
+                    OutputDebugStringA(scriptNameWTF.c_str());
+                }
+                OutputDebugStringA("] , [");
+
+                if (!funcNameWTF.empty()) {
+                    OutputDebugStringA(funcNameWTF.c_str());
+                }
+                OutputDebugStringA("]\n");
+            }
+            OutputDebugStringA("\n");
+        }
+    }
 };
 
 template<typename ClassType, typename Type>
 struct DispatcherAccessor {
-    static void DispatchToCallbackGetter(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+    static void DispatchToCallbackGetter(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+    {
         v8::Isolate* isolate = info.GetIsolate();
 
         v8::Local<v8::External> v8_holder;
@@ -270,7 +339,8 @@ struct DispatcherAccessor {
         info.GetReturnValue().Set(v8_result_value);
     }
 
-    static void DispatchToCallbackSetter(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+    static void DispatchToCallbackSetter(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+    {
         v8::Isolate* isolate = info.GetIsolate();
 
         v8::Local<v8::External> v8_holder;
@@ -296,33 +366,35 @@ struct DispatcherAccessor {
 }  // namespace internal
 
 
-// CreateFunctionTemplate creates a v8::FunctionTemplate that will create
-// JavaScript functions that execute a provided C++ function or base::Callback.
-// JavaScript arguments are automatically converted via gin::Converter, as is
-// the return value of the C++ function, if any.
-//
-// NOTE: V8 caches FunctionTemplates for a lifetime of a web page for its own
-// internal reasons, thus it is generally a good idea to cache the template
-// returned by this function.  Otherwise, repeated method invocations from JS
-// will create substantial memory leaks. See http://crbug.com/463487.
+   // CreateFunctionTemplate creates a v8::FunctionTemplate that will create
+   // JavaScript functions that execute a provided C++ function or base::Callback.
+   // JavaScript arguments are automatically converted via gin::Converter, as is
+   // the return value of the C++ function, if any.
+   //
+   // NOTE: V8 caches FunctionTemplates for a lifetime of a web page for its own
+   // internal reasons, thus it is generally a good idea to cache the template
+   // returned by this function.  Otherwise, repeated method invocations from JS
+   // will create substantial memory leaks. See http://crbug.com/463487.
 template<typename Sig>
 v8::Local<v8::FunctionTemplate> CreateFunctionTemplate(
     v8::Isolate* isolate, const base::Callback<Sig> callback,
-    int callback_flags = 0) {
-  typedef internal::CallbackHolder<Sig> HolderT;
-  HolderT* holder = new HolderT(isolate, callback, callback_flags);
+    int callback_flags = 0)
+{
+    typedef internal::CallbackHolder<Sig> HolderT;
+    HolderT* holder = new HolderT(isolate, callback, callback_flags);
 
-  return v8::FunctionTemplate::New(
-      isolate,
-      &internal::Dispatcher<Sig>::DispatchToCallback,
-      ConvertToV8<v8::Local<v8::External> >(isolate,
-                                             holder->GetHandle(isolate)));
+    return v8::FunctionTemplate::New(
+        isolate,
+        &internal::Dispatcher<Sig>::DispatchToCallback,
+        ConvertToV8<v8::Local<v8::External> >(isolate,
+            holder->GetHandle(isolate)));
 }
 
 template<typename ClassType, typename Type>
 void SetMemberGetSetAccessor(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> obj_template, v8::Local<v8::String> name,
     const base::Callback<Type(ClassType)> get_callback,
-    const base::Callback<void(ClassType, Type)> set_callback) {
+    const base::Callback<void(ClassType, Type)> set_callback)
+{
     typedef internal::CallbackHolderGetSet<ClassType, Type> HolderGetSetT;
     HolderGetSetT* holder = new HolderGetSetT(isolate, get_callback, set_callback);
 
@@ -336,14 +408,15 @@ void SetMemberGetSetAccessor(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate>
 // object template that forwards to a provided C++ function or base::Callback.
 template<typename Sig>
 void CreateFunctionHandler(v8::Isolate* isolate,
-                           v8::Local<v8::ObjectTemplate> tmpl,
-                           const base::Callback<Sig> callback,
-                           int callback_flags = 0) {
-  typedef internal::CallbackHolder<Sig> HolderT;
-  HolderT* holder = new HolderT(isolate, callback, callback_flags);
-  tmpl->SetCallAsFunctionHandler(&internal::Dispatcher<Sig>::DispatchToCallback,
-                                 ConvertToV8<v8::Local<v8::External> >(
-                                     isolate, holder->GetHandle(isolate)));
+    v8::Local<v8::ObjectTemplate> tmpl,
+    const base::Callback<Sig> callback,
+    int callback_flags = 0)
+{
+    typedef internal::CallbackHolder<Sig> HolderT;
+    HolderT* holder = new HolderT(isolate, callback, callback_flags);
+    tmpl->SetCallAsFunctionHandler(&internal::Dispatcher<Sig>::DispatchToCallback,
+        ConvertToV8<v8::Local<v8::External> >(
+            isolate, holder->GetHandle(isolate)));
 }
 
 }  // namespace gin

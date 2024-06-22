@@ -128,7 +128,6 @@ class RootVisitor;
   V(Map, embedder_data_array_map, EmbedderDataArrayMap)                        \
   V(Map, weak_cell_map, WeakCellMap)                                           \
   /* String maps */                                                            \
-  V(Map, empty_string_map, EmptyStringMap)                                     \
   V(Map, native_source_string_map, NativeSourceStringMap)                      \
   V(Map, string_map, StringMap)                                                \
   V(Map, cons_one_byte_string_map, ConsOneByteStringMap)                       \
@@ -182,6 +181,8 @@ class RootVisitor;
     EmptyObjectBoilerplateDescription)                                         \
   V(ArrayBoilerplateDescription, empty_array_boilerplate_description,          \
     EmptyArrayBoilerplateDescription)                                          \
+  V(ClosureFeedbackCellArray, empty_closure_feedback_cell_array,               \
+    EmptyClosureFeedbackCellArray)                                             \
   V(FixedTypedArrayBase, empty_fixed_uint8_array, EmptyFixedUint8Array)        \
   V(FixedTypedArrayBase, empty_fixed_int8_array, EmptyFixedInt8Array)          \
   V(FixedTypedArrayBase, empty_fixed_uint16_array, EmptyFixedUint16Array)      \

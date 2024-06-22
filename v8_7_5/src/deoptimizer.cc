@@ -573,7 +573,7 @@ void Deoptimizer::DeleteFrameDescriptions() {
 Address Deoptimizer::GetDeoptimizationEntry(Isolate* isolate,
                                             DeoptimizeKind kind) {
   DeoptimizerData* data = isolate->deoptimizer_data();
-  CHECK_LE(kind, DeoptimizerData::kLastDeoptimizeKind);
+  CHECK_LE((int)kind, DeoptimizerData::kLastDeoptimizeKind);
   CHECK(!data->deopt_entry_code(kind).is_null());
   return data->deopt_entry_code(kind)->raw_instruction_start();
 }
@@ -581,7 +581,7 @@ Address Deoptimizer::GetDeoptimizationEntry(Isolate* isolate,
 bool Deoptimizer::IsDeoptimizationEntry(Isolate* isolate, Address addr,
                                         DeoptimizeKind type) {
   DeoptimizerData* data = isolate->deoptimizer_data();
-  CHECK_LE(type, DeoptimizerData::kLastDeoptimizeKind);
+  CHECK_LE((int)type, DeoptimizerData::kLastDeoptimizeKind);
   Code code = data->deopt_entry_code(type);
   if (code.is_null()) return false;
   return addr == code->raw_instruction_start();

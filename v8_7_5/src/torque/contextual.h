@@ -9,6 +9,7 @@
 
 #include "src/base/macros.h"
 #include "src/base/platform/platform.h"
+#include "src/base/thread-local.h"
 
 namespace v8 {
 namespace internal {
@@ -74,12 +75,41 @@ class ContextualVariable {
   struct VarName                                  \
       : v8::internal::torque::ContextualVariable<VarName, __VA_ARGS__> {}
 
+// #define DEFINE_CONTEXTUAL_VARIABLE(VarName)                   \
+//   template <>                                                 \
+//   V8_EXPORT_PRIVATE VarName::VariableType*&                   \
+//   ContextualVariable<VarName, VarName::VariableType>::Top() { \
+//     static thread_local VarName::VariableType* top = nullptr; \
+//     return top;                                               \
+//   }
+
 #define DEFINE_CONTEXTUAL_VARIABLE(VarName)                   \
   template <>                                                 \
   V8_EXPORT_PRIVATE VarName::VariableType*&                   \
   ContextualVariable<VarName, VarName::VariableType>::Top() { \
-    static thread_local VarName::VariableType* top = nullptr; \
-    return top;                                               \
+    static DWORD top_slot = 0; \
+    static long run_once = 0; \
+    static VarName::VariableType* s_var = nullptr; \
+    do { \
+      volatile long old_var = _InterlockedCompareExchange((long volatile *)&(run_once), 2, 0); \
+      if (0 == old_var) { \
+        top_slot = TlsAlloc(); \
+        s_var = (VarName::VariableType*)malloc(sizeof(void*)); \
+        ::TlsSetValue(top_slot, s_var); \
+        _InterlockedExchange((long volatile *)&(run_once), 1); \
+        break; \
+      } else if (1 == old_var) { \
+        s_var = (VarName::VariableType*)::TlsGetValue(top_slot); \
+        break; \
+      } else if (2 == old_var) { \
+        continue; \
+      } else { \
+        DebugBreak(); \
+      } \
+    } while (true); \
+    if (!(s_var)) \
+      DebugBreak(); \
+    return s_var; \
   }
 
 // By inheriting from {ContextualClass} a class can become a contextual variable

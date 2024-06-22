@@ -27,8 +27,8 @@
 #define GraphicsTypes3D_h
 
 #ifndef __glext_h_
-// #include "third_party/khronos/GLES3/gl3.h"
-// #include "third_party/khronos/GLES2/gl2ext.h"
+#include "third_party/khronos/GLES3/gl3.h"
+#include "third_party/khronos/GLES2/gl2ext.h"
 #endif
 
 #include "wtf/Forward.h"

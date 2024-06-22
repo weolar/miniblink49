@@ -13,6 +13,8 @@
 #include "src/register-configuration.h"
 #include "src/source-position.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

@@ -9,7 +9,7 @@
 #include "platform/graphics/Image.h"
 #include "third_party/khronos/GLES2/gl2.h"
 #include "third_party/khronos/GLES2/gl2ext.h"
-//#include "third_party/khronos/GLES3/gl3.h"
+#include "third_party/khronos/GLES3/gl3.h"
 #include "third_party/skia/include/core/SkBitmap.h"
 #include "wtf/RefPtr.h"
 

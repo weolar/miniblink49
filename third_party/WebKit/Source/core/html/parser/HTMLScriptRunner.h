@@ -40,7 +40,9 @@ class Document;
 class Element;
 class HTMLScriptRunnerHost;
 
-class HTMLScriptRunner final : public NoBaseWillBeGarbageCollectedFinalized<HTMLScriptRunner>, private ScriptResourceClient {
+class HTMLScriptRunner final 
+    : public NoBaseWillBeGarbageCollectedFinalized<HTMLScriptRunner>
+    , private ScriptResourceClient {
     WTF_MAKE_NONCOPYABLE(HTMLScriptRunner); WTF_MAKE_FAST_ALLOCATED_WILL_BE_REMOVED(HTMLScriptRunner);
 public:
     static PassOwnPtrWillBeRawPtr<HTMLScriptRunner> create(Document* document, HTMLScriptRunnerHost* host)
@@ -68,15 +70,20 @@ public:
     DECLARE_TRACE();
 
 private:
+    friend class Modulator;
     HTMLScriptRunner(Document*, HTMLScriptRunnerHost*);
 
+    bool parsePendingModuleScripts();
+
     void executeParsingBlockingScript();
-    void executePendingScriptAndDispatchEvent(PendingScript&, PendingScript::Type);
+    void executePendingScriptAndDispatchEvent(PendingScript*, PendingScript::Type);
+    void executePendingModuleScript(PendingScript* pendingScript, PendingScript::Type pendingScriptType);
     void executeParsingBlockingScripts();
 
     void requestParsingBlockingScript(Element*);
     void requestDeferredScript(Element*);
-    bool requestPendingScript(PendingScript&, Element*) const;
+    bool requestPendingScript(PendingScript*, Element*) const;
+    bool requestPendingModuleScript(Document* document, const ModuleRecord* parentModuleRecord, const String& sourceUrl, ScriptPromiseResolver* resolver);
 
     void runScript(Element*, const TextPosition& scriptStartPosition);
 
@@ -86,9 +93,11 @@ private:
 
     RawPtrWillBeMember<Document> m_document;
     RawPtrWillBeMember<HTMLScriptRunnerHost> m_host;
-    PendingScript m_parserBlockingScript;
+    //ScriptState* m_scriptState;
+    Member<PendingScript> m_parserBlockingScript;
     // http://www.whatwg.org/specs/web-apps/current-work/#list-of-scripts-that-will-execute-when-the-document-has-finished-parsing
-    WillBeHeapDeque<PendingScript> m_scriptsToExecuteAfterParsing;
+    /*WillBeHeapDeque<PendingScript>*/WillBeHeapDeque<Member<PendingScript> > m_scriptsToExecuteAfterParsing; // 应该改成存指针，这样不用拷贝来去了
+    bool m_isRunningScripts;
     unsigned m_scriptNestingLevel;
 
     // We only want stylesheet loads to trigger script execution if script

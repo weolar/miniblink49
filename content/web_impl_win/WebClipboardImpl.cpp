@@ -7,6 +7,7 @@
 
 #include "content/web_impl_win/BitmapColor.h"
 #include "content/ui/ClipboardUtil.h"
+#include "content/ui/SaveImage.h"
 #include "third_party/WebKit/public/platform/WebData.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/public/platform/WebImage.h"
@@ -54,8 +55,6 @@ void freeData(unsigned int format, HANDLE data)
         ::GlobalFree(data);
 }
 
-
-
 template <class str>
 void appendEscapedCharForHTMLImpl(typename str::value_type c, str* output)
 {
@@ -75,13 +74,13 @@ void appendEscapedCharForHTMLImpl(typename str::value_type c, str* output)
             const char* p = kCharsToEscape[k].replacement;
             while (*p)
                 //output->push_back(*p++);
-                output += (*p++);
+                *output += (*p++);
             break;
         }
     }
     if (k == arraysize(kCharsToEscape))
         //output->push_back(c);
-        output += c;
+        *output += c;
 }
 
 template <class str>
@@ -221,6 +220,8 @@ private:
 
 namespace content {
 
+WebPageImpl* g_saveImageingWebPage = nullptr;
+
 WebClipboardImpl::WebClipboardImpl() 
     : m_clipboardOwner(NULL)
 {
@@ -260,12 +261,13 @@ bool WebClipboardImpl::isFormatAvailable(Format format, Buffer buffer)
     return false;
 }
 
-blink::WebVector<blink::WebString> WebClipboardImpl::readAvailableTypes(Buffer buffer, bool* containsFilenames) {
+blink::WebVector<blink::WebString> WebClipboardImpl::readAvailableTypes(Buffer buffer, bool* containsFilenames) 
+{
     ClipboardType clipboardType;
     Vector<WebString> types;
-    if (convertBufferType(buffer, &clipboardType)) {
+    if (convertBufferType(buffer, &clipboardType))
         readAvailableTypes(clipboardType, &types, containsFilenames);
-    }
+    
     return types;
 }
 
@@ -276,24 +278,31 @@ void WebClipboardImpl::readAvailableTypes(ClipboardType type, Vector<WebString>*
         return;
     }
 
+    *containsFilenames = false;
     types->clear();
+
     if (::IsClipboardFormatAvailable(CF_TEXT))
         types->append(WebString::fromUTF8(kMimeTypeText));
     if (::IsClipboardFormatAvailable(ClipboardUtil::getHtmlFormatType()))
         types->append(WebString::fromUTF8(kMimeTypeHTML));
     if (::IsClipboardFormatAvailable(ClipboardUtil::getRtfFormatType()))
         types->append(WebString::fromUTF8(kMimeTypeRTF));
-    if (::IsClipboardFormatAvailable(CF_DIB))
+
+    if (::IsClipboardFormatAvailable(CF_DIB)) {
         types->append(WebString::fromUTF8(kMimeTypePNG));
+        return; // DataObjectItem::createFromPasteboard里只认识png格式。 不返回的话，wangEditor里会出现粘贴不了的问题
+    }
+
     if (::IsClipboardFormatAvailable(CF_BITMAP))
         types->append(WebString::fromUTF8(kMimeTypeBMP));
 
-    *containsFilenames = false;
+
 }
 
-blink::WebString WebClipboardImpl::readPlainText(Buffer buffer) {
-    ClipboardType clipboard_type;
-    if (!convertBufferType(buffer, &clipboard_type))
+blink::WebString WebClipboardImpl::readPlainText(Buffer buffer)
+{
+    ClipboardType clipboardType;
+    if (!convertBufferType(buffer, &clipboardType))
         return blink::WebString();
 
     // Acquire the clipboard.
@@ -328,7 +337,8 @@ static int getOffsetOfUtf8ToUtf16(const std::string& utf8Str, int offset)
 
 blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
     unsigned* fragmentStart,
-    unsigned* fragmentEnd) {
+    unsigned* fragmentEnd)
+{
     ClipboardType clipboardType;
     if (!convertBufferType(buffer, &clipboardType))
         return blink::WebString();
@@ -477,23 +487,23 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
 {
     ClipboardType clipboardType;
     if (!convertBufferType(buffer, &clipboardType))
-        return blink::WebData();
+        return blink::WebData(" ", 1);
         
     // Acquire the clipboard.
     ScopedClipboard clipboard;
     if (!clipboard.acquire(getClipboardWindow()))
-        return blink::WebData();
+        return blink::WebData(" ", 1);
 
     // We use a DIB rather than a DDB here since ::GetObject() with the
     // HBITMAP returned from ::GetClipboardData(CF_BITMAP) always reports a color
     // depth of 32bpp.
     HANDLE hBitmap = ::GetClipboardData(CF_DIB);
     if (!hBitmap)
-        return blink::WebData();
+        return blink::WebData(" ", 1);
 
     BITMAPINFO* bitmap = static_cast<BITMAPINFO*>(GlobalLock(hBitmap));
     if (!bitmap)
-        return blink::WebData();
+        return blink::WebData(" ", 1);
     int colorTableLength = 0;
     switch (bitmap->bmiHeader.biBitCount) {
     case 1:
@@ -521,7 +531,7 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*canvas));
     if (!device) {
         GlobalUnlock(hBitmap);
-        return blink::WebData();
+        return blink::WebData(" ", 1);
     }
     HDC dc = device->GetBitmapDCUgly(getClipboardWindow());
     ::SetDIBitsToDevice(dc, 
@@ -557,7 +567,7 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
 #else
     //skBitmapToBitmap(skBitmap, &output);
     if (0 == output.size())
-        return blink::WebData();
+        return blink::WebData(" ", 1);
 #endif
     return blink::WebData((const char*)output.data(), output.size());
 
@@ -657,10 +667,13 @@ static std::string WebStringToUtf8(const WebString& text)
     return result;
 }
 
-void WebClipboardImpl::writeTextInternal(String string)
+void WebClipboardImpl::writeTextInternal(const String& string)
 {
+    if (string.isEmpty())
+        return;
+
     std::wstring strW;
-    HGLOBAL glob = NULL;
+    HGLOBAL hClipboardData = NULL;
     if (string.is8Bit()) {
         std::vector<UChar> outBuf;
         WTF::MByteToWChar((const char*)string.characters8(), string.length(), &outBuf, CP_ACP);
@@ -670,9 +683,8 @@ void WebClipboardImpl::writeTextInternal(String string)
     } else
         strW.assign(string.characters16(), string.length());
     
-    glob = ClipboardUtil::createGlobalData<wchar_t>(strW);
-
-    writeToClipboardInternal(CF_UNICODETEXT, glob);
+    hClipboardData = ClipboardUtil::createGlobalData<wchar_t>(strW);
+    writeToClipboardInternal(CF_UNICODETEXT, hClipboardData);
 }
 
 void WebClipboardImpl::clearClipboard()
@@ -711,12 +723,13 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
     if (!urlString.isNull() && !urlString.isEmpty())
         url = WTFStringToStdString(urlString);
 
-    writeTextInternal(plainText);
-
     std::string htmlFragment = ClipboardUtil::htmlToCFHtml(markup, url);
     
-    HGLOBAL glob = ClipboardUtil::createGlobalData<char>(htmlFragment);
-    writeToClipboardInternal(ClipboardUtil::getHtmlFormatType(), glob);
+    HGLOBAL hClipboardData = ClipboardUtil::createGlobalData<char>(htmlFragment);
+    writeToClipboardInternal(ClipboardUtil::getHtmlFormatType(), hClipboardData);
+    //::GlobalUnlock(hClipboardData);
+
+    writeTextInternal(plainText);
 
     if (writeSmartPaste) {
         ASSERT(m_clipboardOwner != NULL);
@@ -724,38 +737,38 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
     }    
 }
 
-void WebClipboardImpl::writeBitmapFromHandle(HBITMAP source_hbitmap, const blink::IntSize& size)
+void WebClipboardImpl::writeBitmapFromHandle(HBITMAP sourceHBitmap, const blink::IntSize& size)
 {
-    // We would like to just call ::SetClipboardData on the source_hbitmap,
+    // We would like to just call ::SetClipboardData on the sourceHBitmap,
     // but that bitmap might not be of a sort we can write to the clipboard.
     // For this reason, we create a new bitmap, copy the bits over, and then
     // write that to the clipboard.
 
     HDC dc = ::GetDC(NULL);
-    HDC compatible_dc = ::CreateCompatibleDC(NULL);
-    HDC source_dc = ::CreateCompatibleDC(NULL);
+    HDC compatibleDC = ::CreateCompatibleDC(NULL);
+    HDC sourceDC = ::CreateCompatibleDC(NULL);
 
     // This is the HBITMAP we will eventually write to the clipboard
     HBITMAP hbitmap = ::CreateCompatibleBitmap(dc, size.width(), size.height());
     if (!hbitmap) {
         // Failed to create the bitmap
-        ::DeleteDC(compatible_dc);
-        ::DeleteDC(source_dc);
+        ::DeleteDC(compatibleDC);
+        ::DeleteDC(sourceDC);
         ::ReleaseDC(NULL, dc);
         return;
     }
 
-    HBITMAP old_hbitmap = (HBITMAP)SelectObject(compatible_dc, hbitmap);
-    HBITMAP old_source = (HBITMAP)SelectObject(source_dc, source_hbitmap);
+    HBITMAP oldHBitmap = (HBITMAP)SelectObject(compatibleDC, hbitmap);
+    HBITMAP oldSource = (HBITMAP)SelectObject(sourceDC, sourceHBitmap);
 
     // Now we need to blend it into an HBITMAP we can place on the clipboard
     BLENDFUNCTION bf = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
-    ::GdiAlphaBlend(compatible_dc,
+    ::GdiAlphaBlend(compatibleDC,
         0,
         0,
         size.width(),
         size.height(),
-        source_dc,
+        sourceDC,
         0,
         0,
         size.width(),
@@ -763,12 +776,12 @@ void WebClipboardImpl::writeBitmapFromHandle(HBITMAP source_hbitmap, const blink
         bf);
 
     // Clean up all the handles we just opened
-    ::SelectObject(compatible_dc, old_hbitmap);
-    ::SelectObject(source_dc, old_source);
-    ::DeleteObject(old_hbitmap);
-    ::DeleteObject(old_source);
-    ::DeleteDC(compatible_dc);
-    ::DeleteDC(source_dc);
+    ::SelectObject(compatibleDC, oldHBitmap);
+    ::SelectObject(sourceDC, oldSource);
+    ::DeleteObject(oldHBitmap);
+    ::DeleteObject(oldSource);
+    ::DeleteDC(compatibleDC);
+    ::DeleteDC(sourceDC);
     ::ReleaseDC(NULL, dc);
 
     writeToClipboardInternal(CF_BITMAP, hbitmap);
@@ -795,20 +808,20 @@ bool WebClipboardImpl::writeBitmapInternal(const SkBitmap& bitmap)
     // Unfortunately, we can't write the created bitmap to the clipboard,
     // (see http://msdn2.microsoft.com/en-us/library/ms532292.aspx)
     void* bits;
-    HBITMAP source_hbitmap = ::CreateDIBSection(dc, &bm_info, DIB_RGB_COLORS, &bits, NULL, 0);
+    HBITMAP sourceHBitmap = ::CreateDIBSection(dc, &bm_info, DIB_RGB_COLORS, &bits, NULL, 0);
 
-    if (bits && source_hbitmap) {
+    if (bits && sourceHBitmap) {
         {
-            SkAutoLockPixels bitmap_lock(bitmap);
+            SkAutoLockPixels bitmapLock(bitmap);
             // Copy the bitmap out of shared memory and into GDI
             memcpy(bits, bitmap.getPixels(), bitmap.getSize());
         }
 
         // Now we have an HBITMAP, we can write it to the clipboard
-        writeBitmapFromHandle(source_hbitmap, blink::IntSize(bitmap.width(), bitmap.height()));
+        writeBitmapFromHandle(sourceHBitmap, blink::IntSize(bitmap.width(), bitmap.height()));
     }
 
-    ::DeleteObject(source_hbitmap);
+    ::DeleteObject(sourceHBitmap);
     ::ReleaseDC(NULL, dc);
     return true;
 }
@@ -820,13 +833,17 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
     bookmark.append(WTF::ensureUTF16String(urlData));
 
     std::string wideBookmark = WTF::WTFStringToStdString(bookmark);
-    HGLOBAL glob = ClipboardUtil::createGlobalData(wideBookmark);
+    HGLOBAL hClipboardData = ClipboardUtil::createGlobalData(wideBookmark);
 
-    writeToClipboardInternal(ClipboardUtil::getUrlWFormatType(), glob);
+    writeToClipboardInternal(ClipboardUtil::getUrlWFormatType(), hClipboardData);
+    //::GlobalUnlock(hClipboardData);
 }
 
 void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, const WebString& title)
 {
+    if (saveImage(image, url))
+        return;
+
     ScopedClipboard clipboard;
     if (!clipboard.acquire(getClipboardWindow()))
         return;
@@ -838,10 +855,10 @@ void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, cons
     if (!writeBitmapInternal(bitmap))
         return;
 
-    return; // weolar
+    //return; // weolar
 
-    if (!url.isEmpty()) {
-        writeBookmark(url.string(), title);
+    if (!url.isEmpty()) { // chrome的ctrl+c会走writeHTML，而右键复制好像是走copyImageAt，此时会写两个剪切板项
+        //writeBookmark(url.string(), title);
 #if !defined(OS_MACOSX)
         // When writing the image, we also write the image markup so that pasting
         // into rich text editors, such as Gmail, reveals the image. We also don't
@@ -850,7 +867,7 @@ void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, cons
         // We also don't want to write HTML on a Mac, since Mail.app prefers to use
         // the image markup over attaching the actual image. See
         // http://crbug.com/33016 for details.
-        writeHTML(WebString::fromUTF8(URLToImageMarkup(url, title)), WebURL(), WebString(), false);
+        writeHTMLInternal(WebString::fromUTF8(URLToImageMarkup(url, title)), WebURL(), WebString(), false);
 #endif
     }
 }
@@ -863,11 +880,11 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     // written by extension functions such as chrome.bookmarkManagerPrivate.copy.
 
     // DataObject::toWebDragData()
-    clearClipboard();
-
     ScopedClipboard clipboard;
     if (!clipboard.acquire(getClipboardWindow()))
         return;
+
+    clearClipboard();
 
     WebVector<WebDragData::Item> items = data.items();
     for (size_t i = 0; i < items.size(); ++i) {
@@ -889,7 +906,8 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     }
 }
 
-bool WebClipboardImpl::convertBufferType(Buffer buffer, ClipboardType* result) {
+bool WebClipboardImpl::convertBufferType(Buffer buffer, ClipboardType* result)
+{
     *result = CLIPBOARD_TYPE_COPY_PASTE;
     switch (buffer) {
     case BufferStandard:
@@ -954,8 +972,7 @@ HWND WebClipboardImpl::getClipboardWindow()
     window_class.hIconSm = NULL;
     ATOM atom = RegisterClassEx(&window_class);
 
-    m_clipboardOwner = ::CreateWindow(MAKEINTATOM(atom), L"window_name", 0, 0, 0,
-        1, 1, HWND_MESSAGE, 0, NULL, NULL);
+    m_clipboardOwner = ::CreateWindow(MAKEINTATOM(atom), L"window_name", 0, 0, 0, 1, 1, HWND_MESSAGE, 0, NULL, NULL);
 
     return m_clipboardOwner;
 

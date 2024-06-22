@@ -486,8 +486,7 @@ const QualifiedName& webkitdirectoryAttr = reinterpret_cast<QualifiedName*>(&Att
 const QualifiedName& webkitdropzoneAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[312];
 const QualifiedName& widthAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[313];
 const QualifiedName& wrapAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[314];
-
-
+const QualifiedName& nomoduleAttr = reinterpret_cast<QualifiedName*>(&AttrStorage)[315];
 
 void init()
 {
@@ -943,6 +942,7 @@ void init()
         { "width", 12902275, 5, 0, 1 },
         { "wrap", 7601899, 4, 0, 1 },
         { "xmp", 8764488, 3, 1, 0 },
+        { "nomodule", 10903441, 8, 0, 1 },
     };
 
     size_t tag_i = 0;

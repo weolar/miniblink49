@@ -7,41 +7,23 @@
     <Filter Include="include">
       <UniqueIdentifier>{b69ee987-2dd2-4b97-b9bd-91c20d758848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\asmjs">
+      <UniqueIdentifier>{4ffb36d7-53fe-480f-9b36-5f189dc85870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ast">
+      <UniqueIdentifier>{5b263d80-58ae-4206-ba39-350059d89ff7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\base">
       <UniqueIdentifier>{ac089705-73a0-4a0b-af5b-7339eee7e8da}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\base\utils">
       <UniqueIdentifier>{671fdc2c-fb1b-4f34-a780-76e8f827f781}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\compiler">
-      <UniqueIdentifier>{840afd4f-cea5-4185-8109-9ef9444663c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\heap">
-      <UniqueIdentifier>{482d4d62-f2d9-4d79-be9b-372a8ccd5ae7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ic">
-      <UniqueIdentifier>{b0a0628e-277b-426c-93a0-331ad2c64c72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\extensions">
-      <UniqueIdentifier>{454467d3-a06a-40c4-b346-7b11081ba774}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gen">
-      <UniqueIdentifier>{45fe4b63-32f2-4942-9c50-8cbc5e7879dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ia32">
-      <UniqueIdentifier>{a0a09a9e-e74c-45ba-93a7-41ff289a4777}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ast">
-      <UniqueIdentifier>{5b263d80-58ae-4206-ba39-350059d89ff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\debug">
-      <UniqueIdentifier>{6e9ce38c-acd9-46f6-a2f2-1ef269f011a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\debug\ia32">
-      <UniqueIdentifier>{f6d9aa6a-72f6-485d-bd64-6c2acaeacdd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\base\debug">
       <UniqueIdentifier>{347f8e24-c3a0-4efc-9cc8-0607a72d7dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base\platform">
+      <UniqueIdentifier>{a8a4a839-58e2-4a50-8e1d-0a3e09858b11}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\builtins">
       <UniqueIdentifier>{d55adaa3-54d1-4a10-baf4-5646c08ffc93}</UniqueIdentifier>
@@ -49,20 +31,11 @@
     <Filter Include="src\builtins\ia32">
       <UniqueIdentifier>{f604be77-11f6-4ea7-9a68-6a1b4b368274}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\compiler-dispatcher">
-      <UniqueIdentifier>{6ba7d126-2fec-44c5-897e-4459982999af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\asmjs">
-      <UniqueIdentifier>{4ffb36d7-53fe-480f-9b36-5f189dc85870}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\builtins\x64">
       <UniqueIdentifier>{c017475a-add8-4f85-8dab-7ab149754d14}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\debug\x64">
-      <UniqueIdentifier>{d33ab571-6544-4d9b-9c70-4c6cca014c42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\base\platform">
-      <UniqueIdentifier>{a8a4a839-58e2-4a50-8e1d-0a3e09858b11}</UniqueIdentifier>
+    <Filter Include="src\compiler">
+      <UniqueIdentifier>{840afd4f-cea5-4185-8109-9ef9444663c5}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\compiler\backend">
       <UniqueIdentifier>{416a95e6-5565-4958-9458-3211d0132dd0}</UniqueIdentifier>
@@ -72,6 +45,24 @@
     </Filter>
     <Filter Include="src\compiler\backend\x64">
       <UniqueIdentifier>{8446dd91-af41-4654-827b-6b61870cfbfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler-dispatcher">
+      <UniqueIdentifier>{6ba7d126-2fec-44c5-897e-4459982999af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug">
+      <UniqueIdentifier>{6e9ce38c-acd9-46f6-a2f2-1ef269f011a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\ia32">
+      <UniqueIdentifier>{f6d9aa6a-72f6-485d-bd64-6c2acaeacdd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\x64">
+      <UniqueIdentifier>{d33ab571-6544-4d9b-9c70-4c6cca014c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\extensions">
+      <UniqueIdentifier>{454467d3-a06a-40c4-b346-7b11081ba774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gen">
+      <UniqueIdentifier>{45fe4b63-32f2-4942-9c50-8cbc5e7879dd}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\gen\torque-generated">
       <UniqueIdentifier>{75eea06c-54eb-4e42-b3eb-5affb870ecfb}</UniqueIdentifier>
@@ -85,23 +76,17 @@
     <Filter Include="src\gen\src\inspector\protocol">
       <UniqueIdentifier>{c7e8bcd1-6cc7-4631-aa86-f3d9d1da87a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\heap">
+      <UniqueIdentifier>{482d4d62-f2d9-4d79-be9b-372a8ccd5ae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ia32">
+      <UniqueIdentifier>{a0a09a9e-e74c-45ba-93a7-41ff289a4777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic">
+      <UniqueIdentifier>{b0a0628e-277b-426c-93a0-331ad2c64c72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-js.h">
-      <Filter>src\asmjs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-names.h">
-      <Filter>src\asmjs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-parser.h">
-      <Filter>src\asmjs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-scanner.h">
-      <Filter>src\asmjs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-types.h">
-      <Filter>src\asmjs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_7_5\src\ast\ast.h">
       <Filter>src\ast</Filter>
     </ClInclude>
@@ -1173,20 +1158,23 @@
     <ClInclude Include="..\..\v8_7_5\include\v8-wasm-trap-handler-win.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-types.h">
+      <Filter>src\asmjs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-js.h">
+      <Filter>src\asmjs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-names.h">
+      <Filter>src\asmjs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-parser.h">
+      <Filter>src\asmjs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-scanner.h">
+      <Filter>src\asmjs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-js.cc">
-      <Filter>src\asmjs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-parser.cc">
-      <Filter>src\asmjs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-scanner.cc">
-      <Filter>src\asmjs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-types.cc">
-      <Filter>src\asmjs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\ast\ast.cc">
       <Filter>src\ast</Filter>
     </ClCompile>
@@ -2164,6 +2152,18 @@
     </ClCompile>
     <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\Schema.cpp">
       <Filter>src\gen\src\inspector\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-js.cc">
+      <Filter>src\asmjs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-parser.cc">
+      <Filter>src\asmjs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-scanner.cc">
+      <Filter>src\asmjs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-types.cc">
+      <Filter>src\asmjs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

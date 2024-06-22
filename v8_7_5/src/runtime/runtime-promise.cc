@@ -79,7 +79,9 @@ RUNTIME_FUNCTION(Runtime_EnqueueMicrotask) {
 
   Handle<CallableTask> microtask = isolate->factory()->NewCallableTask(
       function, handle(function->native_context(), isolate));
-  function->native_context()->microtask_queue()->EnqueueMicrotask(*microtask);
+  MicrotaskQueue* microtask_queue =
+      function->native_context()->microtask_queue();
+  if (microtask_queue) microtask_queue->EnqueueMicrotask(*microtask);
   return ReadOnlyRoots(isolate).undefined_value();
 }
 
@@ -239,6 +241,7 @@ RUNTIME_FUNCTION(Runtime_PromiseHookAfter) {
 
 RUNTIME_FUNCTION(Runtime_RejectPromise) {
   HandleScope scope(isolate);
+
   DCHECK_EQ(3, args.length());
   CONVERT_ARG_HANDLE_CHECKED(JSPromise, promise, 0);
   CONVERT_ARG_HANDLE_CHECKED(Object, reason, 1);

@@ -8,76 +8,104 @@ const EventEmitter = require('events').EventEmitter;
 const url = require('url');
 const path = require('path');
 
-Object.setPrototypeOf(WebContents.prototype, EventEmitter.prototype);
+Object.setPrototypeOf(WebContents.prototype, EventEmitter.prototype); // 把on之类的函数绑定过来
 
 // Add JavaScript wrappers for WebContents class.
 WebContents.prototype._init = function () {
-	if (this.hasOwnProperty('m_isInited'))
-		return;
-	this.m_isInited = true;
-	
-	///
-	this.session = {
-		"webRequest" : {
-			"onBeforeSendHeaders" : function() {},
-			"onBeforeRequest" : function() {},
-			"onHeadersReceived" : function() {},
-		}
-	};
-	this.webContents = this; // 兼容vscode 1.23
-	///
-	
-	// Every remote callback from renderer process would add a listenter to the
-	// render-view-deleted event, so ignore the listenters warning.
-	this.setMaxListeners(0);
-	
-	// Dispatch IPC messages to the ipc module.
-	this.on('ipc-message', function (event, channel, ...args) {
-		ipcMain.emit(channel, event, ...args);
-	});
-	this.on('ipc-message-sync', function (event, channel, ...args) {
-		Object.defineProperty(event, 'returnValue', {
-			set: function (value) {
-				return event.sendReply(JSON.stringify(value));
-			},
-		get: function () {}
-		});
-		ipcMain.emit(channel, event, ...args);
-	});
+    if (this.hasOwnProperty('m_isInited'))
+        return;
+    this.m_isInited = true;
+    
+    ///
+    this.session = {
+        "webRequest" : {
+            "onBeforeSendHeaders" : function() {},
+            "onBeforeRequest" : function() {},
+            "onHeadersReceived" : function() {},
+        }
+    };
+    this.webContents = this; // 兼容vscode 1.23
+    ///
+    
+    // Every remote callback from renderer process would add a listenter to the
+    // render-view-deleted event, so ignore the listenters warning.
+    this.setMaxListeners(0);
+    
+    // Dispatch IPC messages to the ipc module.
+    // 从electron\lib\renderer\api\ipc-renderer.js的ipcRendererBinding.send过来
+    this.on('ipc-message', function (event, channel, ...args) {
+        ipcMain.emit(channel, event, ...args);
+    });
+    this.on('ipc-message-sync', function (event, channel, ...args) {
+        Object.defineProperty(event, 'returnValue', {
+            set: function (value) {
+                return event.sendReply(JSON.stringify(value));
+            },
+        get: function () {}
+        });
+        ipcMain.emit(channel, event, ...args);
+    });
+    this.on('ipc-render-invoke', function (event, channel, ...args) {
+        ipcMain.emit(channel, event, ...args); // channel='ScanGames'
+    });
 
-	// Handle context menu action request from pepper plugin.
-	this.on('pepper-context-menu', function (event, params) {
-		//const menu = Menu.buildFromTemplate(params.menu);
-		//menu.popup(params.x, params.y);
-	});
+    // Handle context menu action request from pepper plugin.
+    this.on('pepper-context-menu', function (event, params) {
+        //const menu = Menu.buildFromTemplate(params.menu);
+        //menu.popup(params.x, params.y);
+    });
 
-	// The devtools requests the webContents to reload.
-	this.on('devtools-reload-page', function () {
-		this.reload();
-	})
+    // The devtools requests the webContents to reload.
+    this.on('devtools-reload-page', function () {
+        this.reload();
+    });
 
-	// Delays the page-title-updated event to next tick.
-	this.on('-page-title-updated', function (...args) {
-		setImmediate(() => {
-			this.emit.apply(this, ['page-title-updated'].concat(args));
-		})
-	});
+    // Delays the page-title-updated event to next tick.
+    this.on('-page-title-updated', function (...args) {
+        setImmediate(() => {
+            this.emit.apply(this, ['page-title-updated'].concat(args));
+        });
+    });
+    
+    this.on('-new-window', function (event, url) {
+        this.onCreateNewWebview(event, url);
+    });
 }
 
 // WebContents::send(channel, args..)
 // WebContents::sendToAll(channel, args..)
 WebContents.prototype.send = function (channel, ...args) {
-  if (channel == null) throw new Error('Missing required channel argument')
-  return this._send(false, channel, args)
+    if (channel == null) throw new Error('Missing required channel argument')
+    return this._send(false, channel, args)
 }
 WebContents.prototype.sendToAll = function (channel, ...args) {
-  if (channel == null) throw new Error('Missing required channel argument')
-  return this._send(true, channel, args)
+    if (channel == null) throw new Error('Missing required channel argument');
+    return this._send(true, channel, args);
+}
+
+WebContents.prototype.getURL = function (url) {
+    return this._getURL(url);
+}
+
+WebContents.prototype.canGoBack = function () {
+    return this._canGoBack();
+}
+
+WebContents.prototype.canGoForward = function () {
+    return this._canGoForward();
+}
+
+WebContents.prototype.getZoomLevel = function () {
+    return this._getZoomLevel();
+}
+
+WebContents.prototype.getZoomLevel = function (z) {
+    return this._getZoomLevel(z);
 }
 
 WebContents.prototype.loadFile = function (filePath) {
     if (typeof filePath !== 'string')
-        throw new Error('Must pass filePath as a string')
+        throw new Error('Must pass filePath as a string');
     
     return this._loadURL(url.format({
         protocol: 'file',
@@ -162,6 +190,12 @@ WebContents.prototype.executeJavaScript = function (code, hasUserGesture, callba
             })
         })
     }
+}
+
+WebContents.prototype.setVisualZoomLevelLimits = function (minimumLevel, maximumLevel) {
+}
+
+WebContents.prototype.setLayoutZoomLevelLimits = function (minimumLevel, maximumLevel) {
 }
 
 module.exports = WebContents;

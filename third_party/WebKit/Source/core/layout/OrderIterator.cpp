@@ -50,6 +50,7 @@ LayoutBox* OrderIterator::first()
 
 LayoutBox* OrderIterator::next()
 {
+    LayoutObject* obj = nullptr;
     do {
         if (!m_currentChild) {
             if (m_orderValuesIterator == m_orderValues.end())
@@ -63,9 +64,15 @@ LayoutBox* OrderIterator::next()
                 m_isReset = false;
             }
 
-            m_currentChild = m_containerBox->firstChildBox();
+            obj = m_containerBox->firstChildBox();
+            m_currentChild = nullptr;
+            if (obj && obj->isBox())
+                m_currentChild = toLayoutBox(obj);
         } else {
-            m_currentChild = m_currentChild->nextSiblingBox();
+            obj = m_currentChild->nextSibling();
+            m_currentChild = nullptr;
+            if (obj && obj->isBox())
+                m_currentChild = toLayoutBox(obj);
         }
     } while (!m_currentChild || m_currentChild->style()->order() != *m_orderValuesIterator);
 

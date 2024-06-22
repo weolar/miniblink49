@@ -91,16 +91,37 @@ V8_BASE_EXPORT void SetDcheckFunction(void (*dcheck_Function)(const char*, int,
 // Make all CHECK functions discard their log strings to reduce code
 // bloat for official release builds.
 
-#define CHECK_OP(name, op, lhs, rhs)                                         \
-  do {                                                                       \
-    bool _cmp = ::v8::base::Cmp##name##Impl<                                 \
-        typename ::v8::base::pass_value_or_ref<decltype(lhs)>::type,         \
-        typename ::v8::base::pass_value_or_ref<decltype(rhs)>::type>((lhs),  \
-                                                                     (rhs)); \
-    CHECK_WITH_MSG(_cmp, #lhs " " #op " " #rhs);                             \
+// #define CHECK_OP(name, op, lhs, rhs)                                         \
+//   do {                                                                       \
+//     bool _cmp = ::v8::base::Cmp##name##Impl<                                 \
+//         typename ::v8::base::pass_value_or_ref<decltype(lhs)>::type,         \
+//         typename ::v8::base::pass_value_or_ref<decltype(rhs)>::type>((lhs),  \
+//                                                                      (rhs)); \
+//     CHECK_WITH_MSG(_cmp, #lhs " " #op " " #rhs);                             \
+//   } while (false)
+// 
+// #define DCHECK_WITH_MSG(condition, msg) void(0);
+
+#define DCHECK_WITH_MSG(condition, message)   \
+  do {                                        \
+    if (V8_UNLIKELY(!(condition))) {          \
+      V8_Dcheck(__FILE__, __LINE__, message); \
+    }                                         \
   } while (false)
 
-#define DCHECK_WITH_MSG(condition, msg) void(0);
+#define CHECK_OP(name, op, lhs, rhs)                                      \
+  do {                                                                    \
+    if (!((lhs) op (rhs))) {                                                  \
+      V8_Dcheck(__FILE__, __LINE__, "");                                  \
+    }                                                                     \
+  } while (false)
+
+#define DCHECK_OP(name, op, lhs, rhs)                                     \
+  do {                                                                    \
+    if (!((lhs) op (rhs))) {                                                  \
+      V8_Dcheck(__FILE__, __LINE__, "");                                  \
+    }                                                                     \
+  } while (false)
 
 #endif
 
@@ -321,6 +342,7 @@ DEFINE_CHECK_OP_IMPL(GT, > )
 // The DCHECK macro is equivalent to CHECK except that it only
 // generates code in debug builds.
 #ifdef DEBUG
+#define DCHECK(condition)   DCHECK_WITH_MSG(condition, "DCHECK")
 #define DCHECK_EQ(lhs, rhs) DCHECK_OP(EQ, ==, lhs, rhs)
 #define DCHECK_NE(lhs, rhs) DCHECK_OP(NE, !=, lhs, rhs)
 #define DCHECK_GT(lhs, rhs) DCHECK_OP(GT, >, lhs, rhs)

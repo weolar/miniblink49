@@ -66,6 +66,8 @@ public:
     static MessagePort* create(ExecutionContext&);
     ~MessagePort() override;
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<MessagePort*>(object); }
+
     void postMessage(ExecutionContext*, PassRefPtr<SerializedScriptValue> message, const MessagePortArray*, ExceptionState&);
 
     void start();

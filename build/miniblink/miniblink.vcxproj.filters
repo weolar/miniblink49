@@ -592,15 +592,6 @@
     <Filter Include="third_party\Webkit\Source\platform\image-decoders\GDIPlus">
       <UniqueIdentifier>{6f6bd026-0437-4366-bec6-4e3572d68ec0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cc">
-      <UniqueIdentifier>{dcd26cb6-12d3-49af-b9f4-8193f98d74f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cc\blink">
-      <UniqueIdentifier>{8e5a1482-0257-4da7-a3b5-6be905fdfc8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cc\trees">
-      <UniqueIdentifier>{04aef1c4-a9e0-4532-b441-7dfc0c880fa6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="content\resources">
       <UniqueIdentifier>{ea4bf853-63e0-4d60-a2e2-a2cce79f7405}</UniqueIdentifier>
     </Filter>
@@ -631,18 +622,6 @@
     <Filter Include="third_party\Webkit\Source\core\xml\parser">
       <UniqueIdentifier>{d2db4763-699c-4916-adc8-a489b58cf35d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cc\raster">
-      <UniqueIdentifier>{94afee93-6b7c-44a7-94fd-c5ff4b60ce24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cc\base">
-      <UniqueIdentifier>{ee7b5219-1d2d-495a-a826-08797a336420}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cc\tiles">
-      <UniqueIdentifier>{df8d7b0f-b3e8-48e5-ba00-8d94b12faa10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cc\playback">
-      <UniqueIdentifier>{cfc3fc5b-0967-4e76-8faa-9749f45f9bf8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="wke">
       <UniqueIdentifier>{f0273d7d-b7d0-415a-8719-84b47d715888}</UniqueIdentifier>
     </Filter>
@@ -655,9 +634,6 @@
     <Filter Include="net\cookies">
       <UniqueIdentifier>{ff555750-3752-46ba-877f-ff9cc64c4b20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cc\layers">
-      <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
-    </Filter>
     <Filter Include="net\websocket">
       <UniqueIdentifier>{eac8e4db-7f21-4a45-9040-df20582d4727}</UniqueIdentifier>
     </Filter>
@@ -666,27 +642,6 @@
     </Filter>
     <Filter Include="content\web_impl_win\npapi">
       <UniqueIdentifier>{26eb4eab-b806-4651-8467-46a5636674e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node">
-      <UniqueIdentifier>{956d3a52-aa3b-4320-a89f-2662eb921979}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\src">
-      <UniqueIdentifier>{047022df-eda9-482c-98af-b1780a1527cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\uv">
-      <UniqueIdentifier>{d2db561c-ddf5-4385-8a3f-b74d43cd7f68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\cares">
-      <UniqueIdentifier>{39d1114c-3d8a-4a8a-8034-cae2df0f1d87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\cares\src">
-      <UniqueIdentifier>{a44c42ff-1bc9-4a07-bbe2-620573a4f25e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\uv\src">
-      <UniqueIdentifier>{33470477-f849-400f-a5ed-17fc5e7edd58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\uv\src\win">
-      <UniqueIdentifier>{877efd80-bba9-437e-a0f3-b2089be66342}</UniqueIdentifier>
     </Filter>
     <Filter Include="base">
       <UniqueIdentifier>{4340f40e-4405-439d-81f2-c9126a225f3f}</UniqueIdentifier>
@@ -744,6 +699,90 @@
     </Filter>
     <Filter Include="third_party\Webkit\Source\modules\crypto">
       <UniqueIdentifier>{afea0f63-e862-4517-9aaf-749d564f726f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc">
+      <UniqueIdentifier>{dcd26cb6-12d3-49af-b9f4-8193f98d74f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\blink">
+      <UniqueIdentifier>{8e5a1482-0257-4da7-a3b5-6be905fdfc8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\trees">
+      <UniqueIdentifier>{04aef1c4-a9e0-4532-b441-7dfc0c880fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\raster">
+      <UniqueIdentifier>{94afee93-6b7c-44a7-94fd-c5ff4b60ce24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\base">
+      <UniqueIdentifier>{ee7b5219-1d2d-495a-a826-08797a336420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\tiles">
+      <UniqueIdentifier>{df8d7b0f-b3e8-48e5-ba00-8d94b12faa10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\playback">
+      <UniqueIdentifier>{cfc3fc5b-0967-4e76-8faa-9749f45f9bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\layers">
+      <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\netinfo">
+      <UniqueIdentifier>{615c595a-01d3-47ba-8297-0b39f163c6dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\geolocation">
+      <UniqueIdentifier>{0ab7c7e1-763a-4612-ae15-cb834a4553d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\geolocation">
+      <UniqueIdentifier>{09c18206-90a1-4b3b-8174-056f43ea8eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\webgl">
+      <UniqueIdentifier>{523a465b-ce04-420b-a155-ba8968f9a91e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\webgl">
+      <UniqueIdentifier>{01e7552b-f7b8-4ceb-b116-cf5b7f21c49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mc\animation">
+      <UniqueIdentifier>{ec94a3fb-846c-4d88-a7bd-64f43d0ccc9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node">
+      <UniqueIdentifier>{11491265-b1e9-4bc2-828e-6129d97b620e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media">
+      <UniqueIdentifier>{75caecf9-6fd1-4cd0-b9c2-25fe28129e12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\mediasession">
+      <UniqueIdentifier>{9a648d96-9aea-4023-b2c2-bd95150f6428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\mediasource">
+      <UniqueIdentifier>{0f7cc052-f353-49ef-b201-5f0724468f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mbvip">
+      <UniqueIdentifier>{9e1a1ca6-cdea-4d6a-90af-88aa5fa8b4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mbvip\common">
+      <UniqueIdentifier>{f489f3ba-6c49-4fc6-9e8d-e3d90e9b8d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mbvip\core">
+      <UniqueIdentifier>{d55bdcf4-8eab-4992-b05b-43f08c2c9a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mbvip\download">
+      <UniqueIdentifier>{478ba9d4-9a44-4786-8850-f5ee68766f08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mbvip\printing">
+      <UniqueIdentifier>{15d10b4a-d6b1-4b33-9fdb-2d54a08af7ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\content">
+      <UniqueIdentifier>{7f6e4e86-81f7-4771-a208-3caf5cd89d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\platform\audio">
+      <UniqueIdentifier>{63413c6f-e835-435b-9876-c89932390ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\platform\audio\ffmpeg">
+      <UniqueIdentifier>{c210ff34-390d-41c8-afc4-23c99a05fdd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\webaudio">
+      <UniqueIdentifier>{a87b921b-819f-4a59-8c75-75eba24723a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\bindings\modules\mediastream">
+      <UniqueIdentifier>{8a064f5a-8510-46e3-91e2-771e6711790b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7872,9 +7911,6 @@
     <ClCompile Include="..\..\ui\gfx\win\dpi.cc">
       <Filter>ui\gfx\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\icu\source\uchar.cpp">
-      <Filter>third_party\icu\source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WindowPartial.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
@@ -7935,26 +7971,8 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8HTMLPlugInElementCustom.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebLayerImpl.cpp">
-      <Filter>cc\blink</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebCompositorSupportImpl.cpp">
-      <Filter>cc\blink</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebContentLayerImpl.cpp">
-      <Filter>cc\blink</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\GraphicsLayerFactoryChromium.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebFilterOperationsImpl.cpp">
-      <Filter>cc\blink</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebScrollbarLayerImpl.cpp">
-      <Filter>cc\blink</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\trees\LayerTreeHost.cpp">
-      <Filter>cc\trees</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasRenderingContext2D.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -8021,9 +8039,6 @@
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DataView.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\blink\WebImageLayerImpl.cpp">
-      <Filter>cc\blink</Filter>
     </ClCompile>
     <ClCompile Include="..\..\content\browser\WebFrameClientImpl.cpp">
       <Filter>content\browser</Filter>
@@ -8151,12 +8166,6 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HTMLVideoElementPartial.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cc\tiles\Tile.cpp">
-      <Filter>cc\tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\tiles\TileGrid.cpp">
-      <Filter>cc\tiles</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebBlobRegistryImpl.cpp">
       <Filter>content\web_impl_win</Filter>
     </ClCompile>
@@ -8177,9 +8186,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleResultEmpty.cpp">
-      <Filter>third_party\Webkit\Source\platform\exported</Filter>
     </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebMediaPlayerImpl.cpp">
       <Filter>content\web_impl_win</Filter>
@@ -8231,12 +8237,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeVerticalData.cpp">
       <Filter>third_party\Webkit\Source\platform\fonts\opentype</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\trees\LayerSorter.cc">
-      <Filter>cc\trees</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\base\MathUtil.cpp">
-      <Filter>cc\base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\custom\CustomElement.cpp">
       <Filter>third_party\Webkit\Source\core\dom\custom</Filter>
@@ -8355,18 +8355,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8HTMLOptionsCollectionCustom.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cc\playback\LayerChangeAction.cpp">
-      <Filter>cc\playback</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\layers\CompositingLayer.cpp">
-      <Filter>cc\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\tiles\CompositingTile.cpp">
-      <Filter>cc\tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\trees\ActionsFrameGroup.cpp">
-      <Filter>cc\trees</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\Counter.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClCompile>
@@ -8475,12 +8463,6 @@
     <ClCompile Include="..\..\content\web_impl_win\npapi\PluginStream.cpp">
       <Filter>content\web_impl_win\npapi</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImpl.cpp">
-      <Filter>content\web_impl_win\npapi</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImplWin.cpp">
-      <Filter>content\web_impl_win\npapi</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\npapi\npapi.cpp">
       <Filter>content\web_impl_win\npapi</Filter>
     </ClCompile>
@@ -8504,390 +8486,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\content\browser\NavigationController.cpp">
-      <Filter>content\browser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\nodeblink.cpp">
-      <Filter>node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\inet.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\threadpool.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\uv-common.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\version.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\uv.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\util1.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\udp_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\timer_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tcp_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\string_search.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\string_bytes.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\stream_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\stream_base.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\spawn_sync.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\signal_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\process_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\pipe_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_zlib.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_watchdog.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_v8.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_util.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_stat_watcher.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_revert.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_os.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_javascript.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_http_parser.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_file.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_dtrace.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_counters.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_contextify.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_constants.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_config.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_buffer.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\js_stream.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\handle_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\env.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\debug-agent.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\connection_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\connect_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\cares_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\backtrace_win32.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\async-wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\http_parser.c">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\async.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\core.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\dl.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\error.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\handle.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\poll.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\req.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\signal.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\udp.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\util.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares__read_line.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares__timeval.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_cancel.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_create_query.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_data.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_destroy.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_expand_name.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_expand_string.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_fds.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_free_string.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_getenv.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_getopt.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_getsock.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_init.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_library_init.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_llist.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_mkquery.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_nowarn.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_options.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_platform.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_process.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_query.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_search.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_send.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_strdup.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_strerror.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_timeout.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_version.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\ares_writev.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\bitncmp.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\inet_net_pton.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\inet_ntop.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\cares\src\windows_port.c">
-      <Filter>node\cares\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\thread1.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node1.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\timer1.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tty_wrap.cc">
-      <Filter>node\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\base\ostreamvc6.cpp">
       <Filter>base</Filter>
@@ -8914,9 +8512,6 @@
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="..\..\net\PathWalker.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\net\AsyncFileStream.cpp">
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
@@ -9258,20 +8853,8 @@
     <ClCompile Include="..\..\net\FixedReceivedData.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cc\raster\RasterFilters.cpp">
-      <Filter>cc\raster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\raster\RasterTask.cpp">
-      <Filter>cc\raster</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\skia\ext\analysis_canvas.cc">
       <Filter>skia\ext</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\playback\TileActionInfo.cpp">
-      <Filter>cc\playback</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\raster\RasterResouce.cpp">
-      <Filter>cc\raster</Filter>
     </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp">
       <Filter>content\web_impl_win</Filter>
@@ -9630,9 +9213,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLArchive.cpp">
       <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\node_url.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebCustomElement.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
@@ -9656,9 +9236,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.cpp">
       <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tls_wrap.cc">
-      <Filter>node\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializer.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
@@ -9704,9 +9281,6 @@
     </ClCompile>
     <ClCompile Include="..\..\wke\wke2.cpp">
       <Filter>wke</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_api.cc">
-      <Filter>node\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathVariableReference.cpp">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
@@ -9810,9 +9384,6 @@
     <ClCompile Include="..\..\net\DefaultFullPath.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\net\DiskCache.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSCustomPropertyDeclaration.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClCompile>
@@ -9833,6 +9404,1092 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\CurlCacheManager.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\CurlCacheEntry.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\base\MathUtil.cpp">
+      <Filter>mc\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebFilterOperationsImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebImageLayerImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebLayerImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebScrollbarLayerImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebCompositorSupportImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebContentLayerImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\layers\CompositingLayer.cpp">
+      <Filter>mc\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\playback\TileActionInfo.cpp">
+      <Filter>mc\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\playback\LayerChangeAction.cpp">
+      <Filter>mc\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\raster\RasterFilters.cpp">
+      <Filter>mc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\raster\RasterResouce.cpp">
+      <Filter>mc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\raster\RasterTask.cpp">
+      <Filter>mc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\tiles\TileGrid.cpp">
+      <Filter>mc\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\tiles\CompositingTile.cpp">
+      <Filter>mc\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\tiles\Tile.cpp">
+      <Filter>mc\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\trees\LayerSorter.cc">
+      <Filter>mc\trees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\trees\LayerTreeHost.cpp">
+      <Filter>mc\trees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\trees\ActionsFrameGroup.cpp">
+      <Filter>mc\trees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\PostTaskHelper.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\netinfo\WorkerNavigatorNetworkInformation.cpp">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\netinfo\NavigatorNetworkInformation.cpp">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\netinfo\NetworkInformation.cpp">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8NetworkInformation.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImeWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\Coordinates.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\Geolocation.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationController.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationWatchers.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\GeoNotifier.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\geolocation\NavigatorGeolocation.cpp">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Geolocation.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\geolocation\PositionOptions.cpp">
+      <Filter>gen\blink\modules\geolocation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PositionError.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PositionErrorCallback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PositionOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PositionCallback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Coordinates.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Geoposition.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\GeolocationClientProxy.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebGeolocationPermissionRequest.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebGeolocationPermissionRequestManager.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebGeolocationPosition.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebGeolocationController.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebGeolocationError.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\PageNavController.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSharedPlatform3DObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSync.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLTexture.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLTransformFeedback.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLUniformLocation.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObjectBase.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObjectOES.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\ANGLEInstancedArrays.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\CHROMIUMSubscribeUniform.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\CHROMIUMValuebuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\EXTBlendMinMax.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\EXTFragDepth.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\EXTShaderTextureLOD.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\EXTsRGB.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\EXTTextureFilterAnisotropic.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESElementIndexUint.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESStandardDerivatives.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureFloat.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureFloatLinear.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureHalfFloat.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureHalfFloatLinear.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\OESVertexArrayObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGL2RenderingContext.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGL2RenderingContextBase.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLBuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureATC.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureETC1.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTexturePVRTC.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureS3TC.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextAttributeHelpers.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextEvent.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextGroup.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDebugRendererInfo.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDebugShaders.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDepthTexture.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDrawBuffers.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLExtension.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLFenceSync.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLFramebuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLLoseContext.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLProgram.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLQuery.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderbuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderingContext.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderingContextBase.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSampler.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLShader.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLShaderPrecisionFormat.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSharedObject.cpp">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLVertexArrayObject.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLVertexArrayObjectOES.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGL2RenderingContext.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLActiveInfo.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLBuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureATC.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureETC1.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTexturePVRTC.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureS3TC.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextAttributes.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextEvent.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextEventInit.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDebugRendererInfo.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDebugShaders.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDepthTexture.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDrawBuffers.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLFramebuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLLoseContext.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLProgram.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLQuery.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLRenderbuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLRenderingContext.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLSampler.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLShader.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLShaderPrecisionFormat.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLSync.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLTexture.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLTransformFeedback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebGLUniformLocation.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureHalfFloat.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureHalfFloatLinear.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESVertexArrayObject.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESElementIndexUint.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESStandardDerivatives.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureFloat.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureFloatLinear.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\graphics\gpu\WebGLImageConversion.cpp">
+      <Filter>third_party\Webkit\Source\platform\graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\graphics\gpu\AcceleratedImageBufferSurface.cpp">
+      <Filter>third_party\Webkit\Source\platform\graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\graphics\gpu\DrawingBuffer.cpp">
+      <Filter>third_party\Webkit\Source\platform\graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\graphics\gpu\Extensions3DUtil.cpp">
+      <Filter>third_party\Webkit\Source\platform\graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\webgl\WebGLContextEventInit.cpp">
+      <Filter>gen\blink\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\webgl\WebGLContextAttributes.cpp">
+      <Filter>gen\blink\modules\webgl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8ANGLEInstancedArrays.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CHROMIUMSubscribeUniform.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CHROMIUMValuebuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8EXTBlendMinMax.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8EXTFragDepth.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8EXTShaderTextureLOD.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8EXTsRGB.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8EXTTextureFilterAnisotropic.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\modules\v8\WebGLAny.cpp">
+      <Filter>third_party\Webkit\Source\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\AnimationObj.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\AnimationCurve.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\base\Tween.cpp">
+      <Filter>mc\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\base\CubicBezier.cpp">
+      <Filter>mc\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\KeyframedAnimationCurve.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\LayerAnimationController.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\base\FloatBox.cpp">
+      <Filter>mc\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\base\TransformUtil.cpp">
+      <Filter>mc\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\TimingFunctionMc.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\TransformOperationMc.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\TransformOperationsMc.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\ScrollOffsetAnimationCurve.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebCompositorAnimationTimelineImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebCompositorAnimationPlayerImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebFilterAnimationCurveImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebFloatAnimationCurveImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebToCcAnimationDelegateAdapter.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebTransformAnimationCurveImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebTransformOperationsImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebAnimationCurveCommon.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebAnimationImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\blink\WebScrollOffsetAnimationCurveImpl.cpp">
+      <Filter>mc\blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\FilterOperationsWrap.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mc\animation\AnimationIdProvider.cpp">
+      <Filter>mc\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImplWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImpl.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\nodeblink.cpp">
+      <Filter>node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\ThemeInputMultipleFieldsCss.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\DateTimeChooserImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasession\MediaSession.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasession\HTMLMediaElementMediaSession.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\MediaSource.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\MediaSourceRegistry.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\SourceBuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\SourceBufferList.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\TrackDefault.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\TrackDefaultList.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\URLMediaSource.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\VideoPlaybackQuality.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediasource\HTMLVideoElementMediaSource.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaSession.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaSource.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SourceBufferList.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SourceBuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TrackDefault.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TrackDefaultList.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8VideoPlaybackQuality.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleAccess.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleResult.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModule.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebRuntimeFeatures.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\heap\UnifiedHeapController.cpp">
+      <Filter>third_party\Webkit\Source\platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\heap\ActiveScriptWrappableManager.cpp">
+      <Filter>third_party\Webkit\Source\platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\common\LiveIdDetect.cpp">
+      <Filter>mbvip\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\common\StringUtil.cpp">
+      <Filter>mbvip\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\common\ThreadCall.cpp">
+      <Filter>mbvip\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\common\BindJsQuery.cpp">
+      <Filter>mbvip\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\core\mb.cpp">
+      <Filter>mbvip\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\core\MbWebView.cpp">
+      <Filter>mbvip\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\download\SimpleDownload.cpp">
+      <Filter>mbvip\download</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\printing\PdfViewerPluginFunc.cpp">
+      <Filter>mbvip\printing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\printing\Printing.cpp">
+      <Filter>mbvip\printing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\printing\PdfiumLoad.cpp">
+      <Filter>mbvip\printing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\printing\PdfViewerPlugin.cpp">
+      <Filter>mbvip\printing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\icu\source\uchar.cpp">
+      <Filter>third_party\icu\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ffmpeg\FFTFrameFFMPEG.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio\ffmpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioChannel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioDelayDSPKernel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioDestination.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioDSPKernel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioDSPKernelProcessor.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioFIFO.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioProcessor.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioPullFIFO.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioResampler.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioResamplerKernel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioUtilities.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Biquad.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Cone.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\DirectConvolver.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Distance.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\DownSampler.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\DynamicsCompressor.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\DynamicsCompressorKernel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\EqualPowerPanner.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\FFTConvolver.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\FFTFrame.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\FFTFrameStub.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\HRTFDatabase.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\HRTFDatabaseLoader.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\HRTFElevation.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\HRTFKernel.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\HRTFPanner.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\MultiChannelResampler.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Panner.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Reverb.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ReverbAccumulationBuffer.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ReverbConvolver.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ReverbConvolverStage.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ReverbInputBuffer.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\SincResampler.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\Spatializer.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\StereoPanner.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\UpSampler.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\VectorMath.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\ZeroPole.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\audio\AudioBus.cpp">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioListener.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioBuffer.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioBufferCallback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioBufferSourceNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioContext.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioDestinationNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioProcessingEvent.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioSourceNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AudioParam.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AsyncAudioDecoder.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBasicInspectorNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBufferSourceNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioContext.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioDestinationNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioListener.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNodeInput.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNodeOutput.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioParam.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioParamTimeline.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioProcessingEvent.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioScheduledSourceNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioSummingJunction.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadDSPKernel.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadFilterNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadProcessor.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\ChannelMergerNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\ChannelSplitterNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\ConvolverNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DefaultAudioDestinationNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DeferredTaskHandler.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayDSPKernel.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayProcessor.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\DynamicsCompressorNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\GainNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaElementAudioSourceNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaStreamAudioDestinationNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaStreamAudioSourceNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioCompletionEvent.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioContext.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioDestinationNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\OscillatorNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\PannerNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\PeriodicWave.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\RealtimeAnalyser.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\ScriptProcessorNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\StereoPannerNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperDSPKernel.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperProcessor.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AnalyserNode.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStream.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OfflineAudioContext.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8AnalyserNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStream.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamEvent.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBasicProcessorHandler.cpp">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8BiquadFilterNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8ChannelMergerNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8ChannelSplitterNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8ConvolverNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DelayNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DynamicsCompressorNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8GainNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaElementAudioSourceNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamAudioDestinationNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamAudioSourceNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OfflineAudioCompletionEvent.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8OscillatorNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PannerNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PeriodicWave.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8ScriptProcessorNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StereoPannerNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WaveShaperNode.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrack.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrackEvent.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrackSourcesRequestImpl.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamRegistry.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebAudioBus.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebAudioDevice.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrackEvent.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrackSourcesCallback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrack.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\SourceInfo.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamEvent.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamEventInit.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\UserMediaRequest.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\UserMediaController.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebSourceInfo.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SourceInfo.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\mediastream\MediaStreamEventInit.cpp">
+      <Filter>gen\blink\bindings\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\NavigatorUserMediaError.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaConstraintsImpl.cpp">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8NavigatorUserMediaErrorCallback.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8NavigatorUserMediaError.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\core\mb2.cpp">
+      <Filter>mbvip\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mbvip\printing\WkePrinting.cpp">
+      <Filter>mbvip\printing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ModuleRecord.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\Modulator.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\ModuleScriptLoader.cpp">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\webp\WEBPImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\webp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -19844,9 +20501,6 @@
     <ClInclude Include="..\..\third_party\icu\source\common\unicode\utrie2.h">
       <Filter>third_party\icu\source\common\unicode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\icu\source\common\unicode\mini_uchar.h">
-      <Filter>third_party\icu\source\common\unicode</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\icu\source\common\unicode\uprops.h">
       <Filter>third_party\icu\source\common\unicode</Filter>
     </ClInclude>
@@ -19901,29 +20555,8 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.h">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebLayerImpl.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebCompositorSupportImpl.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebContentLayerImpl.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\web\GraphicsLayerFactoryChromium.h">
       <Filter>third_party\Webkit\Source\web</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebScrollbarLayerImpl.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebFilterOperationsImpl.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebLayerImplClient.h">
-      <Filter>cc\blink</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\trees\LayerTreeHost.h">
-      <Filter>cc\trees</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HitRegionOptions.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -19990,9 +20623,6 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\storage\StorageNamespace.h">
       <Filter>third_party\Webkit\Source\modules\storage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\blink\WebImageLayerImpl.h">
-      <Filter>cc\blink</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\file_path.h">
       <Filter>base</Filter>
@@ -20129,32 +20759,11 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.h">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterResouce.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\net\WebURLLoaderWinINet.h">
       <Filter>net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HTMLVideoElementPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RecordDrawHelp.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\raster\SkBitmapRefWrap.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterTaskClient.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\Tile.h">
-      <Filter>cc\tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\playback\DisplayListRecordingSource.h">
-      <Filter>cc\playback</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\TileGrid.h">
-      <Filter>cc\tiles</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\RequestExtraData.h">
       <Filter>net</Filter>
@@ -20771,15 +21380,6 @@
     <ClInclude Include="..\..\third_party\ots\include\opentype-sanitiser.h">
       <Filter>third_party\ots\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\trees\DrawProperties.h">
-      <Filter>cc\trees</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\trees\LayerSorter.h">
-      <Filter>cc\trees</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\base\MathUtil.h">
-      <Filter>cc\base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\custom\CustomElement.h">
       <Filter>third_party\Webkit\Source\core\dom\custom</Filter>
     </ClInclude>
@@ -20909,21 +21509,6 @@
     <ClInclude Include="..\..\base\command_line.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\playback\LayerChangeAction.h">
-      <Filter>cc\playback</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\playback\TileActionInfo.h">
-      <Filter>cc\playback</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\layers\CompositingLayer.h">
-      <Filter>cc\layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\CompositingTile.h">
-      <Filter>cc\tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\trees\ActionsFrameGroup.h">
-      <Filter>cc\trees</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\Counter.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClInclude>
@@ -21047,212 +21632,11 @@
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginStream.h">
       <Filter>content\web_impl_win\npapi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImpl.h">
-      <Filter>content\web_impl_win\npapi</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginDatabase.h">
       <Filter>content\web_impl_win\npapi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\browser\NavigationController.h">
-      <Filter>content\browser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\util.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\util-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_natives.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\async-wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\async-wrap-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base-object-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\config.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\connect_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\handle_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\inspector_agent.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\inspector_socket.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_buffer.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_counters.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_groups.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_dtrace.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_etw_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_http_parser.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_i18n.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_internals.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_javascript.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_lttng.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_lttng_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_lttng_tp.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_object_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_revert.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_stat_watcher.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_version.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_watchdog.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\pipe_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\req-wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\spawn_sync.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_base.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_base-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tcp_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tree.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tty_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\v8abbr.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base64.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base-object.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\connection_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\debug-agent.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\http_parser.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\js_stream.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_constants.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_bio.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_file.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_mutex.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_perfctr_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_root_certs.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\req-wrap-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\string_bytes.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\string_search.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tls_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\udp_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\env.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\env-inl.h">
-      <Filter>node\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\BlobResourceLoader.h">
       <Filter>net</Filter>
@@ -21515,12 +21899,6 @@
     <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h">
       <Filter>content\web_impl_win</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\TilesAddr.h">
-      <Filter>cc\tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\TileBase.h">
-      <Filter>cc\tiles</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Response.h">
       <Filter>third_party\Webkit\Source\modules\fetch</Filter>
     </ClInclude>
@@ -21589,15 +21967,6 @@
     </ClInclude>
     <ClInclude Include="..\..\net\FixedReceivedData.h">
       <Filter>net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterFilters.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterTask.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h">
-      <Filter>cc\tiles</Filter>
     </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h">
       <Filter>content\web_impl_win</Filter>
@@ -21995,12 +22364,6 @@
     <ClInclude Include="..\..\net\LambdaTask.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\node\src\node_url.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\nodeblink.h">
-      <Filter>node</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -22055,12 +22418,6 @@
     </ClInclude>
     <ClInclude Include="..\..\wke\wke2.h">
       <Filter>wke</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_api.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_api_types.h">
-      <Filter>node\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\MarkupTokenizerInlines.h">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
@@ -22167,9 +22524,6 @@
     <ClInclude Include="..\..\net\DefaultFullPath.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\net\DiskCache.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\style\StyleVariableData.h">
       <Filter>third_party\Webkit\Source\core\style</Filter>
     </ClInclude>
@@ -22197,6 +22551,1242 @@
     <ClInclude Include="..\..\base\template_util.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\net\CurlCacheManager.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\CurlCacheEntry.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\BitmapColor.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\DownloadFileBlobCache.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\MathUtil.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\BdColor.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebContentLayerImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebFilterOperationsImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebImageLayerImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebLayerImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebLayerImplClient.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebScrollbarLayerImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebCompositorSupportImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\layers\CompositingLayer.h">
+      <Filter>mc\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\playback\TileActionInfo.h">
+      <Filter>mc\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\playback\LayerChangeAction.h">
+      <Filter>mc\playback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\SkBitmapRefWrap.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\RasterFilters.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\RasterResouce.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\RasterTask.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\RasterTaskClient.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\raster\RecordDrawHelp.h">
+      <Filter>mc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\TileGrid.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\TilesAddr.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\TileWidthHeight.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\CompositingTile.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\Tile.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\tiles\TileBase.h">
+      <Filter>mc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\trees\LayerSorter.h">
+      <Filter>mc\trees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\trees\LayerTreeHost.h">
+      <Filter>mc\trees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\trees\LayerTreeHostClient.h">
+      <Filter>mc\trees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\trees\ActionsFrameGroup.h">
+      <Filter>mc\trees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\trees\DrawProperties.h">
+      <Filter>mc\trees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\PostTaskHelper.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\netinfo\WorkerNavigatorNetworkInformation.h">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\netinfo\NavigatorNetworkInformation.h">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\netinfo\NetworkInformation.h">
+      <Filter>third_party\Webkit\Source\modules\netinfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8NetworkInformation.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImeWin.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\PositionErrorCallback.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\Coordinates.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\Geolocation.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationClient.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationController.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationError.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationPosition.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeolocationWatchers.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\GeoNotifier.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\Geoposition.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\NavigatorGeolocation.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\PositionCallback.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\geolocation\PositionError.h">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Geolocation.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\geolocation\PositionOptions.h">
+      <Filter>gen\blink\modules\geolocation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PositionError.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PositionErrorCallback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PositionOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PositionCallback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Coordinates.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Geoposition.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\GeolocationClientProxy.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\FrameNavController.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\PageNavController.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\SaveImage.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSharedPlatform3DObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSync.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLTexture.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLTransformFeedback.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLUniformLocation.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObjectBase.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLVertexArrayObjectOES.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\ANGLEInstancedArrays.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\CHROMIUMSubscribeUniform.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\CHROMIUMValuebuffer.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\EXTBlendMinMax.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\EXTFragDepth.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\EXTShaderTextureLOD.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\EXTsRGB.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\EXTTextureFilterAnisotropic.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESElementIndexUint.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESStandardDerivatives.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureFloat.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureFloatLinear.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureHalfFloat.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESTextureHalfFloatLinear.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\OESVertexArrayObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGL2RenderingContext.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGL2RenderingContextBase.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLActiveInfo.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLBuffer.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureATC.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureETC1.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTexturePVRTC.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLCompressedTextureS3TC.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextAttributeHelpers.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextEvent.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextGroup.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLContextObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDebugRendererInfo.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDebugShaders.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDepthTexture.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLDrawBuffers.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLExtension.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLExtensionName.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLFenceSync.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLFramebuffer.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLLoseContext.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLProgram.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLQuery.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderbuffer.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderingContext.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLRenderingContextBase.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSampler.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLShader.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLShaderPrecisionFormat.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webgl\WebGLSharedObject.h">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLVertexArrayObject.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLVertexArrayObjectOES.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGL2RenderingContext.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLActiveInfo.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLBuffer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureATC.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureETC1.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTexturePVRTC.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLCompressedTextureS3TC.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextAttributes.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLContextEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDebugRendererInfo.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDebugShaders.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDepthTexture.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLDrawBuffers.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLFramebuffer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLLoseContext.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLProgram.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLQuery.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLRenderbuffer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLRenderingContext.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLSampler.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLShader.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLShaderPrecisionFormat.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLSync.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLTexture.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLTransformFeedback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebGLUniformLocation.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureHalfFloat.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureHalfFloatLinear.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESVertexArrayObject.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESElementIndexUint.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESStandardDerivatives.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureFloat.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OESTextureFloatLinear.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\webgl\WebGLContextAttributes.h">
+      <Filter>gen\blink\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\webgl\WebGLContextEventInit.h">
+      <Filter>gen\blink\modules\webgl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\modules\v8\WebGLAny.h">
+      <Filter>third_party\Webkit\Source\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationObj.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\TimeUtil.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationCurve.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\ScrollOffsetAnimationCurve.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\Tween.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\TimingFunction.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\CubicBezier.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationEvents.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationDelegate.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationHost.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\MutatorHostClient.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationPlayer.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\ElementAnimations.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\LinkedList.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\ScopedPtrVector.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationIdProvider.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationRegistrar.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\AnimationTimeline.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\KeyframedAnimationCurve.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\LayerAnimationEventObserver.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\ScrollbarAnimationController.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\TransformOperation.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\TransformOperations.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\LayerAnimationController.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\FloatBox.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\base\TransformUtil.h">
+      <Filter>mc\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebCompositorAnimationTimelineImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebCompositorAnimationPlayerImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebAnimationImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebFilterAnimationCurveImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebFloatAnimationCurveImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebToCcAnimationDelegateAdapter.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebTransformAnimationCurveImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebTransformOperationsImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebAnimationCurveCommon.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\blink\WebScrollOffsetAnimationCurveImpl.h">
+      <Filter>mc\blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mc\animation\FilterOperationsWrap.h">
+      <Filter>mc\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImpl.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\graphics\Canvas2DLayerBridge.h">
+      <Filter>third_party\Webkit\Source\platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\graphics\Canvas2DLayerManager.h">
+      <Filter>third_party\Webkit\Source\platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\nodeblink.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\BufferedDataSource.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\BufferedDataSourceHostImpl.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\BufferedResourceLoader.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\Ranges.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\SeekableBuffer.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\DataBuffer.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\BufferedConstant.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\media\SimpleDataSource.h">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasession\HTMLMediaElementMediaSession.h">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasession\MediaSession.h">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\MediaSource.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\MediaSourceRegistry.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\SourceBuffer.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\SourceBufferList.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\TrackDefault.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\TrackDefaultList.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\URLMediaSource.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\VideoPlaybackQuality.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediasource\HTMLVideoElementMediaSource.h">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaEncryptedEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeyMessageEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeyMessageEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeys.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeySession.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeyStatusMap.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeySystemAccess.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeySystemConfiguration.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaKeySystemMediaCapability.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaSession.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaSource.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaEncryptedEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SourceBuffer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SourceBufferList.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TrackDefaultList.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TrackDefault.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8VideoPlaybackQuality.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\heap\UnifiedHeapController.h">
+      <Filter>third_party\Webkit\Source\platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\heap\ActiveScriptWrappableManager.h">
+      <Filter>third_party\Webkit\Source\platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeSimpleDownload.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\HeartbeatTimerWin.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\LiveIdDetect.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\StringUtil.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\ThreadCall.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\TimeUtil.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\UrlUtil.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\Util.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\BindJsQuery.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\CallbackClosure.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\common\cJSON.h">
+      <Filter>mbvip\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\core\MbWebView.h">
+      <Filter>mbvip\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\core\mb.h">
+      <Filter>mbvip\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\download\SimpleDownload.h">
+      <Filter>mbvip\download</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\download\DownloadMgr.h">
+      <Filter>mbvip\download</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\download\DownloadUtil.h">
+      <Filter>mbvip\download</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PdfViewerPluginFunc.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\Printing.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PrintingPagehtml.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PrintingSetting.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PrintingUtil.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PdfiumLoad.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PdfViewerHtml.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\PdfViewerPlugin.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\GcTimeScheduler.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioBus.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioChannel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioDelayDSPKernel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioDestination.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioDestinationConsumer.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioDSPKernel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioDSPKernelProcessor.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioFIFO.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioFileReader.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioIOCallback.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioProcessor.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioPullFIFO.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioResampler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioResamplerKernel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioSourceProvider.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioSourceProviderClient.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioUtilities.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Biquad.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Cone.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\DenormalDisabler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\DirectConvolver.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Distance.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\DownSampler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\DynamicsCompressor.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\DynamicsCompressorKernel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\EqualPowerPanner.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\FFTConvolver.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\FFTFrame.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\HRTFDatabase.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\HRTFDatabaseLoader.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\HRTFElevation.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\HRTFKernel.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\HRTFPanner.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\MultiChannelResampler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Panner.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Reverb.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\ReverbAccumulationBuffer.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\ReverbConvolver.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\ReverbConvolverStage.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\ReverbInputBuffer.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\SincResampler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\Spatializer.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\StereoPanner.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\UpSampler.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\VectorMath.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\ZeroPole.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\audio\AudioArray.h">
+      <Filter>third_party\Webkit\Source\platform\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioListener.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioBuffer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioBufferCallback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioBufferSourceNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioContext.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioDestinationNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioProcessingEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioSourceNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AudioParam.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AsyncAudioDecoder.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBasicInspectorNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBasicProcessorHandler.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBuffer.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBufferCallback.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioBufferSourceNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioContext.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioDestinationNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioListener.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNodeInput.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioNodeOutput.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioParam.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioParamTimeline.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioProcessingEvent.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioScheduledSourceNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioSourceNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AudioSummingJunction.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadDSPKernel.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadFilterNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\BiquadProcessor.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\ChannelMergerNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\ChannelSplitterNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\ConvolverNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DefaultAudioDestinationNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DeferredTaskHandler.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayDSPKernel.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DelayProcessor.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DOMWindowWebAudio.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\DynamicsCompressorNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\GainNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaElementAudioSourceNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaStreamAudioDestinationNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\MediaStreamAudioSourceNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioCompletionEvent.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioContext.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\OfflineAudioDestinationNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\OscillatorNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\PannerNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\PeriodicWave.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\RealtimeAnalyser.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\ScriptProcessorNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\StereoPannerNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperDSPKernel.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\WaveShaperProcessor.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\webaudio\AnalyserNode.h">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStream.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OfflineAudioContext.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8AnalyserNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStream.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamEvent.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8BiquadFilterNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ChannelMergerNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ChannelSplitterNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ConvolverNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DelayNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DynamicsCompressorNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8GainNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaElementAudioSourceNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamAudioDestinationNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamAudioSourceNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OfflineAudioCompletionEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8OscillatorNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PannerNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PeriodicWave.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ScriptProcessorNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StereoPannerNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WaveShaperNode.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrack.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrackSourcesRequestImpl.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrackEvent.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamTrackSourcesCallback.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaStreamRegistry.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrackEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrackSourcesCallback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamTrack.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\SourceInfo.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MediaStreamEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\UserMediaController.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\UserMediaRequest.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SourceInfo.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\mediastream\MediaStreamEventInit.h">
+      <Filter>gen\blink\bindings\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\NavigatorUserMediaError.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\mediastream\MediaConstraintsImpl.h">
+      <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8NavigatorUserMediaError.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8NavigatorUserMediaErrorCallback.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\core\MbCallback.h">
+      <Filter>mbvip\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\mbvip\printing\WkePrinting.h">
+      <Filter>mbvip\printing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ModuleRecord.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\Modulator.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\ModuleScriptLoader.h">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -22222,9 +23812,6 @@
     </None>
     <None Include="..\..\third_party\WebKit\Source\core\editing\OWNERS">
       <Filter>third_party\Webkit\Source\core\editing</Filter>
-    </None>
-    <None Include="..\..\third_party\WebKit\Source\core\events\events.rar">
-      <Filter>third_party\Webkit\Source\core\events</Filter>
     </None>
     <None Include="..\..\third_party\WebKit\Source\core\events\EventTargetFactory.in">
       <Filter>third_party\Webkit\Source\core\events</Filter>
@@ -22316,14 +23903,39 @@
     <None Include="..\..\third_party\WebKit\Source\core\xml\XPathGrammar.y">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
     </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\geolocation\DEPS">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\geolocation\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\geolocation</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\webgl\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\webgl</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\mediasession\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\mediasession\DEPS">
+      <Filter>third_party\Webkit\Source\modules\mediasession</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\mediasource\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\mediasource\DEPS">
+      <Filter>third_party\Webkit\Source\modules\mediasource</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\webaudio\DEPS">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\webaudio\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\webaudio</Filter>
+    </None>
+    <None Include="..\..\mbvip\mtmb.def">
+      <Filter>mbvip</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
-      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="miniblink.rc" />

@@ -702,6 +702,10 @@ png_free_jmpbuf(png_structrp png_ptr)
 }
 #endif
 
+void my_fprintf(FILE* level, const char* fmt, ...)
+{
+}
+
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
  * function is used by default, or if the program supplies NULL for the
@@ -729,24 +733,24 @@ png_default_error,(png_const_structrp png_ptr, png_const_charp error_message),
       if ((offset > 1) && (offset < 15))
       {
          error_number[offset - 1] = '\0';
-         fprintf(stderr, "libpng error no. %s: %s",
+         my_fprintf(stderr, "libpng error no. %s: %s",
              error_number, error_message + offset + 1);
-         fprintf(stderr, PNG_STRING_NEWLINE);
+         my_fprintf(stderr, PNG_STRING_NEWLINE);
       }
 
       else
       {
-         fprintf(stderr, "libpng error: %s, offset=%d",
+         my_fprintf(stderr, "libpng error: %s, offset=%d",
              error_message, offset);
-         fprintf(stderr, PNG_STRING_NEWLINE);
+         my_fprintf(stderr, PNG_STRING_NEWLINE);
       }
    }
    else
 #endif
    {
-      fprintf(stderr, "libpng error: %s", error_message ? error_message :
+      my_fprintf(stderr, "libpng error: %s", error_message ? error_message :
          "undefined");
-      fprintf(stderr, PNG_STRING_NEWLINE);
+      my_fprintf(stderr, PNG_STRING_NEWLINE);
    }
 #else
    PNG_UNUSED(error_message) /* Make compiler happy */
@@ -800,24 +804,24 @@ png_default_warning(png_const_structrp png_ptr, png_const_charp warning_message)
       if ((offset > 1) && (offset < 15))
       {
          warning_number[offset + 1] = '\0';
-         fprintf(stderr, "libpng warning no. %s: %s",
+         my_fprintf(stderr, "libpng warning no. %s: %s",
              warning_number, warning_message + offset);
-         fprintf(stderr, PNG_STRING_NEWLINE);
+         my_fprintf(stderr, PNG_STRING_NEWLINE);
       }
 
       else
       {
-         fprintf(stderr, "libpng warning: %s",
+         my_fprintf(stderr, "libpng warning: %s",
              warning_message);
-         fprintf(stderr, PNG_STRING_NEWLINE);
+         my_fprintf(stderr, PNG_STRING_NEWLINE);
       }
    }
    else
 #  endif
 
    {
-      fprintf(stderr, "libpng warning: %s", warning_message);
-      fprintf(stderr, PNG_STRING_NEWLINE);
+      my_fprintf(stderr, "libpng warning: %s", warning_message);
+      my_fprintf(stderr, PNG_STRING_NEWLINE);
    }
 #else
    PNG_UNUSED(warning_message) /* Make compiler happy */

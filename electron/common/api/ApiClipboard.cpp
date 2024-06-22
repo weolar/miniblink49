@@ -20,11 +20,13 @@ namespace atom {
 
 class Clipboard : public mate::EventEmitter<Clipboard> {
 public:
-    Clipboard(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    Clipboard(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+    {
         gin::Wrappable<Clipboard>::InitWith(isolate, wrapper);
     }
 
-    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
+    static void init(v8::Isolate* isolate, v8::Local<v8::Object> target)
+    {
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Clipboard"));
@@ -38,11 +40,15 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "Clipboard"), prototype->GetFunction());
     }
 
-    void _clearApi(const std::string& type) {
+    void _clearApi(const std::string& type)
+    {
+        ::OpenClipboard(NULL);
         ::EmptyClipboard();
+        ::CloseClipboard();
     }
 
-    void _writeImageApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void _writeImageApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         NativeImage* nativeImage = nullptr;
         if (args[0]->IsObject()) {
             v8::Local<v8::Object> handle = args[0]->ToObject();
@@ -102,7 +108,8 @@ public:
         ::CloseClipboard();
     }
 
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
         v8::Isolate* isolate = args.GetIsolate();
         if (args.IsConstructCall()) {
             new Clipboard(isolate, args.This());
@@ -111,7 +118,8 @@ public:
         }
     }
 
-    std::string _readTextApi(const std::string& type) {
+    std::string _readTextApi(const std::string& type)
+    {
         if (!::OpenClipboard(nullptr))
             return std::string();
 
@@ -123,13 +131,14 @@ public:
 
         LPCWSTR dataText = (LPCWSTR)::GlobalLock(data);
         std::wstring text(dataText, wcslen(dataText));
-        ::GlobalUnlock(data);        
+        ::GlobalUnlock(data);
 
         ::CloseClipboard();
         return base::WideToUTF8(text);
     }
 
-    void _writeTextApi(const std::string& text, const std::string& type) {
+    void _writeTextApi(const std::string& text, const std::string& type)
+    {
         if (0 == text.size())
             return;
 
@@ -151,7 +160,8 @@ public:
         ::CloseClipboard();
     }
 
-    v8::Local<v8::Object> readImage(const std::string& type) {
+    v8::Local<v8::Object> readImage(const std::string& type)
+    {
         if (!::OpenClipboard(nullptr))
             return NativeImage::createEmpty(isolate());
 
@@ -191,7 +201,8 @@ public:
         return obj;
     }
 
-    v8::Local<v8::Object> _readImageApi(const std::string& type) {
+    v8::Local<v8::Object> _readImageApi(const std::string& type)
+    {
         return readImage(type);
     }
 
@@ -202,14 +213,15 @@ public:
 v8::Persistent<v8::Function> Clipboard::constructor;
 gin::WrapperInfo Clipboard::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-void initializeClipboardApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
+void initializeClipboardApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     Clipboard::init(env->isolate(), exports);
 }
 
-}  // atom namespace
+} // atom namespace
 
 static const char CommonClipboardNative[] = "console.log('CommonClipboardNative');;";
-static NodeNative nativeCommonClipboard{ "Clipboard", CommonClipboardNative, sizeof(CommonClipboardNative) - 1 };
+static NodeNative nativeCommonClipboard { "Clipboard", CommonClipboardNative, sizeof(CommonClipboardNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_clipboard, atom::initializeClipboardApi, &nativeCommonClipboard)

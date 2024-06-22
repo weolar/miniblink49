@@ -14,7 +14,7 @@ class ArrayLastindexofBuiltinsFromDSLAssembler {
   explicit ArrayLastindexofBuiltinsFromDSLAssembler(compiler::CodeAssemblerState* state) : state_(state), ca_(state) { USE(state_, ca_); }
   compiler::TNode<Object> LoadWithHoleCheck10FixedArray(compiler::TNode<Context> p_context, compiler::TNode<FixedArrayBase> p_elements, compiler::TNode<Smi> p_index, compiler::CodeAssemblerLabel* label_IfHole);
   compiler::TNode<Object> LoadWithHoleCheck16FixedDoubleArray(compiler::TNode<Context> p_context, compiler::TNode<FixedArrayBase> p_elements, compiler::TNode<Smi> p_index, compiler::CodeAssemblerLabel* label_IfHole);
-  compiler::TNode<Number> GetFromIndex(compiler::TNode<Context> p_context, compiler::TNode<Number> p_length, CodeStubArguments* p_arguments);
+  compiler::TNode<Number> GetFromIndex(compiler::TNode<Context> p_context, compiler::TNode<Number> p_length, BaseBuiltinsFromDSLAssembler::Arguments p_arguments);
   compiler::TNode<Object> TryFastArrayLastIndexOf(compiler::TNode<Context> p_context, compiler::TNode<JSReceiver> p_receiver, compiler::TNode<Object> p_searchElement, compiler::TNode<Number> p_from, compiler::CodeAssemblerLabel* label_Slow);
   compiler::TNode<Object> GenericArrayLastIndexOf(compiler::TNode<Context> p_context, compiler::TNode<JSReceiver> p_object, compiler::TNode<Object> p_searchElement, compiler::TNode<Number> p_from);
   compiler::TNode<Smi> FastArrayLastIndexOf10FixedArray(compiler::TNode<Context> p_context, compiler::TNode<JSArray> p_array, compiler::TNode<Smi> p_from, compiler::TNode<Object> p_searchElement);

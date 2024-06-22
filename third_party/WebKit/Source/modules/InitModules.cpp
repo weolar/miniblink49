@@ -18,10 +18,10 @@
 #include "modules/compositorworker/CompositorWorkerManager.h"
 #include "modules/filesystem/DraggedIsolatedFileSystemImpl.h"
 #include "modules/webdatabase/DatabaseManager.h"
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "modules/webgl/WebGL2RenderingContext.h"
 #include "modules/webgl/WebGLRenderingContext.h"
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 
 namespace blink {
 
@@ -50,10 +50,12 @@ void ModulesInitializer::init()
     // Canvas context types must be registered with the HTMLCanvasElement.
     HTMLCanvasElement::registerRenderingContextFactory(adoptPtr(new CanvasRenderingContext2D::Factory()));
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef NO_USE_ORIG_CHROME
     HTMLCanvasElement::registerRenderingContextFactory(adoptPtr(new WebGLRenderingContext::Factory()));
     HTMLCanvasElement::registerRenderingContextFactory(adoptPtr(new WebGL2RenderingContext::Factory()));
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 
     ASSERT(isInitialized());
 }

@@ -9,6 +9,8 @@
 #include "src/compiler/opcodes.h"
 #include "src/runtime/runtime.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

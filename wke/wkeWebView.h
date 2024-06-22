@@ -22,6 +22,10 @@ namespace net {
 class WebCookieJarImpl;
 }
 
+namespace printing {
+class WkePrinting;
+}
+
 typedef void CURL;
 typedef void CURLSH;
 
@@ -88,6 +92,12 @@ struct CWebViewHandler {
     wkeLoadUrlBeginCallback loadUrlBeginCallback;
     void* loadUrlBeginCallbackParam;
 
+    wkeLoadUrlHeadersReceivedCallback loadUrlHeadersReceivedCallback;
+    void* loadUrlHeadersReceivedCallbackParam;
+
+    wkeLoadUrlFinishCallback loadUrlFinishCallback;
+    void* loadUrlFinishCallbackParam;
+
     wkeLoadUrlEndCallback loadUrlEndCallback;
     void* loadUrlEndCallbackParam;
 
@@ -123,8 +133,11 @@ struct CWebViewHandler {
 
     wkeOnContextMenuItemClickCallback contextMenuItemClickCallback;
     void* contextMenuItemClickCallbackParam;
+
+    wkeCaretChangedCallback caretChangedCallback;
+    void* caretChangedCallbackParam;
     
-    bool isWke; // 是否是使用的wke接口
+    BOOL needDestroyWnd; // 是否在关闭时刻销毁窗口
 };
 
 class CWebView : public IWebView {
@@ -134,6 +147,11 @@ public:
 
     virtual bool create();
     virtual void destroy() override;
+
+    static void shutdown();
+
+    bool isValid();
+    void setWillDestroy();
 
     const utf8* name() const override;
     const wchar_t* nameW() const;
@@ -159,7 +177,7 @@ public:
 
     const utf8* url() const override;
 
-	  void setUserAgent(const utf8 * useragent);
+    void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
     
     virtual bool isLoading() const override;
@@ -194,15 +212,21 @@ public:
     void paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool fKeepAlpha);
     void repaintIfNeeded();
     HDC viewDC();
+    void releaseHdc();
     HWND windowHandle() const;
     void setHandle(HWND wnd);
     void setHandleOffset(int x, int y);
+    void setDragDropEnable(bool b);
+    void setTouchSimulateEnabled(bool b);
+    void setSystemTouchEnabled(bool b);
     void setViewSettings(const wkeViewSettings*);
     bool canGoBack() const override;
     bool goBack() override;
     bool canGoForward() const override;
     bool goForward() override;
-    
+    void navigateAtIndex(int index);
+    int getNavigateIndex() const;
+
     void editorSelectAll() override;
     void editorUnSelect() override;
     void editorCopy() override;
@@ -240,7 +264,7 @@ public:
 
     jsValue runJS(const wchar_t* script) override;
     jsValue runJS(const utf8* script) override;
-    jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
+    jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure, int worldId);
     jsExecState globalExec() override;
     jsExecState globalExecByFrame(wkeWebFrameHandle frameId);
     
@@ -262,6 +286,7 @@ public:
     void onMouseOverUrlChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
     void onPaintBitUpdated(wkePaintBitUpdatedCallback callback, void* callbackParam);
+    void onCaretChanged(wkeCaretChangedCallback callback, void* callbackParam);
 
     void onAlertBox(wkeAlertBoxCallback callback, void* callbackParam);
     void onConfirmBox(wkeConfirmBoxCallback callback, void* callbackParam);
@@ -282,6 +307,8 @@ public:
     
     void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
     void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+    void onLoadUrlHeadersReceived(wkeLoadUrlHeadersReceivedCallback callback, void* callbackParam);
+    void onLoadUrlFinish(wkeLoadUrlFinishCallback callback, void* callbackParam);
 	void onLoadUrlFail(wkeLoadUrlFailCallback callback, void* callbackParam);
 
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
@@ -320,11 +347,19 @@ public:
 
     CURLSH* getCurlShareHandle();
     std::string getCookieJarPath();
+    void setCookieJarFullPath(const utf8* path);
     net::WebCookieJarImpl* getCookieJar();
+
+    void setLocalStorageFullPath(const utf8* path);
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
 
     int getId() const { return m_id; }
+
+    void clearPrinting() { m_printing = nullptr; }
+    void setPrinting(printing::WkePrinting* printing) { m_printing = printing; }
+    bool isPrinting() const { return !!m_printing; }
+    printing::WkePrinting* getPrinting() const { return m_printing; }
 
 protected:
     friend class ShowDevToolsTaskObserver;
@@ -383,6 +418,8 @@ protected:
     friend class ShowDevToolsTaskObserver;
     bool m_isCreatedDevTools;
     wkeWebView m_devToolsWebView;
+
+    printing::WkePrinting* m_printing;
 
     wkeViewSettings m_settings;
 };

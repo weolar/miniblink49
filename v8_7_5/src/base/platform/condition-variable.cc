@@ -9,6 +9,8 @@
 
 #include "src/base/platform/time.h"
 
+#include "../node/openssl/openssl/crypto/sync_xp.h" // SUPPORT_XP_CODE
+
 namespace v8 {
 namespace base {
 
@@ -119,22 +121,22 @@ bool ConditionVariable::WaitFor(Mutex* mutex, const TimeDelta& rel_time) {
 #elif V8_OS_WIN
 
 ConditionVariable::ConditionVariable() {
-  InitializeConditionVariable(&native_handle_);
+  InitializeConditionVariableXp(&native_handle_); // SUPPORT_XP_CODE
 }
 
 
 ConditionVariable::~ConditionVariable() {}
 
-void ConditionVariable::NotifyOne() { WakeConditionVariable(&native_handle_); }
+void ConditionVariable::NotifyOne() { WakeConditionVariableXp(&native_handle_); } // SUPPORT_XP_CODE
 
 void ConditionVariable::NotifyAll() {
-  WakeAllConditionVariable(&native_handle_);
+  WakeAllConditionVariableXp(&native_handle_); // SUPPORT_XP_CODE
 }
 
 
 void ConditionVariable::Wait(Mutex* mutex) {
   mutex->AssertHeldAndUnmark();
-  SleepConditionVariableSRW(&native_handle_, &mutex->native_handle(), INFINITE,
+  SleepConditionVariableSRWXp(&native_handle_, &mutex->native_handle(), INFINITE, // SUPPORT_XP_CODE
                             0);
   mutex->AssertUnheldAndMark();
 }
@@ -143,7 +145,7 @@ void ConditionVariable::Wait(Mutex* mutex) {
 bool ConditionVariable::WaitFor(Mutex* mutex, const TimeDelta& rel_time) {
   int64_t msec = rel_time.InMilliseconds();
   mutex->AssertHeldAndUnmark();
-  BOOL result = SleepConditionVariableSRW(
+  BOOL result = SleepConditionVariableSRWXp( // SUPPORT_XP_CODE
       &native_handle_, &mutex->native_handle(), static_cast<DWORD>(msec), 0);
 #ifdef DEBUG
   if (!result) {

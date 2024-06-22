@@ -12,12 +12,12 @@
 #include "src/globals.h"
 #include "src/heap-symbols.h"
 #include "src/heap/heap.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+//#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
 
 namespace v8 {
 namespace internal {
 
-typedef std::pair<uint64_t, double> BytesAndDuration;
+using BytesAndDuration = std::pair<uint64_t, double>;
 
 inline BytesAndDuration MakeBytesAndDuration(uint64_t bytes, double duration) {
   return std::make_pair(bytes, duration);
@@ -324,23 +324,23 @@ class V8_EXPORT_PRIVATE GCTracer {
   void RecordGCPhasesHistograms(TimedHistogram* gc_timer);
 
  private:
-  FRIEND_TEST(GCTracer, AverageSpeed);
-  FRIEND_TEST(GCTracerTest, AllocationThroughput);
-  FRIEND_TEST(GCTracerTest, BackgroundScavengerScope);
-  FRIEND_TEST(GCTracerTest, BackgroundMinorMCScope);
-  FRIEND_TEST(GCTracerTest, BackgroundMajorMCScope);
-  FRIEND_TEST(GCTracerTest, MultithreadedBackgroundScope);
-  FRIEND_TEST(GCTracerTest, NewSpaceAllocationThroughput);
-  FRIEND_TEST(GCTracerTest, NewSpaceAllocationThroughputWithProvidedTime);
-  FRIEND_TEST(GCTracerTest, OldGenerationAllocationThroughputWithProvidedTime);
-  FRIEND_TEST(GCTracerTest, RegularScope);
-  FRIEND_TEST(GCTracerTest, IncrementalMarkingDetails);
-  FRIEND_TEST(GCTracerTest, IncrementalScope);
-  FRIEND_TEST(GCTracerTest, IncrementalMarkingSpeed);
-  FRIEND_TEST(GCTracerTest, MutatorUtilization);
-  FRIEND_TEST(GCTracerTest, RecordGCSumHistograms);
-  FRIEND_TEST(GCTracerTest, RecordMarkCompactHistograms);
-  FRIEND_TEST(GCTracerTest, RecordScavengerHistograms);
+//   FRIEND_TEST(GCTracer, AverageSpeed);
+//   FRIEND_TEST(GCTracerTest, AllocationThroughput);
+//   FRIEND_TEST(GCTracerTest, BackgroundScavengerScope);
+//   FRIEND_TEST(GCTracerTest, BackgroundMinorMCScope);
+//   FRIEND_TEST(GCTracerTest, BackgroundMajorMCScope);
+//   FRIEND_TEST(GCTracerTest, MultithreadedBackgroundScope);
+//   FRIEND_TEST(GCTracerTest, NewSpaceAllocationThroughput);
+//   FRIEND_TEST(GCTracerTest, NewSpaceAllocationThroughputWithProvidedTime);
+//   FRIEND_TEST(GCTracerTest, OldGenerationAllocationThroughputWithProvidedTime);
+//   FRIEND_TEST(GCTracerTest, RegularScope);
+//   FRIEND_TEST(GCTracerTest, IncrementalMarkingDetails);
+//   FRIEND_TEST(GCTracerTest, IncrementalScope);
+//   FRIEND_TEST(GCTracerTest, IncrementalMarkingSpeed);
+//   FRIEND_TEST(GCTracerTest, MutatorUtilization);
+//   FRIEND_TEST(GCTracerTest, RecordGCSumHistograms);
+//   FRIEND_TEST(GCTracerTest, RecordMarkCompactHistograms);
+//   FRIEND_TEST(GCTracerTest, RecordScavengerHistograms);
 
   struct BackgroundCounter {
     double total_duration_ms;

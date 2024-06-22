@@ -41,11 +41,11 @@
 // #include <unicode/locid.h>
 // #include <unicode/uchar.h>
 
-#if 0 //ndef MINIBLINK_NO_HARFBUZZ
+#if 1 //ndef MINIBLINK_NO_HARFBUZZ
 #include "third_party/icu/source/common/unicode/umachine.h"
 #include "third_party/icu/source/common/unicode/utrie2.h"
 #include "third_party/icu/source/common/unicode/utypes.h"
-#include "third_party/icu/source/common/unicode/mini_uchar.h"
+#include "third_party/icu/source/common/unicode/uchar.h"
 #endif
 
 namespace blink {
@@ -241,6 +241,7 @@ void initializeScriptFontMap(ScriptToFontMap& scriptFontMap, SkFontMgr* fontMana
     }
 #else
     //localeFamily = L"simsun";
+    localeFamily = scriptFontMap[USCRIPT_SIMPLIFIED_HAN];
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
     if (localeFamily)
@@ -253,7 +254,7 @@ void initializeScriptFontMap(ScriptToFontMap& scriptFontMap, SkFontMgr* fontMana
 // FIXME: make this more efficient with a wider coverage
 UScriptCode getScriptBasedOnUnicodeBlock(int ucs4)
 {
-#if 0 //ndef MINIBLINK_NO_HARFBUZZ
+#if 1 //ndef MINIBLINK_NO_HARFBUZZ
     UBlockCode block = ublock_getCode(ucs4);
     switch (block) {
     case UBLOCK_CJK_SYMBOLS_AND_PUNCTUATION:
@@ -291,7 +292,7 @@ UScriptCode getScriptBasedOnUnicodeBlock(int ucs4)
 
 UScriptCode getScript(int ucs4)
 {
-#if 0 //ndef MINIBLINK_NO_HARFBUZZ
+#if 1 //ndef MINIBLINK_NO_HARFBUZZ
     UErrorCode err = U_ZERO_ERROR;
     UScriptCode script = uscript_getScript(ucs4, &err);
     // If script is invalid, common or inherited or there's an error,
@@ -319,7 +320,7 @@ const UChar* getFontBasedOnUnicodeBlock(int ucs4, SkFontMgr* fontManager)
         }
         initialized = true;
     }
-#if 0 //ndef MINIBLINK_NO_HARFBUZZ
+#if 1 //ndef MINIBLINK_NO_HARFBUZZ
     UBlockCode block = ublock_getCode(ucs4);
     switch (block) {
     case UBLOCK_EMOTICONS:

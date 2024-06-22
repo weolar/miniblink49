@@ -158,7 +158,7 @@ public:
     void setRenderingContext(int id);
     void setMasksToBounds(bool);
 
-    bool drawsContent() const { return m_drawsContent; }
+    bool drawsContent() const;
     void setDrawsContent(bool);
 
     bool contentsAreVisible() const { return m_contentsVisible; }

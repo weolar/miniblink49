@@ -246,6 +246,7 @@ public:
     // ActiveDOMObject functions.
     bool hasPendingActivity() const final;
     void contextDestroyed() final;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<HTMLMediaElement*>(object); }
 
 #if ENABLE(WEB_AUDIO)
     AudioSourceProviderClient* audioSourceNode() { return m_audioSourceNode; }

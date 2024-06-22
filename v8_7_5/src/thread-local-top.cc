@@ -7,6 +7,8 @@
 #include "src/simulator.h"
 #include "src/trap-handler/trap-handler.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

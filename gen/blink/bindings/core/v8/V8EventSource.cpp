@@ -280,7 +280,9 @@ static void installV8EventSourceTemplate(v8::Local<v8::FunctionTemplate> functio
     static_assert(2 == EventSource::CLOSED, "the value of EventSource_CLOSED does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8EventSource::domTemplate(v8::Isolate* isolate)

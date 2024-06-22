@@ -26,6 +26,10 @@ public:
     ~NetworkInformation() override;
 
     String type() const;
+    float downlink() const;
+    String effectiveType() const;
+    int rrt() const;
+    bool saveData() const;
 
     void connectionTypeChange(WebConnectionType) override;
 
@@ -39,6 +43,7 @@ public:
     // ActiveDOMObject overrides.
     bool hasPendingActivity() const override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<NetworkInformation*>(object); }
 
     DECLARE_VIRTUAL_TRACE();
 

@@ -32,6 +32,11 @@
 #include "bindings/core/v8/V8ObjectConstructor.h"
 #include "platform/TraceEvent.h"
 
+#include "bindings/core/v8/V8Document.h"
+#include "third_party/WebKit/Source/core/dom/Document.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8DOMConfiguration.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8EventListenerList.h"
+
 namespace blink {
 
 namespace {
@@ -299,6 +304,15 @@ v8::Local<v8::Signature> V8DOMConfiguration::installDOMClassTemplate(v8::Isolate
     return defaultSignature;
 }
 
+// static void onirkeypressAttributeSetter(const v8::FunctionCallbackInfo<v8::Value>& info)
+// {
+//     v8::Local<v8::Value> v8Value = info[0];
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Document* impl = V8Document::toImpl(holder);
+//     //impl->setOntouchmove(V8EventListenerList::getEventListener(ScriptState::current(info.GetIsolate()), v8Value, true, ListenerFindOrCreate));
+//     impl->setAttributeEventListener(AtomicString("irkeypress"), V8EventListenerList::getEventListener(ScriptState::current(info.GetIsolate()), v8Value, true, ListenerFindOrCreate));
+// }
+
 v8::Local<v8::FunctionTemplate> V8DOMConfiguration::domClassTemplate(v8::Isolate* isolate, WrapperTypeInfo* wrapperTypeInfo, void (*configureDOMClassTemplate)(v8::Local<v8::FunctionTemplate>, v8::Isolate*))
 {
     V8PerIsolateData* data = V8PerIsolateData::from(isolate);
@@ -309,6 +323,17 @@ v8::Local<v8::FunctionTemplate> V8DOMConfiguration::domClassTemplate(v8::Isolate
     TRACE_EVENT_SCOPED_SAMPLING_STATE("blink", "BuildDOMTemplate");
     result = v8::FunctionTemplate::New(isolate, V8ObjectConstructor::isValidConstructorMode);
     configureDOMClassTemplate(result, isolate);
+
+//     if (&V8Document::wrapperTypeInfo == wrapperTypeInfo) {
+//         v8::Local<v8::ObjectTemplate> instanceTemplate = result->InstanceTemplate();
+//         v8::Local<v8::ObjectTemplate> prototypeTemplate = result->PrototypeTemplate();
+//         v8::Local<v8::Signature> defaultSignature;
+// 
+//         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration = \
+//         {"onirkeypress", nullptr, onirkeypressAttributeSetter, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
+//         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, result, defaultSignature, accessorConfiguration);
+//     }
+
     data->setDOMTemplate(wrapperTypeInfo, result);
     return result;
 }

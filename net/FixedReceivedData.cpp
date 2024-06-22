@@ -7,7 +7,7 @@
 namespace net {
 
 FixedReceivedData::FixedReceivedData(const char* data, size_t length, int encodedLength)
-    : data_(data, data + length), m_encodedLength(encodedLength)
+    : m_data(data, data + length), m_encodedLength(encodedLength)
 {
 }
 
@@ -17,7 +17,7 @@ FixedReceivedData::FixedReceivedData(ReceivedData* data)
 }
 
 FixedReceivedData::FixedReceivedData(const std::vector<char>& data, int encodedLength)
-    : data_(data), m_encodedLength(encodedLength)
+    : m_data(data), m_encodedLength(encodedLength)
 {
 }
 
@@ -27,12 +27,12 @@ FixedReceivedData::~FixedReceivedData()
 
 const char* FixedReceivedData::payload() const
 {
-    return data_.empty() ? nullptr : &data_[0];
+    return m_data.empty() ? nullptr : &m_data[0];
 }
 
 int FixedReceivedData::length() const
 {
-    return static_cast<int>(data_.size());
+    return static_cast<int>(m_data.size());
 }
 
 int FixedReceivedData::encodedLength() const

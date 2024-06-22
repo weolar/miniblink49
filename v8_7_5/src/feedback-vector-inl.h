@@ -96,11 +96,8 @@ int FeedbackMetadata::GetSlotSize(FeedbackSlotKind kind) {
   return 1;
 }
 
-SMI_ACCESSORS(ClosureFeedbackCellArray, interrupt_budget,
-              FixedArray::OffsetOfElementAt(kInterruptBudgetIndex))
 Handle<FeedbackCell> ClosureFeedbackCellArray::GetFeedbackCell(int index) {
-  return handle(FeedbackCell::cast(get(index + kFeedbackCellStartIndex)),
-                GetIsolate());
+  return handle(FeedbackCell::cast(get(index)), GetIsolate());
 }
 
 ACCESSORS(FeedbackVector, shared_function_info, SharedFunctionInfo,
@@ -215,12 +212,6 @@ BinaryOperationHint BinaryOperationHintFromFeedback(int type_feedback) {
       return BinaryOperationHint::kNumber;
     case BinaryOperationFeedback::kNumberOrOddball:
       return BinaryOperationHint::kNumberOrOddball;
-    case BinaryOperationFeedback::kConsOneByteString:
-      return BinaryOperationHint::kConsOneByteString;
-    case BinaryOperationFeedback::kConsTwoByteString:
-      return BinaryOperationHint::kConsTwoByteString;
-    case BinaryOperationFeedback::kConsString:
-      return BinaryOperationHint::kConsString;
     case BinaryOperationFeedback::kString:
       return BinaryOperationHint::kString;
     case BinaryOperationFeedback::kBigInt:

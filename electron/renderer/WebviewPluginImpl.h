@@ -40,11 +40,10 @@ public:
     void onKey(uint32_t message, uint32_t wParam, uint32_t lParam);
 
     void loadURL(
-        const std::string& urlString, 
-        const std::string& httpReferrerString, 
-        const std::string& userAgentString, 
-        const std::string& extraHeadersString
-        );
+        const std::string& urlString,
+        const std::string& httpReferrerString,
+        const std::string& userAgentString,
+        const std::string& extraHeadersString);
 
     std::string getURL();
 
@@ -81,4 +80,3 @@ private:
 }
 
 #endif // renderer_WebviewPlugin.h
-

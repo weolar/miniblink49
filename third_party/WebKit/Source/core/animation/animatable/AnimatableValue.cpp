@@ -37,6 +37,14 @@
 
 namespace blink {
 
+AnimatableValue::AnimatableValue()
+{
+}
+
+AnimatableValue::~AnimatableValue()
+{
+}
+
 const AnimatableValue* AnimatableValue::neutralValue()
 {
     DEFINE_STATIC_REF_WILL_BE_PERSISTENT(AnimatableNeutral, neutralSentinelValue, (AnimatableNeutral::create()));

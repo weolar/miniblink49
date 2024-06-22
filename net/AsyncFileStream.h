@@ -50,7 +50,7 @@ public:
     explicit AsyncFileStream(FileStreamClient*);
     ~AsyncFileStream();
 
-    virtual void getSize(const String& path, double expectedModificationTime) override;
+    //virtual void getSize(const String& path, double expectedModificationTime) override;
     virtual void openForRead(const String& path, long long offset, long long length) override;
     void openForWrite(const String& path);
     virtual void close() override;

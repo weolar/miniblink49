@@ -19,6 +19,8 @@ public:
     void add(intptr_t obj);
     void remove(intptr_t obj);
     bool isActivating(intptr_t obj);
+    bool isActivatingLocked(intptr_t obj);
+    void unlock();
 
     void doGarbageCollected(bool forceGC);
 

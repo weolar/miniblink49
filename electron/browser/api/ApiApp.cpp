@@ -6,35 +6,42 @@
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
 #include "common/AtomCommandLine.h"
+#include "common/StringUtil.h"
 #include "common/api/EventEmitter.h"
+#include "common/IconUtil.h"
 #include "browser/api/WindowList.h"
 #include "browser/api/WindowInterface.h"
 #include "base/values.h"
 #include "base/json/json_writer.h"
 #include "gin/object_template_builder.h"
+#include "gin/arguments.h"
 #include "wke.h"
 #include "node/nodeblink.h"
 #include "node/src/node.h"
 #include "node/src/env.h"
 #include "node/src/env-inl.h"
 #include "node/uv/include/uv.h"
-
+#include "net/CheckNetOnline.h"
 #include "base/strings/string_util.h"
 #include "base/files/file_path.h"
+#include "gin/promise.h"
+
 #include <shlobj.h>
 #include <Shlwapi.h>
+#include <shellapi.h>
+#include <Netlistmgr.h>
 
-typedef BOOL(__stdcall *FN_ChangeWindowMessageFilterEx)(HWND hwnd, UINT message, DWORD action, void* pChangeFilterStruct);
+typedef BOOL(__stdcall* FN_ChangeWindowMessageFilterEx)(HWND hwnd, UINT message, DWORD action, void* pChangeFilterStruct);
 
 namespace {
 
-static void onOnUvCreateProcessCallback(
-    wkeWebView webView, 
-    void* param, 
+static void MB_CALL_TYPE onOnUvCreateProcessCallback(
+    mbWebView webView,
+    void* param,
     const WCHAR* applicationPath,
-    const WCHAR* arguments, 
-    STARTUPINFOW* startup
-    ) {
+    const WCHAR* arguments,
+    STARTUPINFOW* startup)
+{
     OutputDebugStringW(L"onOnUvCreateProcessCallback:");
     OutputDebugStringW(applicationPath);
     OutputDebugStringW(L"\n");
@@ -56,28 +63,31 @@ static const wchar_t kMutexName[] = L"LocalAtomProcessSingletonStartup!";
 const wchar_t kHiddenWindowPropName[] = L"mb_app_hidden_window";
 const int BUFSIZE = 4096;
 
-App* App::getInstance() {
+App* App::getInstance()
+{
     return m_instance;
 }
 
-App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+{
     gin::Wrappable<App>::InitWith(isolate, wrapper);
-    ASSERT(!m_instance);
     m_instance = this;
     m_version = "1.3.3";
     m_singleInstanceHandle = nullptr;
 
-    wkeNodeOnCreateProcess(nullptr, onOnUvCreateProcessCallback, nullptr);
+    mbOnNodeCreateProcess(NULL_WEBVIEW, onOnUvCreateProcessCallback, nullptr);
 }
 
-App::~App() {
+App::~App()
+{
     ::CloseHandle(m_singleInstanceHandle);
     m_singleInstanceHandle = nullptr;
 
     DebugBreak();
 }
 
-void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
+void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate)
+{
     v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
     prototype->SetClassName(v8::String::NewFromUtf8(isolate, "App"));
@@ -90,9 +100,11 @@ void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
     builder.SetMethod("getName", &App::getNameApi);
     builder.SetMethod("setName", &App::setNameApi);
     builder.SetMethod("isReady", &App::isReadyApi);
+    builder.SetMethod("isOnline", &App::isOnlineApi);
     builder.SetMethod("addRecentDocument", &App::addRecentDocumentApi);
     builder.SetMethod("clearRecentDocuments", &App::clearRecentDocumentsApi);
     builder.SetMethod("setAppUserModelId", &App::setAppUserModelIdApi);
+    builder.SetMethod("requestSingleInstanceLock", &App::requestSingleInstanceLockApi);
     builder.SetMethod("isDefaultProtocolClient", &App::isDefaultProtocolClientApi);
     builder.SetMethod("setAsDefaultProtocolClient", &App::setAsDefaultProtocolClientApi);
     builder.SetMethod("removeAsDefaultProtocolClient", &App::removeAsDefaultProtocolClientApi);
@@ -112,15 +124,19 @@ void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
     builder.SetMethod("_relaunch", &App::relaunchApi);
     builder.SetMethod("isAccessibilitySupportEnabled", &App::isAccessibilitySupportEnabled);
     builder.SetMethod("disableHardwareAcceleration", &App::disableHardwareAcceleration);
+    builder.SetMethod("getFileIcon", &App::getFileIconApi);
+
     constructor.Reset(isolate, prototype->GetFunction());
     target->Set(v8::String::NewFromUtf8(isolate, "App"), prototype->GetFunction());
 }
 
-void App::nullFunction() {
+void App::nullFunction()
+{
     OutputDebugStringA("nullFunction\n");
 }
 
-void quit() {
+void quit()
+{
     ::TerminateProcess(::GetCurrentProcess(), 0);
     WindowList::closeAllWindows();
 
@@ -128,9 +144,10 @@ void quit() {
     ThreadCall::exitMessageLoop(ThreadCall::getUiThreadId());
 }
 
-void App::quitApi() {
-    OutputDebugStringA("quitApi\n");  
-    
+void App::quitApi()
+{
+    OutputDebugStringA("quitApi\n");
+
     const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
         v8::StackTrace::kLineNumber
         | v8::StackTrace::kColumnOffset
@@ -149,7 +166,7 @@ void App::quitApi() {
     free(output);
 
     for (int i = 0; i < count; ++i) {
-        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(isolate(), i);
         int frameCount = stackTrace->GetFrameCount();
         int line = stackFrame->GetLineNumber();
         v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
@@ -184,51 +201,142 @@ void App::quitApi() {
     }
     OutputDebugStringA("\n");
 
-    quit();
+//     quit();
+// 
+//     if (ThreadCall::isUiThread()) {
+//         quit();
+//         return;
+//     }
 
-    if (ThreadCall::isUiThread()) {
-        quit();
-        return;
-    }
-
-    ThreadCall::callUiThreadAsync([] {
+    App* self = this;
+    ThreadCall::callUiThreadAsync([self] {
+        ThreadCall::callUiThreadAsync([self] {
+            self->emit("before-quit");
+        });
         quit();
     });
 }
 
-void App::exitApi() {
+void App::exitApi()
+{
     quitApi();
 }
 
-void App::focusApi() {
+void App::focusApi()
+{
     OutputDebugStringA("focusApi\n");
 }
 
-bool App::isReadyApi() const {
+bool App::isReadyApi() const
+{
     OutputDebugStringA("isReadyApi\n");
     return true;
 }
 
-void App::addRecentDocumentApi(const std::string& path) {
+bool App::isOnlineApi()
+{
+    IUnknown* pUnknown = nullptr;
+    static INetworkListManager* pNetworkListManager = nullptr;
+    if (!pNetworkListManager)
+        pNetworkListManager = getNetworkList(&pUnknown);
+
+    BOOL checkNetwork = checkIsNetwork(pNetworkListManager);
+    return !!checkNetwork;
+}
+
+// const std::string& path, gin::Arguments* args
+void App::getFileIconApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    std::string path;
+    if (!gin::ConvertFromV8(args.GetIsolate(), args[0], &path))
+        return;
+
+    if (path.empty())
+        return;
+
+    std::string sizeStr("small"); // small | normal | large
+    base::DictionaryValue obj;
+    if (gin::ConvertFromV8(args.GetIsolate(), args[1], &obj))
+        obj.GetString("size", &sizeStr);
+
+    gin::Promise<v8::Local<v8::Object> >* promise = new gin::Promise<v8::Local<v8::Object> >(args.GetIsolate());
+    v8::Local<v8::Promise> ret = promise->GetHandle();
+
+    int size = 0;
+    if (sizeStr == "small")
+        size = SHGFI_SMALLICON;
+    else if (sizeStr == "normal")
+        size = 0;
+    else if (sizeStr == "large")
+        size = SHGFI_LARGEICON;
+    else
+        return;
+
+    std::string* pathStr = new std::string(path);
+
+    App* self = this;
+    ThreadCall::callUiThreadAsync([self, promise, pathStr, size] {
+        SHFILEINFO fileInfo = { 0 };
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        std::wstring path = StringUtil::UTF8ToUTF16(*pathStr);
+        delete pathStr;
+
+        if (!::SHGetFileInfo(path.c_str(), FILE_ATTRIBUTE_NORMAL, &fileInfo, sizeof(SHFILEINFO), SHGFI_ICON | size | SHGFI_USEFILEATTRIBUTES)) {
+            promise->Reject();
+            return;
+        }
+
+        v8::Local<v8::Object> bitmap = IconUtil::CreateSkBitmapFromHICON(isolate, fileInfo.hIcon);
+        ::DestroyIcon(fileInfo.hIcon);
+        if (bitmap.IsEmpty()) {
+            promise->Reject();
+            return;
+        }
+
+        promise->Resolve(bitmap);
+    });
+
+    args.GetReturnValue().Set(ret);
+}
+
+void App::addRecentDocumentApi(const std::string& path)
+{
     OutputDebugStringA("addRecentDocumentApi\n");
 }
 
-void App::clearRecentDocumentsApi() {
+void App::clearRecentDocumentsApi()
+{
     OutputDebugStringA("clearRecentDocumentsApi\n");
 }
 
-void App::setAppUserModelIdApi(const std::string& id) {
+void App::setAppUserModelIdApi(const std::string& id)
+{
     OutputDebugStringA("setAppUserModelIdApi\n");
 }
 
+bool App::requestSingleInstanceLockApi()
+{
+    HANDLE hMutex = NULL;
+    hMutex = ::CreateMutex(NULL, FALSE, L"mini_electron_exe");
+    if (hMutex != NULL) {
+        if (ERROR_ALREADY_EXISTS == ::GetLastError()) {
+            ::ReleaseMutex(hMutex);
+            return true;
+        }
+    }
+    return true;
+}
+
 // const std::string& protocol, const std::string& path, const std::string& args
-bool App::isDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+bool App::isDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("isDefaultProtocolClientApi\n");
     return true;
 }
 
 //const std::string& protocol, const std::string& path, const std::string& args
-bool App::setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+bool App::setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("setAsDefaultProtocolClientApi\n");
     if (0 == args.Length())
         return false;
@@ -236,48 +344,56 @@ bool App::setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value
     std::string protocol;
     if (!gin::ConvertFromV8(args.GetIsolate(), args[0], &protocol))
         return false;
-    
+
     return true;
 }
 
 // const std::string& protocol, const std::string& path, const std::string& args
-bool App::removeAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+bool App::removeAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("removeAsDefaultProtocolClientApi\n");
     return true;
 }
 
-bool App::setBadgeCountApi(int count) {
+bool App::setBadgeCountApi(int count)
+{
     OutputDebugStringA("setBadgeCountApi\n");
     return false;
 }
 
-int App::getBadgeCountApi() {
+int App::getBadgeCountApi()
+{
     OutputDebugStringA("getBadgeCountApi\n");
     return 0;
 }
 
 // const base::DictionaryValue& obj
-int App::getLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+int App::getLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("getLoginItemSettingsApi\n");
     DebugBreak();
     return 0;
 }
 
 // const base::DictionaryValue& obj, const std::string& path, const std::string& args
-void App::setLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void App::setLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("setLoginItemSettingsApi");
 }
 
-bool App::setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+bool App::setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("setUserTasksApi\n");
     return true;
 }
 
-void App::setDesktopNameApi(const std::string& desktopName) { 
+void App::setDesktopNameApi(const std::string& desktopName)
+{
     OutputDebugStringA("App::setDesktopNameApi\n");
 }
 
-v8::Local<v8::Value> App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+v8::Local<v8::Value> App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("getJumpListSettingsApi\n");
     base::DictionaryValue obj;
 
@@ -291,31 +407,19 @@ v8::Local<v8::Value> App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<
 }
 
 // const base::DictionaryValue&
-void App::setJumpListApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void App::setJumpListApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     OutputDebugStringA("setJumpListApi\n");
 }
 
-std::string App::getLocaleApi() {
+std::string App::getLocaleApi()
+{
     return "zh-cn";
 }
 
-static unsigned int hashString(const wchar_t* p) {
-    int prime = 25013;
-    unsigned int h = 0;
-    unsigned int g;
-    for (; *p; p++) {
-        h = (h << 4) + *p;
-        g = h & 0xF0000000;
-        if (g) {
-            h ^= (g >> 24);
-            h ^= g;
-        }
-    }
-    return h % prime;
-}
-
 static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-static void registerHiddenWindowClass(LPCWSTR lpszClassName) {
+static void registerHiddenWindowClass(LPCWSTR lpszClassName)
+{
     WNDCLASS wndClass = { 0 };
     if (!GetClassInfoW(NULL, lpszClassName, &wndClass)) {
         wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
@@ -332,7 +436,8 @@ static void registerHiddenWindowClass(LPCWSTR lpszClassName) {
     }
 }
 
-static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
     int id = -1;
     App* self = (App*)::GetPropW(hWnd, kHiddenWindowPropName);
     if (!self && message == WM_CREATE) {
@@ -355,7 +460,8 @@ static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam,
     return ::DefWindowProcW(hWnd, message, wParam, lParam);
 }
 
-void App::onCopyData(const COPYDATASTRUCT* copyData) {
+void App::onCopyData(const COPYDATASTRUCT* copyData)
+{
     if (copyData->dwData != WindowInterface::kSingleInstanceMessage || 0 == copyData->cbData)
         return;
     if (m_singleInstanceCall.IsEmpty())
@@ -374,7 +480,8 @@ void App::onCopyData(const COPYDATASTRUCT* copyData) {
     callback->Call(v8::Undefined(isolate()), 1, argv);
 }
 
-static std::wstring getNormalizeFilePath() {
+static std::wstring getNormalizeFilePath()
+{
     std::vector<wchar_t> path;
     path.resize(BUFSIZE + 1);
     ::GetModuleFileNameW(::GetModuleHandleW(NULL), &path[0], BUFSIZE);
@@ -400,7 +507,8 @@ static std::wstring getNormalizeFilePath() {
     return std::wstring(&buffer[0], i);
 }
 
-static void notifSingleProcess(HWND hWnd) {
+static void notifSingleProcess(HWND hWnd)
+{
     std::vector<std::string> argv = atom::AtomCommandLine::argv();
 
     std::vector<wchar_t> buffer;
@@ -424,7 +532,8 @@ static void notifSingleProcess(HWND hWnd) {
     ::SendMessage(hWnd, WM_COPYDATA, (WPARAM)hWnd, (LPARAM)&copyData);
 }
 
-bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Function* callback = nullptr;
     if (args[0]->IsFunction())
         m_singleInstanceCall.Reset(args.GetIsolate(), args[0]);
@@ -432,7 +541,7 @@ bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& a
         m_singleInstanceCall.Reset();
 
     std::wstring filePath = getNormalizeFilePath();
-    unsigned int pathHash = hashString(filePath.c_str());
+    unsigned int pathHash = StringUtil::hashString(StringUtil::UTF16ToUTF8(filePath).c_str());
 
     std::vector<wchar_t> buffer;
     buffer.resize(BUFSIZE);
@@ -464,17 +573,17 @@ bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& a
         isFind = true;
         ChangeWindowMessageFilterFunc = (FN_ChangeWindowMessageFilterEx)GetProcAddress(hinstLib, "ChangeWindowMessageFilterEx");
         if (ChangeWindowMessageFilterFunc)
-            ChangeWindowMessageFilterFunc(m_hiddenWindow, WM_COPYDATA, /*MSGFLT_ALLOW*/1, NULL);
-    }   
+            ChangeWindowMessageFilterFunc(m_hiddenWindow, WM_COPYDATA, /*MSGFLT_ALLOW*/ 1, NULL);
+    }
 
     return false;
 }
 
-void App::releaseSingleInstanceApi() {
+void App::releaseSingleInstanceApi()
+{
     ::CloseHandle(m_singleInstanceHandle);
     m_singleInstanceHandle = nullptr;
 }
-
 
 static std::wstring addQuoteForArg(const std::wstring& arg)
 {
@@ -492,7 +601,7 @@ static std::wstring addQuoteForArg(const std::wstring& arg)
         if (arg[i] == '\\') {
             // Find the extent of this run of backslashes.
             size_t start = i, end = start + 1;
-            for (; end < arg.size() && arg[end] == '\\'; ++end) {}
+            for (; end < arg.size() && arg[end] == '\\'; ++end) { }
             size_t backslash_count = end - start;
 
             // Backslashes are escapes only if the run is followed by a double quote.
@@ -534,8 +643,9 @@ const char* kWaitEventName = "ElectronRelauncherWaitEvent";
 const WCHAR* kRelauncherTypeArg = L"--type=relauncher";
 const WCHAR* kRelauncherArgSeparator = L"---";
 
-static PROCESS_INFORMATION* launchProcess(const base::string16& cmdline) {
-    STARTUPINFO startup_info = {0};
+static PROCESS_INFORMATION* launchProcess(const base::string16& cmdline)
+{
+    STARTUPINFO startup_info = { 0 };
     DWORD flags = 0;
 
     startup_info.dwFlags = STARTF_USESHOWWINDOW;
@@ -549,11 +659,12 @@ static PROCESS_INFORMATION* launchProcess(const base::string16& cmdline) {
         tempProcessInfo->hProcess = INVALID_HANDLE_VALUE;
         return tempProcessInfo;
     }
-    
+
     return tempProcessInfo;
 }
 
-static std::wstring getWaitEventName(DWORD pid) {
+static std::wstring getWaitEventName(DWORD pid)
+{
     std::vector<char> buffer;
     buffer.resize(0x1000);
     memset(&buffer[0], 0, 0x1000);
@@ -561,7 +672,8 @@ static std::wstring getWaitEventName(DWORD pid) {
     return base::UTF8ToWide(&buffer[0]);
 }
 
-static bool relaunchAppWithHelper(const base::FilePath& helper, const std::vector<std::wstring>& relauncher_args, const std::vector<std::wstring>& argv) {
+static bool relaunchAppWithHelper(const base::FilePath& helper, const std::vector<std::wstring>& relauncher_args, const std::vector<std::wstring>& argv)
+{
     std::vector<std::wstring> relaunchArgv;
     relaunchArgv.push_back(helper.value());
 #if 0 // https://github.com/electron/electron/pull/5837/files
@@ -576,7 +688,7 @@ static bool relaunchAppWithHelper(const base::FilePath& helper, const std::vecto
             delete process;
         return false;
     }
-    
+
     // The relauncher process is now starting up, or has started up. The
     // original parent process continues.
     // Synchronize with the relauncher process.
@@ -590,7 +702,8 @@ static bool relaunchAppWithHelper(const base::FilePath& helper, const std::vecto
     return true;
 }
 
-static bool relaunchApp(const std::vector<std::wstring>& argv) {
+static bool relaunchApp(const std::vector<std::wstring>& argv)
+{
     // Use the currently-running application's helper process. The automatic
     // update feature is careful to leave the currently-running version alone,
     // so this is safe even if the relaunch is the result of an update having
@@ -601,13 +714,14 @@ static bool relaunchApp(const std::vector<std::wstring>& argv) {
     std::vector<WCHAR> currentExePath;
     currentExePath.resize(MAX_PATH);
     ::GetModuleFileName(NULL, &currentExePath[0], MAX_PATH);
-    childPath = base::FilePath::FromUTF16Unsafe(base::StringPiece16(&currentExePath[0]));
+    childPath = base::FilePath::FromUTF16Unsafe(base::string16(&currentExePath[0]));
 
     std::vector<std::wstring> relauncherArgs;
     return relaunchAppWithHelper(childPath, relauncherArgs, argv);
 }
 
-void App::relaunchApi(const base::DictionaryValue& options) {
+void App::relaunchApi(const base::DictionaryValue& options)
+{
     std::string argsStr;
     std::string execPathStr;
     bool isOverrideArgv = false;
@@ -627,7 +741,7 @@ void App::relaunchApi(const base::DictionaryValue& options) {
         if (argsArray.size() > 0)
             isOverrideArgv = true;
     }
-    
+
     const base::Value* execPath = nullptr;
     if (options.Get("execPath", &execPath)) {
         execPath->GetAsString(&execPathStr);
@@ -656,11 +770,12 @@ void App::relaunchApi(const base::DictionaryValue& options) {
     relaunchApp(argv);
 }
 
-void App::setPathApi(const std::string& name, const std::string& path) { 
+void App::setPathApi(const std::string& name, const std::string& path)
+{
     if (!(name == "userData" || name == "cache" || name == "userCache" || name == "documents"
-        || name == "downloads" || name == "music" || name == "videos" || name == "pepperFlashSystemPlugin"))
+            || name == "downloads" || name == "music" || name == "videos" || name == "pepperFlashSystemPlugin"))
         return;
-    
+
     std::map<std::string, std::string>::iterator it = m_pathMap.find(name);
     if (it == m_pathMap.end())
         m_pathMap.insert(std::make_pair(name, path));
@@ -668,7 +783,8 @@ void App::setPathApi(const std::string& name, const std::string& path) {
         it->second = path;
 }
 
-bool getTempDir(base::FilePath* path) {
+bool getTempDir(base::FilePath* path)
+{
     wchar_t temp_path[MAX_PATH + 1];
     DWORD path_len = ::GetTempPath(MAX_PATH, temp_path);
     if (path_len >= MAX_PATH || path_len <= 0)
@@ -680,7 +796,8 @@ bool getTempDir(base::FilePath* path) {
     return true;
 }
 
-base::FilePath getHomeDir() {
+base::FilePath getHomeDir()
+{
     wchar_t result[MAX_PATH];
     if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, result)) && result[0])
         return base::FilePath(result);
@@ -694,7 +811,8 @@ base::FilePath getHomeDir() {
     return base::FilePath(L"C:\\");
 }
 
-std::string App::getPathApi(const std::string& name) const {
+std::string App::getPathApi(const std::string& name) const
+{
     base::FilePath path;
     std::wstring systemBuffer;
     systemBuffer.assign(MAX_PATH, L'\0');
@@ -713,7 +831,7 @@ std::string App::getPathApi(const std::string& name) const {
     else if (name == "temp") {
         if (!getTempDir(&path))
             return "";
-            systemBuffer = path.value();
+        systemBuffer = path.value();
     } else if (name == "userDesktop" || name == "desktop") {
         if (FAILED(SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, &systemBuffer[0])))
             return "";
@@ -724,7 +842,7 @@ std::string App::getPathApi(const std::string& name) const {
     else if (name == "cache" || name == "userCache") {
         if ((::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, &systemBuffer[0])) < 0)
             return "";
-       
+
         pathBuffer = systemBuffer.c_str();
         pathBuffer += L"\\electron";
     } else
@@ -734,7 +852,8 @@ std::string App::getPathApi(const std::string& name) const {
     return base::WideToUTF8(pathBuffer);
 }
 
-void App::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void App::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Isolate* isolate = args.GetIsolate();
     if (args.IsConstructCall()) {
         new App(isolate, args.This());
@@ -743,7 +862,8 @@ void App::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-void App::onWindowAllClosed() {
+void App::onWindowAllClosed()
+{
     if (ThreadCall::isUiThread()) {
         emit("window-all-closed");
         return;
@@ -755,17 +875,18 @@ void App::onWindowAllClosed() {
     });
 }
 
-v8::Persistent< v8::Function> App::constructor;
+v8::Persistent<v8::Function> App::constructor;
 gin::WrapperInfo App::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-static void initializeAppApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
+static void initializeAppApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native)
+{
     node::Environment* env = node::Environment::GetCurrent(context);
     App::init(target, env->isolate());
 }
 
 static const char BrowserAppNative[] = "console.log('BrowserAppNative');;";
-static NodeNative nativeBrowserAppNative{ "App", BrowserAppNative, sizeof(BrowserAppNative) - 1 };
+static NodeNative nativeBrowserAppNative { "App", BrowserAppNative, sizeof(BrowserAppNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_app, initializeAppApi, &nativeBrowserAppNative)
 
-} 
+}

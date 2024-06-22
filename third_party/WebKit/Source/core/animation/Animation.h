@@ -96,6 +96,8 @@ public:
     String playState() const { return playStateString(playStateInternal()); }
     AnimationPlayState playStateInternal() const;
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<Animation*>(object); }
+
     void pause();
     void play();
     void reverse();
@@ -121,7 +123,7 @@ public:
     const AnimationTimeline* timeline() const { return m_timeline; }
     AnimationTimeline* timeline() { return m_timeline; }
 
-#if !ENABLE(OILPAN)
+#if 1 // !ENABLE(OILPAN)
     void detachFromTimeline();
 #endif
 

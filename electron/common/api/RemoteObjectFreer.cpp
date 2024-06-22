@@ -14,44 +14,49 @@ namespace atom {
 
 namespace {
 
-// content::RenderView* GetCurrentRenderView() {
-//   WebLocalFrame* frame = WebLocalFrame::frameForCurrentContext();
-//   if (!frame)
-//     return nullptr;
-// 
-//   WebView* view = frame->view();
-//   if (!view)
-//     return nullptr;  // can happen during closing.
-// 
-//   return content::RenderView::FromWebView(view);
-// }
+    // content::RenderView* GetCurrentRenderView() {
+    //   WebLocalFrame* frame = WebLocalFrame::frameForCurrentContext();
+    //   if (!frame)
+    //     return nullptr;
+    //
+    //   WebView* view = frame->view();
+    //   if (!view)
+    //     return nullptr;  // can happen during closing.
+    //
+    //   return content::RenderView::FromWebView(view);
+    // }
 
-}  // namespace
+} // namespace
 
 // static
-void RemoteObjectFreer::bindTo(v8::Isolate* isolate, v8::Local<v8::Object> target, int objectId) {
-  new RemoteObjectFreer(isolate, target, objectId);
+void RemoteObjectFreer::bindTo(v8::Isolate* isolate, v8::Local<v8::Object> target, int objectId)
+{
+    new RemoteObjectFreer(isolate, target, objectId);
 }
 
 RemoteObjectFreer::RemoteObjectFreer(v8::Isolate* isolate, v8::Local<v8::Object> target, int objectId)
     : ObjectLifeMonitor(isolate, target)
-    , m_objectId(objectId) {
+    , m_objectId(objectId)
+{
 }
 
-RemoteObjectFreer::~RemoteObjectFreer() {
+RemoteObjectFreer::~RemoteObjectFreer()
+{
 }
 
-void RemoteObjectFreer::onRunDestructor() {
-//   content::RenderView* render_view = GetCurrentRenderView();
-//   if (!render_view)
-//     return;
-// 
-//   base::string16 channel = base::ASCIIToUTF16("ipc-message");
-//   base::ListValue args;
-//   args.AppendString("ELECTRON_BROWSER_DEREFERENCE");
-//   args.AppendInteger(object_id_);
-//   render_view->Send(
-//       new AtomViewHostMsg_Message(render_view->GetRoutingID(), channel, args));
+void RemoteObjectFreer::onRunDestructor()
+{
+    // TODO
+    //   content::RenderView* render_view = GetCurrentRenderView();
+    //   if (!render_view)
+    //     return;
+    //
+    //   base::string16 channel = base::ASCIIToUTF16("ipc-message");
+    //   base::ListValue args;
+    //   args.AppendString("ELECTRON_BROWSER_DEREFERENCE");
+    //   args.AppendInteger(object_id_);
+    //   render_view->Send(
+    //       new AtomViewHostMsg_Message(render_view->GetRoutingID(), channel, args));
 }
 
-}  // namespace atom
+} // namespace atom

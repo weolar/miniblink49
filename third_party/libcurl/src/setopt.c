@@ -1681,7 +1681,6 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ssl.primary.verifypeer = (0 != va_arg(param, long)) ?
       TRUE : FALSE;
-
     /* Update the current connection ssl_config. */
     if(data->easy_conn) {
       data->easy_conn->ssl_config.verifypeer =

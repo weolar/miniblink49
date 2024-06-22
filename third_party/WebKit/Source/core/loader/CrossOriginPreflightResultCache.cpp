@@ -122,12 +122,12 @@ bool CrossOriginPreflightResultCacheItem::allowsCrossOriginMethod(const String& 
 
 bool CrossOriginPreflightResultCacheItem::allowsCrossOriginHeaders(const HTTPHeaderMap& requestHeaders, String& errorDescription) const
 {
-    for (const auto& header : requestHeaders) {
-        if (!m_headers.contains(header.key) && !FetchUtils::isSimpleHeader(header.key, header.value) && !FetchUtils::isForbiddenHeaderName(header.key)) {
-            errorDescription = "Request header field " + header.key.string() + " is not allowed by Access-Control-Allow-Headers.";
-            return false;
-        }
-    }
+//     for (const auto& header : requestHeaders) {
+//         if (!m_headers.contains(header.key) && !FetchUtils::isSimpleHeader(header.key, header.value) && !FetchUtils::isForbiddenHeaderName(header.key)) {
+//             errorDescription = "Request header field " + header.key.string() + " is not allowed by Access-Control-Allow-Headers.";
+//             return false;
+//         }
+//     }
     return true;
 }
 

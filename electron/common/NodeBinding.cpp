@@ -22,65 +22,84 @@ namespace atom {
 
 namespace {
 
-void crash(const v8::FunctionCallbackInfo<v8::Value>& info) {
-    DebugBreak();
-}
+    void crash(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        DebugBreak();
+    }
 
-void hang(const v8::FunctionCallbackInfo<v8::Value>& info) {
-    for (;;) {
-        ::Sleep(1000);
-    };
-}
+    void hang(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        for (;;) {
+            ::Sleep(1000);
+        };
+    }
 
-void getProcessMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info) {
-    v8::Isolate* isolate = info.GetIsolate();
-    //std::unique_ptr<base::ProcessMetrics> metrics(base::ProcessMetrics::CreateCurrentProcessMetrics());
+    void getProcessMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        v8::Isolate* isolate = info.GetIsolate();
+        //std::unique_ptr<base::ProcessMetrics> metrics(base::ProcessMetrics::CreateCurrentProcessMetrics());
 
-    gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
-    dict.Set("workingSetSize", /*static_cast<double>(metrics->GetWorkingSetSize() >> 10)*/1000);
-    dict.Set("peakWorkingSetSize", /*static_cast<double>(metrics->GetPeakWorkingSetSize() >> 10)*/1000);
+        gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
+        dict.Set("workingSetSize", /*static_cast<double>(metrics->GetWorkingSetSize() >> 10)*/ 1000);
+        dict.Set("peakWorkingSetSize", /*static_cast<double>(metrics->GetPeakWorkingSetSize() >> 10)*/ 1000);
 
-    //size_t private_bytes, shared_bytes;
-    //if (metrics->GetMemoryBytes(&private_bytes, &shared_bytes)) {
-        dict.Set("privateBytes", /*static_cast<double>(private_bytes >> 10)*/1000);
-        dict.Set("sharedBytes", /*static_cast<double>(shared_bytes >> 10)*/1000);
-    //}
+        //size_t private_bytes, shared_bytes;
+        //if (metrics->GetMemoryBytes(&private_bytes, &shared_bytes)) {
+        dict.Set("privateBytes", /*static_cast<double>(private_bytes >> 10)*/ 1000);
+        dict.Set("sharedBytes", /*static_cast<double>(shared_bytes >> 10)*/ 1000);
+        //}
 
-    info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
-}
+        info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
+    }
 
-void getSystemMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info) {
-    v8::Isolate* isolate = info.GetIsolate();
-//     base::SystemMemoryInfoKB mem_info;
-//     if (!base::GetSystemMemoryInfo(&mem_info)) {
-//         args->ThrowError("Unable to retrieve system memory information");
-//         return v8::Undefined(isolate);
-//     }
+    void getSystemMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        v8::Isolate* isolate = info.GetIsolate();
+        //     base::SystemMemoryInfoKB mem_info;
+        //     if (!base::GetSystemMemoryInfo(&mem_info)) {
+        //         args->ThrowError("Unable to retrieve system memory information");
+        //         return v8::Undefined(isolate);
+        //     }
 
-    gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
-    dict.Set("total", /*mem_info.total*/10);
-    dict.Set("free", /*mem_info.free*/10);
+        gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
+        dict.Set("total", /*mem_info.total*/ 10);
+        dict.Set("free", /*mem_info.free*/ 10);
 
-    // NB: These return bogus values on macOS
+        // NB: These return bogus values on macOS
 #if !defined(OS_MACOSX)
-    dict.Set("swapTotal", /*mem_info.swap_total*/10);
-    dict.Set("swapFree", /*mem_info.swap_free*/10);
+        dict.Set("swapTotal", /*mem_info.swap_total*/ 10);
+        dict.Set("swapFree", /*mem_info.swap_free*/ 10);
 #endif
 
-    info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
-}
+        info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
+    }
 
-// Called when there is a fatal error in V8, we just crash the process here so
-// we can get the stack trace.
-void fatalErrorCallback(const char* location, const char* message) {
-    //crash(info);
-    DebugBreak();
-}
+    // Called when there is a fatal error in V8, we just crash the process here so
+    // we can get the stack trace.
+    void fatalErrorCallback(const char* location, const char* message)
+    {
+        //crash(info);
+        DebugBreak();
+    }
 
-void log(const v8::FunctionCallbackInfo<v8::Value>& info) {
-    //std::cout << message << std::flush;
-    crash(info);
-}
+    void log(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        //std::cout << message << std::flush;
+        crash(info);
+    }
+
+    void getSystemVersion(const v8::FunctionCallbackInfo<v8::Value>& args)
+    {
+        OSVERSIONINFOEXW os = { 0 };
+        os.dwOSVersionInfoSize = sizeof(os);
+        ::GetVersionEx(reinterpret_cast<LPOSVERSIONINFOW>(&os));
+
+        std::vector<char> buf(201);
+        sprintf(buf.data(), "%d.%d.%d\n", os.dwMajorVersion, os.dwMinorVersion, os.dwBuildNumber);
+
+        v8::Local<v8::String> result = v8::String::NewFromUtf8(args.GetIsolate(), buf.data(), v8::String::kNormalString, -1);
+        args.GetReturnValue().Set(result);
+    }
 
 } // namespace
 
@@ -88,11 +107,12 @@ NodeBindings::NodeBindings(bool isBrowser)
     : m_isBrowser(isBrowser)
     , m_uvLoop(nullptr)
     , m_env(nullptr)
-    , m_callNextTickAsync(new uv_async_t()) {
-
+    , m_callNextTickAsync(new uv_async_t())
+{
 }
 
-NodeBindings::~NodeBindings() {
+NodeBindings::~NodeBindings()
+{
     if (!m_env)
         return;
     nodeDeleteNodeEnvironment(m_env);
@@ -101,7 +121,8 @@ NodeBindings::~NodeBindings() {
 
 static std::wstring* kResPath = nullptr;
 
-std::wstring getResourcesPath(const std::wstring& name) {
+std::wstring getResourcesPath(const std::wstring& name)
+{
     std::wstring out;
     if (kResPath) {
         out += *kResPath + name;
@@ -121,13 +142,14 @@ std::wstring getResourcesPath(const std::wstring& name) {
         out += L"\\resources\\miniblink.asar\\";
     else
         out += L"\\..\\..\\electron\\lib\\";
-    
+
     kResPath = new std::wstring(out);
     out += name;
     return out;
 }
 
-void loadNodeScriptFromRes(void* path) {
+void loadNodeScriptFromRes(void* path)
+{
     NodeNative* nativePath = (NodeNative*)path;
     std::wstring sourceW;
     for (size_t i = 0; i < nativePath->sourceLen; ++i)
@@ -160,11 +182,11 @@ void loadNodeScriptFromRes(void* path) {
     nativePath->sourceLen = bytesRead;
 }
 
-
 // Convert the given vector to an array of C-strings. The strings in the
 // returned vector are only guaranteed valid so long as the vector of strings
 // is not modified.
-std::unique_ptr<const char*[]> stringVectorToArgArray(const std::vector<std::string>& vector) {
+std::unique_ptr<const char* []> stringVectorToArgArray(const std::vector<std::string>& vector)
+{
     std::unique_ptr<const char*[]> argsArray(new const char*[vector.size()]);
     for (size_t i = 0; i < vector.size(); ++i) {
         argsArray[i] = vector[i].c_str();
@@ -172,7 +194,8 @@ std::unique_ptr<const char*[]> stringVectorToArgArray(const std::vector<std::str
     return argsArray;
 }
 
-void NodeBindings::initNodeEnv() {
+void NodeBindings::initNodeEnv()
+{
     std::vector<std::string> args = AtomCommandLine::argv();
     int argsSize = args.size();
 
@@ -182,7 +205,8 @@ void NodeBindings::initNodeEnv() {
     node::Init(&argsSize, c_argv.get(), &exec_argc, &exec_argv);
 }
 
-void NodeBindings::bindFunction(gin::Dictionary* dict) {
+void NodeBindings::bindFunction(gin::Dictionary* dict)
+{
     NodeBindings* self = this;
     dict->SetMethod("crash", &crash);
     dict->SetMethod("hang", &hang);
@@ -192,16 +216,17 @@ void NodeBindings::bindFunction(gin::Dictionary* dict) {
 #if defined(OS_POSIX)
     dict->SetMethod("setFdLimit", &base::SetFdLimit);
 #endif
-    dict->SetMethod("activateUvLoop", [self] (const v8::FunctionCallbackInfo<v8::Value>& info) { self->activateUVLoop(info.GetIsolate()); });
+    dict->SetMethod("activateUvLoop", [self](const v8::FunctionCallbackInfo<v8::Value>& info) { self->activateUVLoop(info.GetIsolate()); });
 
 #if defined(MAS_BUILD)
     dict->Set("mas", true);
 #endif
+    dict->SetMethod("getSystemVersion", getSystemVersion); // M:\chromium\electron14\electron\shell\common\api\electron_bindings.cc
 
     gin::Dictionary versions = gin::Dictionary::CreateEmpty(dict->isolate());
     if (dict->Get("versions", &versions)) {
         versions.Set("atom-project-name", std::string(ATOM_VERSION_STRING));
-        versions.Set("atom-shell", std::string(ATOM_VERSION_STRING));  // For compatibility.
+        versions.Set("atom-shell", std::string(ATOM_VERSION_STRING)); // For compatibility.
         versions.Set("chrome", std::string(CHROME_VERSION_STRING));
         versions.Set("electron", std::string(ATOM_VERSION_STRING));
     }
@@ -209,10 +234,12 @@ void NodeBindings::bindFunction(gin::Dictionary* dict) {
 
 struct MbConsoleLogInfo {
     MbConsoleLogInfo(bool isMainNode)
-        : m_isMainNode(isMainNode) {
+        : m_isMainNode(isMainNode)
+    {
     }
 
-    bool getIsMainNode() const {
+    bool getIsMainNode() const
+    {
         return m_isMainNode;
     };
 
@@ -220,7 +247,8 @@ private:
     bool m_isMainNode;
 };
 
-static void mbConsoleLog(const v8::FunctionCallbackInfo<v8::Value>& info) {
+static void mbConsoleLog(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     v8::Isolate* isolate = info.GetIsolate();
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
@@ -235,14 +263,72 @@ static void mbConsoleLog(const v8::FunctionCallbackInfo<v8::Value>& info) {
     str += *param0String;
     str += "\n";
 
-    OutputDebugStringA(str.c_str());
+    if (std::string::npos != str.find("__callstack__")) {
+        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+            v8::StackTrace::kLineNumber
+            | v8::StackTrace::kColumnOffset
+            | v8::StackTrace::kScriptId
+            | v8::StackTrace::kScriptNameOrSourceURL
+            | v8::StackTrace::kFunctionName);
+
+        int stackNum = 50;
+        v8::HandleScope handleScope(info.GetIsolate());
+        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(info.GetIsolate(), stackNum, options));
+        int count = stackTrace->GetFrameCount();
+
+        char* output = (char*)malloc(0x100);
+        sprintf(output, "mbConsoleLog: %d\n", count);
+        OutputDebugStringA(output);
+        free(output);
+
+        for (int i = 0; i < count; ++i) {
+            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(info.GetIsolate(), i);
+            int frameCount = stackTrace->GetFrameCount();
+            int line = stackFrame->GetLineNumber();
+            v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+            v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+            std::string scriptNameWTF;
+            std::string funcNameWTF;
+
+            if (!scriptName.IsEmpty()) {
+                v8::String::Utf8Value scriptNameUtf8(scriptName);
+                scriptNameWTF = *scriptNameUtf8;
+            }
+
+            if (!funcName.IsEmpty()) {
+                v8::String::Utf8Value funcNameUtf8(funcName);
+                funcNameWTF = *funcNameUtf8;
+            }
+            std::vector<char> output;
+            output.resize(1000);
+            sprintf(&output[0], "line:%d, [", line);
+            OutputDebugStringA(&output[0]);
+
+            if (!scriptNameWTF.empty()) {
+                OutputDebugStringA(scriptNameWTF.c_str());
+            }
+            OutputDebugStringA("] , [");
+
+            if (!funcNameWTF.empty()) {
+                OutputDebugStringA(funcNameWTF.c_str());
+            }
+            OutputDebugStringA("]\n");
+        }
+        OutputDebugStringA("\n");
+    }
+
+    std::wstring strW = StringUtil::UTF8ToUTF16(str);
+    OutputDebugStringW(strW.c_str());
 }
 
-static void addFunction(v8::Local<v8::Context> context, const char* name, v8::FunctionCallback callback, bool isMainNode) {
+static void addFunction(v8::Local<v8::Context> context, const char* name, v8::FunctionCallback callback, bool isMainNode)
+{
     v8::Isolate* isolate = context->GetIsolate();
     if (!isolate->InContext())
         return;
     v8::HandleScope handleScope(isolate);
+    v8::TryCatch block(isolate);
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Object> object = context->Global();
@@ -266,11 +352,15 @@ static void addFunction(v8::Local<v8::Context> context, const char* name, v8::Fu
     object->Set(nameV8Local, func);
 }
 
-node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> context) {
+void NodeBindings::bindMbConsoleLog(v8::Local<v8::Context> context, bool isBrowserProcess)
+{
+    addFunction(context, "mbConsoleLog", mbConsoleLog, isBrowserProcess);
+}
+
+node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> context)
+{
     uv_async_init(m_uvLoop, m_callNextTickAsync, onCallNextTick);
     m_callNextTickAsync->data = this;
-
-    addFunction(context, "mbConsoleLog", mbConsoleLog, m_isBrowser);
 
     std::vector<std::string> args = AtomCommandLine::argv();
 
@@ -278,12 +368,12 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     std::wstring processType = m_isBrowser ? FILE_PATH_LITERAL("browser") : FILE_PATH_LITERAL("renderer");
     std::wstring resourcesPath = getResourcesPath(FILE_PATH_LITERAL(""));
     std::wstring scriptPath = resourcesPath // .append(FILE_PATH_LITERAL("electron.asar"))
-        .append(processType)
-        .append(FILE_PATH_LITERAL("\\init.js"));
+                                  .append(processType)
+                                  .append(FILE_PATH_LITERAL("\\init.js"));
 
     // electron里的process.resourcesPath指的是xxx/resources目录。而main.js一般在xxx/resources/app下
     if (args.size() > 1) {
-        resourcesPath = StringUtil::MultiByteToUTF16(/*CP_ACP*/(936), args[1]);
+        resourcesPath = StringUtil::MultiByteToUTF16(/*CP_ACP*/ (936), args[1]);
         const wchar_t* resourcesPos = wcsstr(resourcesPath.c_str(), L"resources");
         if (!resourcesPos) {
             std::vector<wchar_t> wbuf(resourcesPath.size() + 1);
@@ -307,13 +397,13 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     if (!m_isBrowser)
         m_env->set_is_blink_core();
 
-//     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
-//     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
-//     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
+    //     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
+    //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
+    //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
 
     // Node turns off AutorunMicrotasks, but we need it in web pages to match the
     // behavior of Chrome.
-//     if (!m_isBrowser)
+    //     if (!m_isBrowser)
 
     gin::Dictionary process(context->GetIsolate(), m_env->process_object());
     process.Set("type", StringUtil::UTF16ToUTF8(processType));
@@ -325,18 +415,20 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     bindFunction(&process);
 
     // The path to helper app.
-//     base::FilePath helper_exec_path;
-//     PathService::Get(content::CHILD_PROCESS_EXE, &helper_exec_path);
-//     process.Set("helperExecPath", helper_exec_path);
+    //     base::FilePath helper_exec_path;
+    //     PathService::Get(content::CHILD_PROCESS_EXE, &helper_exec_path);
+    //     process.Set("helperExecPath", helper_exec_path);
     return m_env;
 }
 
-void NodeBindings::loadEnvironment() {
+void NodeBindings::loadEnvironment()
+{
     node::LoadEnvironment(m_env);
     mate::emitEvent(m_env->isolate(), m_env->process_object(), "loaded");
 }
 
-void NodeBindings::activateUVLoop(v8::Isolate* isoloate) {
+void NodeBindings::activateUVLoop(v8::Isolate* isoloate)
+{
     node::Environment* env = node::Environment::GetCurrent(isoloate);
     if (std::find(m_pendingNextTicks.begin(), m_pendingNextTicks.end(), env) != m_pendingNextTicks.end())
         return;
@@ -346,11 +438,11 @@ void NodeBindings::activateUVLoop(v8::Isolate* isoloate) {
 }
 
 // static
-void NodeBindings::onCallNextTick(uv_async_t* handle) {
+void NodeBindings::onCallNextTick(uv_async_t* handle)
+{
     NodeBindings* self = static_cast<NodeBindings*>(handle->data);
 
-    for (std::list<node::Environment*>::const_iterator it = self->m_pendingNextTicks.begin();
-        it != self->m_pendingNextTicks.end(); ++it) {
+    for (std::list<node::Environment*>::const_iterator it = self->m_pendingNextTicks.begin(); it != self->m_pendingNextTicks.end(); ++it) {
         node::Environment* env = *it;
         v8::HandleScope handleScope(env->isolate());
 
@@ -360,6 +452,10 @@ void NodeBindings::onCallNextTick(uv_async_t* handle) {
             continue;
 
         v8::Context::Scope contextScope(env->context());
+
+        v8::Isolate* isolate = env->isolate();
+        v8::Local<v8::Context> ctx = isolate->GetCurrentContext();
+        v8::Isolate* isolate2 = v8::Isolate::GetCurrent();
 
         node::Environment::TickInfo* tickInfo = env->tick_info();
         if (tickInfo->length() == 0)

@@ -31,25 +31,25 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Win32Project1</RootNamespace>
     <ProjectName>v8_7_5_1</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -63,16 +63,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -120,6 +121,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
@@ -130,15 +132,18 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=0;_HAS_EXCEPTIONS=0;V8_TARGET_ARCH_IA32;ENABLE_DISASSEMBLER;BUILDING_V8_PLATFORM_SHARED;V8_PROMISE_INTERNAL_FIELD_COUNT;v8_promise_internal_field_count;V8_CONCURRENT_MARKING;DISABLE_UNTRUSTED_CODE_MITIGATIONS;ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_SHARED;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;V8_ENABLE_CHECKS;VERIFY_HEAP;V8_TRACE_MAPS;V8_ENABLE_ALLOCATION_TIMEOUT;V8_ENABLE_FORCE_SLOW_PATH;ENABLE_HANDLE_ZAPPING;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_DEPRECATION_WARNINGS;BUILDING_V8_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../v8_6_7;../../v8_6_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../v8_7_5;../../v8_7_5/include;../../gen/v8_7_5</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+      <DisableSpecificWarnings>4800;4530;4251;4275;4661;4251</DisableSpecificWarnings>
+      <AdditionalOptions>/d2SSAOptimizer- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -170,7 +175,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;USING_VC6RT=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -178,14 +183,14 @@
       <AdditionalIncludeDirectories>../../v8_6_7;../../v8_6_7/include</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <DisableSpecificWarnings>4800;4530;4251</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -227,24 +232,23 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MinSpace</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=0;_HAS_EXCEPTIONS=0;V8_TARGET_ARCH_IA32;ENABLE_DISASSEMBLER;V8_PROMISE_INTERNAL_FIELD_COUNT;v8_promise_internal_field_count;V8_CONCURRENT_MARKING;DISABLE_UNTRUSTED_CODE_MITIGATIONS;ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_SHARED;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;V8_ENABLE_CHECKS;OBJECT_PRINT;VERIFY_HEAP;V8_TRACE_MAPS;V8_ENABLE_ALLOCATION_TIMEOUT;V8_ENABLE_FORCE_SLOW_PATH;ENABLE_HANDLE_ZAPPING;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_DEPRECATION_WARNINGS;BUILDING_V8_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;SUPPORT_XP_CODE=1;V8_TARGET_ARCH_IA32;V8_EMBEDDED_BUILTINS=1;V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=0;V8_PROMISE_INTERNAL_FIELD_COUNT=1;V8_CONCURRENT_MARKING=1;BUILDING_V8_PLATFORM_SHARED=1;DISABLE_UNTRUSTED_CODE_MITIGATIONS;ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_SHARED;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;V8_DEPRECATION_WARNINGS;BUILDING_V8_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_7_5;../../v8_7_5/include;../../gen/v8_7_5</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4800;4530;4251;4275;4661;4251;4091</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <AdditionalOptions>/Zc:threadSafeInit-  /d2SSAOptimizer- %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -265,23 +269,23 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;SUPPORT_XP_CODE=1;V8_NO_FAST_TLS;V8_DEPRECATION_WARNINGS;V8_EMBEDDED_BUILTINS=1;V8_TARGET_ARCH_X64=1;V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=0;V8_PROMISE_INTERNAL_FIELD_COUNT=1;V8_CONCURRENT_MARKING=1;DISABLE_UNTRUSTED_CODE_MITIGATIONS;ICU_UTIL_DATA_IMPL=ICU_UTIL_DATA_SHARED;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_7_5;../../v8_7_5/include;../../gen/v8_7_5</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4530;4251;4275;4661</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/d2SSAOptimizer- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -296,17 +300,76 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\v8_6_7\include\v8-inspector-protocol.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-inspector.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-platform.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-profiler.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-testing.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-util.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-value-serializer-version.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-version-string.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8-version.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8.h" />
-    <ClInclude Include="..\..\v8_6_7\include\v8config.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Console.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Debugger.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Forward.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\HeapProfiler.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Profiler.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Protocol.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Runtime.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Schema.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtin-definitions-from-dsl.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-arguments-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-copywithin-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-filter-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-find-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-findindex-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-foreach-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-join-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-lastindexof-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-map-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-of-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-reverse-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-shift-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-slice-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-splice-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-array-unshift-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-base-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-collections-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-data-view-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-extras-utils-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-growable-fixed-array-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-iterator-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-object-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-proxy-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-regexp-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-regexp-replace-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-string-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-string-html-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-string-repeat-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-test-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-createtypedarray-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-every-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-filter-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-find-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-findindex-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-foreach-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-reduce-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-reduceright-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-slice-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-some-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-subarray-from-dsl-gen.h" />
+    <ClInclude Include="..\..\gen\v8_7_5\torque-generated\class-definitions-from-dsl.h" />
+    <ClInclude Include="..\..\v8_7_5\include\libplatform\libplatform-export.h" />
+    <ClInclude Include="..\..\v8_7_5\include\libplatform\libplatform.h" />
+    <ClInclude Include="..\..\v8_7_5\include\libplatform\v8-tracing.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-debug.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-inspector-protocol.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-inspector.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-internal.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-platform.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-profiler.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-testing.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-util.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-value-serializer-version.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-version-string.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-version.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-wasm-trap-handler-posix.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8-wasm-trap-handler-win.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8.h" />
+    <ClInclude Include="..\..\v8_7_5\include\v8config.h" />
     <ClInclude Include="..\..\v8_7_5\src\accessors.h" />
     <ClInclude Include="..\..\v8_7_5\src\address-map.h" />
     <ClInclude Include="..\..\v8_7_5\src\allocation-site-scopes-inl.h" />
@@ -320,18 +383,116 @@
     <ClInclude Include="..\..\v8_7_5\src\arguments-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\arguments.h" />
     <ClInclude Include="..\..\v8_7_5\src\asan.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-js.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-names.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-parser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-scanner.h" />
+    <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-types.h" />
     <ClInclude Include="..\..\v8_7_5\src\assembler-arch.h" />
     <ClInclude Include="..\..\v8_7_5\src\assembler-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\assembler.h" />
     <ClInclude Include="..\..\v8_7_5\src\assert-scope.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\ast-function-literal-id-reindexer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\ast-source-ranges.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\ast-traversal-visitor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\ast-value-factory.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\ast.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\modules.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\prettyprinter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\scopes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\source-range-ast-visitor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ast\variables.h" />
     <ClInclude Include="..\..\v8_7_5\src\async-hooks-wrapper.h" />
     <ClInclude Include="..\..\v8_7_5\src\bailout-reason.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\adapters.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\address-region.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\atomic-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\atomicops.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\atomicops_internals_atomicword_compat.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\atomicops_internals_portable.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\atomicops_internals_std.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\base-export.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\bits.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\bounded-page-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\build_config.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\compiler-specific.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\cpu.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\debug\stack_trace.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\division-by-constant.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\enum-set.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\export-template.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\file-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\flags.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\format-macros.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\free_deleter.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\functional.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\hashmap-entry.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\hashmap.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\ieee754.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\lazy-instance.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\list.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\logging.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\lsan-page-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\macros.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\once.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\optional.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\overflowing-math.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\page-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\condition-variable.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\elapsed-timer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\mutex.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\platform.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\semaphore.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\platform\time.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\qnx-math.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\region-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\ring-buffer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\safe_conversions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\safe_math.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\safe_math_impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\small-vector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\sys-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\template-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\threaded-list.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\timezone-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\tsan.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\utils\random-number-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\v8-fallthrough.h" />
+    <ClInclude Include="..\..\v8_7_5\src\base\win32-headers.h" />
     <ClInclude Include="..\..\v8_7_5\src\basic-block-profiler.h" />
     <ClInclude Include="..\..\v8_7_5\src\bignum-dtoa.h" />
     <ClInclude Include="..\..\v8_7_5\src\bignum.h" />
     <ClInclude Include="..\..\v8_7_5\src\bit-vector.h" />
     <ClInclude Include="..\..\v8_7_5\src\bootstrapper.h" />
     <ClInclude Include="..\..\v8_7_5\src\boxed-float.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-arguments-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-array-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-async-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-call-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-collections-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-constructor-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-constructor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-data-view-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-definitions.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-descriptors.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-iterator-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-lazy-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-math-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-object-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-promise-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-promise.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-proxy-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-regexp-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-string-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-typed-array-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-utils-gen.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-utils-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\builtins.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\constants-table-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\builtins\growable-fixed-array-gen.h" />
     <ClInclude Include="..\..\v8_7_5\src\cached-powers.h" />
     <ClInclude Include="..\..\v8_7_5\src\callable.h" />
     <ClInclude Include="..\..\v8_7_5\src\cancelable-task.h" />
@@ -348,7 +509,141 @@
     <ClInclude Include="..\..\v8_7_5\src\collector.h" />
     <ClInclude Include="..\..\v8_7_5\src\compilation-cache.h" />
     <ClInclude Include="..\..\v8_7_5\src\compilation-statistics.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler-dispatcher\compiler-dispatcher.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler-dispatcher\optimizing-compile-dispatcher.h" />
     <ClInclude Include="..\..\v8_7_5\src\compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\access-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\access-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\all-nodes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\allocation-builder-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\allocation-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\code-generator-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\code-generator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\frame-elider.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\gap-resolver.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\ia32\instruction-codes-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\instruction-codes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\instruction-scheduler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\instruction-selector-impl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\instruction-selector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\instruction.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\jump-threading.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\live-range-separator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\move-optimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\register-allocator-verifier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\register-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\unwinding-info-writer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\x64\instruction-codes-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\compiler\backend\x64\unwinding-info-writer-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\compiler\basic-block-instrumentor.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\branch-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\bytecode-analysis.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\bytecode-graph-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\bytecode-liveness-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\checkpoint-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\code-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\common-node-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\common-operator-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\common-operator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\compilation-dependencies.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\compiler-source-position-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\constant-folding-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\control-equivalence.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\control-flow-optimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\dead-code-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\diamond.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\effect-control-linearizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\escape-analysis-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\escape-analysis.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\frame-states.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\frame.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\functional-list.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\graph-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\graph-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\graph-trimmer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\graph-visualizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\graph.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\int64-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-call-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-context-specialization.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-create-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-generic-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-graph.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-heap-broker.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-heap-copy-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-inlining-heuristic.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-inlining.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-intrinsic-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-native-context-specialization.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-operator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-type-hint-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\js-typed-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\linkage.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\load-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\loop-analysis.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\loop-peeling.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\loop-variable-optimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\machine-graph-verifier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\machine-graph.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\machine-operator-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\machine-operator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\memory-optimizer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-aux-data.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-marker.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-matchers.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-origin-table.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node-properties.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\node.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\opcodes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\operation-typer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\operator-properties.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\operator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\osr.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\per-isolate-compiler-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\persistent-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\pipeline-statistics.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\pipeline.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\property-access-builder.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\raw-machine-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\redundancy-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\refs-map.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\representation-change.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\schedule.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\scheduler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\select-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\serializer-for-background-compilation.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\simd-scalar-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\simplified-lowering.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\simplified-operator-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\simplified-operator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\state-values-utils.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\store-store-elimination.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\type-cache.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\type-narrowing-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\typed-optimization.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\typer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\types.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\value-numbering-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\verifier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\wasm-compiler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\compiler\zone-stats.h" />
     <ClInclude Include="..\..\v8_7_5\src\constant-pool.h" />
     <ClInclude Include="..\..\v8_7_5\src\constants-arch.h" />
     <ClInclude Include="..\..\v8_7_5\src\contexts-inl.h" />
@@ -362,6 +657,18 @@
     <ClInclude Include="..\..\v8_7_5\src\date.h" />
     <ClInclude Include="..\..\v8_7_5\src\dateparser-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\dateparser.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-coverage.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-evaluate.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-frames.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-interface.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-property-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-scope-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-scopes.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-stack-trace-iterator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug-type-profile.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\debug.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\interface-types.h" />
+    <ClInclude Include="..\..\v8_7_5\src\debug\liveedit.h" />
     <ClInclude Include="..\..\v8_7_5\src\deoptimize-reason.h" />
     <ClInclude Include="..\..\v8_7_5\src\deoptimizer.h" />
     <ClInclude Include="..\..\v8_7_5\src\detachable-vector.h" />
@@ -375,6 +682,12 @@
     <ClInclude Include="..\..\v8_7_5\src\elements-kind.h" />
     <ClInclude Include="..\..\v8_7_5\src\elements.h" />
     <ClInclude Include="..\..\v8_7_5\src\execution.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\externalize-string-extension.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\free-buffer-extension.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\gc-extension.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\ignition-statistics-extension.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\statistics-extension.h" />
+    <ClInclude Include="..\..\v8_7_5\src\extensions\trigger-failure-extension.h" />
     <ClInclude Include="..\..\v8_7_5\src\external-reference-table.h" />
     <ClInclude Include="..\..\v8_7_5\src\external-reference.h" />
     <ClInclude Include="..\..\v8_7_5\src\fast-dtoa.h" />
@@ -400,7 +713,83 @@
     <ClInclude Include="..\..\v8_7_5\src\handles.h" />
     <ClInclude Include="..\..\v8_7_5\src\hash-seed-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\heap-symbols.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\array-buffer-collector.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\array-buffer-tracker-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\array-buffer-tracker.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\barrier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\code-stats.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\concurrent-marking.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\embedder-tracing.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\factory-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\factory.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\gc-idle-time-handler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\gc-tracer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\heap-controller.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\heap-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\heap-write-barrier-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\heap-write-barrier.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\heap.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\incremental-marking-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\incremental-marking-job.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\incremental-marking.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\invalidated-slots-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\invalidated-slots.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\item-parallel-job.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\local-allocator-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\local-allocator.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\mark-compact-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\mark-compact.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\marking.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\memory-reducer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\object-stats.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\objects-visiting-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\objects-visiting.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\read-only-heap.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\remembered-set.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\scavenge-job.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\scavenger-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\scavenger.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\slot-set.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\spaces-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\spaces.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\store-buffer-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\store-buffer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\stress-marking-observer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\stress-scavenge-observer.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\sweeper.h" />
+    <ClInclude Include="..\..\v8_7_5\src\heap\worklist.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ia32\assembler-ia32-inl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\assembler-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\constants-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\frame-constants-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\macro-assembler-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\register-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\src\ia32\sse-instr.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\v8_7_5\src\icu_util.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\accessor-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\binary-op-assembler.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\call-optimization.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\handler-configuration-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\handler-configuration.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\ic-inl.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\ic-stats.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\ic.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\keyed-store-generic.h" />
+    <ClInclude Include="..\..\v8_7_5\src\ic\stub-cache.h" />
     <ClInclude Include="..\..\v8_7_5\src\identity-map.h" />
     <ClInclude Include="..\..\v8_7_5\src\inspector\custom-preview.h" />
     <ClInclude Include="..\..\v8_7_5\src\inspector\injected-script.h" />
@@ -468,6 +857,7 @@
     <ClInclude Include="..\..\v8_7_5\src\libplatform\default-foreground-task-runner.h" />
     <ClInclude Include="..\..\v8_7_5\src\libplatform\default-platform.h" />
     <ClInclude Include="..\..\v8_7_5\src\libplatform\default-worker-threads-task-runner.h" />
+    <ClInclude Include="..\..\v8_7_5\src\libplatform\default_platform_wrap.h" />
     <ClInclude Include="..\..\v8_7_5\src\libplatform\delayed-task-queue.h" />
     <ClInclude Include="..\..\v8_7_5\src\libplatform\task-queue.h" />
     <ClInclude Include="..\..\v8_7_5\src\libplatform\tracing\trace-buffer.h" />
@@ -802,6 +1192,7 @@
     <ClInclude Include="..\..\v8_7_5\src\unicode-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\unicode.h" />
     <ClInclude Include="..\..\v8_7_5\src\unoptimized-compilation-info.h" />
+    <ClInclude Include="..\..\v8_7_5\src\unwinding-info-win64.h" />
     <ClInclude Include="..\..\v8_7_5\src\uri.h" />
     <ClInclude Include="..\..\v8_7_5\src\utils-inl.h" />
     <ClInclude Include="..\..\v8_7_5\src\utils.h" />
@@ -893,6 +1284,171 @@
     <ClInclude Include="..\..\v8_7_5\src\zone\zone.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\gen\v8_7_5\extras-libraries.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\ConsoleV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\DebuggerV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\HeapProfilerV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\ProfilerV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\ProtocolV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\RuntimeV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\src\inspector\protocol\SchemaV8.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-arguments-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-copywithin-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-filter-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-find-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-findindex-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-foreach-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-from-dsl-gen-64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-join-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-lastindexof-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-map-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-of-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-reverse-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-shift-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-slice-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-splice-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-array-unshift-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-base-from-dsl-gen-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-base-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-collections-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-data-view-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-extras-utils-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-growable-fixed-array-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-iterator-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-object-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-proxy-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-regexp-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-regexp-replace-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-string-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-string-html-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-string-repeat-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-test-from-dsl-gen-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-test-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-createtypedarray-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-every-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-filter-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-find-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-findindex-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-foreach-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-reduce-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-reduceright-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-slice-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-some-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_7_5\torque-generated\builtins-typed-array-subarray-from-dsl-gen.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\accessors.cc" />
     <ClCompile Include="..\..\v8_7_5\src\address-map.cc" />
     <ClCompile Include="..\..\v8_7_5\src\allocation.cc" />
@@ -900,15 +1456,132 @@
     <ClCompile Include="..\..\v8_7_5\src\api-natives.cc" />
     <ClCompile Include="..\..\v8_7_5\src\api.cc" />
     <ClCompile Include="..\..\v8_7_5\src\arguments.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-js.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-parser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-scanner.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\asmjs\asm-types.cc" />
     <ClCompile Include="..\..\v8_7_5\src\assembler.cc" />
     <ClCompile Include="..\..\v8_7_5\src\assert-scope.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\ast-function-literal-id-reindexer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\ast-value-factory.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\ast.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\modules.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\prettyprinter.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\scopes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\source-range-ast-visitor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ast\variables.cc" />
     <ClCompile Include="..\..\v8_7_5\src\async-hooks-wrapper.cc" />
     <ClCompile Include="..\..\v8_7_5\src\bailout-reason.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\bits.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\bounded-page-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\cpu.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\debug\stack_trace.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\debug\stack_trace_win.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\division-by-constant.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\file-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\functional.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\ieee754.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\logging.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\lsan-page-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\once.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\page-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\platform\condition-variable.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\platform\mutex.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\platform\platform-win32.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\platform\semaphore.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\platform\time.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\region-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\sys-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\base\utils\random-number-generator.cc" />
     <ClCompile Include="..\..\v8_7_5\src\basic-block-profiler.cc" />
     <ClCompile Include="..\..\v8_7_5\src\bignum-dtoa.cc" />
     <ClCompile Include="..\..\v8_7_5\src\bignum.cc" />
     <ClCompile Include="..\..\v8_7_5\src\bit-vector.cc" />
     <ClCompile Include="..\..\v8_7_5\src\bootstrapper.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-api.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-arguments-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-array-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-array.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-arraybuffer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-async-function-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-async-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-async-generator-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-async-iterator-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-bigint-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-bigint.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-boolean-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-boolean.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-call-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-call.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-callsite.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-collections-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-collections.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-console-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-console.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-constructor-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-conversion-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-dataview.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-date-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-date.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-debug-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-error.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-extras-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-function-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-function.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-generator-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-global-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-global.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-handler-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-ic-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-internal-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-internal.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-interpreter-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-iterator-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-json.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-lazy-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-math-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-math.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-microtask-queue-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-number-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-number.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-object-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-object.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-promise-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-promise.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-proxy-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-reflect-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-reflect.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-regexp-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-regexp.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-sharedarraybuffer-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-sharedarraybuffer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-string-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-string.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-symbol-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-symbol.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-trace.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-typed-array-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-typed-array.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-wasm-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins-weak-refs.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\builtins.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\constants-table-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\generate-bytecodes-builtins-list.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\growable-fixed-array-gen.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\builtins\ia32\builtins-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\builtins\setup-builtins-internal.cc">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\builtins\x64\builtins-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\cached-powers.cc" />
     <ClCompile Include="..\..\v8_7_5\src\cancelable-task.cc" />
     <ClCompile Include="..\..\v8_7_5\src\code-comments.cc" />
@@ -918,13 +1591,180 @@
     <ClCompile Include="..\..\v8_7_5\src\code-stub-assembler.cc" />
     <ClCompile Include="..\..\v8_7_5\src\compilation-cache.cc" />
     <ClCompile Include="..\..\v8_7_5\src\compilation-statistics.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler-dispatcher\compiler-dispatcher.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler-dispatcher\optimizing-compile-dispatcher.cc" />
     <ClCompile Include="..\..\v8_7_5\src\compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\access-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\access-info.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\all-nodes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\code-generator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\frame-elider.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\gap-resolver.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\ia32\code-generator-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\ia32\instruction-scheduler-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\ia32\instruction-selector-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\instruction-scheduler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\instruction-selector.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\instruction.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\jump-threading.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\live-range-separator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\move-optimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\register-allocator-verifier.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\register-allocator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\x64\code-generator-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\x64\instruction-scheduler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\x64\instruction-selector-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\backend\x64\unwinding-info-writer-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\compiler\basic-block-instrumentor.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\branch-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\bytecode-analysis.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\bytecode-graph-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\bytecode-liveness-map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\c-linkage.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\checkpoint-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\code-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\common-node-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\common-operator-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\common-operator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\compilation-dependencies.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\compiler-source-position-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\constant-folding-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\control-equivalence.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\control-flow-optimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\dead-code-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\effect-control-linearizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\escape-analysis-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\escape-analysis.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\frame-states.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\frame.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\graph-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\graph-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\graph-trimmer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\graph-visualizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\graph.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\int64-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-call-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-context-specialization.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-create-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-generic-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-graph.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-heap-broker.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-heap-copy-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-inlining-heuristic.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-inlining.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-intrinsic-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-native-context-specialization.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-operator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-type-hint-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\js-typed-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\linkage.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\load-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\loop-analysis.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\loop-peeling.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\loop-variable-optimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\machine-graph-verifier.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\machine-graph.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\machine-operator-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\machine-operator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\memory-optimizer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node-marker.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node-matchers.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node-origin-table.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node-properties.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\node.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\opcodes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\operation-typer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\operator-properties.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\operator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\osr.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\pipeline-statistics.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\pipeline.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\property-access-builder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\raw-machine-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\redundancy-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\refs-map.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\representation-change.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\schedule.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\scheduler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\select-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\serializer-for-background-compilation.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\simd-scalar-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\simplified-lowering.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\simplified-operator-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\simplified-operator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\state-values-utils.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\store-store-elimination.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\type-cache.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\type-narrowing-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\typed-optimization.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\typer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\types.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\value-numbering-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\verifier.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\wasm-compiler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\compiler\zone-stats.cc" />
     <ClCompile Include="..\..\v8_7_5\src\constant-pool.cc" />
     <ClCompile Include="..\..\v8_7_5\src\contexts.cc" />
     <ClCompile Include="..\..\v8_7_5\src\conversions.cc" />
     <ClCompile Include="..\..\v8_7_5\src\counters.cc" />
     <ClCompile Include="..\..\v8_7_5\src\date.cc" />
     <ClCompile Include="..\..\v8_7_5\src\dateparser.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-coverage.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-evaluate.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-frames.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-property-iterator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-scope-iterator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-scopes.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-stack-trace-iterator.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug-type-profile.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\debug.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\ia32\debug-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\debug\liveedit.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\debug\x64\debug-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\deoptimize-reason.cc" />
     <ClCompile Include="..\..\v8_7_5\src\deoptimizer.cc" />
     <ClCompile Include="..\..\v8_7_5\src\detachable-vector.cc" />
@@ -935,6 +1775,12 @@
     <ClCompile Include="..\..\v8_7_5\src\elements-kind.cc" />
     <ClCompile Include="..\..\v8_7_5\src\elements.cc" />
     <ClCompile Include="..\..\v8_7_5\src\execution.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\externalize-string-extension.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\free-buffer-extension.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\gc-extension.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\ignition-statistics-extension.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\statistics-extension.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\extensions\trigger-failure-extension.cc" />
     <ClCompile Include="..\..\v8_7_5\src\external-reference-table.cc" />
     <ClCompile Include="..\..\v8_7_5\src\external-reference.cc" />
     <ClCompile Include="..\..\v8_7_5\src\fast-dtoa.cc" />
@@ -949,7 +1795,67 @@
     <ClCompile Include="..\..\v8_7_5\src\global-handles.cc" />
     <ClCompile Include="..\..\v8_7_5\src\handler-table.cc" />
     <ClCompile Include="..\..\v8_7_5\src\handles.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\array-buffer-collector.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\array-buffer-tracker.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\code-stats.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\concurrent-marking.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\embedder-tracing.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\factory.cc">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\heap\gc-idle-time-handler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\gc-tracer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\heap-controller.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\heap.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\incremental-marking-job.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\incremental-marking.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\invalidated-slots.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\item-parallel-job.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\mark-compact.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\marking.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\memory-reducer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\object-stats.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\objects-visiting.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\read-only-heap.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\scavenge-job.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\scavenger.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\setup-heap-internal.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\slot-set.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\spaces.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\store-buffer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\stress-marking-observer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\stress-scavenge-observer.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\heap\sweeper.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ia32\assembler-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\cpu-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\deoptimizer-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\disasm-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\frame-constants-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\interface-descriptors-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_7_5\src\ia32\macro-assembler-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\icu_util.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\accessor-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\binary-op-assembler.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\call-optimization.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\handler-configuration.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\ic-stats.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\ic.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\keyed-store-generic.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\ic\stub-cache.cc" />
     <ClCompile Include="..\..\v8_7_5\src\identity-map.cc" />
     <ClCompile Include="..\..\v8_7_5\src\inspector\custom-preview.cc" />
     <ClCompile Include="..\..\v8_7_5\src\inspector\injected-script.cc" />
@@ -1009,6 +1915,7 @@
     <ClCompile Include="..\..\v8_7_5\src\libplatform\default-foreground-task-runner.cc" />
     <ClCompile Include="..\..\v8_7_5\src\libplatform\default-platform.cc" />
     <ClCompile Include="..\..\v8_7_5\src\libplatform\default-worker-threads-task-runner.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\libplatform\default_platform_wrap.cc" />
     <ClCompile Include="..\..\v8_7_5\src\libplatform\delayed-task-queue.cc" />
     <ClCompile Include="..\..\v8_7_5\src\libplatform\task-queue.cc" />
     <ClCompile Include="..\..\v8_7_5\src\libplatform\tracing\trace-buffer.cc" />
@@ -1089,6 +1996,7 @@
     <ClCompile Include="..\..\v8_7_5\src\regexp\regexp-utils.cc" />
     <ClCompile Include="..\..\v8_7_5\src\regexp\x64\regexp-macro-assembler-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\register-configuration.cc" />
     <ClCompile Include="..\..\v8_7_5\src\reloc-info.cc" />
@@ -1171,7 +2079,7 @@
     <ClCompile Include="..\..\v8_7_5\src\torque\file-visitor.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\implementation-visitor.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\instructions.cc" />
-    <ClCompile Include="..\..\v8_7_5\src\torque\ls\json-parser_.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\ls\json-parser-torque.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\ls\json.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\ls\message-handler.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\server-data.cc" />
@@ -1179,8 +2087,8 @@
     <ClCompile Include="..\..\v8_7_5\src\torque\torque-compiler.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\torque-parser.cc" />
     <ClCompile Include="..\..\v8_7_5\src\torque\type-oracle.cc" />
-    <ClCompile Include="..\..\v8_7_5\src\torque\types.cc" />
-    <ClCompile Include="..\..\v8_7_5\src\torque\utils_.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\types-torque.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\torque\utils-torque.cc" />
     <ClCompile Include="..\..\v8_7_5\src\tracing\trace-event.cc" />
     <ClCompile Include="..\..\v8_7_5\src\tracing\traced-value.cc" />
     <ClCompile Include="..\..\v8_7_5\src\tracing\tracing-category-observer.cc" />
@@ -1196,6 +2104,9 @@
     <ClCompile Include="..\..\v8_7_5\src\unicode.cc" />
     <ClCompile Include="..\..\v8_7_5\src\unoptimized-compilation-info.cc" />
     <ClCompile Include="..\..\v8_7_5\src\unwinder.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\unwinding-info-win64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\uri.cc" />
     <ClCompile Include="..\..\v8_7_5\src\utils.cc" />
     <ClCompile Include="..\..\v8_7_5\src\v8.cc" />
@@ -1223,6 +2134,7 @@
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-engine.cc" />
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-external-refs.cc" />
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-features.cc" />
+    <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-import-wrapper-cache.cc" />
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-interpreter.cc" />
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-js.cc" />
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-memory.cc" />
@@ -1235,31 +2147,42 @@
     <ClCompile Include="..\..\v8_7_5\src\wasm\wasm-text.cc" />
     <ClCompile Include="..\..\v8_7_5\src\x64\assembler-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\cpu-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\deoptimizer-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\disasm-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\eh-frame-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\frame-constants-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\interface-descriptors-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\x64\macro-assembler-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_7_5\src\zone\accounting-allocator.cc" />
     <ClCompile Include="..\..\v8_7_5\src\zone\zone-segment.cc" />
     <ClCompile Include="..\..\v8_7_5\src\zone\zone.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\v8_7_5\include\libplatform\DEPS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

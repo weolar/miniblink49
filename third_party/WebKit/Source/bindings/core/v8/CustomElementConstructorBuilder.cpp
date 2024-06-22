@@ -159,8 +159,10 @@ bool CustomElementConstructorBuilder::createConstructor(Document* document, Cust
     if (!prototypeIsValid(definition->descriptor().type(), exceptionState))
         return false;
 
+    v8::Local<v8::Object> data = v8::Object::New(isolate);
+
     v8::Local<v8::FunctionTemplate> constructorTemplate = v8::FunctionTemplate::New(isolate);
-    constructorTemplate->SetCallHandler(constructCustomElement);
+    constructorTemplate->SetCallHandler(constructCustomElement, data);
     if (!constructorTemplate->GetFunction(context).ToLocal(&m_constructor)) {
         CustomElementException::throwException(CustomElementException::ContextDestroyedRegisteringDefinition, definition->descriptor().type(), exceptionState);
         return false;
@@ -177,11 +179,17 @@ bool CustomElementConstructorBuilder::createConstructor(Document* document, Cust
 
     m_constructor->SetName(v8Type->IsNull() ? v8TagName : v8Type.As<v8::String>());
 
+#if V8_MAJOR_VERSION >= 7
+    V8HiddenValue::setHiddenValue(isolate, data, V8HiddenValue::customElementDocument(isolate), toV8(document, context->Global(), isolate));
+    V8HiddenValue::setHiddenValue(isolate, data, V8HiddenValue::customElementNamespaceURI(isolate), v8String(isolate, descriptor.namespaceURI()));
+    V8HiddenValue::setHiddenValue(isolate, data, V8HiddenValue::customElementTagName(isolate), v8TagName);
+    V8HiddenValue::setHiddenValue(isolate, data, V8HiddenValue::customElementType(isolate), v8Type);
+#else
     V8HiddenValue::setHiddenValue(isolate, m_constructor, V8HiddenValue::customElementDocument(isolate), toV8(document, context->Global(), isolate));
     V8HiddenValue::setHiddenValue(isolate, m_constructor, V8HiddenValue::customElementNamespaceURI(isolate), v8String(isolate, descriptor.namespaceURI()));
     V8HiddenValue::setHiddenValue(isolate, m_constructor, V8HiddenValue::customElementTagName(isolate), v8TagName);
     V8HiddenValue::setHiddenValue(isolate, m_constructor, V8HiddenValue::customElementType(isolate), v8Type);
-
+#endif
     v8::Local<v8::String> prototypeKey = v8String(isolate, "prototype");
     if (!v8CallBoolean(m_constructor->HasOwnProperty(context, prototypeKey)))
         return false;

@@ -440,8 +440,9 @@ void AtomicString::remove(StringImpl* r)
         iterator = findString<LChar>(r);
     else
         iterator = findString<UChar>(r);
-    RELEASE_ASSERT(iterator != atomicStrings().end());
-    atomicStrings().remove(iterator);
+    //RELEASE_ASSERT(iterator != atomicStrings().end());
+    if (iterator != atomicStrings().end())
+        atomicStrings().remove(iterator);
 }
 
 AtomicString AtomicString::lower() const

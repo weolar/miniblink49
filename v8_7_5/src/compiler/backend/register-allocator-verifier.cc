@@ -8,6 +8,8 @@
 #include "src/compiler/backend/instruction.h"
 #include "src/ostreams.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

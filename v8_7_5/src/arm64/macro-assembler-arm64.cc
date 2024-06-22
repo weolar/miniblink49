@@ -48,20 +48,15 @@ int TurboAssembler::RequiredStackSizeForCallerSaved(SaveFPRegsMode fp_mode,
   // However, we leave it in the argument list to mirror the prototype for
   // Push/PopCallerSaved().
 
-#if defined(V8_OS_WIN)
-  // X18 is excluded from caller-saved register list on Windows ARM64 which
-  // makes caller-saved registers in odd number. padreg is used accordingly
-  // to maintain the alignment.
+  // X18 is excluded from caller-saved register list on ARM64 which makes
+  // caller-saved registers in odd number. padreg is used accordingly to
+  // maintain the alignment.
   DCHECK_EQ(list.Count() % 2, 1);
   if (exclusion.Is(no_reg)) {
     bytes += kXRegSizeInBits / 8;
   } else {
     bytes -= kXRegSizeInBits / 8;
   }
-#else
-  DCHECK_EQ(list.Count() % 2, 0);
-  USE(exclusion);
-#endif
 
   bytes += list.Count() * kXRegSizeInBits / 8;
 
@@ -77,21 +72,13 @@ int TurboAssembler::PushCallerSaved(SaveFPRegsMode fp_mode,
   int bytes = 0;
   auto list = kCallerSaved;
 
-#if defined(V8_OS_WIN)
-  // X18 is excluded from caller-saved register list on Windows ARM64, use
-  // padreg accordingly to maintain alignment.
+  // X18 is excluded from caller-saved register list on ARM64, use padreg
+  // accordingly to maintain alignment.
   if (!exclusion.Is(no_reg)) {
     list.Remove(exclusion);
   } else {
     list.Combine(padreg);
   }
-#else
-  if (!exclusion.Is(no_reg)) {
-    // Replace the excluded register with padding to maintain alignment.
-    list.Remove(exclusion);
-    list.Combine(padreg);
-  }
-#endif
 
   DCHECK_EQ(list.Count() % 2, 0);
   PushCPURegList(list);
@@ -115,21 +102,13 @@ int TurboAssembler::PopCallerSaved(SaveFPRegsMode fp_mode, Register exclusion) {
 
   auto list = kCallerSaved;
 
-#if defined(V8_OS_WIN)
-  // X18 is excluded from caller-saved register list on Windows ARM64, use
-  // padreg accordingly to maintain alignment.
+  // X18 is excluded from caller-saved register list on ARM64, use padreg
+  // accordingly to maintain alignment.
   if (!exclusion.Is(no_reg)) {
     list.Remove(exclusion);
   } else {
     list.Combine(padreg);
   }
-#else
-  if (!exclusion.Is(no_reg)) {
-    // Replace the excluded register with padding to maintain alignment.
-    list.Remove(exclusion);
-    list.Combine(padreg);
-  }
-#endif
 
   DCHECK_EQ(list.Count() % 2, 0);
   PopCPURegList(list);
@@ -3033,6 +3012,28 @@ void TurboAssembler::RestoreRegisters(RegList registers) {
   PopCPURegList(regs);
 }
 
+void TurboAssembler::CallEphemeronKeyBarrier(Register object, Register address,
+                                             SaveFPRegsMode fp_mode) {
+  EphemeronKeyBarrierDescriptor descriptor;
+  RegList registers = descriptor.allocatable_registers();
+
+  SaveRegisters(registers);
+
+  Register object_parameter(
+      descriptor.GetRegisterParameter(EphemeronKeyBarrierDescriptor::kObject));
+  Register slot_parameter(descriptor.GetRegisterParameter(
+      EphemeronKeyBarrierDescriptor::kSlotAddress));
+  Register fp_mode_parameter(
+      descriptor.GetRegisterParameter(EphemeronKeyBarrierDescriptor::kFPMode));
+
+  MovePair(object_parameter, object, slot_parameter, address);
+
+  Mov(fp_mode_parameter, Smi::FromEnum(fp_mode));
+  Call(isolate()->builtins()->builtin_handle(Builtins::kEphemeronKeyBarrier),
+       RelocInfo::CODE_TARGET);
+  RestoreRegisters(registers);
+}
+
 void TurboAssembler::CallRecordWriteStub(
     Register object, Register address,
     RememberedSetAction remembered_set_action, SaveFPRegsMode fp_mode) {
@@ -3136,11 +3137,6 @@ void MacroAssembler::RecordWrite(Register object, Register address,
   }
 
   Bind(&done);
-
-  // Count number of write barriers in generated code.
-  isolate()->counters()->write_barriers_static()->Increment();
-  IncrementCounter(isolate()->counters()->write_barriers_dynamic(), 1, address,
-                   value);
 
   // Clobber clobbered registers when running with the debug-code flag
   // turned on to provoke errors.
@@ -3391,14 +3387,20 @@ void MacroAssembler::Printf(const char * format,
   TmpList()->set_list(0);
   FPTmpList()->set_list(0);
 
+  // x18 is the platform register and is reserved for the use of platform ABIs.
+  // It is not part of the kCallerSaved list, but we add it here anyway to
+  // ensure `reg_list.Count() % 2 == 0` which is required in multiple spots.
+  CPURegList saved_registers = kCallerSaved;
+  saved_registers.Combine(x18.code());
+
   // Preserve all caller-saved registers as well as NZCV.
   // PushCPURegList asserts that the size of each list is a multiple of 16
   // bytes.
-  PushCPURegList(kCallerSaved);
+  PushCPURegList(saved_registers);
   PushCPURegList(kCallerSavedV);
 
   // We can use caller-saved registers as scratch values (except for argN).
-  CPURegList tmp_list = kCallerSaved;
+  CPURegList tmp_list = saved_registers;
   CPURegList fp_tmp_list = kCallerSavedV;
   tmp_list.Remove(arg0, arg1, arg2, arg3);
   fp_tmp_list.Remove(arg0, arg1, arg2, arg3);
@@ -3418,7 +3420,8 @@ void MacroAssembler::Printf(const char * format,
       // to PrintfNoPreserve as an argument.
       Register arg_sp = temps.AcquireX();
       Add(arg_sp, sp,
-          kCallerSaved.TotalSizeInBytes() + kCallerSavedV.TotalSizeInBytes());
+          saved_registers.TotalSizeInBytes() +
+              kCallerSavedV.TotalSizeInBytes());
       if (arg0_sp) arg0 = Register::Create(arg_sp.code(), arg0.SizeInBits());
       if (arg1_sp) arg1 = Register::Create(arg_sp.code(), arg1.SizeInBits());
       if (arg2_sp) arg2 = Register::Create(arg_sp.code(), arg2.SizeInBits());
@@ -3443,7 +3446,7 @@ void MacroAssembler::Printf(const char * format,
   }
 
   PopCPURegList(kCallerSavedV);
-  PopCPURegList(kCallerSaved);
+  PopCPURegList(saved_registers);
 
   TmpList()->set_list(old_tmp_list);
   FPTmpList()->set_list(old_fp_tmp_list);

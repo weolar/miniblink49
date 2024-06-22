@@ -89,7 +89,7 @@ public:
 
     // MediaPlayer methods:
     WebMediaPlayer* webMediaPlayer() const override;
-    void load(WebMediaPlayer::LoadType, const WTF::String& url, WebMediaPlayer::CORSMode) override;
+    void load(WebMediaPlayer::LoadType, const WTF::String& url, WebMediaPlayer::CORSMode mode, bool isAudio) override;
     void setPreload(MediaPlayer::Preload) override;
 
 #if ENABLE(WEB_AUDIO)

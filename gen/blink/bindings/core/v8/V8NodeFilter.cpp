@@ -117,7 +117,9 @@ static void installV8NodeFilterTemplate(v8::Local<v8::FunctionTemplate> function
     static_assert(0x800 == NodeFilter::SHOW_NOTATION, "the value of NodeFilter_SHOW_NOTATION does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8NodeFilter::domTemplate(v8::Isolate* isolate)

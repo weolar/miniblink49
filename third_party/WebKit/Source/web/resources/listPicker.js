@@ -208,6 +208,9 @@ ListPicker.prototype._fixWindowSize = function() {
     }
     desiredWindowWidth = Math.max(this._config.anchorRectInScreen.width, desiredWindowWidth);
     var windowRect = adjustWindowRect(desiredWindowWidth, desiredWindowHeight, this._selectElement.offsetWidth, 0);
+    
+    window.pagePopupController.log("_fixWindowSize, windowRect.y:" + desiredWindowHeight + ", " + this._selectElement.offsetWidth + ", " + windowRect.y);
+        
     // If the available screen space is smaller than maxHeight, we will get an unexpected scrollbar.
     if (!expectingScrollbar && windowRect.height < noScrollHeight) {
         desiredWindowWidth = windowRect.width + getScrollbarWidth();

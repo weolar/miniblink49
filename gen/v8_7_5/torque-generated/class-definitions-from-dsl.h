@@ -1,3 +1,8 @@
+//Copyright (C) 2016 Red Hat, Inc. All Rights Reserved.
+// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #ifndef V8_CLASS_BUILTIN_DEFINITIONS_FROM_DSL_H_
 #define V8_CLASS_BUILTIN_DEFINITIONS_FROM_DSL_H_
 
@@ -57,6 +62,19 @@ V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
 V(kFlagsOffset, kTaggedSize) \
 V(kConstantElementsOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_ASM_WASM_DATA_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kManagedNativeModuleOffset, kTaggedSize) \
+V(kExportWrappersOffset, kTaggedSize) \
+V(kAsmJsOffsetTableOffset, kTaggedSize) \
+V(kUsesBitsetOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \
@@ -157,6 +175,20 @@ V(kEndOfWeakFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_CONTEXT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kLengthOffset, kTaggedSize) \
+V(kScopeInfoOffset, kTaggedSize) \
+V(kPreviousOffset, kTaggedSize) \
+V(kExtensionOffset, kTaggedSize) \
+V(kNativeContextOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_DATA_HANDLER_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
@@ -171,10 +203,30 @@ V(kEndOfWeakFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_DEPENDENT_CODE_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_EMBEDDER_DATA_ARRAY_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
 V(kLengthOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_ENUM_CACHE_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kKeysOffset, kTaggedSize) \
+V(kIndicesOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \
@@ -353,6 +405,17 @@ V(kEndOfStrongFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_INTERPRETER_DATA_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kBytecodeArrayOffset, kTaggedSize) \
+V(kInterpreterTrampolineOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_JSACCESSOR_PROPERTY_DESCRIPTOR_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
@@ -505,6 +568,15 @@ V(kConfigurableOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_JSDATA_VIEW_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
@@ -841,6 +913,15 @@ V(kEndOfWeakFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_PROMISE_FULFILL_REACTION_JOB_TASK_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_PROMISE_REACTION_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
@@ -854,10 +935,58 @@ V(kEndOfWeakFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_PROMISE_REACTION_JOB_TASK_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kArgumentOffset, kTaggedSize) \
+V(kContextOffset, kTaggedSize) \
+V(kHandlerOffset, kTaggedSize) \
+V(kPromiseOrCapabilityOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_PROMISE_REJECT_REACTION_JOB_TASK_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_PROMISE_RESOLVE_THENABLE_JOB_TASK_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kContextOffset, kTaggedSize) \
+V(kPromiseToResolveOffset, kTaggedSize) \
+V(kThenOffset, kTaggedSize) \
+V(kThenableOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_PROPERTY_ARRAY_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
 V(kLengthAndHashOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_PROPERTY_CELL_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kNameOffset, kTaggedSize) \
+V(kPropertyDetailsRawOffset, kTaggedSize) \
+V(kValueOffset, kTaggedSize) \
+V(kDependentCodeOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \
@@ -876,6 +1005,15 @@ V(kBitFieldOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_REG_EXP_MATCH_INFO_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
@@ -988,6 +1126,18 @@ V(kScriptNameOffset, kTaggedSize) \
 V(kScriptNameOrSourceUrlOffset, kTaggedSize) \
 V(kFunctionNameOffset, kTaggedSize) \
 V(kFlagOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_STACK_TRACE_FRAME_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kFrameArrayOffset, kTaggedSize) \
+V(kFrameIndexOffset, kTaggedSize) \
+V(kFrameInfoOffset, kTaggedSize) \
 V(kIdOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
@@ -1090,10 +1240,130 @@ V(kEndOfWeakFieldsOffset, 0) \
 V(kEndOfTaggedFieldsOffset, 0) \
 V(kSize, 0) \
 
+#define TORQUE_GENERATED_WASM_DEBUG_INFO_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kInstanceOffset, kTaggedSize) \
+V(kInterpreterHandleOffset, kTaggedSize) \
+V(kInterpretedFunctionsOffset, kTaggedSize) \
+V(kLocalsNamesOffset, kTaggedSize) \
+V(kCWasmEntriesOffset, kTaggedSize) \
+V(kCWasmEntryMapOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_EXCEPTION_OBJECT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kSerializedSignatureOffset, kTaggedSize) \
+V(kExceptionTagOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_EXCEPTION_PACKAGE_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
 #define TORQUE_GENERATED_WASM_EXCEPTION_TAG_FIELDS(V) \
 V(kStartOfPointerFieldsOffset, 0) \
 V(kStartOfStrongFieldsOffset, 0) \
 V(kIndexOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_EXPORTED_FUNCTION_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_EXPORTED_FUNCTION_DATA_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kWrapperCodeOffset, kTaggedSize) \
+V(kInstanceOffset, kTaggedSize) \
+V(kJumpTableOffsetOffset, kTaggedSize) \
+V(kFunctionIndexOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_GLOBAL_OBJECT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kUntaggedBufferOffset, kTaggedSize) \
+V(kTaggedBufferOffset, kTaggedSize) \
+V(kOffsetOffset, kTaggedSize) \
+V(kFlagsOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_MEMORY_OBJECT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kArrayBufferOffset, kTaggedSize) \
+V(kMaximumPagesOffset, kTaggedSize) \
+V(kInstancesOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_MODULE_OBJECT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kNativeModuleOffset, kTaggedSize) \
+V(kExportWrappersOffset, kTaggedSize) \
+V(kScriptOffset, kTaggedSize) \
+V(kWeakInstanceListOffset, kTaggedSize) \
+V(kAsmJsOffsetTableOffset, kTaggedSize) \
+V(kBreakPointInfosOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WASM_TABLE_OBJECT_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kElementsOffset, kTaggedSize) \
+V(kMaximumLengthOffset, kTaggedSize) \
+V(kDispatchTablesOffset, kTaggedSize) \
+V(kRawTypeOffset, kTaggedSize) \
+V(kEndOfStrongFieldsOffset, 0) \
+V(kStartOfWeakFieldsOffset, 0) \
+V(kEndOfWeakFieldsOffset, 0) \
+V(kEndOfTaggedFieldsOffset, 0) \
+V(kSize, 0) \
+
+#define TORQUE_GENERATED_WEAK_FIXED_ARRAY_FIELDS(V) \
+V(kStartOfPointerFieldsOffset, 0) \
+V(kStartOfStrongFieldsOffset, 0) \
+V(kLengthOffset, kTaggedSize) \
 V(kEndOfStrongFieldsOffset, 0) \
 V(kStartOfWeakFieldsOffset, 0) \
 V(kEndOfWeakFieldsOffset, 0) \

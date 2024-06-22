@@ -4,13 +4,19 @@
 #include "content/ui/WebDropSource.h"
 #include "content/ui/ClipboardUtil.h"
 #include "content/browser/CheckReEnter.h"
+#include "content/web_impl_win/WebThreadImpl.h"
+#ifndef NO_USE_ORIG_CHROME
+#include "orig_chrome/content/OrigChromeMgr.h"
+#endif
 #include "wke/wkedefine.h"
 #include "wke/wkeGlobalVar.h"
-#include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
+#include "third_party/WebKit/Source/platform/Task.h"
+#include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "third_party/WebKit/public/platform/WebImage.h"
 #include "third_party/WebKit/public/platform/WebPoint.h"
 #include "third_party/WebKit/public/platform/Platform.h"
+
 #include "base/values.h"
 #include "base/json/json_writer.h"
 
@@ -29,6 +35,7 @@ DragHandle::DragHandle(
     m_taskCount = 0;
     m_viewWindow = nullptr;
     m_webViewImpl = nullptr;
+    m_isDragTargetDragEnter = false;
 }
 
 void DragHandle::setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl)
@@ -205,6 +212,13 @@ blink::WebDragOperation DragHandle::dragCursorTodragOperation(DWORD op)
     return result;
 }
 
+std::string memBufToStdString(wkeMemBuf* buffer)
+{
+    if (!buffer || nullptr == buffer->data || 0 == buffer->length)
+        return "";
+    return std::string((const char*)buffer->data, buffer->length);
+}
+
 blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame* frame,
     const wkeWebDragData* data,
     const blink::WebDragOperationsMask mask,
@@ -236,17 +250,18 @@ blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame
     for (int i = 0; i < data->m_itemListLength; ++i) {
         const wkeWebDragData::Item& it = items[i];
         if (wkeWebDragData::Item::StorageTypeString == it.storageType) {
-            std::string typeStr((const char*)(it.stringType->data ? it.stringType->data : ""), it.stringType->length != 0 ? it.stringType->length : 0);
-            std::string dataStr((const char*)(it.stringData->data ? it.stringData->data : ""), it.stringData->length != 0 ? it.stringData->length : 0);
+            std::string typeStr = memBufToStdString(it.stringType);
+            std::string dataStr = memBufToStdString(it.stringData);
             
             WCDataObject::ClipboardDataType typeEnum = WCDataObject::clipboardTypeFromMIMEType(typeStr);
             if (WCDataObject::kClipboardDataTypeNone == typeEnum) {
                 if (!dictVal)
                     dictVal = new base::DictionaryValue();
-
                 dictVal->SetString(typeStr, dataStr);
             } else
                 dataObjectPtr->writeString(typeStr, dataStr);
+        } else if (wkeWebDragData::Item::StorageTypeBinaryData == it.storageType) {
+            //dataObjectPtr->writeBitmap((const char *)it.binaryData->data, it.binaryData->length);
         }
     }
 
@@ -262,10 +277,11 @@ blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame
     m_dragData = dataObjectPtr;
     m_mask = mask;
 
-    if (!wke::g_isSetDragDropEnable) {
-        simulateDrag();
-        return blink::WebDragOperationCopy;
-    }
+    // 现在不使用g_isSetDragDropEnable全局控制，而是每个webview单独控制是否能拖拽
+//     if (!wke::g_isSetDragDropEnable) {
+//         simulateDrag();
+//         return blink::WebDragOperationCopy;
+//     }
 
     if (source && (!image->isNull() || m_dragData)) {
         if (!image->isNull()) {
@@ -309,6 +325,16 @@ blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame
     return operation;
 }
 
+static void printDragMessage(const char* text, int count)
+{
+#ifdef DEBUG
+    char* output = (char*)malloc(0x100);
+    sprintf_s(output, 0x99, text, count);
+    OutputDebugStringA(output);
+    free(output);
+#endif
+}
+
 class StartDraggingTask {
 public:
     StartDraggingTask(
@@ -328,8 +354,6 @@ public:
         m_image = &image;
         m_dragImageOffset = &dragImageOffset;
         m_op = blink::WebDragOperationNone;
-
-        *m_count += 1;
     }
 
     static void WKE_CALL_TYPE runInUiThread(HWND hWnd, void* param)
@@ -341,7 +365,11 @@ public:
     void runInUiThreadImpl()
     {
         m_op = m_dragHandle->startDraggingInUiThread(m_frame, m_data, m_mask, m_image, m_dragImageOffset);
-        *m_count -= 1;
+
+        //atomicIncrement()
+        WTF::atomicDecrement(m_count);
+
+        printDragMessage("runInUiThreadImpl: %d\n", *m_count);
     }
 
     blink::WebDragOperation getOp() const { return m_op; }
@@ -365,13 +393,16 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     const blink::WebImage& image,
     const blink::WebPoint& dragImageOffset)
 {
-    if (!m_webViewImpl || !wke::g_isSetDragDropEnable)
+    if (!m_webViewImpl /*|| !wke::g_isSetDragDropEnable*/)
         return;
 
     m_notifOnEnterDrag();
     CheckReEnter::decrementEnterCount();
 
     StartDraggingTask* task = new StartDraggingTask(this, &m_taskCount, frame, dragDate, mask, image, dragImageOffset);
+    printDragMessage("DragHandle::startDragging: %d\n", m_taskCount);
+    WTF::atomicIncrement(&m_taskCount);
+
     if (wke::g_wkeUiThreadPostTaskCallback) {
         wke::g_wkeUiThreadPostTaskCallback(m_viewWindow, StartDraggingTask::runInUiThread, task);
 
@@ -380,6 +411,15 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
             if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
                 ::TranslateMessage(&msg);
                 ::DispatchMessageW(&msg);
+
+#ifndef NO_USE_ORIG_CHROME
+                if (OrigChromeMgr::getInst())
+                    OrigChromeMgr::runUntilIdleWithoutMsgPeek();
+#endif
+                WebThreadImpl* mainThread = (WebThreadImpl*)blink::Platform::current()->mainThread();
+                mainThread->fire();
+
+                runMainThreadTasks();
             }
             ::Sleep(10);
         }
@@ -399,6 +439,27 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     m_webViewImpl->dragSourceSystemDragEnded();
 
     delete task;
+}
+
+void DragHandle::postMainThreadTask(const blink::WebTraceLocation& location, WTF::PassOwnPtr<WTF::Function<void()>> func)
+{
+    WTF::MutexLocker locker(m_tasksLock);
+    blink::Task* task = new blink::Task(func);
+    m_tasks.push_back(task);
+}
+
+void DragHandle::runMainThreadTasks()
+{
+    m_tasksLock.lock();
+    std::vector<blink::Task*> tasks = m_tasks;
+    m_tasks.clear();
+    m_tasksLock.unlock();
+
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        blink::Task* task = tasks[i];
+        task->run();
+        delete task;
+    }
 }
 
 void DragHandle::simulateDrag()
@@ -428,13 +489,18 @@ struct DragEnterInfo {
     blink::WebPoint clientPoint;
     blink::WebPoint screenPoint;
     blink::WebDragOperationsMask opAllowed;
+    bool* isDragTargetDragEnter;
     int modifiers;
 };
 
 static void dragTargetDragEnter(DragEnterInfo* info)
 {
+    *info->isDragTargetDragEnter = true;
     info->webViewImpl->dragTargetDragEnter(info->data, info->clientPoint, info->screenPoint, info->opAllowed, info->modifiers);
-    *(info->taskCount) -= 1;
+
+    WTF::atomicDecrement(info->taskCount);
+    printDragMessage("dragTargetDragEnter: %d\n", *(info->taskCount));
+
     delete info;
 }
 
@@ -476,6 +542,7 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
     int modifiers = keyStateToWebInputEventModifiers(grfKeyState);
 
     if (WTF::isMainThread()) {
+        m_isDragTargetDragEnter = true;
         blink::WebDragOperation op = m_webViewImpl->dragTargetDragEnter(dropDataToWebDragData(pDataObject),
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y),
@@ -483,7 +550,9 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
 
         *pdwEffect = dragOperationToDragCursor(op);
     } else {
-        m_taskCount++;
+        WTF::atomicIncrement(&m_taskCount);
+
+        printDragMessage("DragHandle::DragEnter: %d\n", m_taskCount);
 
         DragEnterInfo* info = new DragEnterInfo();
         info->webViewImpl = m_webViewImpl;
@@ -493,7 +562,8 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
         info->screenPoint = blink::WebPoint(screenPoint.x, screenPoint.y);
         info->opAllowed = m_mask;
         info->modifiers = modifiers;
-        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragEnter, info));
+        info->isDragTargetDragEnter = &m_isDragTargetDragEnter;
+        postMainThreadTask(FROM_HERE, WTF::bind(&dragTargetDragEnter, info));
         *pdwEffect = DROPEFFECT_MOVE;
     }
 
@@ -506,7 +576,9 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
 static void dragTargetDragOver(blink::WebViewImpl* m_webViewImpl, int* taskCount, const blink::WebPoint& clientPoint, const blink::WebPoint& screenPoint, blink::WebDragOperationsMask operationsAllowed, int modifiers)
 {
     m_webViewImpl->dragTargetDragOver(clientPoint, screenPoint, operationsAllowed, modifiers);
-    *taskCount -= 1;
+    WTF::atomicDecrement(taskCount);
+
+    printDragMessage("dragTargetDragOver: %d\n", *taskCount);
 }
 
 HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwEffect)
@@ -538,8 +610,10 @@ HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwE
         else
             *pdwEffect = DROPEFFECT_MOVE;
     } else {
-        m_taskCount++;
-        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragOver, m_webViewImpl, &m_taskCount,
+        printDragMessage("DragHandle::DragOver: %d\n", m_taskCount);
+        WTF::atomicIncrement(&m_taskCount);
+
+        postMainThreadTask(FROM_HERE, WTF::bind(&dragTargetDragOver, m_webViewImpl, &m_taskCount,
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y),
             m_mask, modifiers
@@ -550,10 +624,14 @@ HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwE
     return S_OK;
 }
 
-static void dragTargetDragLeave(blink::WebViewImpl* webViewImpl, int* taskCount)
+static void dragTargetDragLeave(blink::WebViewImpl* webViewImpl, int* taskCount, bool* isDragTargetDragEnter)
 {
-    webViewImpl->dragTargetDragLeave();
-    *taskCount -= 1;
+    if (*isDragTargetDragEnter)
+        webViewImpl->dragTargetDragLeave();
+    *isDragTargetDragEnter = false;
+
+    WTF::atomicDecrement(taskCount);
+    printDragMessage("dragTargetDragLeave: %d\n", *taskCount);
 }
 
 HRESULT __stdcall DragHandle::DragLeave() 
@@ -563,10 +641,13 @@ HRESULT __stdcall DragHandle::DragLeave()
 
     if (m_webViewImpl) {
         if (WTF::isMainThread()) {
-            m_webViewImpl->dragTargetDragLeave();
+            if (m_isDragTargetDragEnter)
+                m_webViewImpl->dragTargetDragLeave();
+            m_isDragTargetDragEnter = false;
         } else {
-            m_taskCount++;
-            blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDragLeave, m_webViewImpl, &m_taskCount));
+            printDragMessage("DragHandle::DragLeave: %d\n", m_taskCount);
+            WTF::atomicIncrement(&m_taskCount);
+            postMainThreadTask(FROM_HERE, WTF::bind(&dragTargetDragLeave, m_webViewImpl, &m_taskCount, &m_isDragTargetDragEnter));
         }
         m_dragData = nullptr;
     }
@@ -576,7 +657,9 @@ HRESULT __stdcall DragHandle::DragLeave()
 static void dragTargetDrop(blink::WebViewImpl* webViewImpl, int* taskCount, const blink::WebPoint& clientPoint, const blink::WebPoint& screenPoint, int modifiers)
 {
     webViewImpl->dragTargetDrop(clientPoint, screenPoint, modifiers);
-    *taskCount -= 1;
+
+    WTF::atomicDecrement(taskCount);
+    printDragMessage("dragTargetDrop: %d\n", *taskCount);
 }
 
 HRESULT __stdcall DragHandle::Drop(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect)
@@ -600,8 +683,9 @@ HRESULT __stdcall DragHandle::Drop(IDataObject* pDataObject, DWORD grfKeyState, 
         m_webViewImpl->dragTargetDrop(blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToWebInputEventModifiers(grfKeyState));
     } else {
-        m_taskCount++;
-        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&dragTargetDrop, m_webViewImpl, &m_taskCount,
+        printDragMessage("DragHandle::Drop: %d\n", m_taskCount);
+        WTF::atomicIncrement(&m_taskCount);
+        postMainThreadTask(FROM_HERE, WTF::bind(&dragTargetDrop, m_webViewImpl, &m_taskCount,
             blink::WebPoint(clientPoint.x, clientPoint.y),
             blink::WebPoint(screenPoint.x, screenPoint.y), keyStateToWebInputEventModifiers(grfKeyState)));
     }

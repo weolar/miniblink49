@@ -11,6 +11,9 @@
 
 #include "src/wasm/wasm-constants.h"
 
+#undef max
+#undef min
+
 namespace v8 {
 namespace internal {
 namespace wasm {

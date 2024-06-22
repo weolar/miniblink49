@@ -58,7 +58,7 @@ let getObjectPrototype = function (object) {
 // Convert a real value into meta data.
 let valueToMeta = function (sender, value, optimizeSimpleObject) {
   if (optimizeSimpleObject === undefined)
-  	optimizeSimpleObject = false;
+    optimizeSimpleObject = false;
   
   // Determine the type of value.
   const meta = { type: typeof value }

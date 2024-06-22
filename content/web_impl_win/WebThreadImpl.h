@@ -52,11 +52,14 @@ public:
 
     void startTriggerTasks();
     void schedulerTasks();
+    bool hasImmediatelyTimer();
 
     void fire();
     
     void suspendTimerQueue();
     void resumeTimerQueue();
+
+    void cancelTimerTask(WebThread::Task* task);
 
     void disableScheduler();
     void enableScheduler();
@@ -90,7 +93,7 @@ private:
     void postDelayedTaskImpl(
         const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs, double* createTimeOnOtherThread, int priority, unsigned* heapInsertionOrder);
     
-    static unsigned __stdcall WebThreadImplThreadEntryPoint(void* param);
+    static DWORD __stdcall WebThreadImplThreadEntryPoint(void* param);
     void threadEntryPoint();
     void deleteUnusedTimers();
     void deleteTimersOnExit();

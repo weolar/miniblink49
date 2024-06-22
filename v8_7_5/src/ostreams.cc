@@ -18,6 +18,8 @@
 #include <android/log.h>  // NOLINT
 #endif
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

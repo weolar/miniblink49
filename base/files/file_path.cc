@@ -650,49 +650,49 @@ string16 FilePath::AsUTF16Unsafe() const {
 }
 
 // static
-FilePath FilePath::FromUTF8Unsafe(StringPiece utf8) {
-  std::string utf8Str(utf8.data(), utf8.length());
-  return FilePath(UTF8ToWide(utf8Str));
+FilePath FilePath::FromUTF8Unsafe(const std::string& utf8) {
+  //std::string utf8Str(utf8.data(), utf8.length());
+  return FilePath(UTF8ToWide(utf8));
 }
 
 // static
-FilePath FilePath::FromUTF16Unsafe(StringPiece16 utf16) {
+FilePath FilePath::FromUTF16Unsafe(const string16& utf16) {
   return FilePath(utf16);
 }
 #endif
 
-void FilePath::GetSizeForPickle(PickleSizer* sizer) const {
-// #if defined(OS_WIN)
-//   sizer->AddString16(path_);
-// #else
-//   sizer->AddString(path_);
-// #endif
-  DebugBreak();
-}
+// void FilePath::GetSizeForPickle(PickleSizer* sizer) const {
+// // #if defined(OS_WIN)
+// //   sizer->AddString16(path_);
+// // #else
+// //   sizer->AddString(path_);
+// // #endif
+//   DebugBreak();
+// }
 
-void FilePath::WriteToPickle(Pickle* pickle) const {
-// #if defined(OS_WIN)
-//   pickle->WriteString16(path_);
-// #else
-//   pickle->WriteString(path_);
-// #endif
-  DebugBreak();
-}
-
-bool FilePath::ReadFromPickle(PickleIterator* iter) {
-// #if defined(OS_WIN)
-//   if (!iter->ReadString16(&path_))
-//     return false;
-// #else
-//   if (!iter->ReadString(&path_))
-//     return false;
-// #endif
+// void FilePath::WriteToPickle(Pickle* pickle) const {
+// // #if defined(OS_WIN)
+// //   pickle->WriteString16(path_);
+// // #else
+// //   pickle->WriteString(path_);
+// // #endif
+//   DebugBreak();
+// }
 // 
-//   if (path_.find(kStringTerminator) != StringType::npos)
-//     return false;
-  DebugBreak();
-  return true;
-}
+// bool FilePath::ReadFromPickle(PickleIterator* iter) {
+// // #if defined(OS_WIN)
+// //   if (!iter->ReadString16(&path_))
+// //     return false;
+// // #else
+// //   if (!iter->ReadString(&path_))
+// //     return false;
+// // #endif
+// // 
+// //   if (path_.find(kStringTerminator) != StringType::npos)
+// //     return false;
+//   DebugBreak();
+//   return true;
+// }
 
 #if defined(OS_WIN)
 // Windows specific implementation of file string comparisons.

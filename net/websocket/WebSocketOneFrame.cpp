@@ -151,8 +151,8 @@ void WebSocketOneFrame::makeFrameData(Vector<char>& frameData)
         frameData.at(1) |= payloadLength;
     else if (payloadLength <= 0xFFFF) {
         frameData.at(1) |= payloadLengthWithTwoByteExtendedLengthField;
-        frameData.append((payloadLength & 0xFF00) >> 8);
-        frameData.append(payloadLength & 0xFF);
+        frameData.append((char)((payloadLength & 0xFF00) >> 8));
+        frameData.append((char)(payloadLength & 0xFF));
     } else {
         frameData.at(1) |= payloadLengthWithEightByteExtendedLengthField;
         char extendedPayloadLength[8];

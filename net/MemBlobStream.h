@@ -4,6 +4,7 @@
 
 #include "net/FileStreamClient.h"
 #include "net/LambdaTask.h"
+#include "net/DownloadFileBlobCache.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include <wtf/text/WTFString.h>
@@ -59,19 +60,19 @@ public:
             return -1;
         }
 
-        BlobTempFileInfo* info = WebURLLoaderManager::sharedInstance()->getBlobTempFileInfoByTempFilePath(path);
+        BlobTempFileInfo* info = DownloadFileBlobCache::inst()->getBlobTempFileInfoByTempFilePath(path);
         if (!info)
             return -1;
         
         m_info = info;
-        ++m_info->refCount;
+        m_info->ref();
 
         return m_info->data.size();
     }
 
     void init(long offset, long length)
     {
-        ++m_info->refCount;
+        m_info->ref();
         m_offset = offset;
         m_length = length;
         SelfWrap* selfWrap = m_selfWrap;
@@ -101,7 +102,7 @@ public:
             return false;
         }
 
-        BlobTempFileInfo* info = WebURLLoaderManager::sharedInstance()->getBlobTempFileInfoByTempFilePath(path);
+        BlobTempFileInfo* info = DownloadFileBlobCache::inst()->getBlobTempFileInfoByTempFilePath(path);
         if (!info || offset + length > info->data.size()) {
             DebugBreak();
             return false;
@@ -120,7 +121,7 @@ public:
             return;
         }
 
-        --m_info->refCount;
+        m_info->deref();
     }
 
     int read(char* buffer, int length)
@@ -135,7 +136,6 @@ public:
         m_offset += length;
 
         if (m_isAsync) {
-            //blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didRead, m_client, length));
             SelfWrap* selfWrap = m_selfWrap;
             LambdaTask::asyncCall([selfWrap, length] {
                 if (selfWrap->isDestroied)

@@ -68,8 +68,8 @@ public:
 
     void reset();
 
-    static void parseErrorFunc(void* userData, xmlError*);
-    static void genericErrorFunc(void* userData, const char* msg, ...);
+    static void XMLCALL parseErrorFunc(void* userData, xmlError*);
+    static void XMLCALL genericErrorFunc(void* userData, const char* msg, ...);
 
     // Only for libXSLT callbacks
     XSLStyleSheet* xslStylesheet() const { return m_stylesheet.get(); }

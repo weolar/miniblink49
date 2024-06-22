@@ -1020,6 +1020,12 @@ SecurityOrigin* AudioContext::securityOrigin() const
     return nullptr;
 }
 
+ScriptWrappable* AudioContext::toScriptWrappable(ActiveDOMObject* object) const
+{
+    DebugBreak();
+    return nullptr;
+}
+
 ScriptPromise AudioContext::closeContext(ScriptState* scriptState)
 {
     if (isOfflineContext()) {

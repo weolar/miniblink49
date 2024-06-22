@@ -20,7 +20,7 @@ namespace net {
     
 class WebStorageAreaImpl : public blink::WebStorageArea {
 public:
-    WebStorageAreaImpl(/*const String& localPath,*/ net::DOMStorageMap* cachedArea, const blink::WebString& origin, bool isLocal);
+    WebStorageAreaImpl(DOMStorageMap* cachedArea, const blink::WebString& origin, bool isLocal, WebStorageNamespaceImpl* storageNamespace);
     virtual ~WebStorageAreaImpl();
 
     // See WebStorageArea.h for documentation on these functions.
@@ -55,6 +55,9 @@ private:
 
     HashMap<String, String>::iterator m_iterator;
     unsigned m_iteratorIndex;
+
+    WebStorageNamespaceImpl* m_storageNamespace;
+    static HashSet<String>* s_cachedPath;
 };
 
 }  // namespace blink

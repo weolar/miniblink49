@@ -644,7 +644,7 @@ class V8_EXPORT_PRIVATE Factory {
   // fast elements, or a NumberDictionary, in which case the resulting
   // object will have dictionary elements.
   Handle<JSObject> NewSlowJSObjectWithPropertiesAndElements(
-      Handle<Object> prototype, Handle<NameDictionary> properties,
+      Handle<HeapObject> prototype, Handle<NameDictionary> properties,
       Handle<FixedArrayBase> elements,
       AllocationType allocation = AllocationType::kYoung);
 
@@ -1057,13 +1057,14 @@ class NewFunctionArgs final {
   static NewFunctionArgs ForWasm(
       Handle<String> name,
       Handle<WasmExportedFunctionData> exported_function_data, Handle<Map> map);
-  static NewFunctionArgs ForBuiltin(Handle<String> name, Handle<Map> map,
-                                    int builtin_id);
+  V8_EXPORT_PRIVATE static NewFunctionArgs ForBuiltin(Handle<String> name,
+                                                      Handle<Map> map,
+                                                      int builtin_id);
   static NewFunctionArgs ForFunctionWithoutCode(Handle<String> name,
                                                 Handle<Map> map,
                                                 LanguageMode language_mode);
   static NewFunctionArgs ForBuiltinWithPrototype(
-      Handle<String> name, Handle<Object> prototype, InstanceType type,
+      Handle<String> name, Handle<HeapObject> prototype, InstanceType type,
       int instance_size, int inobject_properties, int builtin_id,
       MutableMode prototype_mutability);
   static NewFunctionArgs ForBuiltinWithoutPrototype(Handle<String> name,
@@ -1092,7 +1093,7 @@ class NewFunctionArgs final {
   int inobject_properties_ = kUninitialized;
 
   bool should_set_prototype_ = false;
-  MaybeHandle<Object> maybe_prototype_;
+  MaybeHandle<HeapObject> maybe_prototype_;
 
   bool should_set_language_mode_ = false;
   LanguageMode language_mode_;

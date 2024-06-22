@@ -91,7 +91,7 @@ public:
     MediaPlayer() { }
     virtual ~MediaPlayer() { }
 
-    virtual void load(WebMediaPlayer::LoadType, const String& url, WebMediaPlayer::CORSMode) = 0;
+    virtual void load(WebMediaPlayer::LoadType, const String& url, WebMediaPlayer::CORSMode, bool isAudio) = 0;
 
     enum Preload { None, MetaData, Auto };
     virtual void setPreload(Preload) = 0;

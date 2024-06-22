@@ -30,6 +30,9 @@
 #include "bindings/core/v8/ScriptState.h"
 #include "bindings/core/v8/V8HiddenValue.h"
 #include "bindings/core/v8/WrapperTypeInfo.h"
+#include "bindings/core/v8/ScriptWrappable.h"
+
+#include "core/dom/ActiveDOMObject.h"
 #include "core/CoreExport.h"
 #include "core/inspector/ScriptDebuggerBase.h"
 #include "gin/public/isolate_holder.h"
@@ -39,12 +42,25 @@
 #include "wtf/Vector.h"
 #include <v8.h>
 
+namespace gin {
+class V8ForegroundTaskRunner;
+}
+
+namespace v8 {
+class TaskRunner;
+}
+
 namespace blink {
 
 class DOMDataStore;
 class StringCache;
 class V8Debugger;
 struct WrapperTypeInfo;
+class UnifiedHeapController;
+class ActiveScriptWrappableManager;
+class ActiveDOMObject;
+class ScriptWrappable;
+class WebThread;
 
 typedef WTF::Vector<DOMDataStore*> DOMDataStoreList;
 
@@ -72,6 +88,8 @@ public:
     bool destructionPending() const { return m_destructionPending; }
     v8::Isolate* isolate() { return m_isolateHolder->isolate(); }
 
+    WebThread* getThread() const; // for V8Platform::GetForegroundTaskRunner
+
     v8::Local<v8::FunctionTemplate> toStringTemplate();
 
     StringCache* stringCache() { return m_stringCache.get(); }
@@ -96,6 +114,14 @@ public:
     int decrementInternalScriptRecursionLevel() { return --m_internalScriptRecursionLevel; }
 #endif
 
+    using ActiveScriptWrappableSet = HeapHashSet<WeakMember<ActiveDOMObject>>;
+    void addActiveScriptWrappable(ActiveDOMObject*);
+    const ActiveScriptWrappableSet* activeScriptWrappables() const;
+
+#if V8_MAJOR_VERSION >= 7
+    static std::shared_ptr<v8::TaskRunner> getThreadRunner(v8::Isolate* isolate);
+#endif
+
     V8HiddenValue* hiddenValue() { return m_hiddenValue.get(); }
 
     v8::Local<v8::FunctionTemplate> domTemplate(const void* domTemplateKey, v8::FunctionCallback = 0, v8::Local<v8::Value> data = v8::Local<v8::Value>(), v8::Local<v8::Signature> = v8::Local<v8::Signature>(), int length = 0);
@@ -109,6 +135,19 @@ public:
 
     const char* previousSamplingState() const { return m_previousSamplingState; }
     void setPreviousSamplingState(const char* name) { m_previousSamplingState = name; }
+
+#if V8_MAJOR_VERSION >= 7
+    UnifiedHeapController* getUnifiedHeapController(v8::Isolate* isolate);
+
+    v8::EmbedderHeapTracer* getEmbedderHeapTracer(v8::Isolate* isolate)
+    {
+        return (v8::EmbedderHeapTracer*)(getUnifiedHeapController(isolate));
+    }
+
+    std::vector<std::pair<void*, void*>>* leakV8References();
+
+    ActiveScriptWrappableManager* getActiveScriptWrappableManager() const;
+#endif
 
     // EndOfScopeTasks are run by V8RecursionScope when control is returning
     // to C++ from script, after executing a script task (e.g. callback,
@@ -130,18 +169,20 @@ private:
     v8::Local<v8::Object> findInstanceInPrototypeChain(const WrapperTypeInfo*, v8::Local<v8::Value>, DOMTemplateMap&);
 
     bool m_destructionPending;
+#if V8_MAJOR_VERSION >= 7
+    std::shared_ptr<gin::V8ForegroundTaskRunner> m_threadRunner;
+    OwnPtr<UnifiedHeapController> m_unifiedHeapController;
+    OwnPtr<ActiveScriptWrappableManager> m_activeScriptWrappableManager;
+#endif
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-    OwnPtr<gin::IsolateHolder> m_isolateHolder;
-#else
     gin::IsolateHolder* m_isolateHolder;
-#endif // MINIBLINK_NOT_IMPLEMENTED
 
     DOMTemplateMap m_domTemplateMapForMainWorld;
     DOMTemplateMap m_domTemplateMapForNonMainWorld;
     ScopedPersistent<v8::FunctionTemplate> m_toStringTemplate;
     OwnPtr<StringCache> m_stringCache;
     OwnPtr<V8HiddenValue> m_hiddenValue;
+
     ScopedPersistent<v8::Value> m_liveRoot;
     RefPtr<ScriptState> m_scriptRegexpScriptState;
 
@@ -154,10 +195,14 @@ private:
     bool m_isHandlingRecursionLevelError;
     bool m_isReportingException;
 
+    WebThread* m_thread;
+
 #if ENABLE(ASSERT)
     int m_internalScriptRecursionLevel;
 #endif
     bool m_performingMicrotaskCheckpoint;
+
+    Persistent<ActiveScriptWrappableSet>* m_activeScriptWrappables;
 
     Vector<OwnPtr<EndOfScopeTask>> m_endOfScopeTasks;
 #if ENABLE(OILPAN)

@@ -119,6 +119,7 @@ public:
     AtomicString upper() const { return AtomicString(impl()->upper()); }
 
     int toInt(bool* ok = 0) const { return m_string.toInt(ok); }
+    long long toInt64(bool* ok = 0) const { return m_string.toInt64(ok); }
     double toDouble(bool* ok = 0) const { return m_string.toDouble(ok); }
     float toFloat(bool* ok = 0) const { return m_string.toFloat(ok); }
 

@@ -1,9 +1,12 @@
-
-#ifndef _WINSOCK2API_
-#define _WINSOCK2API_
+﻿// 这个文件，是为了在不想使用winsock2.h，但又不得不使用winsock2.h的某些数据结构时用。
+// 一般是因为同时用winsock.h和winsock2.h，会出现大量冲突
+#ifndef winsock2_vc6_h
+#define winsock2_vc6_h
 
 #include <winsock.h>
 #include <ipexport.h>
+
+#ifndef _WINSOCK2API_
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +51,9 @@ typedef struct sockaddr_storage {
                                    //   __ss_align fields is 112
 } SOCKADDR_STORAGE_LH, *PSOCKADDR_STORAGE_LH, FAR *LPSOCKADDR_STORAGE_LH;
 
+#ifndef WSAAPI
 #define WSAAPI                  PASCAL
+#endif
 
 #define NI_MAXHOST      1025  /* Max size of a fully-qualified domain name */
 #define NI_MAXSERV      32    /* Max size of a service name */
@@ -125,16 +130,15 @@ typedef int socklen_t;
 
 #define INET6_ADDRSTRLEN 65
 
-struct addrinfo
-{
-	int              ai_flags;
-	int              ai_family;
-	int              ai_socktype;
-	int              ai_protocol;
-	socklen_t   ai_addrlen;   /* Follow rfc3493 struct addrinfo */
-	char            *ai_canonname;
-	struct sockaddr *ai_addr;
-	struct addrinfo *ai_next;
+struct addrinfo {
+    int              ai_flags;
+    int              ai_family;
+    int              ai_socktype;
+    int              ai_protocol;
+    socklen_t   ai_addrlen;   /* Follow rfc3493 struct addrinfo */
+    char            *ai_canonname;
+    struct sockaddr *ai_addr;
+    struct addrinfo *ai_next;
 };
 #define NI_NAMEREQD     0x04  /* Error if the host's name not in DNS */
 #define AI_ADDRCONFIG               0x00000400  // Resolution only if global address configured
@@ -151,23 +155,170 @@ struct addrinfo
 #define IPV6_MULTICAST_HOPS   10 // IP multicast hop limit.
 
 struct ipv6_mreq {
-	IN6_ADDR ipv6mr_multiaddr;  // IPv6 multicast address.
-	ULONG ipv6mr_interface;     // Interface index.
+    IN6_ADDR ipv6mr_multiaddr;  // IPv6 multicast address.
+    ULONG ipv6mr_interface;     // Interface index.
 };
 
+typedef enum {
+    IpPrefixOriginOther = 0,
+    IpPrefixOriginManual,
+    IpPrefixOriginWellKnown,
+    IpPrefixOriginDhcp,
+    IpPrefixOriginRouterAdvertisement
+} IP_PREFIX_ORIGIN;
 
+typedef enum {
+    IpSuffixOriginOther = 0,
+    IpSuffixOriginManual,
+    IpSuffixOriginWellKnown,
+    IpSuffixOriginDhcp,
+    IpSuffixOriginLinkLayerAddress,
+    IpSuffixOriginRandom
+} IP_SUFFIX_ORIGIN;
+
+typedef enum {
+    IpDadStateInvalid = 0,
+    IpDadStateTentative,
+    IpDadStateDuplicate,
+    IpDadStateDeprecated,
+    IpDadStatePreferred
+} IP_DAD_STATE;
+
+typedef enum {
+    IfOperStatusUp = 1,
+    IfOperStatusDown,
+    IfOperStatusTesting,
+    IfOperStatusUnknown,
+    IfOperStatusDormant,
+    IfOperStatusNotPresent,
+    IfOperStatusLowerLayerDown
+} IF_OPER_STATUS;
+
+typedef enum {
+    ScopeLevelInterface = 0x0001,
+    ScopeLevelLink = 0x0002,
+    ScopeLevelSubnet = 0x0003,
+    ScopeLevelAdmin = 0x0004,
+    ScopeLevelSite = 0x0005,
+    ScopeLevelOrganization = 0x0008,
+    ScopeLevelGlobal = 0x000E
+} SCOPE_LEVEL;
+
+typedef struct _IP_ADAPTER_UNICAST_ADDRESS {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD Flags;
+        } s;
+    } u;
+    struct _IP_ADAPTER_UNICAST_ADDRESS *Next;
+    SOCKET_ADDRESS Address;
+    IP_PREFIX_ORIGIN PrefixOrigin;
+    IP_SUFFIX_ORIGIN SuffixOrigin;
+    IP_DAD_STATE DadState;
+    ULONG ValidLifetime;
+    ULONG PreferredLifetime;
+    ULONG LeaseLifetime;
+} IP_ADAPTER_UNICAST_ADDRESS, *PIP_ADAPTER_UNICAST_ADDRESS;
+
+typedef struct _IP_ADAPTER_MULTICAST_ADDRESS {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD Flags;
+        } s;
+    } u;
+    struct _IP_ADAPTER_MULTICAST_ADDRESS *Next;
+    SOCKET_ADDRESS Address;
+} IP_ADAPTER_MULTICAST_ADDRESS, *PIP_ADAPTER_MULTICAST_ADDRESS;
+
+typedef struct _IP_ADAPTER_DNS_SERVER_ADDRESS {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD Reserved;
+        } s;
+    } u;
+    struct _IP_ADAPTER_DNS_SERVER_ADDRESS *Next;
+    SOCKET_ADDRESS Address;
+} IP_ADAPTER_DNS_SERVER_ADDRESS, *PIP_ADAPTER_DNS_SERVER_ADDRESS;
+
+typedef struct _IP_ADAPTER_PREFIX {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD Flags;
+        } s;
+    } u;
+    struct _IP_ADAPTER_PREFIX *Next;
+    SOCKET_ADDRESS Address;
+    ULONG PrefixLength;
+} IP_ADAPTER_PREFIX, *PIP_ADAPTER_PREFIX;
+
+typedef struct _IP_ADAPTER_ANYCAST_ADDRESS {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD Flags;
+        } s;
+    } u;
+    struct _IP_ADAPTER_ANYCAST_ADDRESS *Next;
+    SOCKET_ADDRESS Address;
+} IP_ADAPTER_ANYCAST_ADDRESS, *PIP_ADAPTER_ANYCAST_ADDRESS;
+
+#define MAX_ADAPTER_ADDRESS_LENGTH      8   // arb.
+
+#define GAA_FLAG_SKIP_UNICAST        0x0001
+#define GAA_FLAG_SKIP_ANYCAST        0x0002
+#define GAA_FLAG_SKIP_MULTICAST      0x0004
+#define GAA_FLAG_SKIP_DNS_SERVER     0x0008
+#define GAA_FLAG_INCLUDE_PREFIX      0x0010
+#define GAA_FLAG_SKIP_FRIENDLY_NAME  0x0020
+
+typedef struct _IP_ADAPTER_ADDRESSES {
+    union {
+        ULONGLONG Alignment;
+        struct {
+            ULONG Length;
+            DWORD IfIndex;
+        } s;
+    } u;
+    struct _IP_ADAPTER_ADDRESSES *Next;
+    PCHAR AdapterName;
+    PIP_ADAPTER_UNICAST_ADDRESS FirstUnicastAddress;
+    PIP_ADAPTER_ANYCAST_ADDRESS FirstAnycastAddress;
+    PIP_ADAPTER_MULTICAST_ADDRESS FirstMulticastAddress;
+    PIP_ADAPTER_DNS_SERVER_ADDRESS FirstDnsServerAddress;
+    PWCHAR DnsSuffix;
+    PWCHAR Description;
+    PWCHAR FriendlyName;
+    BYTE PhysicalAddress[MAX_ADAPTER_ADDRESS_LENGTH];
+    DWORD PhysicalAddressLength;
+    DWORD Flags;
+    DWORD Mtu;
+    DWORD IfType;
+    IF_OPER_STATUS OperStatus;
+    DWORD Ipv6IfIndex;
+    DWORD ZoneIndices[16];
+    PIP_ADAPTER_PREFIX FirstPrefix;
+} IP_ADAPTER_ADDRESSES, *PIP_ADAPTER_ADDRESSES;
 
 __checkReturn
 SOCKET
 WSAAPI
 WSASocketW(
-	__in int af,
-	__in int type,
-	__in int protocol,
-	__in_opt LPWSAPROTOCOL_INFOW lpProtocolInfo,
-	__in unsigned int g,
-	__in DWORD dwFlags
-);
+    __in int af,
+    __in int type,
+    __in int protocol,
+    __in_opt LPWSAPROTOCOL_INFOW lpProtocolInfo,
+    __in unsigned int g,
+    __in DWORD dwFlags
+    );
 #define FROM_PROTOCOL_INFO (-1)
 #define WSA_FLAG_OVERLAPPED           0x01
 
@@ -179,65 +330,70 @@ WSASocketW(
 int
 WSAAPI
 WSARecvFrom(
-	__in SOCKET s,
-	__in_ecount(dwBufferCount) LPWSABUF lpBuffers,
-	__in DWORD dwBufferCount,
-	__out_opt LPDWORD lpNumberOfBytesRecvd,
-	__inout LPDWORD lpFlags,
-	__out_bcount_part_opt(*lpFromlen, *lpFromlen) struct sockaddr FAR * lpFrom,
-	__inout_opt LPINT lpFromlen,
-	__inout_opt LPWSAOVERLAPPED lpOverlapped,
-	__in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
+    __in SOCKET s,
+    __in_ecount(dwBufferCount) LPWSABUF lpBuffers,
+    __in DWORD dwBufferCount,
+    __out_opt LPDWORD lpNumberOfBytesRecvd,
+    __inout LPDWORD lpFlags,
+    __out_bcount_part_opt(*lpFromlen, *lpFromlen) struct sockaddr FAR * lpFrom,
+    __inout_opt LPINT lpFromlen,
+    __inout_opt LPWSAOVERLAPPED lpOverlapped,
+    __in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+    );
 
 int
 WSAAPI
 WSARecv(
-	__in SOCKET s,
-	__in_ecount(dwBufferCount) LPWSABUF lpBuffers,
-	__in DWORD dwBufferCount,
-	__out_opt LPDWORD lpNumberOfBytesRecvd,
-	__inout LPDWORD lpFlags,
-	__inout_opt LPWSAOVERLAPPED lpOverlapped,
-	__in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
+    __in SOCKET s,
+    __in_ecount(dwBufferCount) LPWSABUF lpBuffers,
+    __in DWORD dwBufferCount,
+    __out_opt LPDWORD lpNumberOfBytesRecvd,
+    __inout LPDWORD lpFlags,
+    __inout_opt LPWSAOVERLAPPED lpOverlapped,
+    __in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+    );
+
 int WSAAPI WSASendTo(
-	SOCKET s,
-	LPWSABUF lpBuffers,
-	DWORD dwBufferCount,
-	LPDWORD lpNumberOfBytesSent,
-	int iFlags,
-	LPVOID lpTo,
-	int iToLen,
-	LPWSAOVERLAPPED lpOverlapped,
-	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
+    SOCKET s,
+    LPWSABUF lpBuffers,
+    DWORD dwBufferCount,
+    LPDWORD lpNumberOfBytesSent,
+    int iFlags,
+    LPVOID lpTo,
+    int iToLen,
+    LPWSAOVERLAPPED lpOverlapped,
+    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+    );
+
 int WSAAPI WSASend(
-	SOCKET s,
-	LPWSABUF lpBuffers,
-	DWORD dwBufferCount,
-	LPDWORD lpNumberOfBytesSent,
-	DWORD dwFlags,
-	LPWSAOVERLAPPED lpOverlapped,
-	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
+    SOCKET s,
+    LPWSABUF lpBuffers,
+    DWORD dwBufferCount,
+    LPDWORD lpNumberOfBytesSent,
+    DWORD dwFlags,
+    LPWSAOVERLAPPED lpOverlapped,
+    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+    );
+
 int WSAAPI WSAIoctl(SOCKET s,
-	DWORD dwIoControlCode,
-	LPVOID lpvInBuffer,
-	DWORD cbInBuffer,
-	LPVOID lpvOutBuffer,
-	DWORD cbOutBuffer,
-	LPDWORD lpcbBytesReturned,
-	LPWSAOVERLAPPED lpOverlapped,
-	LPWSAOVERLAPPED_COMPLETION_ROUTINE
-	lpCompletionRoutine);
+    DWORD dwIoControlCode,
+    LPVOID lpvInBuffer,
+    DWORD cbInBuffer,
+    LPVOID lpvOutBuffer,
+    DWORD cbOutBuffer,
+    LPDWORD lpcbBytesReturned,
+    LPWSAOVERLAPPED lpOverlapped,
+    LPWSAOVERLAPPED_COMPLETION_ROUTINE
+    lpCompletionRoutine);
+
 int
 WSAAPI
 WSADuplicateSocketW(
-	__in SOCKET s,
-	__in DWORD dwProcessId,
-	__out LPWSAPROTOCOL_INFOW lpProtocolInfo
-);
+    __in SOCKET s,
+    __in DWORD dwProcessId,
+    __out LPWSAPROTOCOL_INFOW lpProtocolInfo
+    );
+
 #define SD_RECEIVE      0x00
 #define SD_SEND         0x01
 #define SD_BOTH         0x02
@@ -257,6 +413,6 @@ WSADuplicateSocketW(
 }
 #endif
 
-#endif // _WINSOCK2API_
+#endif // winsock2_vc6_h
 
-
+#endif // end #ifndef _WINSOCK2API_

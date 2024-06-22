@@ -131,9 +131,6 @@
 #define KHRONOS_APICALL GLES2_C_LIB_EXPORT
 #endif
 
-#undef KHRONOS_APIENTRY
-#define KHRONOS_APIENTRY
-
 /*-------------------------------------------------------------------------
  * Definition of KHRONOS_APIATTRIBUTES
  *-------------------------------------------------------------------------

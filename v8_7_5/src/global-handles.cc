@@ -516,8 +516,15 @@ class GlobalHandles::Node final : public NodeBase<GlobalHandles::Node> {
     void* p = parameter();
     set_state(NORMAL);
     set_parameter(nullptr);
+    weak_callback_ = nullptr; // weolar
     return p;
   }
+
+//   void* GetWeakness() {
+//     DCHECK(IsInUse());
+//     void* p = parameter();
+//     return p;
+//   }
 
   void AnnotateStrongRetainer(const char* label) {
     DCHECK_EQ(state(), NORMAL);
@@ -806,6 +813,10 @@ void GlobalHandles::MakeWeak(Address** location_addr) {
 
 void* GlobalHandles::ClearWeakness(Address* location) {
   return Node::FromLocation(location)->ClearWeakness();
+}
+
+void* GlobalHandles::GetWeakness(Address* location) {
+  return Node::FromLocation(location)->parameter();
 }
 
 void GlobalHandles::AnnotateStrongRetainer(Address* location,
@@ -1290,7 +1301,7 @@ void GlobalHandles::RecordStats(HeapStats* stats) {
   }
 }
 
-#ifdef DEBUG
+#if 1 //def DEBUG
 
 void GlobalHandles::PrintStats() {
   int total = 0;

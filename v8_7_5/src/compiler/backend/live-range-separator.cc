@@ -5,6 +5,8 @@
 #include "src/compiler/backend/live-range-separator.h"
 #include "src/compiler/backend/register-allocator.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {

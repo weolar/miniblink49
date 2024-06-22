@@ -80,7 +80,7 @@ public:
     void handleSourceAttribute(const String& sourceUrl);
     void handleAsyncAttribute();
 
-    virtual bool isReady() const { return m_pendingScript.isReady(); }
+    virtual bool isReady() const { return m_pendingScript->isReady(); }
 
     // Clears the connection to the PendingScript (and Element and Resource).
     void detach();
@@ -105,7 +105,7 @@ private:
     String m_characterEncoding;
     String m_fallbackCharacterEncoding;
 
-    PendingScript m_pendingScript;
+    Member<PendingScript> m_pendingScript;
 
     bool m_parserInserted : 1;
     bool m_isExternalScript : 1;

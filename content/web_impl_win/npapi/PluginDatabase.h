@@ -69,7 +69,7 @@ public:
     void addExtraPluginDirectory(const String&);
 
     static bool isPreferredPluginDirectory(const String& directory);
-    static int preferredPluginCompare(const void*, const void*);
+    static int __cdecl preferredPluginCompare(const void*, const void*);
 
     PluginPackage* findPlugin(const blink::KURL&, String& mimeType);
     PluginPackage* pluginForMIMEType(const String& mimeType);

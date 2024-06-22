@@ -19,7 +19,8 @@ namespace atom {
 
 extern NPNetscapeFuncs* g_npBrowserFunctions;
 
-void WebviewPluginImpl::staticDidCreateScriptContextCallback(wkeWebView webView, WebviewPluginImpl* self, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId) {
+void WebviewPluginImpl::staticDidCreateScriptContextCallback(wkeWebView webView, WebviewPluginImpl* self, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId)
+{
     v8::Local<v8::Context>& contextV8 = *(v8::Local<v8::Context>*)context;
     contextV8->SetAlignedPointerInEmbedderData(node::Environment::kContextEmbedderDataIndex, nullptr);
 
@@ -28,6 +29,7 @@ void WebviewPluginImpl::staticDidCreateScriptContextCallback(wkeWebView webView,
     self->m_nodeBinding = new NodeBindings(false);
     self->m_nodeBinding->setUvLoop(ThreadCall::getBlinkLoop());
     node::Environment* env = self->m_nodeBinding->createEnvironment(contextV8);
+    NodeBindings::bindMbConsoleLog(contextV8, false);
     self->m_nodeBinding->loadEnvironment();
 
     nodeBlinkMicrotaskSuppressionLeave(handle);
@@ -35,7 +37,8 @@ void WebviewPluginImpl::staticDidCreateScriptContextCallback(wkeWebView webView,
     self->loadPreloadURL();
 }
 
-void WebviewPluginImpl::staticOnWillReleaseScriptContextCallback(wkeWebView webView, WebviewPluginImpl* self, wkeWebFrameHandle frame, void* context, int worldId) {
+void WebviewPluginImpl::staticOnWillReleaseScriptContextCallback(wkeWebView webView, WebviewPluginImpl* self, wkeWebFrameHandle frame, void* context, int worldId)
+{
     v8::Local<v8::Context>& contextV8 = *(v8::Local<v8::Context>*)context;
     node::Environment* env = node::Environment::GetCurrent(contextV8);
     if (env)
@@ -45,16 +48,17 @@ void WebviewPluginImpl::staticOnWillReleaseScriptContextCallback(wkeWebView webV
     self->m_nodeBinding = nullptr;
 }
 
-void WebviewPluginImpl::onLoadingFinishCallback(wkeWebView webView, WebviewPluginImpl* self, const wkeString url, wkeLoadingResult result, const wkeString failedReason) {
+void WebviewPluginImpl::onLoadingFinishCallback(wkeWebView webView, WebviewPluginImpl* self, const wkeString url, wkeLoadingResult result, const wkeString failedReason)
+{
     int id = self->m_id;
     wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(webView);
-    bool isMainFrame = wkeIsMainFrame(webView, tempInfo->frame);
+    BOOL isMainFrame = wkeIsMainFrame(webView, tempInfo->frame);
     const utf8* failedReasonString = wkeGetString(failedReason);
     const utf8* urlString = wkeGetString(url);
 
     std::string jsonRet;
     base::ListValue listParams;
-   
+
     if (result == WKE_LOADING_SUCCEEDED) {
         listParams.AppendBoolean(isMainFrame);
         self->guestSendMessageToHost("did-frame-finish-load", listParams);
@@ -81,16 +85,18 @@ void WebviewPluginImpl::onLoadingFinishCallback(wkeWebView webView, WebviewPlugi
     }
 }
 
-void WebviewPluginImpl::onDocumentReady(wkeWebView webView, WebviewPluginImpl* self) {
+void WebviewPluginImpl::onDocumentReady(wkeWebView webView, WebviewPluginImpl* self)
+{
     base::ListValue listParams;
     std::string jsonRet;
     self->guestSendMessageToHost("dom-ready", listParams);
 }
 
-void WebviewPluginImpl::onOtherLoadCallback(wkeWebView webView, WebviewPluginImpl* self, wkeOtherLoadType type, wkeTempCallbackInfo* info) {
+void WebviewPluginImpl::onOtherLoadCallback(wkeWebView webView, WebviewPluginImpl* self, wkeOtherLoadType type, wkeTempCallbackInfo* info)
+{
     base::ListValue listParams;
     std::string jsonRet;
-    
+
     if (WKE_DID_START_LOADING == type) {
         self->guestSendMessageToHost("did-start-loading", listParams);
     } else if (WKE_DID_STOP_LOADING == type) {
@@ -102,7 +108,8 @@ void WebviewPluginImpl::onOtherLoadCallback(wkeWebView webView, WebviewPluginImp
     }
 }
 
-WebviewPluginImpl::WebviewPluginImpl(wkeWebView parentWebview) {
+WebviewPluginImpl::WebviewPluginImpl(wkeWebView parentWebview)
+{
     m_id = IdLiveDetect::get()->constructed(this);
     m_preloadcode = nullptr;
     m_guestId = -1;
@@ -114,21 +121,23 @@ WebviewPluginImpl::WebviewPluginImpl(wkeWebView parentWebview) {
     wkeOnPaintUpdated(m_webview, (wkePaintUpdatedCallback)staticOnPaintUpdated, this);
     wkeOnDidCreateScriptContext(m_webview, (wkeDidCreateScriptContextCallback)&staticDidCreateScriptContextCallback, this);
     wkeOnWillReleaseScriptContext(m_webview, (wkeWillReleaseScriptContextCallback)&staticOnWillReleaseScriptContextCallback, this);
-    
+
     wkeOnLoadingFinish(m_webview, (wkeLoadingFinishCallback)onLoadingFinishCallback, this);
     wkeOnDocumentReady(m_webview, (wkeDocumentReadyCallback)onDocumentReady, this);
     wkeOnOtherLoad(m_webview, (wkeOnOtherLoadCallback)onOtherLoadCallback, this);
-    
+
     wkeSetCspCheckEnable(m_webview, false);
     wkeSetUserKeyValue(m_webview, "WebviewPluginImpl", this);
     // wkeSetDebugConfig(m_webview, "drawDirtyDebugLine", nullptr);
 }
 
-WebviewPluginImpl::~WebviewPluginImpl() {
+WebviewPluginImpl::~WebviewPluginImpl()
+{
     IdLiveDetect::get()->deconstructed(m_id);
 }
 
-void WebviewPluginImpl::loadPreloadURL() {
+void WebviewPluginImpl::loadPreloadURL()
+{
     if (!m_preloadcode)
         return;
 
@@ -138,7 +147,8 @@ void WebviewPluginImpl::loadPreloadURL() {
     delete preloadcode;
 }
 
-void WebviewPluginImpl::staticOnPaintUpdated(wkeWebView webView, WebviewPluginImpl* self, const HDC hdc, int x, int y, int cx, int cy) {
+void WebviewPluginImpl::staticOnPaintUpdated(wkeWebView webView, WebviewPluginImpl* self, const HDC hdc, int x, int y, int cx, int cy)
+{
     int id = self->m_id;
     ThreadCall::callBlinkThreadAsync([self, id, x, y, cx, cy] {
         if (!IdLiveDetect::get()->isLive(id))
@@ -148,20 +158,24 @@ void WebviewPluginImpl::staticOnPaintUpdated(wkeWebView webView, WebviewPluginIm
     });
 }
 
-void WebviewPluginImpl::onSize(const WINDOWPOS& windowpos) {
+void WebviewPluginImpl::onSize(const WINDOWPOS& windowpos)
+{
     wkeResize(m_webview, windowpos.cx, windowpos.cy);
 }
 
-void WebviewPluginImpl::onPaint(HDC hdc) {
+void WebviewPluginImpl::onPaint(HDC hdc)
+{
     HDC wkeDC = wkeGetViewDC(m_webview);
     ::BitBlt(hdc, m_npWindow.x, m_npWindow.y, m_npWindow.width, m_npWindow.height, wkeDC, 0, 0, SRCCOPY);
 }
 
-void WebviewPluginImpl::onSetWinow(const NPWindow& npWindow) {
+void WebviewPluginImpl::onSetWinow(const NPWindow& npWindow)
+{
     m_npWindow = npWindow;
 }
 
-void WebviewPluginImpl::onMouseEvt(uint32_t message, uint32_t wParam, uint32_t lParam) {
+void WebviewPluginImpl::onMouseEvt(uint32_t message, uint32_t wParam, uint32_t lParam)
+{
     int x = LOWORD(lParam) - m_npWindow.x;
     int y = HIWORD(lParam) - m_npWindow.y;
 
@@ -194,7 +208,8 @@ void WebviewPluginImpl::onMouseEvt(uint32_t message, uint32_t wParam, uint32_t l
     });
 }
 
-void WebviewPluginImpl::onKey(uint32_t message, uint32_t wParam, uint32_t lParam) {
+void WebviewPluginImpl::onKey(uint32_t message, uint32_t wParam, uint32_t lParam)
+{
     unsigned int virtualKeyCode = wParam;
     unsigned int flags = 0;
     if (HIWORD(lParam) & KF_REPEAT)
@@ -221,11 +236,12 @@ void WebviewPluginImpl::onKey(uint32_t message, uint32_t wParam, uint32_t lParam
     });
 }
 
-void WebviewPluginImpl::setPreloadURL(const std::string& preload) {
+void WebviewPluginImpl::setPreloadURL(const std::string& preload)
+{
     std::string preloadURL = preload;
     if (preloadURL.size() > 9 && "file:///" == preloadURL.substr(0, 8))
         preloadURL = preloadURL.substr(8);
-    
+
     if (m_preloadcode)
         delete m_preloadcode;
     m_preloadcode = new std::string("require('");
@@ -234,22 +250,24 @@ void WebviewPluginImpl::setPreloadURL(const std::string& preload) {
     //wkeRunJS(m_webview, code.c_str());
 }
 
-void WebviewPluginImpl::hostSendMessageToGuest(const std::string& channel, const base::ListValue& listParams) {
-
-    std::string* channelCopy = new std::string(channel);
-    base::ListValue* listParamsCopy = listParams.DeepCopy();
-    wkeWebView webview = m_webview;
-    int id = m_id;
-    ThreadCall::callBlinkThreadAsync([id, webview, channelCopy, listParamsCopy] {
-        if (!IdLiveDetect::get()->isLive(id))
-            return;
-        WebContents::rendererSendMessageToRenderer(webview, wkeWebFrameGetMainFrame(webview), *channelCopy, *listParamsCopy);
-        delete channelCopy;
-        delete listParamsCopy;
-    });
+void WebviewPluginImpl::hostSendMessageToGuest(const std::string& channel, const base::ListValue& listParams)
+{
+    DebugBreak(); 
+//     std::string* channelCopy = new std::string(channel);
+//     base::ListValue* listParamsCopy = listParams.DeepCopy();
+//     wkeWebView webview = m_webview;
+//     int id = m_id;
+//     ThreadCall::callBlinkThreadAsync([id, webview, channelCopy, listParamsCopy] {
+//         if (!IdLiveDetect::get()->isLive(id))
+//             return;
+//         WebContents::rendererSendMessageToRenderer(webview, wkeWebFrameGetMainFrame(webview), *channelCopy, *listParamsCopy);
+//         delete channelCopy;
+//         delete listParamsCopy;
+//     });
 }
 
-void WebviewPluginImpl::guestSendMessageToHost(const std::string& channel, const base::ListValue& listParams) {
+void WebviewPluginImpl::guestSendMessageToHost(const std::string& channel, const base::ListValue& listParams)
+{
     NPVariant voidResponse;
 
     NPVariant channelNp;
@@ -277,16 +295,17 @@ void WebviewPluginImpl::loadURL(
     const std::string& urlString,
     const std::string& httpReferrerString,
     const std::string& userAgentString,
-    const std::string& extraHeadersString) {
-//     if (1) {
-//         urlString = "data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%0D%0A%3Chtml%20lang%3D%22en%22%20style%3D%22width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3Chead%3E%0D%0A%09%3Ctitle%3EVirtual%20Document%3C%2Ftitle%3E%0D%0A%3C%2Fhead%3E%0D%0A%3Cbody%20style%3D%22margin%3A%200%3B%20overflow%3A%20hidden%3B%20width%3A%20100%25%3B%20height%3A%20100%25%3bbgcolor%3argb(50%2c50%2c50)%22%3E%0D%0A%3C%2Fbody%3E%0D%0A%3C%2Fhtml%3E";
-//     }
+    const std::string& extraHeadersString)
+{
+    //     if (1) {
+    //         urlString = "data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%0D%0A%3Chtml%20lang%3D%22en%22%20style%3D%22width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3Chead%3E%0D%0A%09%3Ctitle%3EVirtual%20Document%3C%2Ftitle%3E%0D%0A%3C%2Fhead%3E%0D%0A%3Cbody%20style%3D%22margin%3A%200%3B%20overflow%3A%20hidden%3B%20width%3A%20100%25%3B%20height%3A%20100%25%3bbgcolor%3argb(50%2c50%2c50)%22%3E%0D%0A%3C%2Fbody%3E%0D%0A%3C%2Fhtml%3E";
+    //     }
     wkeLoadURL(m_webview, urlString.c_str());
 }
 
-std::string WebviewPluginImpl::getURL() {
+std::string WebviewPluginImpl::getURL()
+{
     return wkeGetURL(m_webview);
 }
 
 }
-

@@ -31,6 +31,7 @@ bool SetupIsolateDelegate::SetupHeap(Heap* heap) {
     CHECK(heap->isolate()->snapshot_available());
     return true;
   }
+  return true;
 }
 
 }  // namespace internal

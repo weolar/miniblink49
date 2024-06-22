@@ -133,6 +133,11 @@ public:
     bool setAttributeEventListener(const AtomicString& eventType, PassRefPtr<EventListener>);
     EventListener* getAttributeEventListener(const AtomicString& eventType);
 
+    bool hasScriptWrappableEventListeners() const override
+    {
+        return hasEventListeners();
+    }
+
     bool hasEventListeners() const;
     bool hasEventListeners(const AtomicString& eventType) const;
     bool hasCapturingEventListeners(const AtomicString& eventType);

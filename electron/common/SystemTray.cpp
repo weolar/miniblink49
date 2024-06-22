@@ -3,7 +3,7 @@
 // NON-MFC VERSION
 //
 // This class is a light wrapper around the windows system tray stuff. It
-// adds an icon to the system tray with the specified ToolTip text and 
+// adds an icon to the system tray with the specified ToolTip text and
 // callback notification value, which is sent back to the Parent window.
 //
 // Updated: 21 Sep 2000 - Added GetDoWndAnimation - animation only occurs if the system
@@ -29,7 +29,7 @@
 #endif
 
 #ifndef _countof
-#define _countof(x) (sizeof(x)/sizeof(x[0]))
+#define _countof(x) (sizeof(x) / sizeof(x[0]))
 #endif
 
 #undef max
@@ -46,44 +46,46 @@ using std::min;
 #define TRAYICON_CLASS L"TrayIconClass"
 
 // The option here is to maintain a list of all TrayIcon windows,
-// and iterate through them, instead of only allowing a single 
+// and iterate through them, instead of only allowing a single
 // TrayIcon per application
 SystemTray* SystemTray::m_pThis = NULL;
 
 const UINT SystemTray::m_nTimerID = 4567;
-UINT SystemTray::m_nMaxTooltipLength = 64;     // This may change...
+UINT SystemTray::m_nMaxTooltipLength = 64; // This may change...
 UINT SystemTray::m_nTaskbarCreatedMsg = 0;
-HWND  SystemTray::m_hWndInvisible;
+HWND SystemTray::m_hWndInvisible;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-SystemTray::SystemTray() {
+SystemTray::SystemTray()
+{
     if (!m_nTaskbarCreatedMsg)
         m_nTaskbarCreatedMsg = ::RegisterWindowMessage(L"TaskbarCreated");
 
     initialise();
 }
 
-SystemTray::SystemTray(HINSTANCE hInst,			// Handle to application instance
-    HWND hParent,				// The window that will recieve tray notifications
-    UINT uCallbackMessage,     // the callback message to send to parent
-    LPCTSTR szToolTip,         // tray icon tooltip
-    HICON icon,                // Handle to icon
-    UINT uID,                  // Identifier of tray icon
-    BOOL bHidden /*=FALSE*/,   // Hidden on creation?                  
-    LPCTSTR szBalloonTip /*=NULL*/,    // Ballon tip (w2k only)
-    LPCTSTR szBalloonTitle /*=NULL*/,  // Balloon tip title (w2k)
-    DWORD dwBalloonIcon /*=NIIF_NONE*/,// Ballon tip icon (w2k)
-    UINT uBalloonTimeout /*=10*/)      // Balloon timeout (w2k)
+SystemTray::SystemTray(HINSTANCE hInst, // Handle to application instance
+    HWND hParent, // The window that will recieve tray notifications
+    UINT uCallbackMessage, // the callback message to send to parent
+    LPCTSTR szToolTip, // tray icon tooltip
+    HICON icon, // Handle to icon
+    UINT uID, // Identifier of tray icon
+    BOOL bHidden /*=FALSE*/, // Hidden on creation?
+    LPCTSTR szBalloonTip /*=NULL*/, // Ballon tip (w2k only)
+    LPCTSTR szBalloonTitle /*=NULL*/, // Balloon tip title (w2k)
+    DWORD dwBalloonIcon /*=NIIF_NONE*/, // Ballon tip icon (w2k)
+    UINT uBalloonTimeout /*=10*/) // Balloon timeout (w2k)
 {
     initialise();
     create(hInst, hParent, uCallbackMessage, szToolTip, icon, uID, bHidden,
         szBalloonTip, szBalloonTitle, dwBalloonIcon, uBalloonTimeout);
 }
 
-void SystemTray::initialise() {
+void SystemTray::initialise()
+{
     // If maintaining a list of all TrayIcon windows (instead of
     // only allowing a single TrayIcon per application) then add
     // this TrayIcon to the list
@@ -108,7 +110,8 @@ void SystemTray::initialise() {
     m_bWin2K = FALSE;
 }
 
-ATOM SystemTray::registerClass(HINSTANCE hInstance) {
+ATOM SystemTray::registerClass(HINSTANCE hInstance)
+{
     WNDCLASSEX wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -133,7 +136,8 @@ BOOL SystemTray::create(HINSTANCE hInst, HWND hParent, UINT uCallbackMessage,
     LPCTSTR szBalloonTip /*=NULL*/,
     LPCTSTR szBalloonTitle /*=NULL*/,
     DWORD dwBalloonIcon /*=NIIF_NONE*/,
-    UINT uBalloonTimeout /*=10*/) {
+    UINT uBalloonTimeout /*=10*/)
+{
 
     // this is only for Windows 95 (or higher)
     m_bEnabled = (GetVersion() & 0xff) >= 4;
@@ -174,7 +178,7 @@ BOOL SystemTray::create(HINSTANCE hInst, HWND hParent, UINT uCallbackMessage,
     m_bHidden = bHidden;
     m_hTargetWnd = m_tnd.hWnd;
 
-    m_uCreationFlags = m_tnd.uFlags;	// Store in case we need to recreate in OnTaskBarCreate
+    m_uCreationFlags = m_tnd.uFlags; // Store in case we need to recreate in OnTaskBarCreate
 
     BOOL bResult = TRUE;
     if (!m_bHidden || m_bWin2K) {
@@ -185,7 +189,8 @@ BOOL SystemTray::create(HINSTANCE hInst, HWND hParent, UINT uCallbackMessage,
     return bResult;
 }
 
-SystemTray::~SystemTray() {
+SystemTray::~SystemTray()
+{
     removeIcon();
     m_IconList.clear();
     if (m_hWnd)
@@ -195,16 +200,18 @@ SystemTray::~SystemTray() {
 /////////////////////////////////////////////////////////////////////////////
 // SystemTray icon manipulation
 
-void SystemTray::setFocus() {
-
+void SystemTray::setFocus()
+{
 }
 
-BOOL SystemTray::moveToRight() {
+BOOL SystemTray::moveToRight()
+{
     removeIcon();
     return addIcon();
 }
 
-BOOL SystemTray::addIcon() {
+BOOL SystemTray::addIcon()
+{
     if (!m_bRemoved)
         removeIcon();
 
@@ -218,7 +225,8 @@ BOOL SystemTray::addIcon() {
     return (m_bRemoved == FALSE);
 }
 
-BOOL SystemTray::removeIcon() {
+BOOL SystemTray::removeIcon()
+{
     m_bShowIconPending = FALSE;
 
     if (!m_bEnabled || m_bRemoved)
@@ -231,7 +239,8 @@ BOOL SystemTray::removeIcon() {
     return (m_bRemoved == TRUE);
 }
 
-BOOL SystemTray::hideIcon() {
+BOOL SystemTray::hideIcon()
+{
     if (!m_bEnabled || m_bRemoved || m_bHidden)
         return TRUE;
 
@@ -240,7 +249,8 @@ BOOL SystemTray::hideIcon() {
     return (m_bHidden == TRUE);
 }
 
-BOOL SystemTray::showIcon() {
+BOOL SystemTray::showIcon()
+{
     if (m_bRemoved)
         return addIcon();
 
@@ -252,7 +262,8 @@ BOOL SystemTray::showIcon() {
     return (m_bHidden == FALSE);
 }
 
-BOOL SystemTray::setIcon(HICON hIcon) {
+BOOL SystemTray::setIcon(HICON hIcon)
+{
     if (!m_bEnabled)
         return FALSE;
 
@@ -265,7 +276,8 @@ BOOL SystemTray::setIcon(HICON hIcon) {
         return Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 }
 
-BOOL SystemTray::setIcon(LPCTSTR lpszIconName) {
+BOOL SystemTray::setIcon(LPCTSTR lpszIconName)
+{
 
     HICON hIcon = nullptr;
     Gdiplus::Bitmap* gdipBitmap = Gdiplus::Bitmap::FromFile(lpszIconName, false);
@@ -280,8 +292,9 @@ BOOL SystemTray::setIcon(LPCTSTR lpszIconName) {
     return returnCode;
 }
 
-BOOL SystemTray::setIcon(UINT nIDResource) {
-    HICON hIcon = (HICON) ::LoadImage(m_hInstance,
+BOOL SystemTray::setIcon(UINT nIDResource)
+{
+    HICON hIcon = (HICON)::LoadImage(m_hInstance,
         MAKEINTRESOURCE(nIDResource),
         IMAGE_ICON,
         0, 0,
@@ -292,23 +305,27 @@ BOOL SystemTray::setIcon(UINT nIDResource) {
     return returnCode;
 }
 
-BOOL SystemTray::setStandardIcon(LPCTSTR lpIconName) {
+BOOL SystemTray::setStandardIcon(LPCTSTR lpIconName)
+{
     HICON hIcon = ::LoadIcon(NULL, lpIconName);
 
     return setIcon(hIcon);
 }
 
-BOOL SystemTray::setStandardIcon(UINT nIDResource) {
+BOOL SystemTray::setStandardIcon(UINT nIDResource)
+{
     HICON hIcon = ::LoadIcon(NULL, MAKEINTRESOURCE(nIDResource));
 
     return setIcon(hIcon);
 }
 
-HICON SystemTray::getIcon() const {
+HICON SystemTray::getIcon() const
+{
     return (m_bEnabled) ? m_tnd.hIcon : NULL;
 }
 
-BOOL SystemTray::setIconList(UINT uFirstIconID, UINT uLastIconID) {
+BOOL SystemTray::setIconList(UINT uFirstIconID, UINT uLastIconID)
+{
     if (uFirstIconID > uLastIconID)
         return FALSE;
 
@@ -326,7 +343,8 @@ BOOL SystemTray::setIconList(UINT uFirstIconID, UINT uLastIconID) {
     return TRUE;
 }
 
-BOOL SystemTray::setIconList(HICON* pHIconList, UINT nNumIcons) {
+BOOL SystemTray::setIconList(HICON* pHIconList, UINT nNumIcons)
+{
     m_IconList.clear();
 
     try {
@@ -340,7 +358,8 @@ BOOL SystemTray::setIconList(HICON* pHIconList, UINT nNumIcons) {
     return TRUE;
 }
 
-BOOL SystemTray::animate(UINT nDelayMilliSeconds, int nNumSeconds /*=-1*/) {
+BOOL SystemTray::animate(UINT nDelayMilliSeconds, int nNumSeconds /*=-1*/)
+{
     if (m_IconList.empty())
         return FALSE;
 
@@ -356,7 +375,8 @@ BOOL SystemTray::animate(UINT nDelayMilliSeconds, int nNumSeconds /*=-1*/) {
     return (m_uIDTimer != 0);
 }
 
-BOOL SystemTray::stepAnimation() {
+BOOL SystemTray::stepAnimation()
+{
     if (!m_IconList.size())
         return FALSE;
 
@@ -367,7 +387,8 @@ BOOL SystemTray::stepAnimation() {
     return setIcon(m_IconList[m_nCurrentIcon]);
 }
 
-BOOL SystemTray::stopAnimation() {
+BOOL SystemTray::stopAnimation()
+{
     BOOL bResult = FALSE;
 
     if (m_uIDTimer)
@@ -384,7 +405,8 @@ BOOL SystemTray::stopAnimation() {
 /////////////////////////////////////////////////////////////////////////////
 // SystemTray tooltip text manipulation
 
-BOOL SystemTray::setTooltipText(LPCTSTR pszTip) {
+BOOL SystemTray::setTooltipText(LPCTSTR pszTip)
+{
     ASSERT(wcslen(pszTip) < m_nMaxTooltipLength);
 
     if (!m_bEnabled)
@@ -399,7 +421,8 @@ BOOL SystemTray::setTooltipText(LPCTSTR pszTip) {
         return Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 }
 
-BOOL SystemTray::setTooltipText(UINT nID) {
+BOOL SystemTray::setTooltipText(UINT nID)
+{
     TCHAR strBuffer[1024];
     ASSERT(1024 >= m_nMaxTooltipLength);
 
@@ -409,7 +432,8 @@ BOOL SystemTray::setTooltipText(UINT nID) {
     return setTooltipText(strBuffer);
 }
 
-LPTSTR SystemTray::getTooltipText() const {
+LPTSTR SystemTray::getTooltipText() const
+{
     if (!m_bEnabled)
         return FALSE;
 
@@ -448,11 +472,12 @@ LPTSTR SystemTray::getTooltipText() const {
 //////////////////////////////////////////////////////////////////////////
 
 BOOL SystemTray::showBalloon(LPCTSTR szText,
-    LPCTSTR szTitle  /*=NULL*/,
-    DWORD   dwIcon   /*=NIIF_NONE*/,
-    UINT    uTimeout /*=10*/) {
+    LPCTSTR szTitle /*=NULL*/,
+    DWORD dwIcon /*=NIIF_NONE*/,
+    UINT uTimeout /*=10*/)
+{
     m_tnd.uFlags = NIF_INFO;
-//     m_tnd.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
+    //     m_tnd.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
     wcsncpy(m_tnd.szInfoTitle, szTitle, wcslen(szTitle));
     wcsncpy(m_tnd.szInfo, szText, wcslen(szText));
     //LoadIconMetric(g_hInst, MAKEINTRESOURCE(dwIcon), LIM_LARGE, &nid.hBalloonIcon);
@@ -464,7 +489,8 @@ BOOL SystemTray::showBalloon(LPCTSTR szText,
 /////////////////////////////////////////////////////////////////////////////
 // SystemTray notification window stuff
 
-BOOL SystemTray::setNotificationWnd(HWND hNotifyWnd) {
+BOOL SystemTray::setNotificationWnd(HWND hNotifyWnd)
+{
     if (!m_bEnabled)
         return FALSE;
 
@@ -483,29 +509,33 @@ BOOL SystemTray::setNotificationWnd(HWND hNotifyWnd) {
         return Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 }
 
-HWND SystemTray::getNotificationWnd() const {
+HWND SystemTray::getNotificationWnd() const
+{
     return m_tnd.hWnd;
 }
 
 // Hatr added
 
 // Change or retrive the window to send menu commands to
-BOOL SystemTray::setTargetWnd(HWND hTargetWnd) {
+BOOL SystemTray::setTargetWnd(HWND hTargetWnd)
+{
     m_hTargetWnd = hTargetWnd;
     return TRUE;
 } // SystemTray::setTargetWnd()
 
-HWND SystemTray::getTargetWnd() const {
+HWND SystemTray::getTargetWnd() const
+{
     if (m_hTargetWnd)
         return m_hTargetWnd;
     else
         return m_tnd.hWnd;
 } // SystemTray::getTargetWnd()
 
-  /////////////////////////////////////////////////////////////////////////////
-  // SystemTray notification message stuff
+/////////////////////////////////////////////////////////////////////////////
+// SystemTray notification message stuff
 
-BOOL SystemTray::setCallbackMessage(UINT uCallbackMessage) {
+BOOL SystemTray::setCallbackMessage(UINT uCallbackMessage)
+{
     if (!m_bEnabled)
         return FALSE;
 
@@ -521,14 +551,16 @@ BOOL SystemTray::setCallbackMessage(UINT uCallbackMessage) {
         return Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 }
 
-UINT SystemTray::getCallbackMessage() const {
+UINT SystemTray::getCallbackMessage() const
+{
     return m_tnd.uCallbackMessage;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // SystemTray menu manipulation
 
-BOOL SystemTray::setMenuDefaultItem(UINT uItem, BOOL bByPos) {
+BOOL SystemTray::setMenuDefaultItem(UINT uItem, BOOL bByPos)
+{
     if ((m_DefaultMenuItemID == uItem) && (m_DefaultMenuItemByPos == bByPos))
         return TRUE;
 
@@ -553,7 +585,8 @@ BOOL SystemTray::setMenuDefaultItem(UINT uItem, BOOL bByPos) {
     return TRUE;
 }
 
-void SystemTray::getMenuDefaultItem(UINT& uItem, BOOL& bByPos) {
+void SystemTray::getMenuDefaultItem(UINT& uItem, BOOL& bByPos)
+{
     uItem = m_DefaultMenuItemID;
     bByPos = m_DefaultMenuItemByPos;
 }
@@ -561,7 +594,8 @@ void SystemTray::getMenuDefaultItem(UINT& uItem, BOOL& bByPos) {
 /////////////////////////////////////////////////////////////////////////////
 // SystemTray message handlers
 
-LRESULT SystemTray::OnTimer(UINT nIDEvent) {
+LRESULT SystemTray::OnTimer(UINT nIDEvent)
+{
     if (nIDEvent != m_uIDTimer) {
         ASSERT(FALSE);
         return 0L;
@@ -584,19 +618,21 @@ LRESULT SystemTray::OnTimer(UINT nIDEvent) {
 // This is called whenever the taskbar is created (eg after explorer crashes
 // and restarts. Please note that the WM_TASKBARCREATED message is only passed
 // to TOP LEVEL windows (like WM_QUERYNEWPALETTE)
-LRESULT SystemTray::OnTaskbarCreated(WPARAM wParam, LPARAM lParam) {
+LRESULT SystemTray::OnTaskbarCreated(WPARAM wParam, LPARAM lParam)
+{
     installIconPending();
     return 0L;
 }
 
-
-LRESULT SystemTray::OnSettingChange(UINT uFlags, LPCTSTR lpszSection) {
+LRESULT SystemTray::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
+{
     if (uFlags == SPI_SETWORKAREA)
         installIconPending();
     return 0L;
 }
 
-LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam) {
+LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam)
+{
     //Return quickly if its not for this tray icon
     if (wParam != m_tnd.uID)
         return 0L;
@@ -614,7 +650,7 @@ LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam) {
 
         HMENU hSubMenu = ::GetSubMenu(hMenu, 0);
         if (!hSubMenu) {
-            ::DestroyMenu(hMenu);        //Be sure to Destroy Menu Before Returning
+            ::DestroyMenu(hMenu); //Be sure to Destroy Menu Before Returning
             return 0;
         }
 
@@ -658,7 +694,8 @@ LRESULT SystemTray::OnTrayNotification(UINT wParam, LONG lParam) {
 }
 
 // This is the global (static) callback function for all TrayIcon windows
-LRESULT PASCAL SystemTray::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT PASCAL SystemTray::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
     // The option here is to maintain a list of all TrayIcon windows,
     // and iterate through them. If you do this, remove these 3 lines.
     SystemTray* pTrayIcon = m_pThis;
@@ -694,7 +731,8 @@ LRESULT PASCAL SystemTray::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LP
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void SystemTray::installIconPending() {
+void SystemTray::installIconPending()
+{
     // Is the icon display pending, and it's not been set as "hidden"?
     if (!m_bShowIconPending || m_bHidden)
         return;
@@ -714,7 +752,8 @@ void SystemTray::installIconPending() {
 /////////////////////////////////////////////////////////////////////////////
 // For minimising/maximising from system tray
 
-BOOL CALLBACK FindTrayWnd(HWND hwnd, LPARAM lParam) {
+BOOL CALLBACK FindTrayWnd(HWND hwnd, LPARAM lParam)
+{
     TCHAR szClassName[256];
     GetClassName(hwnd, szClassName, 255);
 
@@ -742,7 +781,8 @@ BOOL CALLBACK FindTrayWnd(HWND hwnd, LPARAM lParam) {
     return TRUE;
 }
 
-void SystemTray::GetTrayWndRect(LPRECT lprect) {
+void SystemTray::GetTrayWndRect(LPRECT lprect)
+{
 #define DEFAULT_RECT_WIDTH 150
 #define DEFAULT_RECT_HEIGHT 30
 
@@ -815,7 +855,8 @@ void SystemTray::GetTrayWndRect(LPRECT lprect) {
 }
 
 // Check to see if the animation has been disabled (Matthew Ellis <m.t.ellis@bigfoot.com>)
-BOOL SystemTray::GetDoWndAnimation() {
+BOOL SystemTray::GetDoWndAnimation()
+{
     ANIMATIONINFO ai;
 
     ai.cbSize = sizeof(ai);
@@ -824,7 +865,8 @@ BOOL SystemTray::GetDoWndAnimation() {
     return ai.iMinAnimate ? TRUE : FALSE;
 }
 
-BOOL SystemTray::RemoveTaskbarIcon(HWND hWnd) {
+BOOL SystemTray::RemoveTaskbarIcon(HWND hWnd)
+{
     // create static invisible window
     if (!::IsWindow(m_hWndInvisible)) {
         m_hWndInvisible = CreateWindowExW(0, L"Static", L"", WS_POPUP,
@@ -840,7 +882,8 @@ BOOL SystemTray::RemoveTaskbarIcon(HWND hWnd) {
     return TRUE;
 }
 
-void SystemTray::minimiseToTray(HWND hWnd) {
+void SystemTray::minimiseToTray(HWND hWnd)
+{
     if (GetDoWndAnimation()) {
         RECT rectFrom, rectTo;
 
@@ -851,10 +894,11 @@ void SystemTray::minimiseToTray(HWND hWnd) {
     }
 
     RemoveTaskbarIcon(hWnd);
-    SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) &~WS_VISIBLE);
+    SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) & ~WS_VISIBLE);
 }
 
-void SystemTray::maximiseFromTray(HWND hWnd) {
+void SystemTray::maximiseFromTray(HWND hWnd)
+{
     if (GetDoWndAnimation()) {
         RECT rectTo;
         ::GetWindowRect(hWnd, &rectTo);
@@ -868,8 +912,7 @@ void SystemTray::maximiseFromTray(HWND hWnd) {
         ::SetParent(hWnd, NULL);
 
     SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) | WS_VISIBLE);
-    RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_ALLCHILDREN | RDW_FRAME |
-        RDW_INVALIDATE | RDW_ERASE);
+    RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_ALLCHILDREN | RDW_FRAME | RDW_INVALIDATE | RDW_ERASE);
 
     // Move focus away and back again to ensure taskbar icon is recreated
     if (::IsWindow(m_hWndInvisible))

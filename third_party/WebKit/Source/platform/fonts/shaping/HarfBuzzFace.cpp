@@ -319,6 +319,12 @@ static hb_font_funcs_t* harfBuzzSkiaGetFontFuncs()
 }
 
 #if !OS(MACOSX)
+
+void __cdecl hbDestroyFuncWrap(void *user_data)
+{
+    fastFree(user_data);
+}
+
 static hb_blob_t* harfBuzzSkiaGetTable(hb_face_t* face, hb_tag_t tag, void* userData)
 {
     SkTypeface* typeface = reinterpret_cast<SkTypeface*>(userData);
@@ -337,11 +343,11 @@ static hb_blob_t* harfBuzzSkiaGetTable(hb_face_t* face, hb_tag_t tag, void* user
         return 0;
     }
 
-    return hb_blob_create(const_cast<char*>(buffer), tableSize, HB_MEMORY_MODE_WRITABLE, buffer, fastFree);
+    return hb_blob_create(const_cast<char*>(buffer), tableSize, HB_MEMORY_MODE_WRITABLE, buffer, hbDestroyFuncWrap);
 }
 #endif
 
-static void destroyHarfBuzzFontData(void* userData)
+static void __cdecl destroyHarfBuzzFontData(void* userData)
 {
     HarfBuzzFontData* hbFontData = reinterpret_cast<HarfBuzzFontData*>(userData);
     delete hbFontData;

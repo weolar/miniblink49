@@ -41,6 +41,7 @@
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
+#include <map>
 
 namespace blink {
 class WebURLRequest;
@@ -59,7 +60,6 @@ class WebCookieJarImpl;
 struct BlobTempFileInfo;
 struct InitializeHandleInfo;
 struct MainTaskArgs;
-class DiskCache;
 
 class AutoLockJob {
 public:
@@ -85,6 +85,7 @@ public:
     int addAsynchronousJob(WebURLLoaderInternal*);
     void cancel(int jobId);
     void cancelAll();
+    void cancelAllJobsOfWebview(int webviewId);
 
     JobHead* checkJob(int jobId);
     void removeLiveJobs(int jobId);
@@ -104,32 +105,38 @@ public:
 
     void shutdown();
     bool isShutdown() const { return m_isShutdown; }
-
-    void saveDiskCache();
-
-    void appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength);
-    String createBlobTempFileInfoByUrlIfNeeded(const String& url);
-    String handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize);
-    BlobTempFileInfo* getBlobTempFileInfoByTempFilePath(const String& path);
     
     void didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength);
     void handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength);
     void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);
     void handleDidReceiveResponse(WebURLLoaderInternal* job);
+    void handleDidSentData(WebURLLoaderInternal* job, unsigned long long bytesSent, unsigned long long totalBytesToBeSent);
 
     void continueJob(WebURLLoaderInternal* job);
     void cancelWithHookRedirect(WebURLLoaderInternal* job);
 
-    blink::WebThread* getIoThread() const { return m_thread; }
+    String handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize);
 
+    enum IoThreadType {
+        kIoThreadTypeRes, // 图片等资源类型
+        kIoThreadTypeSync, // 同步资源
+        kIoThreadTypeOther,
+    };
+
+    blink::WebThread* getIoThread(IoThreadType type);
+private:
+    blink::WebThread* getSyncIoThread();
+public:
     WebCookieJarImpl* getShareCookieJar() const;
+
+    bool doCancel(JobHead* jobHeead, CancelledReason cancelledReason);
 
 private:
     WebURLLoaderManager(const char* cookieJarFullPath);
     ~WebURLLoaderManager();
 
-    bool doCancel(JobHead* jobHeead, CancelledReason cancelledReason);
-    
+    void initializeMultiHandleOnIoThread(int* waitCount);    
+
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
@@ -148,32 +155,111 @@ private:
 
     void initCookieSession(const char* cookiePath);
 
+    CURLM* getCurrentThreadCurlMultiHandle() const;
+
     static WebURLLoaderManager* m_sharedInstance;
 
     Vector<WebURLLoaderInternal*> m_resourceHandleList;
-    CURLM* m_curlMultiHandle;
+    //CURLM* m_curlMultiHandle;
     //CURLSH* m_curlShareHandle;
     //char* m_cookieJarFileName;
+    std::map<DWORD, CURLM*> m_curlMultiHandles;
     WebCookieJarImpl* m_shareCookieJar;
 
     char m_curlErrorBuffer[CURL_ERROR_SIZE];
     const CString m_certificatePath;
     int m_runningJobs;
-    blink::WebThread* m_thread;
+    WTF::Vector<blink::WebThread*> m_threads;
+    blink::WebThread* m_syncIoThread;
     String m_proxy;
     ProxyType m_proxyType;
     bool m_isShutdown;
 
-    friend class WebURLLoaderManagerMainTask;
+    friend class WebURLLoaderInternal;
     WTF::Mutex m_liveJobsMutex;
     WTF::HashMap<int, JobHead*> m_liveJobs;
     int m_newestJobId;
-
-    WTF::Mutex m_shutdownMutex;
-
-    DiskCache* m_diskCache;
     
-    WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>
+    friend class WebURLLoaderManagerMainTask;
+    WTF::Mutex m_mainTasksMutex;
+    WebURLLoaderManagerMainTask* m_mainTasksBegin;
+    WebURLLoaderManagerMainTask* m_mainTasksEnd;
+
+public:
+    //WTF::Mutex m_shutdownMutex;
+    class ShutdownRWLock {
+    public:
+        ShutdownRWLock()
+        {
+            m_readCount = 0;
+            m_writeCount = 0;
+        }
+
+        bool read()
+        {
+            WTF::Locker<WTF::Mutex> locker(m_lock);
+            if (m_writeCount > 0)
+                return false;
+
+            ++m_readCount;
+            return true;
+        }
+
+        void releaseRead()
+        {
+            WTF::Locker<WTF::Mutex> locker(m_lock);
+            --m_readCount;
+        }
+
+        void waitForWrite()
+        {
+            m_lock.lock();
+            ++m_writeCount;
+            m_lock.unlock();
+
+            while (true) {
+                m_lock.lock();
+                if (m_readCount > 0) {
+                    m_lock.unlock();
+                    ::Sleep(10);
+                } else {
+                    m_lock.unlock();
+                    break;
+                }
+            }
+        }
+
+    private:
+        int m_readCount;
+        int m_writeCount;
+        WTF::Mutex m_lock;
+    };
+
+    class ShutdownReadLocker {
+    public:
+        ShutdownReadLocker(ShutdownRWLock* lock)
+        {
+            m_lock = lock;
+        }
+
+        bool lock()
+        {
+            bool b = m_lock->read();
+            if (!b)
+                m_lock = nullptr;
+            return b;
+        }
+
+        ~ShutdownReadLocker()
+        {
+            if (m_lock)
+                m_lock->releaseRead();
+        }
+    private:
+        ShutdownRWLock* m_lock;
+    };
+
+    ShutdownRWLock m_shutdownLock;
 };
 
 }

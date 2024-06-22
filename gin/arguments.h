@@ -15,84 +15,91 @@ namespace gin {
 // with Converter to make it easier to marshall arguments and return values
 // between V8 and C++.
 class GIN_EXPORT Arguments {
- public:
-  Arguments();
-  explicit Arguments(const v8::FunctionCallbackInfo<v8::Value>& info);
-  ~Arguments();
+public:
+    Arguments();
+    explicit Arguments(const v8::FunctionCallbackInfo<v8::Value>& info);
+    ~Arguments();
 
-  const v8::FunctionCallbackInfo<v8::Value>* getInfo() const { return info_; }
+    const v8::FunctionCallbackInfo<v8::Value>* getInfo() const { return info_; }
 
-  template<typename T>
-  bool GetHolder(T* out) {
-    return ConvertFromV8(isolate_, info_->Holder(), out);
-  }
-
-  template<typename T>
-  bool GetData(T* out) {
-    return ConvertFromV8(isolate_, info_->Data(), out);
-  }
-
-  template<typename T>
-  bool GetNext(T* out) {
-    if (next_ >= info_->Length()) {
-      insufficient_arguments_ = true;
-      return false;
+    template<typename T>
+    bool GetHolder(T* out)
+    {
+        return ConvertFromV8(isolate_, info_->Holder(), out);
     }
-    v8::Local<v8::Value> val = (*info_)[next_++];
-    return ConvertFromV8(isolate_, val, out);
-  }
 
-  template<typename T>
-  bool GetRemaining(std::vector<T>* out) {
-    if (next_ >= info_->Length()) {
-      insufficient_arguments_ = true;
-      return false;
+    template<typename T>
+    bool GetData(T* out)
+    {
+        return ConvertFromV8(isolate_, info_->Data(), out);
     }
-    int remaining = info_->Length() - next_;
-    out->resize(remaining);
-    for (int i = 0; i < remaining; ++i) {
-      v8::Local<v8::Value> val = (*info_)[next_++];
-      if (!ConvertFromV8(isolate_, val, &out->at(i)))
-        return false;
+
+    template<typename T>
+    bool GetNext(T* out)
+    {
+        if (next_ >= info_->Length()) {
+            insufficient_arguments_ = true;
+            return false;
+        }
+        v8::Local<v8::Value> val = (*info_)[next_++];
+        return ConvertFromV8(isolate_, val, out);
     }
-    return true;
-  }
 
-  bool Skip() {
-    if (next_ >= info_->Length())
-      return false;
-    next_++;
-    return true;
-  }
+    template<typename T>
+    bool GetRemaining(std::vector<T>* out)
+    {
+        if (next_ >= info_->Length()) {
+            insufficient_arguments_ = true;
+            return false;
+        }
+        int remaining = info_->Length() - next_;
+        out->resize(remaining);
+        for (int i = 0; i < remaining; ++i) {
+            v8::Local<v8::Value> val = (*info_)[next_++];
+            if (!ConvertFromV8(isolate_, val, &out->at(i)))
+                return false;
+        }
+        return true;
+    }
 
-  int Length() const {
-    return info_->Length();
-  }
+    bool Skip()
+    {
+        if (next_ >= info_->Length())
+            return false;
+        next_++;
+        return true;
+    }
 
-  template<typename T>
-  void Return(T val) {
-    v8::Local<v8::Value> v8_value;
-    if (!TryConvertToV8(isolate_, val, &v8_value))
-      return;
-    info_->GetReturnValue().Set(v8_value);
-  }
+    int Length() const
+    {
+        return info_->Length();
+    }
 
-  v8::Local<v8::Value> PeekNext() const;
+    template<typename T>
+    void Return(T val)
+    {
+        v8::Local<v8::Value> v8_value;
+        if (!TryConvertToV8(isolate_, val, &v8_value))
+            return;
+        info_->GetReturnValue().Set(v8_value);
+    }
 
-  void ThrowError() const;
-  void ThrowTypeError(const std::string& message) const;
+    v8::Local<v8::Value> PeekNext() const;
 
-  v8::Isolate* isolate() const { return isolate_; }
+    void ThrowError() const;
+    void ThrowTypeError(const std::string& message) const;
 
-  // Allows the function handler to distinguish between normal invocation
-  // and object construction.
-  bool IsConstructCall() const;
+    v8::Isolate* isolate() const { return isolate_; }
 
- private:
-  v8::Isolate* isolate_;
-  const v8::FunctionCallbackInfo<v8::Value>* info_;
-  int next_;
-  bool insufficient_arguments_;
+    // Allows the function handler to distinguish between normal invocation
+    // and object construction.
+    bool IsConstructCall() const;
+
+private:
+    v8::Isolate* isolate_;
+    const v8::FunctionCallbackInfo<v8::Value>* info_;
+    int next_;
+    bool insufficient_arguments_;
 };
 
 }  // namespace gin

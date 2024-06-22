@@ -681,6 +681,9 @@ void Document::childrenChanged(const ChildrenChange& change)
 {
     ContainerNode::childrenChanged(change);
     m_documentElement = ElementTraversal::firstWithin(*this);
+
+    if (page())
+        page()->animator().scheduleVisualUpdate(); // weolar
 }
 
 AtomicString Document::convertLocalName(const AtomicString& name)

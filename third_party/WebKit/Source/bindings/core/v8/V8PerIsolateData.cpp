@@ -33,17 +33,39 @@
 #include "bindings/core/v8/V8ObjectConstructor.h"
 #include "bindings/core/v8/V8RecursionScope.h"
 #include "bindings/core/v8/V8ScriptRunner.h"
+#if V8_MAJOR_VERSION >= 7
+#include "platform/heap/UnifiedHeapController.h"
+#include "platform/heap/ActiveScriptWrappableManager.h"
+#endif
 #include "core/frame/UseCounter.h"
 #include "core/inspector/ScriptDebuggerBase.h"
 #include "public/platform/Platform.h"
+#include "include/v8-platform.h"
+#include "gin/v8_task_runner.h"
 #include "wtf/MainThread.h"
 
 namespace blink {
 
 static V8PerIsolateData* mainThreadPerIsolateData = 0;
+static DWORD s_threadLocalV8PerIsolateData = 0;
+gin::IsolateHolder* initIsolateHolder(V8PerIsolateData* data)
+{
+    if (isMainThread())
+        mainThreadPerIsolateData = data;
+
+    if (0 == s_threadLocalV8PerIsolateData)
+        s_threadLocalV8PerIsolateData = ::TlsAlloc();
+    ::TlsSetValue(s_threadLocalV8PerIsolateData, data);
+
+    return new gin::IsolateHolder();
+}
 
 #if ENABLE(ASSERT)
-static void assertV8RecursionScope()
+static void assertV8RecursionScope(
+#if V8_MAJOR_VERSION >= 7
+    v8::Isolate* isolate
+#endif
+)
 {
     int level = V8RecursionScope::recursionLevel(v8::Isolate::GetCurrent());
     int internalLevel = V8PerIsolateData::from(v8::Isolate::GetCurrent())->internalScriptRecursionLevel();
@@ -82,17 +104,18 @@ static void useCounterCallback(v8::Isolate* isolate, v8::Isolate::UseCounterFeat
 
 V8PerIsolateData::V8PerIsolateData()
     : m_destructionPending(false)
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-    , m_isolateHolder(adoptPtr(new gin::IsolateHolder()))
-#else
-	, m_isolateHolder(new gin::IsolateHolder())
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#if V8_MAJOR_VERSION >= 7
+    , m_unifiedHeapController(adoptPtr(new UnifiedHeapController(ThreadState::current())))
+    , m_threadRunner(std::make_shared<gin::V8ForegroundTaskRunner>(blink::Platform::current()->currentThread()))
+#endif
+    , m_isolateHolder(initIsolateHolder(this))
     , m_stringCache(adoptPtr(new StringCache(isolate())))
     , m_hiddenValue(adoptPtr(new V8HiddenValue()))
     , m_constructorMode(ConstructorMode::CreateNewObject)
     , m_recursionLevel(0)
     , m_isHandlingRecursionLevelError(false)
     , m_isReportingException(false)
+    , m_thread(blink::Platform::current()->currentThread())
 #if ENABLE(ASSERT)
     , m_internalScriptRecursionLevel(0)
 #endif
@@ -105,16 +128,13 @@ V8PerIsolateData::V8PerIsolateData()
     if (!runningUnitTest())
         isolate()->AddCallCompletedCallback(&assertV8RecursionScope);
 #endif
-    if (isMainThread())
-        mainThreadPerIsolateData = this;
     isolate()->SetUseCounterCallback(&useCounterCallback);
+
 }
 
 V8PerIsolateData::~V8PerIsolateData()
 {
-#ifndef MINIBLINK_NOT_IMPLEMENTED
-	delete m_isolateHolder;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+    delete m_isolateHolder;
 }
 
 v8::Isolate* V8PerIsolateData::mainThreadIsolate()
@@ -129,6 +149,9 @@ v8::Isolate* V8PerIsolateData::initialize()
     V8PerIsolateData* data = new V8PerIsolateData();
     v8::Isolate* isolate = data->isolate();
     isolate->SetData(gin::kEmbedderBlink, data);
+#if V8_MAJOR_VERSION >= 7
+    isolate->SetEmbedderHeapTracer(data->m_unifiedHeapController.get());
+#endif
     return isolate;
 }
 
@@ -306,5 +329,56 @@ void V8PerIsolateData::setScriptDebugger(PassOwnPtrWillBeRawPtr<ScriptDebuggerBa
     ASSERT(!m_scriptDebugger);
     m_scriptDebugger = debugger;
 }
+
+#if V8_MAJOR_VERSION >= 7
+
+UnifiedHeapController* V8PerIsolateData::getUnifiedHeapController(v8::Isolate* isolate)
+{
+    m_unifiedHeapController->attachIsolate(isolate);
+    return m_unifiedHeapController.get();
+}
+
+std::vector<std::pair<void*, void*>>* V8PerIsolateData::leakV8References()
+{
+    return m_unifiedHeapController->leakV8References();
+}
+
+ActiveScriptWrappableManager* V8PerIsolateData::getActiveScriptWrappableManager() const
+{
+    //return m_activeScriptWrappableManager.get();
+    return nullptr;
+}
+
+#endif
+
+void V8PerIsolateData::addActiveScriptWrappable(ActiveDOMObject* wrappable)
+{
+//     if (!m_activeScriptWrappables)
+//         m_activeScriptWrappables = new ActiveScriptWrappableSet();
+// 
+//     m_activeScriptWrappables->add(wrappable);
+}
+
+const V8PerIsolateData::ActiveScriptWrappableSet* V8PerIsolateData::activeScriptWrappables() const
+{
+    //return V8PerIsolateData::m_activeScriptWrappables.get();
+    return nullptr;
+}
+
+WebThread* V8PerIsolateData::getThread() const
+{
+    return m_thread;
+}
+
+#if V8_MAJOR_VERSION >= 7
+std::shared_ptr<v8::TaskRunner> V8PerIsolateData::getThreadRunner(v8::Isolate* isolate)
+{
+    V8PerIsolateData* self = static_cast<V8PerIsolateData*>(isolate->GetData(gin::kEmbedderBlink));
+    if (!self)
+        self = (V8PerIsolateData*)::TlsGetValue(s_threadLocalV8PerIsolateData);
+    
+    return self->m_threadRunner;
+}
+#endif
 
 } // namespace blink

@@ -186,7 +186,7 @@ struct CharBreakIterator : TextBreakIterator {
     virtual int next() override
     {
         if (m_currentPos >= m_length)
-            return m_length - 1;
+            return /*m_length*/ - 1;
         ++m_currentPos;
         return m_currentPos;
     }

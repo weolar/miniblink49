@@ -83,6 +83,7 @@ public:
     void suspend() override;
     void resume() override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<Stream*>(object); }
 
     DECLARE_VIRTUAL_TRACE();
 

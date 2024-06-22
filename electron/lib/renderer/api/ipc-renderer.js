@@ -3,21 +3,33 @@
 var IpcRendererBinding = process.binding('atom_renderer_ipc').ipcRenderer;
 const EventEmitter = require('events').EventEmitter;
 var v8Util = new (process.binding('atom_common_v8_util').v8Util)();
-var binding = new IpcRendererBinding();
+var ipcRendererBinding = new IpcRendererBinding();
 
 // Created by init.js.
 const ipcRenderer = v8Util.getHiddenValue(global, 'ipc'); //var ipcRenderer = new EventEmitter();
 
+ipcRenderer.invoke = function(...args) {
+    var channel = arguments[0];
+    var promise = new Promise(function(resolve, reject) {
+        ipcRendererBinding.send('ipc-render-invoke', args);
+        ipcRenderer.once('ipc-main-handle-reply-' + channel, function(event, result) {
+            resolve(result);
+        });
+    });
+
+    return promise;
+}
+
 ipcRenderer.send = function (...args) {
-    return binding.send('ipc-message', args);
+    return ipcRendererBinding.send('ipc-message', args);
 }
 
 ipcRenderer.sendSync = function (...args) {
-    return JSON.parse(binding.sendSync('ipc-message-sync', args));
+    return JSON.parse(ipcRendererBinding.sendSync('ipc-message-sync', args));
 }
 
 ipcRenderer.sendToHost = function (...args) {
-    return binding.send('ipc-message-host', args);
+    return ipcRendererBinding.send('ipc-message-host', args);
 }
 
 ipcRenderer.sendTo = function (webContentsId, channel, ...args) {
@@ -36,5 +48,4 @@ ipcRenderer.sendToAll = function (webContentsId, channel, ...args) {
     ipcRenderer.send('ELECTRON_BROWSER_SEND_TO', true, webContentsId, channel, ...args);
 }
 
-//electron.ipcRenderer = ipcRenderer;
 module.exports = ipcRenderer;

@@ -19,12 +19,6 @@
 
 namespace v8 {
 namespace base {
-
-namespace internal {
-template <typename T>
-class CheckedNumeric;
-}
-
 namespace bits {
 
 // CountPopulation(value) returns the number of bits set in |value|.
@@ -93,10 +87,10 @@ inline constexpr
 #endif
 }
 
-inline constexpr unsigned CountLeadingZeros32(uint32_t value) {
+inline /*constexpr*/ unsigned CountLeadingZeros32(uint32_t value) {
   return CountLeadingZeros(value);
 }
-inline constexpr unsigned CountLeadingZeros64(uint64_t value) {
+inline /*constexpr*/ unsigned CountLeadingZeros64(uint64_t value) {
   return CountLeadingZeros(value);
 }
 
@@ -122,10 +116,10 @@ inline constexpr
 #endif
 }
 
-inline constexpr unsigned CountTrailingZeros32(uint32_t value) {
+inline /*constexpr*/ unsigned CountTrailingZeros32(uint32_t value) {
   return CountTrailingZeros(value);
 }
-inline constexpr unsigned CountTrailingZeros64(uint64_t value) {
+inline /*constexpr*/ unsigned CountTrailingZeros64(uint64_t value) {
   return CountTrailingZeros(value);
 }
 
@@ -148,11 +142,10 @@ V8_BASE_EXPORT uint32_t RoundUpToPowerOfTwo32(uint32_t value);
 V8_BASE_EXPORT uint64_t RoundUpToPowerOfTwo64(uint64_t value);
 // Same for size_t integers.
 inline size_t RoundUpToPowerOfTwo(size_t value) {
-  if (sizeof(size_t) == sizeof(uint64_t)) {
-    return RoundUpToPowerOfTwo64(value);
-  } else {
+  if (sizeof(size_t) == sizeof(uint64_t))
+    return (size_t)RoundUpToPowerOfTwo64(value);
+  else
     return RoundUpToPowerOfTwo32(value);
-  }
 }
 
 // RoundDownToPowerOfTwo32(value) returns the greatest power of two which is
@@ -242,11 +235,6 @@ inline bool SignedSubOverflow64(int64_t lhs, int64_t rhs, int64_t* val) {
   return ((res ^ lhs) & (res ^ ~rhs) & (1ULL << 63)) != 0;
 }
 
-// SignedMulOverflow64(lhs,rhs,val) performs a signed multiplication of |lhs|
-// and |rhs| and stores the result into the variable pointed to by |val| and
-// returns true if the signed multiplication resulted in an overflow.
-V8_BASE_EXPORT bool SignedMulOverflow64(int64_t lhs, int64_t rhs, int64_t* val);
-
 // SignedMulHigh32(lhs, rhs) multiplies two signed 32-bit values |lhs| and
 // |rhs|, extracts the most significant 32 bits of the result, and returns
 // those.
@@ -294,10 +282,6 @@ inline uint32_t UnsignedMod32(uint32_t lhs, uint32_t rhs) {
   return rhs ? lhs % rhs : 0u;
 }
 
-
-// Clamp |value| on overflow and underflow conditions.
-V8_BASE_EXPORT int64_t
-FromCheckedNumeric(const internal::CheckedNumeric<int64_t> value);
 
 // SignedSaturatedAdd64(lhs, rhs) adds |lhs| and |rhs|,
 // checks and returns the result.

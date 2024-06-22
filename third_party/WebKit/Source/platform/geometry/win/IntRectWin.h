@@ -2,6 +2,8 @@
 #ifndef IntRectWin_h
 #define IntRectWin_h
 
+#include "third_party/WebKit/Source/platform/geometry/IntRect.h"
+
 namespace blink {
 
 inline IntRect winRectToIntRect(const RECT& rt)

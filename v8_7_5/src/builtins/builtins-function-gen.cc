@@ -9,6 +9,8 @@
 #include "src/objects/api-callbacks.h"
 #include "src/objects/descriptor-array.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

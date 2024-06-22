@@ -176,7 +176,9 @@ static void installV8SVGRadialGradientElementTemplate(v8::Local<v8::FunctionTemp
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGRadialGradientElement::domTemplate(v8::Isolate* isolate)

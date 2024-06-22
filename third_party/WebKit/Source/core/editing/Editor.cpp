@@ -454,9 +454,12 @@ static void writeImageNodeToPasteboard(Pasteboard* pasteboard, Node* node, const
     AtomicString urlString;
     if (isHTMLImageElement(*node) || isHTMLInputElement(*node))
         urlString = toHTMLElement(node)->getAttribute(srcAttr);
-    else if (isSVGImageElement(*node))
-        urlString = toSVGElement(node)->getAttribute(XLinkNames::hrefAttr);
-    else if (isHTMLEmbedElement(*node) || isHTMLObjectElement(*node) || isHTMLCanvasElement(*node))
+    else if (isSVGImageElement(*node)) {
+        if (toSVGElement(node)->hasAttribute(SVGNames::hrefAttr))
+            urlString = toSVGElement(node)->getAttribute(SVGNames::hrefAttr);
+        else
+            urlString = toSVGElement(node)->getAttribute(XLinkNames::hrefAttr);
+    } else if (isHTMLEmbedElement(*node) || isHTMLObjectElement(*node) || isHTMLCanvasElement(*node))
         urlString = toHTMLElement(node)->imageSourceURL();
     KURL url = urlString.isEmpty() ? KURL() : node->document().completeURL(stripLeadingAndTrailingHTMLSpaces(urlString));
 

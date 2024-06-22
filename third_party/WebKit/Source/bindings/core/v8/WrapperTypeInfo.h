@@ -119,6 +119,13 @@ struct WrapperTypeInfo {
             wrapper->MarkIndependent();
     }
 
+#if V8_MAJOR_VERSION >= 7
+    void configureWrapper(v8::TracedGlobal<v8::Object>* wrapper) const
+    {
+        wrapper->SetWrapperClassId(wrapperClassId);
+    }
+#endif
+
     v8::Local<v8::FunctionTemplate> domTemplate(v8::Isolate* isolate) const
     {
         return domTemplateFunction(isolate);

@@ -40,7 +40,7 @@ class String;
 
 namespace net {
 
-void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl);
+void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl, bool useStreamOnResponse, bool isSync);
 bool parseDataURL(const blink::KURL& kurl, WTF::String& mimeType, WTF::String& charset, WTF::Vector<char>& out);
 
 }

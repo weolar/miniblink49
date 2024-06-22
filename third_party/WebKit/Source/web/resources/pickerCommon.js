@@ -117,6 +117,8 @@ function adjustWindowRect(width, height, minWidth, minHeight) {
     var anchorRect = new Rectangle(global.params.anchorRectInScreen);
     var availRect = new Rectangle(window.screen.availLeft, window.screen.availTop, window.screen.availWidth, window.screen.availHeight);
 
+    window.pagePopupController.log("anchorRect.y:" + anchorRect.y + ", anchorRect.height:" + anchorRect.height);
+
     _adjustWindowRectVertically(windowRect, availRect, anchorRect, minHeight);
     _adjustWindowRectHorizontally(windowRect, availRect, anchorRect, minWidth);
 
@@ -129,14 +131,20 @@ function _adjustWindowRectVertically(windowRect, availRect, anchorRect, minHeigh
 
     var availableSpaceBelow = availRect.maxY - anchorRect.maxY;
     availableSpaceBelow = Math.max(0, Math.min(availRect.height, availableSpaceBelow));
+    
+    window.pagePopupController.log("availRect.height:" + availRect.height + ", availableSpaceAbove:" + availableSpaceAbove);
+    window.pagePopupController.log("windowRect.height:" + windowRect.height + ", availableSpaceBelow:" + availableSpaceBelow);
+    
     if (windowRect.height > availableSpaceBelow && availableSpaceBelow < availableSpaceAbove) {
         windowRect.height = Math.min(windowRect.height, availableSpaceAbove);
         windowRect.height = Math.max(windowRect.height, minHeight);
         windowRect.y = anchorRect.y - windowRect.height;
+        window.pagePopupController.log("_adjustWindowRectVertically 1");
     } else {
         windowRect.height = Math.min(windowRect.height, availableSpaceBelow);
         windowRect.height = Math.max(windowRect.height, minHeight);
         windowRect.y = anchorRect.maxY;
+        window.pagePopupController.log("_adjustWindowRectVertically 2");
     }
 }
 

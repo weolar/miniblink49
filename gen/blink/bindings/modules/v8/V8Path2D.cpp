@@ -532,7 +532,9 @@ static void installV8Path2DTemplate(v8::Local<v8::FunctionTemplate> functionTemp
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Path2D::domTemplate(v8::Isolate* isolate)

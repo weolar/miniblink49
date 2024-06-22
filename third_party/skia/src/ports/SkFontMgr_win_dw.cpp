@@ -24,6 +24,10 @@
 #include <dwrite_2.h>
 #endif
 
+#ifndef LOCALE_NAME_MAX_LENGTH
+#define LOCALE_NAME_MAX_LENGTH 85
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 
 class StreamFontFileLoader : public IDWriteFontFileLoader {
@@ -69,11 +73,11 @@ HRESULT StreamFontFileLoader::QueryInterface(REFIID iid, void** ppvObject) {
 }
 
 ULONG StreamFontFileLoader::AddRef() {
-    return InterlockedIncrement(&fRefCount);
+    return InterlockedIncrement((volatile LONG *)&fRefCount);
 }
 
 ULONG StreamFontFileLoader::Release() {
-    ULONG newCount = InterlockedDecrement(&fRefCount);
+    ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
     if (0 == newCount) {
         delete this;
     }
@@ -145,11 +149,11 @@ HRESULT StreamFontFileEnumerator::QueryInterface(REFIID iid, void** ppvObject) {
 }
 
 ULONG StreamFontFileEnumerator::AddRef() {
-    return InterlockedIncrement(&fRefCount);
+    return InterlockedIncrement((volatile LONG *)&fRefCount);
 }
 
 ULONG StreamFontFileEnumerator::Release() {
-    ULONG newCount = InterlockedDecrement(&fRefCount);
+    ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
     if (0 == newCount) {
         delete this;
     }
@@ -232,11 +236,11 @@ HRESULT StreamFontCollectionLoader::QueryInterface(REFIID iid, void** ppvObject)
 }
 
 ULONG StreamFontCollectionLoader::AddRef() {
-    return InterlockedIncrement(&fRefCount);
+    return InterlockedIncrement((volatile LONG *)&fRefCount);
 }
 
 ULONG StreamFontCollectionLoader::Release() {
-    ULONG newCount = InterlockedDecrement(&fRefCount);
+    ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
     if (0 == newCount) {
         delete this;
     }
@@ -596,11 +600,11 @@ public:
 
     // IUnknown methods
     ULONG STDMETHODCALLTYPE AddRef() override {
-        return InterlockedIncrement(&fRefCount);
+        return InterlockedIncrement((volatile LONG *)&fRefCount);
     }
 
     ULONG STDMETHODCALLTYPE Release() override {
-        ULONG newCount = InterlockedDecrement(&fRefCount);
+        ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
         if (0 == newCount) {
             delete this;
         }
@@ -697,11 +701,11 @@ public:
 
     // IUnknown methods
     ULONG STDMETHODCALLTYPE AddRef() override {
-        return InterlockedIncrement(&fRefCount);
+        return InterlockedIncrement((volatile LONG *)&fRefCount);
     }
 
     ULONG STDMETHODCALLTYPE Release() override {
-        ULONG newCount = InterlockedDecrement(&fRefCount);
+        ULONG newCount = InterlockedDecrement((volatile LONG *)&fRefCount);
         if (0 == newCount) {
             delete this;
         }

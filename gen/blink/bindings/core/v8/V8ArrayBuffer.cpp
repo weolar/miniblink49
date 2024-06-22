@@ -55,7 +55,7 @@ DOMArrayBuffer* V8ArrayBuffer::toImpl(v8::Local<v8::Object> object)
     // Transfer the ownership of the allocated memory to an ArrayBuffer without
     // copying.
     v8::ArrayBuffer::Contents v8Contents = v8buffer->Externalize();
-    WTF::ArrayBufferContents contents(v8Contents.Data(), v8Contents.ByteLength(), WTF::ArrayBufferContents::NotShared);
+    WTF::ArrayBufferContents contents(v8Contents.Data(), v8Contents.ByteLength(), v8Contents.Deleter(), v8Contents.DeleterData(), WTF::ArrayBufferContents::NotShared);
     RefPtr<DOMArrayBuffer> buffer = DOMArrayBuffer::create(contents);
     v8::Local<v8::Object> associatedWrapper = buffer->associateWithWrapper(v8::Isolate::GetCurrent(), buffer->wrapperTypeInfo(), object);
     ASSERT_UNUSED(associatedWrapper, associatedWrapper == object);

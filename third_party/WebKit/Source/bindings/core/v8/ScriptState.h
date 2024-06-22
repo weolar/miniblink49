@@ -20,6 +20,7 @@ class DOMWrapperWorld;
 class ExecutionContext;
 class LocalFrame;
 class ScriptValue;
+class Modulator;
 
 // ScriptState is created when v8::Context is created.
 // ScriptState is destroyed when v8::Context is garbage-collected and
@@ -102,6 +103,7 @@ public:
     v8::Isolate* isolate() const { return m_isolate; }
     DOMWrapperWorld& world() const { return *m_world; }
     LocalDOMWindow* domWindow() const;
+    Modulator* modulator() const { return m_modulator.get(); }
     virtual ExecutionContext* executionContext() const;
     virtual void setExecutionContext(ExecutionContext*);
 
@@ -145,6 +147,8 @@ private:
     // So you must explicitly clear the OwnPtr by calling disposePerContextData()
     // once you no longer need V8PerContextData. Otherwise, the v8::Context will leak.
     OwnPtr<V8PerContextData> m_perContextData;
+
+    Persistent<Modulator> m_modulator;
 
 #if ENABLE(ASSERT)
     bool m_globalObjectDetached;

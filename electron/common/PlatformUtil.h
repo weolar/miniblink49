@@ -9,6 +9,7 @@
 
 #if defined(OS_WIN)
 #include "base/strings/string16.h"
+#include <windows.h>
 #endif
 
 class GURL;
@@ -37,11 +38,15 @@ bool openExternal(
 #endif
     bool activate);
 
+#if defined(OS_WIN)
+void moveToCenter(HWND hWnd);
+#endif
+
 // Move a file to trash.
 bool moveItemToTrash(const base::FilePath& full_path);
 
 void beep();
 
-}  // namespace platform_util
+} // namespace platform_util
 
-#endif  // ATOM_COMMON_PLATFORM_UTIL_H_
+#endif // ATOM_COMMON_PLATFORM_UTIL_H_

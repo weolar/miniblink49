@@ -6,6 +6,8 @@
 
 #include "src/register-configuration.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -26,7 +28,7 @@ struct MoveKeyCompare {
   }
 };
 
-typedef ZoneMap<MoveKey, unsigned, MoveKeyCompare> MoveMap;
+using MoveMap = ZoneMap<MoveKey, unsigned, MoveKeyCompare>;
 
 class OperandSet {
  public:

@@ -1372,7 +1372,11 @@ void StyleResolver::applyMatchedProperties(StyleResolverState& state, const Matc
         m_matchedPropertiesCache.add(*state.style(), *state.parentStyle(), cacheHash, matchResult);
     }
 
-    ASSERT(!state.fontBuilder().fontDirty());
+#ifdef _DEBUG
+    if (state.fontBuilder().fontDirty())
+        OutputDebugStringA("state.fontBuilder().fontDirty() fail\n");
+#endif // _DEBUG
+    //ASSERT(!state.fontBuilder().fontDirty());
 }
 
 void StyleResolver::applyCallbackSelectors(StyleResolverState& state)

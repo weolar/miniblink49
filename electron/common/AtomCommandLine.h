@@ -42,6 +42,6 @@ private:
     DISALLOW_IMPLICIT_CONSTRUCTORS(AtomCommandLine);
 };
 
-}  // namespace atom
+} // namespace atom
 
-#endif  // ATOM_COMMON_ATOM_COMMAND_LINE_H_
+#endif // ATOM_COMMON_ATOM_COMMAND_LINE_H_

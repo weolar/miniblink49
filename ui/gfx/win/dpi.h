@@ -1,18 +1,16 @@
-#ifndef dpi_h
-#define dpi_h
+#ifndef ui_gfx_win_dpi_h
+#define ui_gfx_win_dpi_h
 
 namespace gfx {
 
-    namespace win {
+namespace win {
 
-        void InitDeviceScaleFactor();
+void InitDeviceScaleFactor();
+float GetDeviceScaleFactor();
+int GetSystemMetricsInDIP(int metric);
 
-        float GetDeviceScaleFactor();
-
-        int GetSystemMetricsInDIP(int metric);
-
-    } // namespace win
+} // namespace win
 
 } // namespace gfx
 
-#endif // dpi_h
+#endif // ui_gfx_win_dpi_h

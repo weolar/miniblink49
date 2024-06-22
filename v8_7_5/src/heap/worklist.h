@@ -12,7 +12,7 @@
 #include "src/base/logging.h"
 #include "src/base/macros.h"
 #include "src/base/platform/mutex.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+//#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
 
 namespace v8 {
 namespace internal {
@@ -206,16 +206,16 @@ class Worklist {
   }
 
  private:
-  FRIEND_TEST(WorkListTest, SegmentCreate);
-  FRIEND_TEST(WorkListTest, SegmentPush);
-  FRIEND_TEST(WorkListTest, SegmentPushPop);
-  FRIEND_TEST(WorkListTest, SegmentIsEmpty);
-  FRIEND_TEST(WorkListTest, SegmentIsFull);
-  FRIEND_TEST(WorkListTest, SegmentClear);
-  FRIEND_TEST(WorkListTest, SegmentFullPushFails);
-  FRIEND_TEST(WorkListTest, SegmentEmptyPopFails);
-  FRIEND_TEST(WorkListTest, SegmentUpdateFalse);
-  FRIEND_TEST(WorkListTest, SegmentUpdate);
+//   FRIEND_TEST(WorkListTest, SegmentCreate);
+//   FRIEND_TEST(WorkListTest, SegmentPush);
+//   FRIEND_TEST(WorkListTest, SegmentPushPop);
+//   FRIEND_TEST(WorkListTest, SegmentIsEmpty);
+//   FRIEND_TEST(WorkListTest, SegmentIsFull);
+//   FRIEND_TEST(WorkListTest, SegmentClear);
+//   FRIEND_TEST(WorkListTest, SegmentFullPushFails);
+//   FRIEND_TEST(WorkListTest, SegmentEmptyPopFails);
+//   FRIEND_TEST(WorkListTest, SegmentUpdateFalse);
+//   FRIEND_TEST(WorkListTest, SegmentUpdate);
 
   class Segment {
    public:

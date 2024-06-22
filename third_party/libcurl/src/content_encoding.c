@@ -145,8 +145,9 @@ static CURLcode process_trailer(struct connectdata *conn, zlib_params *zp)
   zp->trailerlen -= len;
   z->avail_in -= len;
   z->next_in += len;
-  if(z->avail_in)
+  if(z->avail_in > 10) // weolar:fix mj19916992-4.icoc.vc bug
     result = CURLE_WRITE_ERROR;
+  z->avail_in = 0; // weolar:fix mj19916992-4.icoc.vc bug
   if(result || !zp->trailerlen)
     result = exit_zlib(conn, z, &zp->zlib_init, result);
   else {

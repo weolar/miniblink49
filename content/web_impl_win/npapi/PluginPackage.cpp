@@ -277,7 +277,6 @@ void PluginPackage::initializeBrowserFuncs()
     m_browserFuncs.getvalueforurl = NPN_GetValueForURL;
     m_browserFuncs.setvalueforurl = NPN_SetValueForURL;
     m_browserFuncs.getauthenticationinfo = NPN_GetAuthenticationInfo;
-
     m_browserFuncs.popupcontextmenu = NPN_PopUpContextMenu;
 }
 

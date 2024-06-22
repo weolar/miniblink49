@@ -1084,6 +1084,7 @@ static char *get_line(char *buf, int len, FILE *input)
   return NULL;
 }
 
+FILE* fopen_wrap(/*_In_z_*/ const char* _Filename, /*_In_*/ const char* _OpenFlag);
 
 /*****************************************************************************
  *
@@ -1130,7 +1131,7 @@ struct CookieInfo *Curl_cookie_init(struct Curl_easy *data,
     fp = NULL;
   }
   else
-    fp = file?fopen(file, FOPEN_READTEXT):NULL;
+    fp = file ? fopen_wrap(file, FOPEN_READTEXT) : NULL;
 
   c->newsession = newsession; /* new session? */
 
@@ -1179,7 +1180,7 @@ fail:
 }
 
 /* sort this so that the longest path gets before the shorter path */
-static int cookie_sort(const void *p1, const void *p2)
+static int __cdecl cookie_sort(const void *p1, const void *p2)
 {
   struct Cookie *c1 = *(struct Cookie **)p1;
   struct Cookie *c2 = *(struct Cookie **)p2;
@@ -1211,7 +1212,7 @@ static int cookie_sort(const void *p1, const void *p2)
 }
 
 /* sort cookies only according to creation time */
-static int cookie_sort_ct(const void *p1, const void *p2)
+static int __cdecl cookie_sort_ct(const void *p1, const void *p2)
 {
   struct Cookie *c1 = *(struct Cookie **)p1;
   struct Cookie *c2 = *(struct Cookie **)p2;
@@ -1535,7 +1536,7 @@ static int cookie_output(struct CookieInfo *c, const char *dumphere)
     use_stdout = TRUE;
   }
   else {
-    out = fopen(dumphere, FOPEN_WRITETEXT);
+    out = fopen_wrap(dumphere, FOPEN_WRITETEXT);
     if(!out) {
       free(array);
       return 1; /* failure */

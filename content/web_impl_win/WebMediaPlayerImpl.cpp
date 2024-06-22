@@ -7,6 +7,10 @@
 #include "content/browser/WebPageImpl.h"
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
+
+#include "media/BufferedDataSourceHostImpl.h"
+#include "media/SimpleDataSource.h"
+
 #include "third_party/WebKit/Source/wtf/Functional.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/public/platform/Platform.h"
@@ -45,6 +49,13 @@ public:
     {
         m_view = view;
         m_client = client;
+        m_sourceHost = nullptr;
+    }
+
+    ~MediaPlayerClientWkeWrap()
+    {
+        if (m_sourceHost)
+            delete m_sourceHost;
     }
 
     virtual void keyAdded(const char* keySystem, const char* sessionId) override
@@ -140,9 +151,35 @@ public:
         m_view->didExitFullScreen();
     }
 
+    virtual wke::DataSource* createDataSource(const char* url, int corsMode, wke::DataSource::DownloadingCB* downloadingCb) override
+    {
+#if 0
+        m_sourceHost = new media::BufferedDataSourceHostImpl();
+        blink::KURL kurl(blink::ParsedURLString, url);
+
+        media::BufferedDataSource* source = new media::BufferedDataSource(
+            kurl,
+            (media::BufferedResourceLoader::CORSMode) corsMode,
+            m_view->mainFrame(),
+            nullptr,
+            m_sourceHost, downloadingCb);
+#else
+
+//         media::SimpleDataSource* source = new media::SimpleDataSource(
+//             kurl,
+//             (blink::WebMediaPlayer::CORSMode) corsMode,
+//             m_view->mainFrame(),
+//             nullptr,
+//             m_sourceHost, downloadingCb);
+#endif
+        //return source;
+        return nullptr;
+    };
+
 private:
     blink::WebMediaPlayerClient* m_client;
     blink::WebViewImpl* m_view;
+    media::BufferedDataSourceHostImpl* m_sourceHost;
 };
 
 // static uint16_t getNPVersion()
@@ -241,19 +278,27 @@ WebMediaPlayerImpl::WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink:
     if (!plugin && PluginDatabase::installedPlugins()->refresh())
         plugin = PluginDatabase::installedPlugins()->findPlugin(blink::KURL(), mime);
 
-    if (!plugin)
-        return;
-
-    plugin->load();
+    if (plugin) {
+        plugin->load();
+        if (!plugin->browserFuncs() || 0 == plugin->browserFuncs()->size)
+            return;
+    }
 
     m_wkeClientWrap = new MediaPlayerClientWkeWrap(view, m_client);
 
     if (1) {
         NPNetscapeFuncs browserFuncs = { 0 };
-        memcpy(&browserFuncs, plugin->browserFuncs(), sizeof(NPNetscapeFuncs));
-        m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, (void*)&browserFuncs, (void*)plugin->pluginFuncs());
+        if (plugin)
+            memcpy(&browserFuncs, plugin->browserFuncs(), sizeof(NPNetscapeFuncs));
+        m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, (void*)&browserFuncs, (void*)(plugin ? plugin->pluginFuncs() : nullptr));
 
-        if (s_wkeBrowserFuncs.size != sizeof(NPNetscapeFuncs))
+        if (!m_wkePlayer) {
+            delete m_wkeClientWrap;
+            m_wkeClientWrap = nullptr;
+            return;
+        }
+
+        if (s_wkeBrowserFuncs.size != sizeof(NPNetscapeFuncs) && 0 != browserFuncs.size)
             memcpy(&s_wkeBrowserFuncs, &browserFuncs, sizeof(NPNetscapeFuncs));
     } else {
         m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, nullptr, nullptr);
@@ -270,9 +315,12 @@ WebMediaPlayerImpl::~WebMediaPlayerImpl()
 
     if (m_wkePlayer)
         m_wkePlayer->destroy();
+
+    if (m_memoryCanvas)
+        delete m_memoryCanvas;
 }
 
-void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType type, const blink::WebURL& url, blink::WebMediaPlayer::CORSMode mode)
+void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType type, const blink::WebURL& url, blink::WebMediaPlayer::CORSMode mode, bool isAudio)
 {
     ASSERT(isMainThread());
     blink::KURL kurl(url);
@@ -288,7 +336,7 @@ void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType type, const blink:
     }
 
     if (m_wkePlayer) {
-        m_wkePlayer->load((wke::WkeMediaPlayer::LoadType)type, urlString.data(), (wke::WkeMediaPlayer::CORSMode)mode);
+        m_wkePlayer->load((wke::WkeMediaPlayer::LoadType)type, urlString.data(), (wke::WkeMediaPlayer::CORSMode)mode, isAudio);
         return;
     }
 
@@ -378,34 +426,33 @@ void WebMediaPlayerImpl::setPreload(Preload preload)
         return m_wkePlayer->setPreload((wke::WkeMediaPlayer::Preload)preload);
 }
 
-static blink::WebTimeRanges getWebTimeRanges(wkeMemBuf* buffer)
+static blink::WebTimeRanges getWebTimeRanges(wke::WkeMediaPlayer::TimeRanges* buffer)
 {
     WTF::Vector<blink::WebTimeRange> ranges;
     if (!buffer)
         return ranges;
-    size_t size = buffer->length / sizeof(wke::WkeMediaPlayer::MediaTimeRange);
 
-    for (size_t i = 0; i < size; ++i) {
-        wke::WkeMediaPlayer::MediaTimeRange* range = ((wke::WkeMediaPlayer::MediaTimeRange*)buffer->data) + i;
+    for (size_t i = 0; i < buffer->size(); ++i) {
+        wke::WkeMediaPlayer::TimeRange* range = buffer->getRange(i);
         ranges.append(blink::WebTimeRange(range->start, range->end));
     }
-    wkeFreeMemBuf(buffer);
+    buffer->destroy();
     return ranges;
 }
 
 blink::WebTimeRanges WebMediaPlayerImpl::buffered() const
 {
-    if (m_wkePlayer) {
-        wkeMemBuf* buffer = m_wkePlayer->buffered();
-        return getWebTimeRanges(buffer);
-    }
+//     if (m_wkePlayer) {
+//         wkeMemBuf* buffer = m_wkePlayer->buffered();
+//         return getWebTimeRanges(buffer);
+//     }
     return WTF::Vector<blink::WebTimeRange>();
 }
 
 blink::WebTimeRanges WebMediaPlayerImpl::seekable() const
 {
     if (m_wkePlayer) {
-        wkeMemBuf* buffer = m_wkePlayer->seekable();
+        wke::WkeMediaPlayer::TimeRanges* buffer = m_wkePlayer->seekable();
         return getWebTimeRanges(buffer);
     }
     return WTF::Vector<blink::WebTimeRange>();

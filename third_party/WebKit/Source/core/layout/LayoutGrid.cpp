@@ -1809,11 +1809,11 @@ ContentPosition static resolveContentDistributionFallback(ContentDistributionTyp
     case ContentDistributionStretch:
         return ContentPositionStart;
     case ContentDistributionDefault:
-        return ContentPositionAuto;
+        return ContentPositionNormal;
     }
 
     ASSERT_NOT_REACHED();
-    return ContentPositionAuto;
+    return ContentPositionNormal;
 }
 
 static inline LayoutUnit offsetToStartEdge(bool isLeftToRight, LayoutUnit availableSpace)
@@ -1826,10 +1826,9 @@ static inline LayoutUnit offsetToEndEdge(bool isLeftToRight, LayoutUnit availabl
     return !isLeftToRight ? LayoutUnit() : availableSpace;
 }
 
-
 static ContentAlignmentData contentDistributionOffset(LayoutUnit availableFreeSpace, ContentPosition& fallbackPosition, ContentDistributionType distribution, unsigned numberOfGridTracks)
 {
-    if (distribution != ContentDistributionDefault && fallbackPosition == ContentPositionAuto)
+    if (distribution != ContentDistributionDefault && fallbackPosition == ContentPositionNormal)
         fallbackPosition = resolveContentDistributionFallback(distribution);
 
     if (availableFreeSpace <= 0)
@@ -1902,7 +1901,7 @@ ContentAlignmentData LayoutGrid::computeContentPositionAndDistributionOffset(Gri
         if (isRowAxis)
             return {offsetToStartEdge(styleRef().isLeftToRightDirection(), availableFreeSpace), 0};
         return {0, 0};
-    case ContentPositionAuto:
+    case ContentPositionNormal:
         break;
     }
 

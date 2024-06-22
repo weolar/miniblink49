@@ -112,6 +112,10 @@ void WindowProxy::disposeContext(GlobalDetachmentBehavior behavior)
         // The embedder could run arbitrary code in response to the willReleaseScriptContext callback, so all disposing should happen after it returns.
         frame->loader().client()->willReleaseScriptContext(context, m_world->worldId());
         InspectorInstrumentation::willReleaseScriptContext(frame, m_scriptState.get());
+
+#ifndef MINIBLINK_NO_DEVTOOLS
+        MainThreadDebugger::disposeContext(context, m_world->worldId());
+#endif // MINIBLINK_NOT_IMPLEMENTED
     }
 
     m_document.clear();
@@ -219,7 +223,7 @@ bool WindowProxy::initialize()
 
     v8::HandleScope handleScope(m_isolate);
 
-    createContext();
+    createContext();    
 
     if (!isContextInitialized())
         return false;

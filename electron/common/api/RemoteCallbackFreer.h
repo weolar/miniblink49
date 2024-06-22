@@ -33,6 +33,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(RemoteCallbackFreer);
 };
 
-}  // namespace atom
+} // namespace atom
 
-#endif  // ATOM_COMMON_API_REMOTE_CALLBACK_FREER_H_
+#endif // ATOM_COMMON_API_REMOTE_CALLBACK_FREER_H_

@@ -319,7 +319,9 @@ static void installV8MediaSourceTemplate(v8::Local<v8::FunctionTemplate> functio
     V8DOMConfiguration::installMethod(isolate, functionTemplate, v8::Local<v8::Signature>(), v8::None, isTypeSupportedMethodConfiguration);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8MediaSource::domTemplate(v8::Isolate* isolate)

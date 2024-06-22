@@ -174,7 +174,9 @@ static void installV8SVGGradientElementTemplate(v8::Local<v8::FunctionTemplate> 
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_SPREADMETHOD_REPEAT", SVGGradientElementV8Internal::SVG_SPREADMETHOD_REPEATConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGGradientElement::domTemplate(v8::Isolate* isolate)

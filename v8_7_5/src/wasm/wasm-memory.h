@@ -31,10 +31,7 @@ class WasmMemoryTracker {
   // ReserveAddressSpace attempts to increase the reserved address space counter
   // by {num_bytes}. Returns true if successful (meaning it is okay to go ahead
   // and reserve {num_bytes} bytes), false otherwise.
-  // Use {kSoftLimit} if you can implement a fallback which needs less reserved
-  // memory.
-  enum ReservationLimit { kSoftLimit, kHardLimit };
-  bool ReserveAddressSpace(size_t num_bytes, ReservationLimit limit);
+  bool ReserveAddressSpace(size_t num_bytes);
 
   void RegisterAllocation(Isolate* isolate, void* allocation_base,
                           size_t allocation_length, void* buffer_start,
@@ -56,6 +53,9 @@ class WasmMemoryTracker {
     void* buffer_start = nullptr;
     size_t buffer_length = 0;
     bool is_shared = false;
+    // Wasm memories are growable by default, this will be false only when
+    // shared with an asmjs module.
+    bool is_growable = true;
 
     // Track Wasm Memory instances across isolates, this is populated on
     // PostMessage using persistent handles for memory objects.
@@ -102,10 +102,6 @@ class WasmMemoryTracker {
 
   bool IsWasmSharedMemory(const void* buffer_start);
 
-  // Returns whether the given buffer is a Wasm memory with guard regions large
-  // enough to safely use trap handlers.
-  bool HasFullGuardRegions(const void* buffer_start);
-
   // Returns a pointer to a Wasm buffer's allocation data, or nullptr if the
   // buffer is not tracked.
   V8_EXPORT_PRIVATE const AllocationData* FindAllocationData(
@@ -115,6 +111,10 @@ class WasmMemoryTracker {
   // work to reclaim the buffer. If this function returns false, the caller must
   // free the buffer manually.
   bool FreeMemoryIfIsWasmMemory(Isolate* isolate, const void* buffer_start);
+
+  void MarkWasmMemoryNotGrowable(Handle<JSArrayBuffer> buffer);
+
+  bool IsWasmMemoryGrowable(Handle<JSArrayBuffer> buffer);
 
   // When WebAssembly.Memory is transferred over PostMessage, register the
   // allocation as shared and track the memory objects that will need

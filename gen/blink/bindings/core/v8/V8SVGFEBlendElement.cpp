@@ -272,7 +272,9 @@ static void installV8SVGFEBlendElementTemplate(v8::Local<v8::FunctionTemplate> f
     V8DOMConfiguration::installConstantWithGetter(isolate, functionTemplate, prototypeTemplate, "SVG_FEBLEND_MODE_LIGHTEN", SVGFEBlendElementV8Internal::SVG_FEBLEND_MODE_LIGHTENConstantGetterCallback);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFEBlendElement::domTemplate(v8::Isolate* isolate)

@@ -75,6 +75,7 @@ private:
     bool asyncAttributeValue() const override;
     bool deferAttributeValue() const override;
     bool hasSourceAttribute() const override;
+    bool hasNomoduleAttribute() const override;
 
     void dispatchLoadEvent() override;
 

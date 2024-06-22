@@ -27,6 +27,9 @@
 #include "config.h"
 #include "net/DataURL.h"
 
+#include "net/SharedMemoryDataConsumerHandle.h"
+#include "net/FixedReceivedData.h"
+#include "content/browser/PostTaskHelper.h"
 #include "third_party/WebKit/Source/wtf/text/UTF8.h"
 #include "third_party/WebKit/Source/wtf/text/Base64.h"
 #include "third_party/WebKit/Source/wtf/text/TextEncoding.h"
@@ -42,12 +45,26 @@
 
 namespace net {
 
-void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl)
+static void cancelBodyStreaming(SharedMemoryDataConsumerHandle::Writer* bodyStreamWriter)
 {
-    Vector<char> out;
+    delete bodyStreamWriter;
+}
+
+void finishHandleDataURL(bool isSync, std::function<void(void)>&& closure)
+{
+    if (isSync) {
+        closure();
+        return;
+    }
+    content::postTaskToMainThread(FROM_HERE, std::move(closure));
+}
+
+void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl, bool useStreamOnResponse, bool isSync)
+{
+    Vector<char>* data = new Vector<char>();
     String mimeType;
     String charset;
-    bool ok = parseDataURL(kurl, mimeType, charset, out);
+    bool ok = parseDataURL(kurl, mimeType, charset, *data);
     if (!ok) {
         blink::WebURLError error;
         error.domain = blink::WebString(kurl);
@@ -56,15 +73,35 @@ void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* clien
         return;
     }
 
-    blink::WebURLResponse response;
-    response.initialize();
-    response.setMIMEType(mimeType);
-    response.setTextEncodingName(charset);
-    response.setURL(blink::WebURL(kurl));
-    response.setExpectedContentLength(out.size());
-    client->didReceiveResponse(handle, response);
-    client->didReceiveData(handle, out.data(), out.size(), 0);
-    client->didFinishLoading(handle, currentTime(), out.size());
+    blink::WebURLResponse* response = new blink::WebURLResponse();
+    response->initialize();
+    response->setMIMEType(mimeType);
+    response->setTextEncodingName(charset);
+    response->setURL(blink::WebURL(kurl));
+    response->setExpectedContentLength(data->size());
+    response->setHTTPStatusCode(200);
+    response->setHTTPStatusText(blink::WebString::fromLatin1("OK"));
+
+    if (useStreamOnResponse) {
+        OutputDebugStringA("handleDataURL, useStreamOnResponse\n");
+    }
+
+    SharedMemoryDataConsumerHandle::BackpressureMode mode = SharedMemoryDataConsumerHandle::kDoNotApplyBackpressure;
+    SharedMemoryDataConsumerHandle::Writer* bodyStreamWriter = nullptr;
+    SharedMemoryDataConsumerHandle* readHandle = new SharedMemoryDataConsumerHandle(mode, WTF::bind(&cancelBodyStreaming, bodyStreamWriter), &bodyStreamWriter);
+
+    finishHandleDataURL(isSync, [handle, client, readHandle, response, data, bodyStreamWriter] {
+        client->didReceiveResponse(handle, *response, readHandle);
+        client->didReceiveData(handle, data->data(), data->size(), 0);
+
+        bodyStreamWriter->addData(adoptPtr(new FixedReceivedData(data->data(), data->size(), 0)));
+        bodyStreamWriter->close();
+        delete bodyStreamWriter;
+
+        client->didFinishLoading(handle, currentTime(), data->size());
+        delete response;
+        delete data;
+    });
 }
 
 bool parseDataURL(const blink::KURL& kurl, String& mimeType, String& charset, Vector<char>& out)

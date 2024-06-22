@@ -16,44 +16,17 @@
     <Filter Include="src\vtls">
       <UniqueIdentifier>{6b74704d-5853-4793-b327-551b6f4e0632}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\cares">
+      <UniqueIdentifier>{a02e606b-3e66-428a-a14f-79b4ec5308f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cares\include">
+      <UniqueIdentifier>{56c6844e-a4dc-4a7c-a7a7-4cc3da9b4104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cares\src">
+      <UniqueIdentifier>{586c3568-affc-4687-ab00-759ca81960ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\axtls.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\cyassl.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\darwinssl.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gskit.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gtls.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\mbedtls.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\nssg.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\openssl.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\schannel.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\vtls.h">
-      <Filter>src\vtls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\libcurl\src\vauth\digest.h">
       <Filter>src\vauth</Filter>
     </ClInclude>
@@ -426,44 +399,110 @@
     <ClInclude Include="..\..\third_party\libcurl\include\curl\system.h">
       <Filter>include\curl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\schannel.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\vtls.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gskit.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\gtls.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\mbedtls.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\nssg.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\openssl.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libcurl\src\vtls\cyassl.h">
+      <Filter>src\vtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\include\ares.h">
+      <Filter>src\cares\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\include\ares_build.h">
+      <Filter>src\cares\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\include\ares_rules.h">
+      <Filter>src\cares\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\include\ares_version.h">
+      <Filter>src\cares\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\include\nameser.h">
+      <Filter>src\cares\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_data.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_dns.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_getenv.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_getopt.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_inet_net_pton.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_iphlpapi.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_ipv6.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_library_init.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_llist.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_nowarn.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_platform.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_private.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_setup.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_strcasecmp.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_strdup.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\ares_writev.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\bitncmp.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\config-win32.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\cares\src\setup_once.h">
+      <Filter>src\cares\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\axtls.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\cyassl.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\darwinssl.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gskit.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gtls.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\mbedtls.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\nss.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\openssl.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\vtls.c">
-      <Filter>src\vtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\vauth\digest_sspi.c">
       <Filter>src\vauth</Filter>
     </ClCompile>
@@ -525,12 +564,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\amigaos.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\asyn-ares.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\asyn-thread.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\base64.c">
@@ -737,9 +770,6 @@
     <ClCompile Include="..\..\third_party\libcurl\src\pingpong.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\pipeline.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\pop3.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -794,9 +824,6 @@
     <ClCompile Include="..\..\third_party\libcurl\src\splay.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\libcurl\src\ssh.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\strcase.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -823,6 +850,192 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\libcurl\src\curl_range.c">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel_verify.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\vtls.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gskit.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\gtls.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\mbedtls.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\nss.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\openssl.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\pipeline.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\cyassl.c">
+      <Filter>src\vtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\asyn-ares.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_cancel.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_create_query.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_data.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_destroy.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_expand_name.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_expand_string.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_fds.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_free_string.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getenv.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getopt.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getsock.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_init.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_library_init.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_llist.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_mkquery.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_nowarn.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_options.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_platform.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_process.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_query.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_search.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_send.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strdup.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strerror.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_timeout.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_version.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_writev.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__read_line.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__timeval.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\bitncmp.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\inet_net_pton.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\windows_port.c">
+      <Filter>src\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\inet_ntop_cares.c">
+      <Filter>src\cares\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -882,6 +1095,27 @@
     </None>
     <None Include="..\..\third_party\libcurl\src\objnames-test10.sh">
       <Filter>src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\AUTHORS">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\NEWS">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\README">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\README.cares">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\README.msvc">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\RELEASE-NOTES">
+      <Filter>src\cares\src</Filter>
+    </None>
+    <None Include="..\..\node\cares\src\TODO">
+      <Filter>src\cares\src</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

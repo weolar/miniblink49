@@ -77,6 +77,8 @@ public:
     // if the suspension count is zero and the current scheduler policy allows it.
     virtual void resumeTimerQueue() OVERRIDE;
 
+    virtual void cancelTimerTask(blink::WebThread::Task* task) OVERRIDE;
+
 #ifdef INSIDE_BLINK
     // Helpers for posting bound functions as tasks.
     typedef Function<void(double deadlineSeconds)> IdleTask;

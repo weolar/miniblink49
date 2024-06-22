@@ -36,6 +36,8 @@
 #include "GrRenderTarget.h"
 #endif
 
+#define SK_SUPPORT_SRC_BOUNDS_BLOAT_FOR_IMAGEFILTERS
+
 static bool gIgnoreSaveLayerBounds;
 void SkCanvas::Internal_Private_SetIgnoreSaveLayerBounds(bool ignore) {
     gIgnoreSaveLayerBounds = ignore;
@@ -937,8 +939,21 @@ bool SkCanvas::clipRectBounds(const SkRect* bounds, SaveFlags flags,
 
     const SkMatrix& ctm = fMCRec->fMatrix;  // this->getTotalMatrix()
 
+    // This is a temporary hack, until individual filters can do their own
+    // bloating, when this will be removed.
+#ifdef SK_SUPPORT_SRC_BOUNDS_BLOAT_FOR_IMAGEFILTERS
+    SkRect storage;
+#endif
     if (imageFilter) {
         imageFilter->filterBounds(clipBounds, ctm, &clipBounds);
+#ifdef SK_SUPPORT_SRC_BOUNDS_BLOAT_FOR_IMAGEFILTERS
+        if (bounds && imageFilter->canComputeFastBounds()) {
+            imageFilter->computeFastBounds(*bounds, &storage);
+            bounds = &storage;
+        } else {
+            bounds = nullptr;
+        }
+#endif
     }
     SkIRect ir;
     if (bounds) {

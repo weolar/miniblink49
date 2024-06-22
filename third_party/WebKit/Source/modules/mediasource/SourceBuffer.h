@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2013 Google Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ public:
     const AtomicString& mode() const { return m_mode; }
     void setMode(const AtomicString&, ExceptionState&);
     bool updating() const { return m_updating; }
-    PassRefPtrWillBeRawPtr<TimeRanges> buffered(ExceptionState&) const;
+    TimeRanges* buffered(ExceptionState&) const;
     double timestampOffset() const;
     void setTimestampOffset(double, ExceptionState&);
     void appendBuffer(PassRefPtr<DOMArrayBuffer> data, ExceptionState&);
@@ -96,6 +96,7 @@ public:
     void suspend() override;
     void resume() override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<SourceBuffer*>(object); }
 
     // EventTarget interface
     ExecutionContext* executionContext() const override;
@@ -114,8 +115,11 @@ private:
     bool isRemoved() const;
     void scheduleEvent(const AtomicString& eventName);
 
+    bool prepareAppend(size_t newDataSize, ExceptionState&);
+    bool evictCodedFrames(size_t newDataSize);
     void appendBufferInternal(const unsigned char*, unsigned, ExceptionState&);
     void appendBufferAsyncPart();
+    void appendError(bool decodeError);
 
     void removeAsyncPart();
 

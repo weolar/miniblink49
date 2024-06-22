@@ -7,6 +7,7 @@
 #include "src/handles-inl.h"
 #include "src/objects-inl.h"
 #include "src/objects/allocation-site-inl.h"
+#include "src/zone/zone-handle-set.h"
 
 namespace v8 {
 namespace internal {
@@ -160,6 +161,41 @@ class PretenureModeDependency final
  private:
   AllocationSiteRef site_;
   AllocationType allocation_;
+};
+
+class FieldRepresentationDependency final
+    : public CompilationDependencies::Dependency {
+ public:
+  // TODO(neis): Once the concurrent compiler frontend is always-on, we no
+  // longer need to explicitly store the representation.
+  FieldRepresentationDependency(const MapRef& owner, int descriptor,
+                                Representation representation)
+      : owner_(owner),
+        descriptor_(descriptor),
+        representation_(representation) {
+    DCHECK(owner_.equals(owner_.FindFieldOwner(descriptor_)));
+    DCHECK(representation_.Equals(
+        owner_.GetPropertyDetails(descriptor_).representation()));
+  }
+
+  bool IsValid() const override {
+    DisallowHeapAllocation no_heap_allocation;
+    Handle<Map> owner = owner_.object();
+    return representation_.Equals(owner->instance_descriptors()
+                                      ->GetDetails(descriptor_)
+                                      .representation());
+  }
+
+  void Install(const MaybeObjectHandle& code) override {
+    SLOW_DCHECK(IsValid());
+    DependentCode::InstallDependency(owner_.isolate(), code, owner_.object(),
+                                     DependentCode::kFieldOwnerGroup);
+  }
+
+ private:
+  MapRef owner_;
+  int descriptor_;
+  Representation representation_;
 };
 
 class FieldTypeDependency final : public CompilationDependencies::Dependency {
@@ -409,6 +445,16 @@ PropertyConstness CompilationDependencies::DependOnFieldConstness(
   return PropertyConstness::kConst;
 }
 
+void CompilationDependencies::DependOnFieldRepresentation(const MapRef& map,
+                                                          int descriptor) {
+  MapRef owner = map.FindFieldOwner(descriptor);
+  PropertyDetails details = owner.GetPropertyDetails(descriptor);
+  DCHECK(details.representation().Equals(
+      map.GetPropertyDetails(descriptor).representation()));
+  dependencies_.push_front(new (zone_) FieldRepresentationDependency(
+      owner, descriptor, details.representation()));
+}
+
 void CompilationDependencies::DependOnFieldType(const MapRef& map,
                                                 int descriptor) {
   MapRef owner = map.FindFieldOwner(descriptor);
@@ -532,22 +578,28 @@ bool CompilationDependencies::Commit(Handle<Code> code) {
 namespace {
 // This function expects to never see a JSProxy.
 void DependOnStablePrototypeChain(CompilationDependencies* deps, MapRef map,
-                                  const JSObjectRef& last_prototype) {
+                                  base::Optional<JSObjectRef> last_prototype) {
   while (true) {
     map.SerializePrototype();
-    JSObjectRef proto = map.prototype().AsJSObject();
+    HeapObjectRef proto = map.prototype();
+    if (!proto.IsJSObject()) {
+      CHECK_EQ(proto.map().oddball_type(), OddballType::kNull);
+      break;
+    }
     map = proto.map();
     deps->DependOnStableMap(map);
-    if (proto.equals(last_prototype)) break;
+    if (last_prototype.has_value() && proto.equals(*last_prototype)) break;
   }
 }
 }  // namespace
 
+template <class MapContainer>
 void CompilationDependencies::DependOnStablePrototypeChains(
-    std::vector<Handle<Map>> const& receiver_maps, const JSObjectRef& holder) {
-  // Determine actual holder and perform prototype chain checks.
+    MapContainer const& receiver_maps, WhereToStart start,
+    base::Optional<JSObjectRef> last_prototype) {
   for (auto map : receiver_maps) {
     MapRef receiver_map(broker_, map);
+    if (start == kStartAtReceiver) DependOnStableMap(receiver_map);
     if (receiver_map.IsPrimitiveMap()) {
       // Perform the implicit ToObject for primitives here.
       // Implemented according to ES6 section 7.3.2 GetV (V, P).
@@ -555,9 +607,15 @@ void CompilationDependencies::DependOnStablePrototypeChains(
           broker_->native_context().GetConstructorFunction(receiver_map);
       if (constructor.has_value()) receiver_map = constructor->initial_map();
     }
-    DependOnStablePrototypeChain(this, receiver_map, holder);
+    DependOnStablePrototypeChain(this, receiver_map, last_prototype);
   }
 }
+template void CompilationDependencies::DependOnStablePrototypeChains(
+    MapHandles const& receiver_maps, WhereToStart start,
+    base::Optional<JSObjectRef> last_prototype);
+template void CompilationDependencies::DependOnStablePrototypeChains(
+    ZoneHandleSet<Map> const& receiver_maps, WhereToStart start,
+    base::Optional<JSObjectRef> last_prototype);
 
 void CompilationDependencies::DependOnElementsKinds(
     const AllocationSiteRef& site) {

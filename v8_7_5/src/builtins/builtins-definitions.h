@@ -36,6 +36,7 @@ namespace internal {
 #define BUILTIN_LIST_BASE(CPP, API, TFJ, TFC, TFS, TFH, ASM)                   \
   /* GC write barrirer */                                                      \
   TFC(RecordWrite, RecordWrite)                                                \
+  TFC(EphemeronKeyBarrier, EphemeronKeyBarrier)                                \
                                                                                \
   /* Adaptors for CPP/API builtin */                                           \
   TFC(AdaptorWithExitFrame, CppBuiltinAdaptor)                                 \
@@ -857,6 +858,10 @@ namespace internal {
   TFJ(PromiseAllResolveElementClosure, 1, kReceiver, kValue)                   \
   /* ES #sec-promise.race */                                                   \
   TFJ(PromiseRace, 1, kReceiver, kIterable)                                    \
+  /* ES #sec-promise.allsettled */                                             \
+  TFJ(PromiseAllSettled, 1, kReceiver, kIterable)                              \
+  TFJ(PromiseAllSettledResolveElementClosure, 1, kReceiver, kValue)            \
+  TFJ(PromiseAllSettledRejectElementClosure, 1, kReceiver, kValue)             \
   /* V8 Extras: v8.createPromise(parent) */                                    \
   TFJ(PromiseInternalConstructor, 1, kReceiver, kParent)                       \
   /* V8 Extras: v8.rejectPromise(promise, reason) */                           \
@@ -865,8 +870,6 @@ namespace internal {
   TFJ(PromiseInternalResolve, 2, kReceiver, kPromise, kResolution)             \
                                                                                \
   /* Proxy */                                                                  \
-  TFJ(ProxyConstructor, 2, kReceiver, kTarget, kHandler)                       \
-  TFJ(ProxyRevocable, 2, kReceiver, kTarget, kHandler)                         \
   TFS(ProxyGetProperty, kProxy, kName, kReceiverValue, kOnNonExistent)         \
   TFS(ProxyHasProperty, kProxy, kName)                                         \
   TFS(ProxySetProperty, kProxy, kName, kValue, kReceiverValue)                 \
@@ -942,7 +945,6 @@ namespace internal {
   TFS(RegExpExecInternal, kRegExp, kString, kLastIndex, kMatchInfo)            \
   TFS(RegExpMatchFast, kReceiver, kPattern)                                    \
   TFS(RegExpPrototypeExecSlow, kReceiver, kString)                             \
-  TFS(RegExpReplace, kRegExp, kString, kReplaceValue)                          \
   TFS(RegExpSearchFast, kReceiver, kPattern)                                   \
   TFS(RegExpSplit, kRegExp, kString, kLimit)                                   \
                                                                                \

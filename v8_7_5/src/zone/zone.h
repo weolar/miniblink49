@@ -388,6 +388,14 @@ class ScopedPtrList final {
     end_ += list.length();
   }
 
+  typedef T** iterator;
+  inline iterator begin() const {
+    return reinterpret_cast<T**>(buffer_.data() + start_);
+  }
+  inline iterator end() const {
+    return reinterpret_cast<T**>(buffer_.data() + end_);
+  }
+
  private:
   std::vector<void*>& buffer_;
   size_t start_;

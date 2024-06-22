@@ -953,6 +953,22 @@ v8::Local<v8::Context> WebLocalFrameImpl::mainWorldScriptContext() const
     return scriptState->context();
 }
 
+int32_t WebLocalFrameImpl::getScriptContextWorldId(v8::Local<v8::Context> scriptContext) const
+{
+    //DCHECK_EQ(this, FrameForContext(script_context));
+    return DOMWrapperWorld::world(scriptContext).worldId();
+}
+
+v8::Local<v8::Context> WebLocalFrameImpl::getScriptContextFromWorldId(v8::Isolate* isolate, int worldId) const
+{
+    if (0 == worldId)
+        return mainWorldScriptContext();
+    
+    PassRefPtr<DOMWrapperWorld> world = DOMWrapperWorld::ensureIsolatedWorld(isolate, worldId, -1);
+    ScriptState* scriptState = ScriptState::forWorld(frame(), *world);
+    return scriptState->context();
+}
+
 bool WebFrame::scriptCanAccess(WebFrame* target)
 {
     return BindingSecurity::shouldAllowAccessToFrame(mainThreadIsolate(), toCoreFrame(target), DoNotReportSecurityError);
@@ -1700,8 +1716,8 @@ WebLocalFrameImpl::WebLocalFrameImpl(WebTreeScopeType scope, WebFrameClient* cli
     , m_inputEventsScaleFactorForEmulation(1)
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     , m_userMediaClientImpl(this)
-    , m_geolocationClientProxy(GeolocationClientProxy::create(client ? client->geolocationClient() : 0))
 #endif // MINIBLINK_NOT_IMPLEMENTED
+    , m_geolocationClientProxy(GeolocationClientProxy::create(client ? client->geolocationClient() : 0))
     , m_webDevToolsFrontend(0)
 #if ENABLE(OILPAN)
     , m_selfKeepAlive(this)
@@ -1747,30 +1763,30 @@ void WebLocalFrameImpl::setCoreFrame(PassRefPtrWillBeRawPtr<LocalFrame> frame)
 {
     m_frame = frame;
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     // FIXME: we shouldn't add overhead to every frame by registering these objects when they're not used.
     if (m_frame) {
-        if (m_client)
-            providePushControllerTo(*m_frame, m_client->pushClient());
+//         if (m_client)
+//             providePushControllerTo(*m_frame, m_client->pushClient());
 
-        provideNotificationPermissionClientTo(*m_frame, NotificationPermissionClientImpl::create());
-        provideUserMediaTo(*m_frame, &m_userMediaClientImpl);
+//         provideNotificationPermissionClientTo(*m_frame, NotificationPermissionClientImpl::create());
+//         provideUserMediaTo(*m_frame, &m_userMediaClientImpl);
         provideGeolocationTo(*m_frame, m_geolocationClientProxy.get());
         m_geolocationClientProxy->setController(GeolocationController::from(m_frame.get()));
-        provideMIDITo(*m_frame, MIDIClientProxy::create(m_client ? m_client->webMIDIClient() : nullptr));
-        provideLocalFileSystemTo(*m_frame, LocalFileSystemClient::create());
-        provideNavigatorContentUtilsTo(*m_frame, NavigatorContentUtilsClientImpl::create(this));
-
-        if (RuntimeEnabledFeatures::screenOrientationEnabled())
-            ScreenOrientationController::provideTo(*m_frame, m_client ? m_client->webScreenOrientationClient() : nullptr);
-        if (RuntimeEnabledFeatures::presentationEnabled())
-            PresentationController::provideTo(*m_frame, m_client ? m_client->presentationClient() : nullptr);
-        if (RuntimeEnabledFeatures::permissionsEnabled())
-            PermissionController::provideTo(*m_frame, m_client ? m_client->permissionClient() : nullptr);
-        if (RuntimeEnabledFeatures::webVREnabled())
-            VRController::provideTo(*m_frame, m_client ? m_client->webVRClient() : nullptr);
+//         provideMIDITo(*m_frame, MIDIClientProxy::create(m_client ? m_client->webMIDIClient() : nullptr));
+//         provideLocalFileSystemTo(*m_frame, LocalFileSystemClient::create());
+//         provideNavigatorContentUtilsTo(*m_frame, NavigatorContentUtilsClientImpl::create(this));
+// 
+//         if (RuntimeEnabledFeatures::screenOrientationEnabled())
+//             ScreenOrientationController::provideTo(*m_frame, m_client ? m_client->webScreenOrientationClient() : nullptr);
+//         if (RuntimeEnabledFeatures::presentationEnabled())
+//             PresentationController::provideTo(*m_frame, m_client ? m_client->presentationClient() : nullptr);
+//         if (RuntimeEnabledFeatures::permissionsEnabled())
+//             PermissionController::provideTo(*m_frame, m_client ? m_client->permissionClient() : nullptr);
+//         if (RuntimeEnabledFeatures::webVREnabled())
+//             VRController::provideTo(*m_frame, m_client ? m_client->webVRClient() : nullptr);
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 PassRefPtrWillBeRawPtr<LocalFrame> WebLocalFrameImpl::initializeCoreFrame(FrameHost* host, FrameOwner* owner, const AtomicString& name, const AtomicString& fallbackName)

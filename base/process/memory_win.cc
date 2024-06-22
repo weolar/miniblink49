@@ -10,10 +10,6 @@
 
 #include "base/logging.h"
 
-// extern "C" 
-// WINBASEAPI
-// BOOL WINAPI GetModuleHandleExA(DWORD dwFlags, LPCSTR lpModuleName, HMODULE * phModule);
-
 #define GET_MODULE_HANDLE_EX_FLAG_PIN                 (0x00000001)
 #define GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT  (0x00000002)
 #define GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS        (0x00000004)
@@ -90,17 +86,32 @@ void EnableTerminationOnOutOfMemory() {
   DebugBreak();
 }
 
+BOOL GetModuleHandleExAXp(DWORD dwFlags, LPCSTR lpModuleName, HMODULE* phModule) {
+  typedef BOOL(WINAPI * PFN_GetModuleHandleExA)(DWORD dwFlags, LPCSTR lpModuleName, HMODULE* phModule);
+  static PFN_GetModuleHandleExA s_GetModuleHandleExA = NULL;
+  static BOOL s_is_init = FALSE;
+  if (!s_is_init) {
+    HMODULE mod_handle = GetModuleHandle(L"Kernel32.dll");
+    s_GetModuleHandleExA = (PFN_GetModuleHandleExA)(GetProcAddress(mod_handle, "GetModuleHandleExA"));
+    s_is_init = TRUE;
+  }
+
+  if (!s_GetModuleHandleExA)
+    return FALSE;
+
+  return s_GetModuleHandleExA(dwFlags, lpModuleName, phModule);
+}
+
 HMODULE GetModuleFromAddress(void* address) {
   HMODULE instance = NULL;
-#if 0
-  if (!::GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+#if 1
+  if (!GetModuleHandleExAXp(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
                             GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                             static_cast<char*>(address),
                             &instance)) {
     __debugbreak();
   }
 #endif
-  __debugbreak();
   return instance;
 }
 

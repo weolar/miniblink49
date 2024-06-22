@@ -272,7 +272,9 @@ static void installV8HTMLTrackElementTemplate(v8::Local<v8::FunctionTemplate> fu
     static_assert(3 == HTMLTrackElement::TRACK_ERROR, "the value of HTMLTrackElement_TRACK_ERROR does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8HTMLTrackElement::domTemplate(v8::Isolate* isolate)

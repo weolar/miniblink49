@@ -39,6 +39,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\node\cares\include\ares.h" />
+    <ClInclude Include="..\..\node\cares\include\ares_build.h" />
+    <ClInclude Include="..\..\node\cares\include\ares_rules.h" />
+    <ClInclude Include="..\..\node\cares\include\ares_version.h" />
+    <ClInclude Include="..\..\node\cares\include\nameser.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_data.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_dns.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_getenv.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_getopt.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_inet_net_pton.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_iphlpapi.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_ipv6.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_library_init.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_llist.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_nowarn.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_platform.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_private.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_setup.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_strcasecmp.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_strdup.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_writev.h" />
+    <ClInclude Include="..\..\node\cares\src\bitncmp.h" />
+    <ClInclude Include="..\..\node\cares\src\config-win32.h" />
+    <ClInclude Include="..\..\node\cares\src\setup_once.h" />
     <ClInclude Include="..\..\third_party\libcurl\include\curl\curl.h" />
     <ClInclude Include="..\..\third_party\libcurl\include\curl\curlver.h" />
     <ClInclude Include="..\..\third_party\libcurl\include\curl\easy.h" />
@@ -160,9 +184,7 @@
     <ClInclude Include="..\..\third_party\libcurl\src\vauth\digest.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vauth\ntlm.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vauth\vauth.h" />
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\axtls.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vtls\cyassl.h" />
-    <ClInclude Include="..\..\third_party\libcurl\src\vtls\darwinssl.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vtls\gskit.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vtls\gtls.h" />
     <ClInclude Include="..\..\third_party\libcurl\src\vtls\mbedtls.h" />
@@ -177,9 +199,57 @@
     <ClInclude Include="..\..\third_party\libcurl\src\x509asn1.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\node\cares\src\ares_cancel.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_create_query.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_data.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_destroy.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_expand_name.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_expand_string.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_fds.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_free_string.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getenv.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getopt.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getsock.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_init.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_library_init.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_llist.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_mkquery.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_nowarn.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_options.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_platform.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_process.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_query.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_search.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_send.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strdup.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strerror.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_timeout.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_version.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_writev.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__read_line.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__timeval.c" />
+    <ClCompile Include="..\..\node\cares\src\bitncmp.c" />
+    <ClCompile Include="..\..\node\cares\src\inet_net_pton.c" />
+    <ClCompile Include="..\..\node\cares\src\inet_ntop_cares.c" />
+    <ClCompile Include="..\..\node\cares\src\windows_port.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\amigaos.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\asyn-ares.c" />
-    <ClCompile Include="..\..\third_party\libcurl\src\asyn-thread.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\base64.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\conncache.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\connect.c" />
@@ -269,7 +339,6 @@
     <ClCompile Include="..\..\third_party\libcurl\src\socks_sspi.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\speedcheck.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\splay.c" />
-    <ClCompile Include="..\..\third_party\libcurl\src\ssh.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\strcase.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\strdup.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\strerror.c" />
@@ -294,9 +363,7 @@
     <ClCompile Include="..\..\third_party\libcurl\src\vauth\spnego_sspi.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vauth\vauth.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\version.c" />
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\axtls.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\cyassl.c" />
-    <ClCompile Include="..\..\third_party\libcurl\src\vtls\darwinssl.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\gskit.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\gtls.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\mbedtls.c" />
@@ -305,12 +372,20 @@
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\polarssl_threadlock.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\vtls\schannel_verify.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\vtls\vtls.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\warnless.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\wildcard.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\x509asn1.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\node\cares\src\AUTHORS" />
+    <None Include="..\..\node\cares\src\NEWS" />
+    <None Include="..\..\node\cares\src\README" />
+    <None Include="..\..\node\cares\src\README.cares" />
+    <None Include="..\..\node\cares\src\README.msvc" />
+    <None Include="..\..\node\cares\src\RELEASE-NOTES" />
+    <None Include="..\..\node\cares\src\TODO" />
     <None Include="..\..\third_party\libcurl\src\checksrc.pl" />
     <None Include="..\..\third_party\libcurl\src\curl_config.h.cmake" />
     <None Include="..\..\third_party\libcurl\src\firefox-db2pem.sh" />
@@ -348,27 +423,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -388,14 +464,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -481,10 +557,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;CURLRES_ARES=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0600;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_WINSOCK=1;USE_SCHANNEL=1;USE_WINDOWS_SSPI=1;USE_WIN32_LDAP=1;USE_OPENSSL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -514,18 +591,20 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Custom</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../node/openssl/openssl/include;../../third_party/wolfssl/</AdditionalIncludeDirectories>
+      <Optimization>MinSpace</Optimization>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;CURLRES_ARES=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <AdditionalOptions>/Gw %(AdditionalOptions)</AdditionalOptions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -544,9 +623,9 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_LIBCURL=1;CURL_STATICLIB=1;CARES_STATICLIB=1;CURLRES_ARES=1;WIN32;NDEBUG;_LIB;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
@@ -556,6 +635,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -574,9 +654,9 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;HAVE_CYASSL_ERROR_SSL_H;HAVE_SNI=1;USE_CYASSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_CYASSL;HAVE_CYASSL_OPTIONS_H;HAVE_CYASSL_ERROR_SSL_H;CURLRES_ARES=1;CARES_STATICLIB;SIZEOF_LONG=4;SIZEOF_LONG_LONG=8;CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
@@ -619,12 +699,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;NDEBUG;_LIB;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_LIBCURL=1;CURL_STATICLIB=1;CARES_STATICLIB=1;CURLRES_ARES=1;WIN32;NDEBUG;_LIB;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../third_party/wolfssl/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/wolfssl/;../../third_party/libcurl/include/;../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

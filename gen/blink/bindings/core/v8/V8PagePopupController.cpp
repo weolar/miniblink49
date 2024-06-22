@@ -308,6 +308,22 @@ static void setWindowRectMethodCallback(const v8::FunctionCallbackInfo<v8::Value
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void logMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
+    V8StringResource<> str;
+    {
+        str = info[0];
+        if (!str.prepare())
+            return;
+    }
+    String strLog = str;
+    strLog.append("\n");
+    OutputDebugStringA(strLog.utf8().data());
+
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
 } // namespace PagePopupControllerV8Internal
 
 static const V8DOMConfiguration::MethodConfiguration V8PagePopupControllerMethods[] = {
@@ -321,6 +337,7 @@ static const V8DOMConfiguration::MethodConfiguration V8PagePopupControllerMethod
     {"formatWeek", PagePopupControllerV8Internal::formatWeekMethodCallback, 0, 3, V8DOMConfiguration::ExposedToAllScripts},
     {"histogramEnumeration", PagePopupControllerV8Internal::histogramEnumerationMethodCallback, 0, 3, V8DOMConfiguration::ExposedToAllScripts},
     {"setWindowRect", PagePopupControllerV8Internal::setWindowRectMethodCallback, 0, 4, V8DOMConfiguration::ExposedToAllScripts},
+    {"log", PagePopupControllerV8Internal::logMethodCallback, 0, 4, V8DOMConfiguration::ExposedToAllScripts},
 };
 
 static void installV8PagePopupControllerTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
@@ -341,7 +358,9 @@ static void installV8PagePopupControllerTemplate(v8::Local<v8::FunctionTemplate>
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8PagePopupController::domTemplate(v8::Isolate* isolate)

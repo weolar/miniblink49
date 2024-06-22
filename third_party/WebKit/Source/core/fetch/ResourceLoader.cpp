@@ -424,12 +424,14 @@ void ResourceLoader::didReceiveData(WebURLLoader*, const char* data, int length,
     RELEASE_ASSERT(length >= 0);
     m_resource->appendData(data, length);
 
-    if (0 != length) {
+#if 0 // ndef NDEBUG
+    if (0 != length && m_dump.size() < 32768) {
         Vector<char> dump;
         dump.resize(length);
         memcpy(dump.data(), data, length);
         m_dump.append(data, length); // weolar
     }
+#endif
 }
 
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);

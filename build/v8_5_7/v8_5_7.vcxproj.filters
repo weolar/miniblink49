@@ -7,59 +7,26 @@
     <Filter Include="include">
       <UniqueIdentifier>{b69ee987-2dd2-4b97-b9bd-91c20d758848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\extensions">
+      <UniqueIdentifier>{454467d3-a06a-40c4-b346-7b11081ba774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\asmjs">
+      <UniqueIdentifier>{4ffb36d7-53fe-480f-9b36-5f189dc85870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ast">
+      <UniqueIdentifier>{5b263d80-58ae-4206-ba39-350059d89ff7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\base">
       <UniqueIdentifier>{ac089705-73a0-4a0b-af5b-7339eee7e8da}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\base\utils">
       <UniqueIdentifier>{671fdc2c-fb1b-4f34-a780-76e8f827f781}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\compiler">
-      <UniqueIdentifier>{840afd4f-cea5-4185-8109-9ef9444663c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\heap">
-      <UniqueIdentifier>{482d4d62-f2d9-4d79-be9b-372a8ccd5ae7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ic">
-      <UniqueIdentifier>{b0a0628e-277b-426c-93a0-331ad2c64c72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\extensions">
-      <UniqueIdentifier>{454467d3-a06a-40c4-b346-7b11081ba774}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gen">
-      <UniqueIdentifier>{45fe4b63-32f2-4942-9c50-8cbc5e7879dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ia32">
-      <UniqueIdentifier>{a0a09a9e-e74c-45ba-93a7-41ff289a4777}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\compiler\ia32">
-      <UniqueIdentifier>{9dcf0105-5a14-42c4-9a80-3f7781475e6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ic\ia32">
-      <UniqueIdentifier>{9f032fe6-44f6-403e-855a-04c5f0942b3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ast">
-      <UniqueIdentifier>{5b263d80-58ae-4206-ba39-350059d89ff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\debug">
-      <UniqueIdentifier>{6e9ce38c-acd9-46f6-a2f2-1ef269f011a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\crankshaft">
-      <UniqueIdentifier>{b67e13fd-b0d2-4504-aa48-55e8e3a43692}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\crankshaft\ia32">
-      <UniqueIdentifier>{a7bb2a1a-f628-4788-ad6f-40ced8a1f604}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\debug\ia32">
-      <UniqueIdentifier>{f6d9aa6a-72f6-485d-bd64-6c2acaeacdd1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\full-codegen">
-      <UniqueIdentifier>{857813e8-c0b2-4505-8e4a-00c948ce72a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\full-codegen\ia32">
-      <UniqueIdentifier>{05ddf14e-6070-43f8-92ac-41f8184a1f3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\base\debug">
       <UniqueIdentifier>{347f8e24-c3a0-4efc-9cc8-0607a72d7dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base\platform">
+      <UniqueIdentifier>{a8a4a839-58e2-4a50-8e1d-0a3e09858b11}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\builtins">
       <UniqueIdentifier>{d55adaa3-54d1-4a10-baf4-5646c08ffc93}</UniqueIdentifier>
@@ -67,32 +34,65 @@
     <Filter Include="src\builtins\ia32">
       <UniqueIdentifier>{f604be77-11f6-4ea7-9a68-6a1b4b368274}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\compiler-dispatcher">
-      <UniqueIdentifier>{6ba7d126-2fec-44c5-897e-4459982999af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\asmjs">
-      <UniqueIdentifier>{4ffb36d7-53fe-480f-9b36-5f189dc85870}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\builtins\x64">
       <UniqueIdentifier>{c017475a-add8-4f85-8dab-7ab149754d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler">
+      <UniqueIdentifier>{840afd4f-cea5-4185-8109-9ef9444663c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\ia32">
+      <UniqueIdentifier>{9dcf0105-5a14-42c4-9a80-3f7781475e6f}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\compiler\x64">
       <UniqueIdentifier>{3dc78283-eac6-4067-9d32-be5241e8b797}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\compiler-dispatcher">
+      <UniqueIdentifier>{6ba7d126-2fec-44c5-897e-4459982999af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft">
+      <UniqueIdentifier>{b67e13fd-b0d2-4504-aa48-55e8e3a43692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft\ia32">
+      <UniqueIdentifier>{a7bb2a1a-f628-4788-ad6f-40ced8a1f604}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\crankshaft\x64">
       <UniqueIdentifier>{a49c7537-acbc-49dd-af98-923370b5b5c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug">
+      <UniqueIdentifier>{6e9ce38c-acd9-46f6-a2f2-1ef269f011a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\ia32">
+      <UniqueIdentifier>{f6d9aa6a-72f6-485d-bd64-6c2acaeacdd1}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\debug\x64">
       <UniqueIdentifier>{d33ab571-6544-4d9b-9c70-4c6cca014c42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\full-codegen">
+      <UniqueIdentifier>{857813e8-c0b2-4505-8e4a-00c948ce72a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen\ia32">
+      <UniqueIdentifier>{05ddf14e-6070-43f8-92ac-41f8184a1f3f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\full-codegen\x64">
       <UniqueIdentifier>{4d94d355-3fba-4fbd-8344-aa589c978bf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gen">
+      <UniqueIdentifier>{45fe4b63-32f2-4942-9c50-8cbc5e7879dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\heap">
+      <UniqueIdentifier>{482d4d62-f2d9-4d79-be9b-372a8ccd5ae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ia32">
+      <UniqueIdentifier>{a0a09a9e-e74c-45ba-93a7-41ff289a4777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic">
+      <UniqueIdentifier>{b0a0628e-277b-426c-93a0-331ad2c64c72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\ia32">
+      <UniqueIdentifier>{9f032fe6-44f6-403e-855a-04c5f0942b3f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\ic\x64">
       <UniqueIdentifier>{7f646730-429f-4053-8f13-73780c5c9d86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\base\platform">
-      <UniqueIdentifier>{a8a4a839-58e2-4a50-8e1d-0a3e09858b11}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

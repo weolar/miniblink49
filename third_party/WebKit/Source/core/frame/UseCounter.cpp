@@ -542,6 +542,10 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyScale: return 506;
 	case CSSPropertyVariable: return 507;
 	//case CSSPropertyAliasWebkitUserSelect: return 508;
+    case CSSPropertyBackdropFilter: return 510;
+    case CSSPropertyGridColumnGap: return 511;
+    case CSSPropertyGridRowGap: return 512;
+    case CSSPropertyFontFeatureSettings: return 513;
 
     // 1. Add new features above this line (don't change the assigned numbers of the existing
     // items).

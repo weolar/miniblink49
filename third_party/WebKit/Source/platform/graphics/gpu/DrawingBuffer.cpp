@@ -307,7 +307,8 @@ bool DrawingBuffer::prepareMailbox(WebExternalTextureMailbox* outMailbox, WebExt
 
     m_context->produceTextureDirectCHROMIUM(frontColorBufferMailbox->textureInfo.textureId, GL_TEXTURE_2D, frontColorBufferMailbox->mailbox.name);
     m_context->flush();
-    frontColorBufferMailbox->mailbox.syncPoint = m_context->insertSyncPoint();
+    //frontColorBufferMailbox->mailbox.syncPoint = m_context->insertSyncPoint();
+    frontColorBufferMailbox->mailbox.validSyncToken = m_context->insertSyncPoint(frontColorBufferMailbox->mailbox.syncToken);
     frontColorBufferMailbox->mailbox.allowOverlay = frontColorBufferMailbox->textureInfo.imageId != 0;
     setBufferClearNeeded(true);
 
@@ -329,7 +330,8 @@ void DrawingBuffer::mailboxReleased(const WebExternalTextureMailbox& mailbox, bo
     for (size_t i = 0; i < m_textureMailboxes.size(); i++) {
         RefPtr<MailboxInfo> mailboxInfo = m_textureMailboxes[i];
         if (nameEquals(mailboxInfo->mailbox, mailbox)) {
-            mailboxInfo->mailbox.syncPoint = mailbox.syncPoint;
+            // mailboxInfo->mailbox.syncPoint = mailbox.syncPoint;
+            memcpy(mailboxInfo->mailbox.syncToken, mailbox.syncToken, sizeof(mailboxInfo->mailbox.syncToken));
             ASSERT(mailboxInfo->m_parentDrawingBuffer.get() == this);
             mailboxInfo->m_parentDrawingBuffer.clear();
             m_recycledMailboxQueue.prepend(mailboxInfo->mailbox);
@@ -369,9 +371,9 @@ PassRefPtr<DrawingBuffer::MailboxInfo> DrawingBuffer::recycledMailbox()
     }
     ASSERT(mailboxInfo);
 
-    if (mailboxInfo->mailbox.syncPoint) {
-        m_context->waitSyncPoint(mailboxInfo->mailbox.syncPoint);
-        mailboxInfo->mailbox.syncPoint = 0;
+    if (mailboxInfo->mailbox.validSyncToken) {
+        m_context->waitSyncToken(mailboxInfo->mailbox.syncToken);
+        mailboxInfo->mailbox.validSyncToken = false;
     }
 
     if (mailboxInfo->size != m_size) {
@@ -397,8 +399,8 @@ void DrawingBuffer::deleteMailbox(const WebExternalTextureMailbox& mailbox)
 {
     for (size_t i = 0; i < m_textureMailboxes.size(); i++) {
         if (nameEquals(m_textureMailboxes[i]->mailbox, mailbox)) {
-            if (mailbox.syncPoint)
-                m_context->waitSyncPoint(mailbox.syncPoint);
+            if (mailbox.validSyncToken)
+                m_context->waitSyncToken(mailbox.syncToken);
 
             deleteChromiumImageForTexture(&m_textureMailboxes[i]->textureInfo);
 
@@ -503,10 +505,10 @@ bool DrawingBuffer::copyToPlatformTexture(WebGraphicsContext3D* context, Platfor
         m_context->genMailboxCHROMIUM(mailbox.name);
         m_context->produceTextureDirectCHROMIUM(textureId, GL_TEXTURE_2D, mailbox.name);
         m_context->flush();
-        mailbox.syncPoint = m_context->insertSyncPoint();
+        mailbox.validSyncToken = m_context->insertSyncPoint(mailbox.syncToken);
     }
 
-    context->waitSyncPoint(mailbox.syncPoint);
+    context->waitSyncToken(mailbox.syncToken);
     Platform3DObject sourceTexture = context->createAndConsumeTextureCHROMIUM(GL_TEXTURE_2D, mailbox.name);
 
     GLboolean unpackPremultiplyAlphaNeeded = GL_FALSE;
@@ -521,7 +523,9 @@ bool DrawingBuffer::copyToPlatformTexture(WebGraphicsContext3D* context, Platfor
     context->deleteTexture(sourceTexture);
 
     context->flush();
-    m_context->waitSyncPoint(context->insertSyncPoint());
+    GLbyte syncToken[24];
+    if (context->insertSyncPoint(syncToken))
+        m_context->waitSyncToken(syncToken);
 
     return true;
 }

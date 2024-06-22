@@ -500,6 +500,18 @@ bool Map::has_dictionary_elements() const {
   return IsDictionaryElementsKind(elements_kind());
 }
 
+bool Map::has_frozen_or_sealed_elements() const {
+  return IsPackedFrozenOrSealedElementsKind(elements_kind());
+}
+
+bool Map::has_sealed_elements() const {
+  return IsSealedElementsKind(elements_kind());
+}
+
+bool Map::has_frozen_elements() const {
+  return IsFrozenElementsKind(elements_kind());
+}
+
 void Map::set_is_dictionary_map(bool value) {
   uint32_t new_bit_field3 = IsDictionaryMapBit::update(bit_field3(), value);
   new_bit_field3 = IsUnstableBit::update(new_bit_field3, value);
@@ -564,9 +576,11 @@ bool Map::IsPrimitiveMap() const {
   return instance_type() <= LAST_PRIMITIVE_TYPE;
 }
 
-Object Map::prototype() const { return READ_FIELD(*this, kPrototypeOffset); }
+HeapObject Map::prototype() const {
+  return HeapObject::cast(READ_FIELD(*this, kPrototypeOffset));
+}
 
-void Map::set_prototype(Object value, WriteBarrierMode mode) {
+void Map::set_prototype(HeapObject value, WriteBarrierMode mode) {
   DCHECK(value->IsNull() || value->IsJSReceiver());
   WRITE_FIELD(*this, kPrototypeOffset, value);
   CONDITIONAL_WRITE_BARRIER(*this, kPrototypeOffset, value, mode);
@@ -678,10 +692,10 @@ void Map::AppendDescriptor(Isolate* isolate, Descriptor* desc) {
 #endif
 }
 
-Object Map::GetBackPointer() const {
+HeapObject Map::GetBackPointer() const {
   Object object = constructor_or_backpointer();
   if (object->IsMap()) {
-    return object;
+    return Map::cast(object);
   }
   return GetReadOnlyRoots().undefined_value();
 }

@@ -98,7 +98,9 @@ static void installV8WebGLLoseContextTemplate(v8::Local<v8::FunctionTemplate> fu
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8WebGLLoseContext::domTemplate(v8::Isolate* isolate)

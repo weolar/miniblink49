@@ -474,11 +474,13 @@ CORE_EXPORT extern const blink::QualifiedName& webkitdirectoryAttr;
 CORE_EXPORT extern const blink::QualifiedName& webkitdropzoneAttr;
 CORE_EXPORT extern const blink::QualifiedName& widthAttr;
 CORE_EXPORT extern const blink::QualifiedName& wrapAttr;
+CORE_EXPORT extern const blink::QualifiedName& nomoduleAttr;
 
 const unsigned HTMLTagsCount = 138;
 CORE_EXPORT PassOwnPtr<const HTMLQualifiedName*[]> getHTMLTags();
 
-const unsigned HTMLAttrsCount = 315;
+// add nomoduleAttr
+const unsigned HTMLAttrsCount = 315 + 1;
 
 void init();
 

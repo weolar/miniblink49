@@ -783,16 +783,16 @@ Handle<WasmTableObject> WasmTableObject::New(Isolate* isolate,
                                              uint32_t initial, bool has_maximum,
                                              uint32_t maximum,
                                              Handle<FixedArray>* elements) {
-  Handle<JSFunction> table_ctor(
-      isolate->native_context()->wasm_table_constructor(), isolate);
-  auto table_obj = Handle<WasmTableObject>::cast(
-      isolate->factory()->NewJSObject(table_ctor));
-
   Handle<FixedArray> backing_store = isolate->factory()->NewFixedArray(initial);
   Object null = ReadOnlyRoots(isolate).null_value();
   for (int i = 0; i < static_cast<int>(initial); ++i) {
     backing_store->set(i, null);
   }
+
+  Handle<JSFunction> table_ctor(
+      isolate->native_context()->wasm_table_constructor(), isolate);
+  auto table_obj = Handle<WasmTableObject>::cast(
+      isolate->factory()->NewJSObject(table_ctor));
 
   table_obj->set_raw_type(static_cast<int>(type));
   table_obj->set_elements(*backing_store);
@@ -1092,16 +1092,7 @@ MaybeHandle<JSArrayBuffer> MemoryGrowBuffer(Isolate* isolate,
     if (!wasm::NewArrayBuffer(isolate, new_size).ToHandle(&new_buffer)) {
       return {};
     }
-    wasm::WasmMemoryTracker* const memory_tracker =
-        isolate->wasm_engine()->memory_tracker();
-    // If the old buffer had full guard regions, we can only safely use the new
-    // buffer if it also has full guard regions. Otherwise, we'd have to
-    // recompile all the instances using this memory to insert bounds checks.
     void* old_mem_start = old_buffer->backing_store();
-    if (memory_tracker->HasFullGuardRegions(old_mem_start) &&
-        !memory_tracker->HasFullGuardRegions(new_buffer->backing_store())) {
-      return {};
-    }
     size_t old_size = old_buffer->byte_length();
     if (old_size == 0) return new_buffer;
     memcpy(new_buffer->backing_store(), old_mem_start, old_size);
@@ -1149,20 +1140,21 @@ void SetInstanceMemory(Handle<WasmInstanceObject> instance,
 Handle<WasmMemoryObject> WasmMemoryObject::New(
     Isolate* isolate, MaybeHandle<JSArrayBuffer> maybe_buffer,
     uint32_t maximum) {
+  Handle<JSArrayBuffer> buffer;
+  if (!maybe_buffer.ToHandle(&buffer)) {
+    // If no buffer was provided, create a 0-length one.
+    buffer = wasm::SetupArrayBuffer(isolate, nullptr, 0, false);
+  }
+
   // TODO(kschimpf): Do we need to add an argument that defines the
   // style of memory the user prefers (with/without trap handling), so
   // that the memory will match the style of the compiled wasm module.
   // See issue v8:7143
   Handle<JSFunction> memory_ctor(
       isolate->native_context()->wasm_memory_constructor(), isolate);
+
   auto memory_obj = Handle<WasmMemoryObject>::cast(
       isolate->factory()->NewJSObject(memory_ctor, AllocationType::kOld));
-
-  Handle<JSArrayBuffer> buffer;
-  if (!maybe_buffer.ToHandle(&buffer)) {
-    // If no buffer was provided, create a 0-length one.
-    buffer = wasm::SetupArrayBuffer(isolate, nullptr, 0, false);
-  }
   memory_obj->set_array_buffer(*buffer);
   memory_obj->set_maximum_pages(maximum);
 
@@ -1189,30 +1181,6 @@ MaybeHandle<WasmMemoryObject> WasmMemoryObject::New(Isolate* isolate,
     }
   }
   return New(isolate, buffer, maximum);
-}
-
-bool WasmMemoryObject::has_full_guard_region(Isolate* isolate) {
-  const wasm::WasmMemoryTracker::AllocationData* allocation =
-      isolate->wasm_engine()->memory_tracker()->FindAllocationData(
-          array_buffer()->backing_store());
-  CHECK_NOT_NULL(allocation);
-
-  Address allocation_base =
-      reinterpret_cast<Address>(allocation->allocation_base);
-  Address buffer_start = reinterpret_cast<Address>(allocation->buffer_start);
-
-  // Return whether the allocation covers every possible Wasm heap index.
-  //
-  // We always have the following relationship:
-  // allocation_base <= buffer_start <= buffer_start + memory_size <=
-  // allocation_base + allocation_length
-  // (in other words, the buffer fits within the allocation)
-  //
-  // The space between buffer_start + memory_size and allocation_base +
-  // allocation_length is the guard region. Here we make sure the guard region
-  // is large enough for any Wasm heap offset.
-  return buffer_start + wasm::kWasmMaxHeapOffset <=
-         allocation_base + allocation->allocation_length;
 }
 
 void WasmMemoryObject::AddInstance(Isolate* isolate,
@@ -1255,7 +1223,9 @@ int32_t WasmMemoryObject::Grow(Isolate* isolate,
                                uint32_t pages) {
   TRACE_EVENT0(TRACE_DISABLED_BY_DEFAULT("v8.wasm"), "GrowMemory");
   Handle<JSArrayBuffer> old_buffer(memory_object->array_buffer(), isolate);
-  if (!old_buffer->is_growable()) return -1;
+  if (old_buffer->is_shared() && !FLAG_wasm_grow_shared_memory) return -1;
+  auto* memory_tracker = isolate->wasm_engine()->memory_tracker();
+  if (!memory_tracker->IsWasmMemoryGrowable(old_buffer)) return -1;
 
   // Checks for maximum memory size, compute new size.
   uint32_t maximum_pages = wasm::max_mem_pages();
@@ -1284,16 +1254,13 @@ int32_t WasmMemoryObject::Grow(Isolate* isolate,
     if (!AdjustBufferPermissions(isolate, old_buffer, new_size)) {
       return -1;
     }
-    wasm::WasmMemoryTracker* const memory_tracker =
-        isolate->wasm_engine()->memory_tracker();
     void* backing_store = old_buffer->backing_store();
     if (memory_tracker->IsWasmSharedMemory(backing_store)) {
       // This memory is shared between different isolates.
       DCHECK(old_buffer->is_shared());
       // Update pending grow state, and trigger a grow interrupt on all the
       // isolates that share this buffer.
-      isolate->wasm_engine()->memory_tracker()->SetPendingUpdateOnGrow(
-          old_buffer, new_size);
+      memory_tracker->SetPendingUpdateOnGrow(old_buffer, new_size);
       // Handle interrupts for this isolate so that the instances with this
       // isolate are updated.
       isolate->stack_guard()->HandleInterrupts();
@@ -1608,9 +1575,11 @@ void WasmInstanceObject::InitDataSegmentArrays(
     instance->dropped_data_segments()[i] = segment.active ? 1 : 0;
 
     // Initialize the pointer and size of passive segments.
+    auto source_bytes = wire_bytes.SubVector(segment.source.offset(),
+                                             segment.source.end_offset());
     instance->data_segment_starts()[i] =
-        reinterpret_cast<Address>(&wire_bytes[segment.source.offset()]);
-    instance->data_segment_sizes()[i] = segment.source.length();
+        reinterpret_cast<Address>(source_bytes.start());
+    instance->data_segment_sizes()[i] = source_bytes.length();
   }
 }
 
@@ -1765,10 +1734,6 @@ Handle<WasmExceptionObject> WasmExceptionObject::New(
     Handle<HeapObject> exception_tag) {
   Handle<JSFunction> exception_cons(
       isolate->native_context()->wasm_exception_constructor(), isolate);
-  Handle<JSObject> exception_object =
-      isolate->factory()->NewJSObject(exception_cons, AllocationType::kOld);
-  Handle<WasmExceptionObject> exception =
-      Handle<WasmExceptionObject>::cast(exception_object);
 
   // Serialize the signature.
   DCHECK_EQ(0, sig->return_count());
@@ -1780,6 +1745,11 @@ Handle<WasmExceptionObject> WasmExceptionObject::New(
   for (wasm::ValueType param : sig->parameters()) {
     serialized_sig->set(index++, param);
   }
+
+  Handle<JSObject> exception_object =
+      isolate->factory()->NewJSObject(exception_cons, AllocationType::kOld);
+  Handle<WasmExceptionObject> exception =
+      Handle<WasmExceptionObject>::cast(exception_object);
   exception->set_serialized_signature(*serialized_sig);
   exception->set_exception_tag(*exception_tag);
 

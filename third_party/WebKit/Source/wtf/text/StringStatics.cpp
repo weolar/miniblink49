@@ -63,7 +63,7 @@ WTF_EXPORT DEFINE_GLOBAL(AtomicString, xlinkAtom)
 WTF_EXPORT DEFINE_GLOBAL(String, xmlnsWithColon)
 
 NEVER_INLINE unsigned StringImpl::hashSlowCase() const
-{
+{   
     if (is8Bit())
         setHash(StringHasher::computeHashAndMaskTop8Bits(characters8(), m_length));
     else

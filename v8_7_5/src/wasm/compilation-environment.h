@@ -120,7 +120,8 @@ class CompilationState {
 
   bool failed() const;
 
-  void OnFinishedUnit(ExecutionTier, WasmCode*);
+  void OnFinishedUnit(WasmCode*);
+  void OnFinishedUnits(Vector<WasmCode*>);
 
  private:
   friend class NativeModule;

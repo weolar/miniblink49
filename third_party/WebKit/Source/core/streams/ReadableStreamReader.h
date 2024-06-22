@@ -41,6 +41,7 @@ public:
 
     bool hasPendingActivity() const override;
     void stop() override;
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<ReadableStreamReader*>(object); }
 
     DECLARE_TRACE();
 

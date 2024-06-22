@@ -35,9 +35,9 @@
 #include "WebString.h"
 //#include <url/third_party/mozilla/url_parse.h>
 
-#if !INSIDE_BLINK
-#include <url/gurl.h>
-#endif
+// #if !INSIDE_BLINK
+// #include <url/gurl.h>
+// #endif
 
 namespace blink {
 
@@ -81,6 +81,9 @@ public:
         return m_string;
     }
 
+    bool schemeIsHTTPOrHTTPS() const;
+    std::string getOrigin() const;
+
 //     const url::Parsed& parsed() const
 //     {
 //         return m_parsed;
@@ -101,14 +104,16 @@ public:
         return m_string.isEmpty();
     }
 
-#if INSIDE_BLINK
+#if 1 // INSIDE_BLINK
     BLINK_PLATFORM_EXPORT WebURL(const KURL&);
     BLINK_PLATFORM_EXPORT WebURL& operator=(const KURL&);
     BLINK_PLATFORM_EXPORT operator KURL() const;
+
+    BLINK_PLATFORM_EXPORT WebURL(const WebString& str);
 #else
     WebURL(const GURL& url)
         : m_string(WebString::fromUTF8(url.possibly_invalid_spec()))
-        , m_parsed(url.parsed_for_possibly_invalid_spec())
+        //, m_parsed(url.parsed_for_possibly_invalid_spec())
         , m_isValid(url.is_valid())
     {
     }
@@ -116,7 +121,7 @@ public:
     WebURL& operator=(const GURL& url)
     {
         m_string = WebString::fromUTF8(url.possibly_invalid_spec());
-        m_parsed = url.parsed_for_possibly_invalid_spec();
+        //m_parsed = url.parsed_for_possibly_invalid_spec();
         m_isValid = url.is_valid();
         return *this;
     }

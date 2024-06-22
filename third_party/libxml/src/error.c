@@ -86,7 +86,7 @@ xmlGenericErrorDefaultFunc(void *ctx ATTRIBUTE_UNUSED, const char *msg, ...) {
  * Set or reset (if NULL) the default handler for generic errors
  * to the builtin error function.
  */
-void
+void XMLCALL
 initGenericErrorDefaultFunc(xmlGenericErrorFunc * handler)
 {
     if (handler == NULL)
@@ -109,7 +109,7 @@ initGenericErrorDefaultFunc(xmlGenericErrorFunc * handler)
  * stderr by setting @ctx to this file handle and @handler to NULL.
  * For multi-threaded applications, this must be set separately for each thread.
  */
-void
+void XMLCALL
 xmlSetGenericErrorFunc(void *ctx, xmlGenericErrorFunc handler) {
     xmlGenericErrorContext = ctx;
     if (handler != NULL)
@@ -130,7 +130,7 @@ xmlSetGenericErrorFunc(void *ctx, xmlGenericErrorFunc handler) {
  * be passed as first argument to @handler
  * For multi-threaded applications, this must be set separately for each thread.
  */
-void
+void XMLCALL
 xmlSetStructuredErrorFunc(void *ctx, xmlStructuredErrorFunc handler) {
     xmlStructuredErrorContext = ctx;
     xmlStructuredError = handler;
@@ -149,7 +149,7 @@ xmlSetStructuredErrorFunc(void *ctx, xmlStructuredErrorFunc handler) {
  * Displays the associated file and line informations for the current input
  */
 
-void
+void XMLCALL
 xmlParserPrintFileInfo(xmlParserInputPtr input) {
     if (input != NULL) {
 	if (input->filename)
@@ -224,7 +224,7 @@ xmlParserPrintFileContextInternal(xmlParserInputPtr input ,
  * 
  * Displays current context within the input content for error tracking
  */
-void
+void XMLCALL
 xmlParserPrintFileContext(xmlParserInputPtr input) {
    xmlParserPrintFileContextInternal(input, xmlGenericError,
                                      xmlGenericErrorContext);
@@ -638,7 +638,7 @@ __xmlRaiseError(xmlStructuredErrorFunc schannel,
  *
  * Handle an out of memory condition
  */
-void
+void XMLCALL
 __xmlSimpleError(int domain, int code, xmlNodePtr node,
                  const char *msg, const char *extra)
 {
@@ -846,7 +846,7 @@ xmlParserValidityWarning(void *ctx, const char *msg, ...)
  *
  * Returns NULL if no error occured or a pointer to the error
  */
-xmlErrorPtr
+xmlErrorPtr XMLCALL
 xmlGetLastError(void)
 {
     if (xmlLastError.code == XML_ERR_OK)
@@ -860,7 +860,7 @@ xmlGetLastError(void)
  *
  * Cleanup the error.
  */
-void
+void XMLCALL
 xmlResetError(xmlErrorPtr err)
 {
     if (err == NULL)
@@ -887,7 +887,7 @@ xmlResetError(xmlErrorPtr err)
  * Cleanup the last global error registered. For parsing error
  * this does not change the well-formedness result.
  */
-void
+void XMLCALL
 xmlResetLastError(void)
 {
     if (xmlLastError.code == XML_ERR_OK)
@@ -903,7 +903,7 @@ xmlResetLastError(void)
  *
  * Returns NULL if no error occured or a pointer to the error
  */
-xmlErrorPtr
+xmlErrorPtr XMLCALL
 xmlCtxtGetLastError(void *ctx)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -922,7 +922,7 @@ xmlCtxtGetLastError(void *ctx)
  * Cleanup the last global error registered. For parsing error
  * this does not change the well-formedness result.
  */
-void
+void XMLCALL
 xmlCtxtResetLastError(void *ctx)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -944,7 +944,7 @@ xmlCtxtResetLastError(void *ctx)
  *
  * Returns 0 in case of success and -1 in case of error.
  */
-int
+int XMLCALL
 xmlCopyError(xmlErrorPtr from, xmlErrorPtr to) {
     char *message, *file, *str1, *str2, *str3;
 

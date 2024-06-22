@@ -56,10 +56,21 @@ bool ActivatingObjCheck::isActivating(intptr_t loader)
     return isActivating;
 }
 
+bool ActivatingObjCheck::isActivatingLocked(intptr_t loader)
+{
+    ::EnterCriticalSection(&m_mutex);
+    return m_activatingObjs->find(loader) != m_activatingObjs->end();
+}
+
 int ActivatingObjCheck::genId()
 {
     InterlockedIncrement((long *)&m_newestId);
     return m_newestId;
+}
+
+void ActivatingObjCheck::unlock()
+{
+    ::LeaveCriticalSection(&m_mutex);
 }
 
 void ActivatingObjCheck::testPrint()

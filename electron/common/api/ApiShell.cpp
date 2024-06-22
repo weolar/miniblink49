@@ -16,16 +16,17 @@
 #include "node/nodeblink.h"
 #include "node/src/node.h"
 #include "node/src/env.h"
-#include "node/src/env-inl.h"
+//#include "node/src/env-inl.h"
 #include "node/uv/include/uv.h"
 #include "common/NodeRegisterHelp.h"
 
 namespace gin {
 
-template<>
+template <>
 struct Converter<base::win::ShortcutOperation> {
     static bool FromV8(v8::Isolate* isolate, v8::Handle<v8::Value> val,
-        base::win::ShortcutOperation* out) {
+        base::win::ShortcutOperation* out)
+    {
         std::string operation;
         if (!ConvertFromV8(isolate, val, &operation))
             return false;
@@ -41,12 +42,13 @@ struct Converter<base::win::ShortcutOperation> {
     }
 };
 
-}  // namespace gin
+} // namespace gin
 //#endif
 
 namespace {
 
-void openExternal(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void openExternal(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     gin::Arguments args(info);
 
     if (args.Length() != 1 && args.Length() != 2) {
@@ -69,13 +71,14 @@ void openExternal(const v8::FunctionCallbackInfo<v8::Value>& info) {
     if (args.GetNext(&options)) {
         options.Get("activate", &activate);
     }
-    
+
     bool b = platform_util::openExternal(urlW, activate);
     info.GetReturnValue().Set(b);
 }
 
 //#if defined(OS_WIN)
-void writeShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void writeShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     std::string shortcutPathStr;
     gin::Arguments args(info);
 
@@ -122,10 +125,11 @@ void writeShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info) {
     base::win::CreateOrUpdateShortcutLink(base::StringToFilePath(shortcutPathStr), properties, operation);
 }
 
-void readShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void readShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     gin::Arguments args(info);
     std::string pathStr;
-    if (args.Length() != 2) {
+    if (args.Length() != 1) {
         args.ThrowError();
         info.GetReturnValue().Set(v8::Null(args.isolate()));
         return;
@@ -155,7 +159,8 @@ void readShortcutLink(const v8::FunctionCallbackInfo<v8::Value>& info) {
     info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(args.isolate(), options));
 }
 
-void showItemInFolder(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void showItemInFolder(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     std::string fullPathStr;
     gin::Arguments args(info);
 
@@ -173,7 +178,8 @@ void showItemInFolder(const v8::FunctionCallbackInfo<v8::Value>& info) {
     platform_util::showItemInFolder(base::StringToFilePath(fullPathStr));
 }
 
-void openItem(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void openItem(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     std::string fullPathStr;
     gin::Arguments args(info);
 
@@ -189,7 +195,8 @@ void openItem(const v8::FunctionCallbackInfo<v8::Value>& info) {
     platform_util::openItem(base::StringToFilePath(fullPathStr));
 }
 
-void moveItemToTrash(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void moveItemToTrash(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     std::string fullPathStr;
     gin::Arguments args(info);
 
@@ -208,17 +215,20 @@ void moveItemToTrash(const v8::FunctionCallbackInfo<v8::Value>& info) {
     info.GetReturnValue().Set(b);
 }
 
-void beep(const v8::FunctionCallbackInfo<v8::Value>& info) {
+void beep(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
     platform_util::beep();
 }
 //#endif
 
-void initializeShellApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
+void initializeShellApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv)
+{
     v8::Isolate* isolate = context->GetIsolate();
     v8::Local<v8::Object> obj = v8::Object::New(isolate);
     gin::Dictionary dict(context->GetIsolate(), obj);
     dict.SetMethod("showItemInFolder", &showItemInFolder);
     dict.SetMethod("openItem", &openItem);
+    dict.SetMethod("openPath", &openItem);
     dict.SetMethod("openExternal", &openExternal);
     dict.SetMethod("moveItemToTrash", &moveItemToTrash);
     dict.SetMethod("beep", &beep);
@@ -230,9 +240,9 @@ void initializeShellApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unus
     exports->Set(v8::String::NewFromUtf8(isolate, "Shell"), obj);
 }
 
-}  // namespace
+} // namespace
 
 static const char CommonShellNative[] = "console.log('CommonShellNative');;";
-static NodeNative nativeCommonShellNative{ "Shell", CommonShellNative, sizeof(CommonShellNative) - 1 };
+static NodeNative nativeCommonShellNative { "Shell", CommonShellNative, sizeof(CommonShellNative) - 1 };
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_common_shell, initializeShellApi, &nativeCommonShellNative)

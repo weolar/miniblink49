@@ -353,13 +353,25 @@ void V8ConsoleMessage::reportToFrontend(protocol::Runtime::Frontend* frontend,
     }
     Maybe<String16> consoleContext;
     if (!m_consoleContext.isEmpty()) consoleContext = m_consoleContext;
+    std::unique_ptr<protocol::Runtime::StackTrace> stackTrace;
+    if (m_stackTrace) {
+      switch (m_type) {
+        case ConsoleAPIType::kAssert:
+        case ConsoleAPIType::kError:
+        case ConsoleAPIType::kTrace:
+        case ConsoleAPIType::kWarning:
+          stackTrace =
+              m_stackTrace->buildInspectorObjectImpl(inspector->debugger());
+          break;
+        default:
+          stackTrace =
+              m_stackTrace->buildInspectorObjectImpl(inspector->debugger(), 0);
+          break;
+      }
+    }
     frontend->consoleAPICalled(
         consoleAPITypeValue(m_type), std::move(arguments), m_contextId,
-        m_timestamp,
-        m_stackTrace
-            ? m_stackTrace->buildInspectorObjectImpl(inspector->debugger())
-            : nullptr,
-        std::move(consoleContext));
+        m_timestamp, std::move(stackTrace), std::move(consoleContext));
     return;
   }
   UNREACHABLE();
@@ -406,6 +418,7 @@ std::unique_ptr<V8ConsoleMessage> V8ConsoleMessage::createForConsoleAPI(
   message->m_consoleContext = consoleContext;
   message->m_type = type;
   message->m_contextId = contextId;
+  String16Builder messageStrBuilder;
   for (size_t i = 0; i < arguments.size(); ++i) {
     std::unique_ptr<v8::Global<v8::Value>> argument(
         new v8::Global<v8::Value>(isolate, arguments.at(i)));
@@ -413,10 +426,14 @@ std::unique_ptr<V8ConsoleMessage> V8ConsoleMessage::createForConsoleAPI(
     message->m_arguments.push_back(std::move(argument));
     message->m_v8Size +=
         v8::debug::EstimatedValueSize(isolate, arguments.at(i));
+
+    messageStrBuilder.append(V8ValueStringBuilder::toString(arguments.at(i), v8Context));
+    if (i != arguments.size() - 1)
+      messageStrBuilder.append(", ", 2);
   }
-  if (arguments.size())
-    message->m_message =
-        V8ValueStringBuilder::toString(arguments[0], v8Context);
+  message->m_message = messageStrBuilder.toString();
+//   if (arguments.size())
+//     message->m_message = V8ValueStringBuilder::toString(arguments[0], v8Context);
 
   v8::Isolate::MessageErrorLevel clientLevel = v8::Isolate::kMessageInfo;
   if (type == ConsoleAPIType::kDebug || type == ConsoleAPIType::kCount ||

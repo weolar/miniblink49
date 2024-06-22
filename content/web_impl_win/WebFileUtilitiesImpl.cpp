@@ -16,17 +16,19 @@ namespace content {
 
 static const ULONGLONG kSecondsFromFileTimeToTimet = 11644473600;
 
-static bool getFindData(String path, WIN32_FIND_DATAW& findData)
+static bool getFindData(const String path, WIN32_FIND_DATAW& findData)
 {
     if (path.isNull() || path.isEmpty())
         return false;
+    
     Vector<UChar> upath = WTF::ensureUTF16UChar(path, true);
-    if (upath.isEmpty() || upath.size() <= 1)
-        return false;
+    if (upath.isEmpty() || upath.size() <= 1) 
+        return false;    
 
     HANDLE handle = ::FindFirstFileW(upath.data(), &findData);
     if (handle == INVALID_HANDLE_VALUE)
         return false;
+    
     ::FindClose(handle);
     return true;
 }

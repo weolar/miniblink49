@@ -155,7 +155,9 @@ static void installV8OESVertexArrayObjectTemplate(v8::Local<v8::FunctionTemplate
     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8OESVertexArrayObjectConstants, WTF_ARRAY_LENGTH(V8OESVertexArrayObjectConstants));
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8OESVertexArrayObject::domTemplate(v8::Isolate* isolate)

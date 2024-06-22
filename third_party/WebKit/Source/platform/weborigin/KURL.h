@@ -29,7 +29,7 @@
 //#include "PlatformString.h"
 //#include "URLString.h"
 #include "wtf/text/WTFString.h"
-#include <wtf/HashMap.h>
+#include "wtf/HashMap.h"
 
 #if USE(GOOGLEURL)
 #include "KURLGooglePrivate.h"

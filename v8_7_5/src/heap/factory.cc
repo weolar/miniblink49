@@ -231,8 +231,11 @@ Handle<PrototypeInfo> Factory::NewPrototypeInfo() {
 
 Handle<EnumCache> Factory::NewEnumCache(Handle<FixedArray> keys,
                                         Handle<FixedArray> indices) {
-  return Handle<EnumCache>::cast(
-      NewTuple2(keys, indices, AllocationType::kOld));
+  Handle<EnumCache> result = Handle<EnumCache>::cast(
+      NewStruct(ENUM_CACHE_TYPE, AllocationType::kOld));
+  result->set_keys(*keys);
+  result->set_indices(*indices);
+  return result;
 }
 
 Handle<Tuple2> Factory::NewTuple2(Handle<Object> value1, Handle<Object> value2,
@@ -419,16 +422,12 @@ Handle<FixedArray> Factory::NewUninitializedFixedArray(
 }
 
 Handle<ClosureFeedbackCellArray> Factory::NewClosureFeedbackCellArray(
-    int num_slots, AllocationType allocation) {
-  int length = ClosureFeedbackCellArray::kFeedbackCellStartIndex + num_slots;
+    int length, AllocationType allocation) {
+  if (length == 0) return empty_closure_feedback_cell_array();
+
   Handle<ClosureFeedbackCellArray> feedback_cell_array =
       NewFixedArrayWithMap<ClosureFeedbackCellArray>(
           RootIndex::kClosureFeedbackCellArrayMap, length, allocation);
-
-  // Initialize header fields
-  feedback_cell_array->set_interrupt_budget(
-      FLAG_budget_for_feedback_vector_allocation);
-  DCHECK_EQ(ClosureFeedbackCellArray::kFeedbackCellStartIndex, 1);
 
   return feedback_cell_array;
 }
@@ -882,8 +881,7 @@ Handle<SeqOneByteString> Factory::AllocateRawOneByteInternalizedString(
       length == 0,
       isolate()->roots_table()[RootIndex::kempty_string] == kNullAddress);
 
-  Map map =
-      length == 0 ? *empty_string_map() : *one_byte_internalized_string_map();
+  Map map = *one_byte_internalized_string_map();
   int size = SeqOneByteString::SizeFor(length);
   HeapObject result =
       AllocateRawWithImmortalMap(size,
@@ -1235,8 +1233,6 @@ MaybeHandle<String> Factory::NewConsString(Handle<String> left,
 
 Handle<String> Factory::NewConsString(Handle<String> left, Handle<String> right,
                                       int length, bool one_byte) {
-  DCHECK_GT(left->length(), 0);
-  DCHECK_GT(right->length(), 0);
   DCHECK(!left->IsThinString());
   DCHECK(!right->IsThinString());
   DCHECK_GE(length, ConsString::kMinLength);
@@ -1604,7 +1600,8 @@ Handle<Context> Factory::NewWithContext(Handle<Context> previous,
 
 Handle<Context> Factory::NewBlockContext(Handle<Context> previous,
                                          Handle<ScopeInfo> scope_info) {
-  DCHECK_EQ(scope_info->scope_type(), BLOCK_SCOPE);
+  DCHECK_IMPLIES(scope_info->scope_type() != BLOCK_SCOPE,
+                 scope_info->scope_type() == CLASS_SCOPE);
   int variadic_part_length = scope_info->ContextLength();
   Handle<Context> context = NewContext(
       RootIndex::kBlockContextMap, Context::SizeFor(variadic_part_length),
@@ -1822,7 +1819,6 @@ Handle<BytecodeArray> Factory::NewBytecodeArray(
   instance->set_parameter_count(parameter_count);
   instance->set_incoming_new_target_or_generator_register(
       interpreter::Register::invalid_value());
-  instance->set_interrupt_budget(interpreter::Interpreter::InterruptBudget());
   instance->set_osr_loop_nesting_level(0);
   instance->set_bytecode_age(BytecodeArray::kNoAgeBytecodeAge);
   instance->set_constant_pool(*constant_pool);
@@ -1892,6 +1888,8 @@ Handle<FeedbackCell> Factory::NewNoClosuresCell(Handle<HeapObject> value) {
       FeedbackCell::kSize, AllocationType::kOld, *no_closures_cell_map());
   Handle<FeedbackCell> cell(FeedbackCell::cast(result), isolate());
   cell->set_value(*value);
+  cell->set_interrupt_budget(FeedbackCell::GetInitialInterruptBudget());
+  cell->clear_padding();
   return cell;
 }
 
@@ -1901,6 +1899,8 @@ Handle<FeedbackCell> Factory::NewOneClosureCell(Handle<HeapObject> value) {
       FeedbackCell::kSize, AllocationType::kOld, *one_closure_cell_map());
   Handle<FeedbackCell> cell(FeedbackCell::cast(result), isolate());
   cell->set_value(*value);
+  cell->set_interrupt_budget(FeedbackCell::GetInitialInterruptBudget());
+  cell->clear_padding();
   return cell;
 }
 
@@ -1910,6 +1910,8 @@ Handle<FeedbackCell> Factory::NewManyClosuresCell(Handle<HeapObject> value) {
       FeedbackCell::kSize, AllocationType::kOld, *many_closures_cell_map());
   Handle<FeedbackCell> cell(FeedbackCell::cast(result), isolate());
   cell->set_value(*value);
+  cell->set_interrupt_budget(FeedbackCell::GetInitialInterruptBudget());
+  cell->clear_padding();
   return cell;
 }
 
@@ -2541,7 +2543,7 @@ Handle<JSFunction> Factory::NewFunction(const NewFunctionArgs& args) {
     // TODO(littledan): Why do we have this is_generator test when
     // NewFunctionPrototype already handles finding an appropriately
     // shared prototype?
-    Handle<Object> prototype = args.maybe_prototype_.ToHandleChecked();
+    Handle<HeapObject> prototype = args.maybe_prototype_.ToHandleChecked();
     if (!IsResumableFunction(result->shared()->kind())) {
       if (prototype->IsTheHole(isolate())) {
         prototype = NewFunctionPrototype(result);
@@ -2950,7 +2952,6 @@ Handle<BytecodeArray> Factory::CopyBytecodeArray(
   copy->set_constant_pool(bytecode_array->constant_pool());
   copy->set_handler_table(bytecode_array->handler_table());
   copy->set_source_position_table(bytecode_array->source_position_table());
-  copy->set_interrupt_budget(bytecode_array->interrupt_budget());
   copy->set_osr_loop_nesting_level(bytecode_array->osr_loop_nesting_level());
   copy->set_bytecode_age(bytecode_array->bytecode_age());
   bytecode_array->CopyBytecodesTo(*copy);
@@ -3112,7 +3113,7 @@ Handle<JSObject> Factory::NewSlowJSObjectFromMap(Handle<Map> map, int capacity,
 }
 
 Handle<JSObject> Factory::NewSlowJSObjectWithPropertiesAndElements(
-    Handle<Object> prototype, Handle<NameDictionary> properties,
+    Handle<HeapObject> prototype, Handle<NameDictionary> properties,
     Handle<FixedArrayBase> elements, AllocationType allocation) {
   Handle<Map> object_map = isolate()->slow_object_with_object_prototype_map();
   if (object_map->prototype() != *prototype) {
@@ -3498,7 +3499,7 @@ MaybeHandle<JSBoundFunction> Factory::NewJSBoundFunction(
   }
 
   // Determine the prototype of the {target_function}.
-  Handle<Object> prototype;
+  Handle<HeapObject> prototype;
   ASSIGN_RETURN_ON_EXCEPTION(
       isolate(), prototype,
       JSReceiver::GetPrototype(isolate(), target_function), JSBoundFunction);
@@ -4421,7 +4422,7 @@ NewFunctionArgs NewFunctionArgs::ForFunctionWithoutCode(
 
 // static
 NewFunctionArgs NewFunctionArgs::ForBuiltinWithPrototype(
-    Handle<String> name, Handle<Object> prototype, InstanceType type,
+    Handle<String> name, Handle<HeapObject> prototype, InstanceType type,
     int instance_size, int inobject_properties, int builtin_id,
     MutableMode prototype_mutability) {
   DCHECK(Builtins::IsBuiltinId(builtin_id));

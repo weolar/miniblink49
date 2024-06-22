@@ -54,6 +54,8 @@ public:
 
     DEFINE_ATTRIBUTE_EVENT_LISTENER(change);
 
+    ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return static_cast<MediaQueryList*>(object); }
+
     // These two functions are provided for compatibility with JS code
     // written before the change listener became a DOM event.
     void addDeprecatedListener(PassRefPtr<EventListener>);

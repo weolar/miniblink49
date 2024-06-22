@@ -33,11 +33,12 @@
 #include "wtf/Forward.h"
 #include "wtf/OwnPtr.h"
 #include "wtf/RefCounted.h"
+#include "wtf/ThreadSafeRefCounted.h"
 #include "wtf/text/WTFString.h"
 
 namespace blink {
 
-class PLATFORM_EXPORT SharedBuffer : public RefCounted<SharedBuffer> {
+class PLATFORM_EXPORT SharedBuffer : public WTF::ThreadSafeRefCounted<SharedBuffer> {
 public:
     static const unsigned kSegmentSize = 0x1000;
 

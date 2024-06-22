@@ -92,6 +92,7 @@ font-style inherited, font, type_name=FontStyle, name_for_methods=Style
 font-variant inherited, font, type_name=FontVariant, name_for_methods=Variant
 font-variant-ligatures inherited, font, name_for_methods=VariantLigatures, converter=convertFontVariantLigatures
 font-weight interpolable, inherited, font, type_name=FontWeight, name_for_methods=Weight, converter=convertFontWeight
+font-feature-settings inherited, font, name_for_methods=FeatureSettings, converter=convertFontFeatureSettings
 -webkit-font-feature-settings inherited, font, name_for_methods=FeatureSettings, converter=convertFontFeatureSettings
 -webkit-font-smoothing inherited, font, type_name=FontSmoothingMode
 -webkit-locale inherited, custom_value
@@ -112,6 +113,7 @@ animation-iteration-count custom_all
 animation-name custom_all
 animation-play-state custom_all
 animation-timing-function custom_all
+backdrop-filter interpolable, converter=convertFilterOperations, runtime_flag=CSSBackdropFilter
 backface-visibility
 background-attachment custom_all
 background-blend-mode custom_all
@@ -181,6 +183,7 @@ flex-wrap
 float type_name=EFloat, name_for_methods=Floating
 flood-color interpolable, svg, converter=convertColor
 flood-opacity interpolable, svg, converter=convertNumberOrPercentage
+ime-mode
 glyph-orientation-horizontal inherited, svg, converter=convertGlyphOrientation
 glyph-orientation-vertical inherited, svg, custom_value
 grid-auto-columns runtime_flag=CSSGridLayout, converter=convertGridTrackSize
@@ -188,13 +191,16 @@ grid-auto-flow runtime_flag=CSSGridLayout, converter=convertGridAutoFlow
 grid-auto-rows runtime_flag=CSSGridLayout, converter=convertGridTrackSize
 grid-column-end runtime_flag=CSSGridLayout, converter=convertGridPosition
 grid-column-start runtime_flag=CSSGridLayout, converter=convertGridPosition
+grid-column-gap runtime_flag=CSSGridLayout, converter=convertLength
 grid-row-end runtime_flag=CSSGridLayout, converter=convertGridPosition
 grid-row-start runtime_flag=CSSGridLayout, converter=convertGridPosition
+grid-row-gap runtime_flag=CSSGridLayout, converter=convertLength
 grid-template-areas runtime_flag=CSSGridLayout, custom_all
 grid-template-columns runtime_flag=CSSGridLayout, custom_all
 grid-template-rows runtime_flag=CSSGridLayout, custom_all
 height interpolable, initial=initialSize, converter=convertLengthSizing
 image-rendering inherited
+image-orientation runtime_flag=ImageOrientation, inherited, name_for_methods=RespectImageOrientation, converter=convertImageOrientation
 isolation runtime_flag=CSSCompositing
 justify-content initial=initialContentAlignment, converter=convertContentAlignmentData
 justify-items runtime_flag=CSSGridLayout, initial=initialSelfAlignment, converter=convertSelfOrDefaultAlignmentData

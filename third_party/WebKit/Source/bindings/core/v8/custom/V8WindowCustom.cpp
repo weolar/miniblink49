@@ -63,6 +63,10 @@
 #include "wtf/Assertions.h"
 #include "wtf/OwnPtr.h"
 
+namespace content {
+void traceEventSamplingState(const char* category, const char*  name, const char* funcName);
+}
+
 namespace blink {
 
 void V8Window::eventAttributeGetterCustom(const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -330,6 +334,15 @@ void V8Window::namedPropertyGetterCustom(v8::Local<v8::Name> name, const v8::Pro
     AtomicString propName = toCoreAtomicString(nameString);
     if (propName == "Symbol.toPrimitive") {
         return;
+    }
+
+    if (propName.length() > 0) {
+        const char* propNameString = nullptr;
+        if (propName.is8Bit())
+            propNameString = (const char*)propName.characters8();
+        else
+            propNameString = propName.utf8().data();
+        content::traceEventSamplingState("DOMNamedProperty", "namedProperty", propNameString);
     }
 
     // Note that the spec doesn't allow any cross-origin named access to the window object. However,

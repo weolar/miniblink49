@@ -85,7 +85,7 @@ AnimationTimeline::AnimationTimeline(Document* document, PassOwnPtrWillBeRawPtr<
 
 AnimationTimeline::~AnimationTimeline()
 {
-#if !ENABLE(OILPAN)
+#if 1 // !ENABLE(OILPAN)
     for (const auto& animation : m_animations)
         animation->detachFromTimeline();
 #endif

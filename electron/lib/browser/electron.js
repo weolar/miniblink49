@@ -6,33 +6,48 @@ electron.ipcMain = ipcMain;
 var App = require("./../browser/api/app").App;
 electron.app = new App();
 
-electron.BrowserWindow = require("./../browser/api/browser-window");
+electron.BrowserWindow = require("./../browser/api/browser-window.js");
+electron.BrowserView = require("./../browser/api/browser-view.js");
+electron.webContents = require("./../browser/api/web-contents.js");
+electron.session = require("./../browser/api/session.js").session;
 
-electron.webContents = require("./../browser/api/web-contents");
+var s_map = {};
+var s_idGen = 0;
+
+electron.webContents.prototype.onCreateNewWebview = function(event, url) {
+    const win = new electron.BrowserWindow({width: 800, height: 600, show: true});
+    win.show();
+    
+    var id = ++s_idGen;
+    s_map[id] = win;
+    win.webContents.once("destroyed", function() { console.log('onCreateNewWebview, destroy'); delete s_map[id]; });
+    console.log("electron.webContents.prototype.onCreateNewWebview!!!!!!!!!!!");
+    event.newGuest = win;
+}
 
 const EventEmitter = require('events').EventEmitter;
 Object.setPrototypeOf(App.prototype, EventEmitter.prototype);
 
-const MenuItem = require('./api/menu-item');
+const MenuItem = require('./api/menu-item.js');
 electron.MenuItem = MenuItem;
 
-const Menu = require('./api/menu');
+const Menu = require('./api/menu.js');
 electron.Menu = Menu;
 
-const isPromise = require('./../common/api/is-promise').isPromise;
+const isPromise = require('./../common/api/is-promise.js').isPromise;
 electron.isPromise = isPromise;
 
-const dialog = require('./api/dialog').dialog;
+const dialog = require('./api/dialog.js').dialog;
 electron.dialog = dialog;
 
-const net = require('./api/net').net;
+const net = require('./api/net.js').net;
 electron.net = net;
 
-electron.shell = require("./../common/api/shell").Shell;
-electron.screen = require("./../common/api/screen").Screen;
-electron.tray = require("./../common/api/screen").Tray;
-electron.clipboard = require("./../common/api/clipboard");
-electron.nativeImage = require("./../common/api/native-image").NativeImage;
+electron.shell = require("./../common/api/shell.js").Shell;
+electron.screen = require("./../common/api/screen.js").Screen;
+electron.tray = require("./../common/api/screen.js").Tray;
+electron.clipboard = require("./../common/api/clipboard.js");
+electron.nativeImage = require("./../common/api/native-image.js").NativeImage;
 
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }
@@ -44,7 +59,7 @@ electron.systemPreferences = new SystemPreferences();
 
 ////////////////////////////////////////////////////////////////
 
-electron.protocol = require("./api/protocol").protocol;
+electron.protocol = require("./api/protocol.js").protocol;
 
 // function Protocol() {}
 // Protocol.prototype.registerStandardSchemes = function(schemes) {}

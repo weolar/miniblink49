@@ -203,6 +203,16 @@ public:
                                              SkFilterQuality,
                                              SkImageFilter* input = NULL);
 
+    bool canComputeFastBounds() const;
+
+    /**
+     * Returns true if this filter can cause transparent black pixels to become
+     * visible (ie., alpha > 0). The default implementation returns false. This
+     * function is non-recursive, i.e., only queries this filter and not its
+     * inputs.
+     */
+    virtual bool affectsTransparentBlack() const;
+
 #if SK_SUPPORT_GPU
     /**
      * Wrap the given texture in a texture-backed SkBitmap.

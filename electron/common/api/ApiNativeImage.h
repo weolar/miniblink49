@@ -19,6 +19,7 @@ public:
     v8::Local<v8::Object> toPNGAPI(const base::DictionaryValue& args);
     v8::Local<v8::Object> toJpeg(const base::DictionaryValue& args);
     v8::Local<v8::Object> toBitmap(const base::DictionaryValue& args);
+    std::string toDataURLApi();
 
     static v8::Local<v8::Object> NativeImage::createEmpty(v8::Isolate* isolate);
     static void createEmptyApi(const v8::FunctionCallbackInfo<v8::Value> info);
@@ -26,7 +27,7 @@ public:
     static void createFromBufferApi(const v8::FunctionCallbackInfo<v8::Value> info);
     static v8::Local<v8::Object> createFromBITMAPINFO(v8::Isolate* isolate, const BITMAPINFO* gdiBitmapInfo, void* gdiBitmapData);
     static v8::Local<v8::Object> createNativeImageFromBuffer(v8::Isolate* isolate, const unsigned char* data, size_t size);
-
+    
     static NativeImage* GetSelf(v8::Local<v8::Object> handle);
     HICON getIcon();
     HBITMAP getBitmap();

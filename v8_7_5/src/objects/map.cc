@@ -558,11 +558,49 @@ bool Map::InstancesNeedRewriting(Map target, int target_number_of_fields,
   return true;
 }
 
+//#pragma optimize("", off)
+
+// static constexpr T decode(U value) {
+//   return static_cast<T>((value & kMask) >> shift);
+// }
+// 
+// BitField<PropertyLocation, KindField::kNext, 1>
+
+// class LocationField : public BitField<PropertyLocation, KindField::kNext, 1>
+
+// enum PropertyLocation { kField = 0, kDescriptor = 1 };
+
+// template <class T, int shift, int size>
+//     class BitField : public BitFieldBase<T, shift, size, uint32_t> {};
+
+// template <class T, int shift, int size, class U>
+// class BitFieldBase {
+//  public:
+//   typedef T FieldType;
+// 
+//   // A type U mask of bit field.  To use all bits of a type U of x bits
+//   // in a bitfield without compiler warnings we have to compute 2^x
+//   // without using a shift count of x in the computation.
+//   static const U kOne = static_cast<U>(1U);
+//   static const U kMask = ((kOne << shift) << size) - (kOne << shift);
+//   static const U kShift = shift;
+//   static const U kSize = size;
+//   static const U kNext = kShift + kSize;
+//   static const U kNumValues = kOne << size;
+
+// class KindField : public BitField<PropertyKind, 0, 1> {};
+
+static constexpr int my_decode(uint32_t value) {
+  const uint32_t kMask = ((1u << 1) << 1) - (1u << 1);
+  return static_cast<int>((value & kMask) >> 1);
+}
+
 int Map::NumberOfFields() const {
   DescriptorArray descriptors = instance_descriptors();
   int result = 0;
   for (int i = 0; i < NumberOfOwnDescriptors(); i++) {
     if (descriptors->GetDetails(i).location() == kField) result++;
+    
   }
   return result;
 }
@@ -748,16 +786,14 @@ void Map::UpdateFieldType(Isolate* isolate, int descriptor, Handle<Name> name,
     DescriptorArray descriptors = current->instance_descriptors();
     PropertyDetails details = descriptors->GetDetails(descriptor);
 
-    // Currently constness change implies map change.
-    DCHECK_IMPLIES(new_constness != details.constness(),
-                   FLAG_modify_map_inplace);
-
-    // It is allowed to change representation here only from None to something.
+    // It is allowed to change representation here only from None
+    // to something or from Smi or HeapObject to Tagged.
     DCHECK(details.representation().Equals(new_representation) ||
-           details.representation().IsNone());
+           details.representation().CanBeInPlaceChangedTo(new_representation));
 
     // Skip if already updated the shared descriptor.
-    if ((FLAG_modify_map_inplace && new_constness != details.constness()) ||
+    if (new_constness != details.constness() ||
+        !new_representation.Equals(details.representation()) ||
         descriptors->GetFieldType(descriptor) != *new_wrapped_type.object()) {
       DCHECK_IMPLIES(!FLAG_track_constant_fields,
                      new_constness == PropertyConstness::kMutable);
@@ -805,9 +841,7 @@ void Map::GeneralizeField(Isolate* isolate, Handle<Map> map, int modify_index,
 
   // Return if the current map is general enough to hold requested constness and
   // representation/field type.
-  if (((FLAG_modify_map_inplace &&
-        IsGeneralizableTo(new_constness, old_constness)) ||
-       (!FLAG_modify_map_inplace && (old_constness == new_constness))) &&
+  if (IsGeneralizableTo(new_constness, old_constness) &&
       old_representation.Equals(new_representation) &&
       !FieldTypeIsCleared(new_representation, *new_field_type) &&
       // Checking old_field_type for being cleared is not necessary because
@@ -828,9 +862,8 @@ void Map::GeneralizeField(Isolate* isolate, Handle<Map> map, int modify_index,
   new_field_type =
       Map::GeneralizeFieldType(old_representation, old_field_type,
                                new_representation, new_field_type, isolate);
-  if (FLAG_modify_map_inplace) {
-    new_constness = GeneralizeConstness(old_constness, new_constness);
-  }
+
+  new_constness = GeneralizeConstness(old_constness, new_constness);
 
   PropertyDetails details = descriptors->GetDetails(modify_index);
   Handle<Name> name(descriptors->GetKey(modify_index), isolate);
@@ -1018,9 +1051,10 @@ Map Map::TryUpdateSlow(Isolate* isolate, Map old_map) {
     // Bail out if there were some private symbol transitions mixed up
     // with the integrity level transitions.
     if (!info.has_integrity_level_transition) return Map();
-    // Make sure replay the original elements kind transitions, before
+    // Make sure to replay the original elements kind transitions, before
     // the integrity level transition sets the elements to dictionary mode.
     DCHECK(to_kind == DICTIONARY_ELEMENTS ||
+           to_kind == SLOW_STRING_WRAPPER_ELEMENTS ||
            IsFixedTypedArrayElementsKind(to_kind));
     to_kind = info.integrity_level_source_map->elements_kind();
   }
@@ -1479,7 +1513,7 @@ Handle<Map> Map::RawCopy(Isolate* isolate, Handle<Map> map, int instance_size,
   Handle<Map> result = isolate->factory()->NewMap(
       map->instance_type(), instance_size, TERMINAL_FAST_ELEMENTS_KIND,
       inobject_properties);
-  Handle<Object> prototype(map->prototype(), isolate);
+  Handle<HeapObject> prototype(map->prototype(), isolate);
   Map::SetPrototype(isolate, result, prototype);
   result->set_constructor_or_backpointer(map->GetConstructor());
   result->set_bit_field(map->bit_field());
@@ -2047,6 +2081,24 @@ Handle<Map> Map::CopyForPreventExtensions(Isolate* isolate, Handle<Map> map,
     ElementsKind new_kind = IsStringWrapperElementsKind(map->elements_kind())
                                 ? SLOW_STRING_WRAPPER_ELEMENTS
                                 : DICTIONARY_ELEMENTS;
+    if (FLAG_enable_sealed_frozen_elements_kind) {
+      switch (map->elements_kind()) {
+        case PACKED_ELEMENTS:
+          if (attrs_to_add == SEALED) {
+            new_kind = PACKED_SEALED_ELEMENTS;
+          } else if (attrs_to_add == FROZEN) {
+            new_kind = PACKED_FROZEN_ELEMENTS;
+          }
+          break;
+        case PACKED_SEALED_ELEMENTS:
+          if (attrs_to_add == FROZEN) {
+            new_kind = PACKED_FROZEN_ELEMENTS;
+          }
+          break;
+        default:
+          break;
+      }
+    }
     new_map->set_elements_kind(new_kind);
   }
   return new_map;
@@ -2187,7 +2239,7 @@ Handle<Map> Map::TransitionToDataProperty(Isolate* isolate, Handle<Map> map,
       result = Map::Normalize(isolate, initial_map, CLEAR_INOBJECT_PROPERTIES,
                               reason);
       initial_map->DeprecateTransitionTree(isolate);
-      Handle<Object> prototype(result->prototype(), isolate);
+      Handle<HeapObject> prototype(result->prototype(), isolate);
       JSFunction::SetInitialMap(constructor, result, prototype);
 
       // Deoptimize all code that embeds the previous initial map.
@@ -2630,7 +2682,7 @@ bool Map::IsPrototypeChainInvalidated(Map map) {
 
 // static
 void Map::SetPrototype(Isolate* isolate, Handle<Map> map,
-                       Handle<Object> prototype,
+                       Handle<HeapObject> prototype,
                        bool enable_prototype_setup_mode) {
   RuntimeCallTimerScope stats_scope(isolate, *map,
                                     RuntimeCallCounterId::kMap_SetPrototype);
@@ -2652,6 +2704,8 @@ void Map::SetPrototype(Isolate* isolate, Handle<Map> map,
           FunctionTemplateInfo::cast(maybe_constructor)->hidden_prototype() ||
           prototype->IsJSGlobalObject();
     }
+  } else {
+    DCHECK(prototype->IsNull(isolate) || prototype->IsJSProxy());
   }
   map->set_has_hidden_prototype(is_hidden);
 
@@ -2667,7 +2721,7 @@ void Map::StartInobjectSlackTracking() {
 }
 
 Handle<Map> Map::TransitionToPrototype(Isolate* isolate, Handle<Map> map,
-                                       Handle<Object> prototype) {
+                                       Handle<HeapObject> prototype) {
   Handle<Map> new_map =
       TransitionsAccessor(isolate, map).GetPrototypeTransition(prototype);
   if (new_map.is_null()) {

@@ -80,17 +80,11 @@
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp">
-      <Filter>src\browser\api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp">
       <Filter>src\browser\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\electron\common\ThreadCall.cpp">
-      <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gin\object_template_builder.cc">
       <Filter>gin</Filter>
@@ -112,42 +106,6 @@
     </ClCompile>
     <ClCompile Include="..\..\gin\arguments.cc">
       <Filter>gin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_string16.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_checker_impl.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_bind_helpers.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_helpers.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_internal.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_logging.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_ref_counted.cc">
-      <Filter>cef\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock_impl.cc">
-      <Filter>cef\base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gin\function_template.cc">
       <Filter>gin</Filter>
@@ -314,14 +272,98 @@
     <ClCompile Include="..\..\electron\common\SystemTray.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\ui\WCDataObject.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\ui\WebDropSource.cpp">
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_bind_helpers.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_callback_helpers.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_callback_internal.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_logging.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_ref_counted.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_string16.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_thread_checker_impl.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_thread_collision_warner.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_weak_ptr.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiNativeImage.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\WebviewPluginImpl.cpp">
+      <Filter>src\renerer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\WebviewPlugin.cpp">
+      <Filter>src\renerer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\InitGdiPlus.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiClipboard.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\NapiStub.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_lock_impl.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\cef\libcef_dll\base\cef_lock.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiBrowserView.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiBrowserWindow.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\ThreadCallWrap.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiSession.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiWebRequest.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\api\ApiContextBridge.cpp">
+      <Filter>src\renerer\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\api\ObjectCache.cpp">
+      <Filter>src\renerer\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\promise.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\microtasks_scope.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiDownloadItem.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,9 +426,6 @@
     </ClInclude>
     <ClInclude Include="..\..\electron\common\AtomCommandLine.h">
       <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h">
-      <Filter>src\renerer\api</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\common\IdLiveDetect.h">
       <Filter>src\common</Filter>
@@ -531,6 +570,57 @@
     </ClInclude>
     <ClInclude Include="..\..\electron\resource.h">
       <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\renderer\WebviewPluginImpl.h">
+      <Filter>src\renerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\renderer\WebviewPlugin.h">
+      <Filter>src\renerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\InitGdiPlus.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ApiBrowserView.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\WindowState.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\PopupWindow.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ApiSession.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\FileUtil.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ApiWebRequest.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\renderer\api\ApiContextBridge.h">
+      <Filter>src\renerer\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\renderer\api\ObjectCache.h">
+      <Filter>src\renerer\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\promise.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\microtasks_scope.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ApiDownloadItem.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\WorldIDs.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\IconUtil.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\mbexport.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

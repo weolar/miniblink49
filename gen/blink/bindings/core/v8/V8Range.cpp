@@ -900,7 +900,9 @@ static void installV8RangeTemplate(v8::Local<v8::FunctionTemplate> functionTempl
     static_assert(3 == Range::END_TO_START, "the value of Range_END_TO_START does not match with implementation");
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Range::domTemplate(v8::Isolate* isolate)

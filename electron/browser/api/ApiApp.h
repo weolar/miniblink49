@@ -3,9 +3,13 @@
 
 #include "common/api/EventEmitter.h"
 
-typedef struct HWND__ *HWND;
+typedef struct HWND__* HWND;
 typedef struct tagCOPYDATASTRUCT COPYDATASTRUCT;
-typedef void *HANDLE;
+typedef void* HANDLE;
+
+namespace gin {
+class Arguments;
+}
 
 namespace atom {
 
@@ -24,9 +28,12 @@ public:
     void exitApi();
     void focusApi();
     bool isReadyApi() const;
+    bool isOnlineApi();
+    void getFileIconApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     void addRecentDocumentApi(const std::string& path);
     void clearRecentDocumentsApi();
     void setAppUserModelIdApi(const std::string& id);
+    bool requestSingleInstanceLockApi();
     bool isDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     bool setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     bool removeAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -37,7 +44,7 @@ public:
     bool setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     bool isAccessibilitySupportEnabled() { return false; }
-    void disableHardwareAcceleration() {}
+    void disableHardwareAcceleration() { }
 
     void setVersionApi(const std::string& version) { m_version = version; }
     std::string getVersionApi() const { return m_version; }

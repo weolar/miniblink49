@@ -7,7 +7,7 @@
 #include <Unknwn.h>
 
 namespace atom {
- 
+
 extern CLSID s_bmpClsid;
 extern CLSID s_jpgClsid;
 extern CLSID s_pngClsid;

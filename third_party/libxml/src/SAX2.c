@@ -219,7 +219,7 @@ xmlNsWarnMsg(xmlParserCtxtPtr ctxt, xmlParserErrors error,
  *
  * Returns a xmlChar *
  */
-const xmlChar *
+const xmlChar * XMLCALL
 xmlSAX2GetPublicId(void *ctx ATTRIBUTE_UNUSED)
 {
     /* xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx; */
@@ -235,7 +235,7 @@ xmlSAX2GetPublicId(void *ctx ATTRIBUTE_UNUSED)
  *
  * Returns a xmlChar *
  */
-const xmlChar *
+const xmlChar * XMLCALL
 xmlSAX2GetSystemId(void *ctx)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -251,7 +251,7 @@ xmlSAX2GetSystemId(void *ctx)
  *
  * Returns an int
  */
-int
+int XMLCALL
 xmlSAX2GetLineNumber(void *ctx)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -267,7 +267,7 @@ xmlSAX2GetLineNumber(void *ctx)
  *
  * Returns an int
  */
-int
+int XMLCALL
 xmlSAX2GetColumnNumber(void *ctx)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;

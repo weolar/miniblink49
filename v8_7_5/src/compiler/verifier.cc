@@ -25,6 +25,8 @@
 #include "src/compiler/type-cache.h"
 #include "src/ostreams.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -1190,7 +1192,12 @@ void Verifier::Visitor::Check(Node* node, const AllNodes& all) {
       CheckValueInputIs(node, 1, Type::Any());
       CheckTypeIs(node, Type::Boolean());
       break;
-
+    case IrOpcode::kNumberSameValue:
+      // (Number, Number) -> Boolean
+      CheckValueInputIs(node, 0, Type::Number());
+      CheckValueInputIs(node, 1, Type::Number());
+      CheckTypeIs(node, Type::Boolean());
+      break;
     case IrOpcode::kObjectIsArrayBufferView:
     case IrOpcode::kObjectIsBigInt:
     case IrOpcode::kObjectIsCallable:
@@ -1270,8 +1277,10 @@ void Verifier::Visitor::Check(Node* node, const AllNodes& all) {
       CheckTypeIs(node, Type::OtherInternal());
       break;
     case IrOpcode::kNewConsString:
-    case IrOpcode::kNewConsOneByteString:
-    case IrOpcode::kNewConsTwoByteString:
+      CheckValueInputIs(node, 0, TypeCache::Get()->kStringLengthType);
+      CheckValueInputIs(node, 1, Type::String());
+      CheckValueInputIs(node, 2, Type::String());
+      CheckTypeIs(node, Type::String());
       break;
     case IrOpcode::kDelayedStringConstant:
       CheckTypeIs(node, Type::String());
@@ -1339,7 +1348,9 @@ void Verifier::Visitor::Check(Node* node, const AllNodes& all) {
       // CheckTypeIs(node, to));
       break;
     }
-    case IrOpcode::kChangeTaggedToTaggedSigned:
+    case IrOpcode::kChangeTaggedToTaggedSigned:      // Fall through.
+    case IrOpcode::kChangeCompressedToTaggedSigned:  // Fall through.
+    case IrOpcode::kChangeTaggedToCompressedSigned:
       break;
     case IrOpcode::kTruncateTaggedToFloat64: {
       // NumberOrUndefined /\ Tagged -> Number /\ UntaggedFloat64
@@ -1444,18 +1455,6 @@ void Verifier::Visitor::Check(Node* node, const AllNodes& all) {
       CheckValueInputIs(node, 0, Type::Any());
       CheckTypeIs(node, Type::InternalizedString());
       break;
-    case IrOpcode::kCheckNonEmptyString:
-      CheckValueInputIs(node, 0, Type::Any());
-      CheckTypeIs(node, Type::NonEmptyString());
-      break;
-    case IrOpcode::kCheckNonEmptyOneByteString:
-      CheckValueInputIs(node, 0, Type::Any());
-      CheckTypeIs(node, Type::NonEmptyOneByteString());
-      break;
-    case IrOpcode::kCheckNonEmptyTwoByteString:
-      CheckValueInputIs(node, 0, Type::Any());
-      CheckTypeIs(node, Type::NonEmptyTwoByteString());
-      break;
     case IrOpcode::kCheckMaps:
       CheckValueInputIs(node, 0, Type::Any());
       CheckNotTyped(node);
@@ -1518,6 +1517,10 @@ void Verifier::Visitor::Check(Node* node, const AllNodes& all) {
     case IrOpcode::kCheckedTaggedToFloat64:
     case IrOpcode::kCheckedTaggedToTaggedSigned:
     case IrOpcode::kCheckedTaggedToTaggedPointer:
+    case IrOpcode::kCheckedCompressedToTaggedSigned:
+    case IrOpcode::kCheckedCompressedToTaggedPointer:
+    case IrOpcode::kCheckedTaggedToCompressedSigned:
+    case IrOpcode::kCheckedTaggedToCompressedPointer:
     case IrOpcode::kCheckedTruncateTaggedToWord32:
       break;
 

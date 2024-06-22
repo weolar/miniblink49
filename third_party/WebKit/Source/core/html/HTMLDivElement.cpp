@@ -36,6 +36,10 @@ HTMLDivElement::HTMLDivElement(Document& document)
 {
 }
 
+HTMLDivElement::~HTMLDivElement()
+{
+}
+
 DEFINE_NODE_FACTORY(HTMLDivElement)
 
 void HTMLDivElement::collectStyleForPresentationAttribute(const QualifiedName& name, const AtomicString& value, MutableStylePropertySet* style)

@@ -33,6 +33,8 @@
 
 namespace blink {
 
+class ScriptWrappable;
+
 class CORE_EXPORT ActiveDOMObject : public ContextLifecycleObserver {
 public:
     ActiveDOMObject(ExecutionContext*);
@@ -53,6 +55,8 @@ public:
     virtual void suspend();
     virtual void resume();
     virtual void stop();
+
+    virtual ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const = 0;
 
     void didMoveToNewExecutionContext(ExecutionContext*);
 

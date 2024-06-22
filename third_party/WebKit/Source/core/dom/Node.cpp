@@ -2081,7 +2081,7 @@ void Node::handleLocalEvents(Event& event)
 {
 #ifndef MINIBLINK_NO_DRAG_REGION
     const AtomicString& eventType = event.type();
-    
+
     if (EventTypeNames::mousedown == eventType && event.isMouseEvent() && event.eventPhase() == Event::CAPTURING_PHASE) {
         MouseEvent* mouseEvent = toMouseEvent(&event);
         if (mouseEvent->buttonDown() && LeftButton == mouseEvent->button()) {

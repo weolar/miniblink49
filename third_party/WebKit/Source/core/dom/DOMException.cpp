@@ -89,6 +89,15 @@ static const CoreException* getErrorEntry(ExceptionCode ec)
     return tableIndex < tableSize ? &coreExceptions[tableIndex] : 0;
 }
 
+static int getErrorCode(const String& name)
+{
+    for (const CoreException& entry : coreExceptions) {
+        if (entry.name == name)
+            return entry.code;
+    }
+    return 0;
+}
+
 DOMException::DOMException(unsigned short code, const String& name, const String& sanitizedMessage, const String& unsanitizedMessage)
 {
     ASSERT(name);
@@ -107,6 +116,12 @@ DOMException* DOMException::create(ExceptionCode ec, const String& sanitizedMess
         sanitizedMessage.isNull() ? String(entry->message) : sanitizedMessage,
         unsanitizedMessage);
 }
+
+DOMException* DOMException::create(const String& message, const String& name)
+{
+    return new DOMException(getErrorCode(name), name, message, message);
+}
+
 
 String DOMException::toString() const
 {

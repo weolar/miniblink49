@@ -9,6 +9,8 @@
 #include "src/isolate.h"
 #include "src/utils.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

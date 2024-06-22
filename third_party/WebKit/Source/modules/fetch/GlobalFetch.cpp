@@ -67,6 +67,7 @@ private:
         }
 
         void stop() override { m_fetchManager->stop(); }
+        ScriptWrappable* toScriptWrappable(ActiveDOMObject* object) const final { return nullptr; }
 
         DEFINE_INLINE_TRACE()
         {

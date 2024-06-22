@@ -48,13 +48,8 @@ public:
     public:
         ReaderImpl(PassRefPtr<Context> context, Client* client);
         ~ReaderImpl() override;
-        Result read(void* data,
-            size_t size,
-            Flags flags,
-            size_t* readSize) override;
-        Result beginRead(const void** buffer,
-            Flags flags,
-            size_t* available) override;
+        Result read(void* data, size_t size, Flags flags, size_t* readSize) override;
+        Result beginRead(const void** buffer, Flags flags, size_t* available) override;
         Result endRead(size_t readSize) override;
 
     private:

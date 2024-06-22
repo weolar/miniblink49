@@ -49,6 +49,7 @@ class WorkerInspectorController;
 class WorkerMicrotaskRunner;
 class WorkerReportingProxy;
 class WorkerThreadStartupData;
+class GcTimeScheduler;
 
 enum WorkerThreadStartMode {
     DontPauseWorkerGlobalScopeOnStart,
@@ -177,6 +178,8 @@ private:
 
     // Used to signal thread termination.
     OwnPtr<WebWaitableEvent> m_terminationEvent;
+
+    OwnPtr<GcTimeScheduler> m_gcTimeScheduler;
 };
 
 } // namespace blink

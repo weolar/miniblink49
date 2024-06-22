@@ -876,7 +876,7 @@ class BytecodeGenerator::FeedbackSlotCache : public ZoneObject {
   }
 
  private:
-  typedef std::tuple<SlotKind, int, const void*> Key;
+  using Key = std::tuple<SlotKind, int, const void*>;
 
   void PutImpl(SlotKind slot_kind, int index, const void* node,
                int slot_index) {
@@ -1367,8 +1367,7 @@ void BytecodeGenerator::VisitDeclarations(Declaration::List* declarations) {
 
   globals_builder()->set_constant_pool_entry(
       builder()->AllocateDeferredConstantPoolEntry());
-  int encoded_flags = DeclareGlobalsEvalFlag::encode(info()->is_eval()) |
-                      DeclareGlobalsNativeFlag::encode(info()->is_native());
+  int encoded_flags = DeclareGlobalsEvalFlag::encode(info()->is_eval());
 
   // Emit code to declare globals.
   RegisterList args = register_allocator()->NewRegisterList(3);
@@ -4655,7 +4654,7 @@ void BytecodeGenerator::VisitCountOperation(CountOperation* expr) {
   // Evaluate LHS expression and get old value.
   Register object, key, old_value;
   RegisterList super_property_args;
-  const AstRawString* name;
+  const AstRawString* name = nullptr;
   switch (assign_type) {
     case NON_PROPERTY: {
       VariableProxy* proxy = expr->expression()->AsVariableProxy();

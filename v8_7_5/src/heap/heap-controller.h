@@ -8,7 +8,7 @@
 #include <cstddef>
 #include "src/allocation.h"
 #include "src/heap/heap.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+//#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
 
 namespace v8 {
 namespace internal {
@@ -47,10 +47,10 @@ class V8_EXPORT_PRIVATE MemoryController {
   const double conservative_growing_factor_;
   const double target_mutator_utilization_;
 
-  FRIEND_TEST(HeapControllerTest, HeapGrowingFactor);
-  FRIEND_TEST(HeapControllerTest, MaxHeapGrowingFactor);
-  FRIEND_TEST(HeapControllerTest, MaxOldGenerationSize);
-  FRIEND_TEST(HeapControllerTest, OldGenerationAllocationLimit);
+//   FRIEND_TEST(HeapControllerTest, HeapGrowingFactor);
+//   FRIEND_TEST(HeapControllerTest, MaxHeapGrowingFactor);
+//   FRIEND_TEST(HeapControllerTest, MaxOldGenerationSize);
+//   FRIEND_TEST(HeapControllerTest, OldGenerationAllocationLimit);
 };
 
 class V8_EXPORT_PRIVATE HeapController : public MemoryController {

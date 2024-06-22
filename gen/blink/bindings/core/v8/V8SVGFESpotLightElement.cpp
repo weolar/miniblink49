@@ -216,7 +216,9 @@ static void installV8SVGFESpotLightElementTemplate(v8::Local<v8::FunctionTemplat
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8SVGFESpotLightElement::domTemplate(v8::Isolate* isolate)

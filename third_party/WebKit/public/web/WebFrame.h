@@ -51,6 +51,7 @@ class Context;
 class Function;
 class Object;
 class Value;
+class Isolate;
 template <class T> class Local;
 }
 
@@ -347,6 +348,8 @@ public:
     // be calling this API.
     virtual v8::Local<v8::Context> mainWorldScriptContext() const = 0;
 
+    virtual int32_t getScriptContextWorldId(v8::Local<v8::Context> scriptContext) const = 0;
+    virtual v8::Local<v8::Context> getScriptContextFromWorldId(v8::Isolate* isolate, int worldId) const = 0;
 
     // Returns true if the WebFrame currently executing JavaScript has access
     // to the given WebFrame, or false otherwise.

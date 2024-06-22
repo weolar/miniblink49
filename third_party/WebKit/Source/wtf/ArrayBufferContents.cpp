@@ -37,10 +37,10 @@ namespace WTF {
 AdjustAmountOfExternalAllocatedMemoryFunction ArrayBufferContents::s_adjustAmountOfExternalAllocatedMemoryFunction;
 
 ArrayBufferContents::ArrayBufferContents()
-    : m_holder(adoptRef(new DataHolder())) { }
+    : m_holder(adoptRef(new DataHolder(nullptr, nullptr))) { }
 
 ArrayBufferContents::ArrayBufferContents(unsigned numElements, unsigned elementByteSize, SharingType isShared, ArrayBufferContents::InitializationPolicy policy)
-    : m_holder(adoptRef(new DataHolder()))
+    : m_holder(adoptRef(new DataHolder(nullptr, nullptr)))
 {
     // Do not allow 32-bit overflow of the total size.
     unsigned totalSize = numElements * elementByteSize;
@@ -53,9 +53,8 @@ ArrayBufferContents::ArrayBufferContents(unsigned numElements, unsigned elementB
     m_holder->allocateNew(totalSize, isShared, policy);
 }
 
-ArrayBufferContents::ArrayBufferContents(
-    void* data, unsigned sizeInBytes, SharingType isShared)
-    : m_holder(adoptRef(new DataHolder()))
+ArrayBufferContents::ArrayBufferContents(void* data, unsigned sizeInBytes, DataDeleter deleter, void* deleterInfo, SharingType isShared)
+    : m_holder(adoptRef(new DataHolder(deleter, deleterInfo)))
 {
     if (data) {
         m_holder->adopt(data, sizeInBytes, isShared);
@@ -101,9 +100,10 @@ void ArrayBufferContents::copyTo(ArrayBufferContents& other)
 struct MemoryHead {
     size_t magicNum;
     size_t size;
+    //int isBig;
 
-    static const size_t kMagicNum0 = 0x1122dd44;
-    static const size_t kMagicNum1 = 0x11227788;
+    static const size_t kMagicNum0 = 0x33333333;
+    static const size_t kMagicNum1 = 0x44444444;
 
     static MemoryHead* getPointerHead(void* pointer) { return ((MemoryHead*)pointer) - 1; }
     static size_t getPointerMemSize(void* pointer) { return getPointerHead(pointer)->size; }
@@ -115,13 +115,22 @@ void ArrayBufferContents::allocateMemory(size_t size, InitializationPolicy polic
     if (s_adjustAmountOfExternalAllocatedMemoryFunction)
         s_adjustAmountOfExternalAllocatedMemoryFunction(static_cast<int>(size));
 #if 1
-    MemoryHead* head = (MemoryHead*)partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size + sizeof(MemoryHead), "ArrayBufferContents::allocateMemory");
+    MemoryHead* head = nullptr;
+//     int isBig = size > 1000000;
+//     if (!isBig) {
+//         head = (MemoryHead*)partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size + sizeof(MemoryHead), "ArrayBufferContents::allocateMemory");
+//     } else {
+           head = (MemoryHead*)malloc(size + sizeof(MemoryHead));
+//     }
+
     head->magicNum = MemoryHead::kMagicNum0;
     head->size = size;
+    //head->isBig = isBig;
     data = MemoryHead::getHeadToMemBegin(head);
 #else
-    data = partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size);
+    data = partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size, "ArrayBufferContents::allocateMemory");
 #endif
+
     if (policy == ZeroInitialize && data)
         memset(data, '\0', size);
 }
@@ -132,24 +141,37 @@ void ArrayBufferContents::freeMemory(void* data, size_t size)
     if (!data || 0 == size)
         return;
     MemoryHead* head = MemoryHead::getPointerHead(data);
+
     if (head->magicNum != MemoryHead::kMagicNum0)
         DebugBreak();
-    partitionFreeGeneric(WTF::Partitions::bufferPartition(), head);
+    head->magicNum = MemoryHead::kMagicNum1;
+    //if (head->isBig)
+          free(head);
+    //else
+    //    partitionFreeGeneric(WTF::Partitions::bufferPartition(), head);
 #else
     partitionFreeGeneric(WTF::Partitions::bufferPartition(), data);
 #endif
+
     if (s_adjustAmountOfExternalAllocatedMemoryFunction)
         s_adjustAmountOfExternalAllocatedMemoryFunction(-static_cast<int>(size));
 }
 
-ArrayBufferContents::DataHolder::DataHolder()
+ArrayBufferContents::DataHolder::DataHolder(DataDeleter deleter, void* deleterInfo)
     : m_data(nullptr)
     , m_sizeInBytes(0)
-    , m_isShared(NotShared) { }
+    , m_isShared(NotShared)
+    , m_deleter(deleter)
+    , m_deleterInfo(deleterInfo)
+{
+}
 
 ArrayBufferContents::DataHolder::~DataHolder()
 {
-    ArrayBufferContents::freeMemory(m_data, m_sizeInBytes);
+    if (m_deleter)
+        m_deleter(m_data, m_sizeInBytes, m_deleterInfo);
+    else
+        ArrayBufferContents::freeMemory(m_data, m_sizeInBytes);
 
     m_data = nullptr;
     m_sizeInBytes = 0;

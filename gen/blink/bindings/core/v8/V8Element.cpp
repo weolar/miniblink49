@@ -226,6 +226,30 @@ static void classListAttributeGetterCallbackForMainWorld(const v8::FunctionCallb
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void classListAttributeSetterForMainWorld(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    Element* proxyImpl = V8Element::toImpl(holder);
+    DOMTokenList* impl = WTF::getPtr(proxyImpl->classList());
+    if (!impl)
+        return;
+
+    // Prepare the value to be set.
+    V8StringResource<> cppValue = v8Value;
+    if (!cppValue.prepare())
+        return;
+
+    impl->setValue(cppValue);
+}
+
+CORE_EXPORT void classListAttributeSetterCallbackForMainWorld(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Value> v8Value = info[0];
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
+    ElementV8Internal::classListAttributeSetterForMainWorld(v8Value, info);
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
 static void attributesAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -2678,7 +2702,7 @@ static const V8DOMConfiguration::AccessorConfiguration V8ElementAccessors[] = {
     {"tagName", ElementV8Internal::tagNameAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"id", ElementV8Internal::idAttributeGetterCallback, ElementV8Internal::idAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"className", ElementV8Internal::classNameAttributeGetterCallback, ElementV8Internal::classNameAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-    {"classList", ElementV8Internal::classListAttributeGetterCallback, 0, ElementV8Internal::classListAttributeGetterCallbackForMainWorld, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"classList", ElementV8Internal::classListAttributeGetterCallback, 0, ElementV8Internal::classListAttributeGetterCallbackForMainWorld, ElementV8Internal::classListAttributeSetterCallbackForMainWorld, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"attributes", ElementV8Internal::attributesAttributeGetterCallback, 0, ElementV8Internal::attributesAttributeGetterCallbackForMainWorld, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"innerHTML", ElementV8Internal::innerHTMLAttributeGetterCallback, ElementV8Internal::innerHTMLAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"outerHTML", ElementV8Internal::outerHTMLAttributeGetterCallback, ElementV8Internal::outerHTMLAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
@@ -2859,7 +2883,9 @@ static void installV8ElementTemplate(v8::Local<v8::FunctionTemplate> functionTem
     }
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8Element::domTemplate(v8::Isolate* isolate)

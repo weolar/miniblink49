@@ -4,6 +4,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{3a4ce0f4-5050-42c1-bf6e-2a9c54180474}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libyuv">
+      <UniqueIdentifier>{46b488e4-0843-4f4e-9b98-89e2b32f6cdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\libpng\libpng.c">
@@ -51,6 +54,129 @@
     <ClCompile Include="..\..\third_party\libpng\pngwutil.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare_neon.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare_neon64.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare_win.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_argb.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_from.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_from_argb.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_jpeg.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_to_argb.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\convert_to_i420.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\cpu_id.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\mjpeg_decoder.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\mjpeg_validate.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\planar_functions.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_any.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_argb.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_common.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_gcc.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_neon.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_neon64.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_win.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_any.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_common.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_gcc.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_neon.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_neon64.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\row_win.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_any.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_argb.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_common.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_gcc.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_neon.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_neon64.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_win.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\video_common.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare_common.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\compare_gcc.cc">
+      <Filter>libyuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libyuv\source\rotate_mips.cc" />
+    <ClCompile Include="..\..\third_party\libyuv\source\row_mips.cc" />
+    <ClCompile Include="..\..\third_party\libyuv\source\scale_mips.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\third_party\libpng\png.h">

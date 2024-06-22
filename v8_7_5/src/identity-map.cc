@@ -8,6 +8,8 @@
 #include "src/heap/heap.h"
 #include "src/roots-inl.h"
 
+#include "src/objects-inl.h" // weolar
+
 namespace v8 {
 namespace internal {
 

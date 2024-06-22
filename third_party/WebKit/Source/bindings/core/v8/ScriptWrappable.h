@@ -39,6 +39,56 @@
 
 namespace blink {
 
+#if V8_MAJOR_VERSION >= 7
+// TraceWrapperV8Reference is used to hold references from Blink to V8 that are
+// known to both garbage collectors. The reference is a regular traced reference
+// for unified heap garbage collections.
+template <typename T>
+class TraceWrapperV8Reference {
+public:
+    TraceWrapperV8Reference() = default;
+
+    TraceWrapperV8Reference(v8::Isolate* isolate, v8::Local<T> handle)
+    {
+        InternalSet(isolate, handle);
+    }
+
+    bool operator==(const TraceWrapperV8Reference& other) const
+    {
+        return m_handle == other.m_handle;
+    }
+
+    void Set(v8::Isolate* isolate, v8::Local<T> handle)
+    {
+        InternalSet(isolate, handle);
+    }
+
+    v8::Local<T> NewLocal(v8::Isolate* isolate) const
+    {
+        return m_handle.Get(isolate);
+    }
+
+    bool IsEmpty() const { return m_handle.IsEmpty(); }
+    void Clear() { m_handle.Reset(); }
+    const v8::TracedGlobal<T>& Get() const { return m_handle; }
+    v8::TracedGlobal<T>& Get() { return m_handle; }
+
+protected:
+    void InternalSet(v8::Isolate* isolate, v8::Local<T> handle)
+    {
+        m_handle.Reset(isolate, handle);
+        //UnifiedHeapMarkingVisitor::WriteBarrier(UnsafeCast<v8::Value>());
+    }
+
+    void WriteBarrier() const
+    {
+        //UnifiedHeapMarkingVisitor::WriteBarrier(UnsafeCast<v8::Value>());
+    }
+
+    v8::TracedGlobal<T> m_handle;
+};
+#endif
+
 /**
  * ScriptWrappable wraps a V8 object and its WrapperTypeInfo.
  *
@@ -54,7 +104,7 @@ namespace blink {
 class CORE_EXPORT ScriptWrappable {
     WTF_MAKE_NONCOPYABLE(ScriptWrappable);
 public:
-    ScriptWrappable() { }
+    ScriptWrappable();
 
     template<typename T>
     T* toImpl()
@@ -67,6 +117,17 @@ public:
         return static_cast<T*>(this);
     }
 
+    // The following methods may override lifetime of ScriptWrappable objects when
+    // needed. In particular if |HasPendingActivity| or |HasEventListeners|
+    // returns true *and* the child type also inherits from
+    // |ActiveScriptWrappable|, the objects will not be reclaimed by the GC, even
+    // if they are otherwise unreachable.
+    //
+    // Note: These methods are queried during garbage collection and *must not*
+    // allocate any new objects.
+    virtual bool hasScriptWrappablePendingActivity() const { return false; }
+    virtual bool hasScriptWrappableEventListeners() const { return false; }
+
     // Returns the WrapperTypeInfo of the instance.
     //
     // This method must be overridden by DEFINE_WRAPPERTYPEINFO macro.
@@ -74,6 +135,11 @@ public:
 
     // Creates and returns a new wrapper object.
     virtual v8::Local<v8::Object> wrap(v8::Isolate*, v8::Local<v8::Object> creationContext);
+
+#if V8_MAJOR_VERSION >= 7
+    const v8::TracedGlobal<v8::Object>& GetMainWorldWrapper() const;
+    void traceWrapper(Visitor*);
+#endif
 
     // Associates the instance with the given |wrapper| if this instance is not
     // yet associated with any wrapper.  Returns the wrapper already associated
@@ -86,29 +152,11 @@ public:
     // associated with this instance, or false if this instance is already
     // associated with a wrapper.  In the latter case, |wrapper| will be updated
     // to the existing wrapper.
-    bool setWrapper(v8::Isolate* isolate, const WrapperTypeInfo* wrapperTypeInfo, v8::Local<v8::Object>& wrapper) WARN_UNUSED_RETURN
-    {
-        ASSERT(!wrapper.IsEmpty());
-        if (UNLIKELY(containsWrapper())) {
-            wrapper = newLocalWrapper(isolate);
-            return false;
-        }
-        m_wrapper.Reset(isolate, wrapper);
-        wrapperTypeInfo->configureWrapper(&m_wrapper);
-        m_wrapper.SetWeak(this, &firstWeakCallback, v8::WeakCallbackType::kInternalFields);
-        ASSERT(containsWrapper());
-        return true;
-    }
+    bool setWrapper(v8::Isolate* isolate, const WrapperTypeInfo* wrapperTypeInfo, v8::Local<v8::Object>& wrapper) WARN_UNUSED_RETURN;
 
-    v8::Local<v8::Object> newLocalWrapper(v8::Isolate* isolate) const
-    {
-        return v8::Local<v8::Object>::New(isolate, m_wrapper);
-    }
+    v8::Local<v8::Object> newLocalWrapper(v8::Isolate* isolate) const;
 
-    bool isEqualTo(const v8::Local<v8::Object>& other) const
-    {
-        return m_wrapper == other;
-    }
+    bool isEqualTo(const v8::Local<v8::Object>& other) const;
 
     // Provides a way to convert Node* to ScriptWrappable* without including
     // "core/dom/Node.h".
@@ -127,41 +175,17 @@ public:
     // inline calls to fromNode as much as possible.
     static ScriptWrappable* fromNode(Node*);
 
-    bool setReturnValue(v8::ReturnValue<v8::Value> returnValue)
-    {
-        returnValue.Set(m_wrapper);
-        return containsWrapper();
-    }
+    bool setReturnValue(v8::ReturnValue<v8::Value> returnValue);
 
-    void markAsDependentGroup(ScriptWrappable* groupRoot, v8::Isolate* isolate)
-    {
-        ASSERT(containsWrapper());
-        ASSERT(groupRoot && groupRoot->containsWrapper());
+    void markAsDependentGroup(ScriptWrappable* groupRoot, v8::Isolate* isolate);
 
-        // FIXME: There has to be a better way.
-        v8::UniqueId groupId(*reinterpret_cast<intptr_t*>(&groupRoot->m_wrapper));
-		//zero
-#if !(V8_MINOR_VERSION == 7)
-        m_wrapper.MarkPartiallyDependent();
-#endif
-        isolate->SetObjectGroupId(v8::Persistent<v8::Value>::Cast(m_wrapper), groupId);
-    }
-
-    void setReference(const v8::Persistent<v8::Object>& parent, v8::Isolate* isolate)
-    {
-        isolate->SetReference(parent, m_wrapper);
-    }
+    void setReference(const v8::Persistent<v8::Object>& parent, v8::Isolate* isolate);
 
     bool containsWrapper() const { return !m_wrapper.IsEmpty(); }
 
 #if !ENABLE(OILPAN)
 protected:
-    virtual ~ScriptWrappable()
-    {
-        // We must not get deleted as long as we contain a wrapper. If this happens, we screwed up ref
-        // counting somewhere. Crash here instead of crashing during a later gc cycle.
-        RELEASE_ASSERT_WITH_SECURITY_IMPLICATION(!containsWrapper());
-    }
+    virtual ~ScriptWrappable();
 #endif
     // With Oilpan we don't need a ScriptWrappable destructor.
     //
@@ -174,10 +198,13 @@ protected:
 
 private:
     void disposeWrapper(const v8::WeakCallbackInfo<ScriptWrappable>& data);
-    static void firstWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
-    static void secondWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
+    static void V8CALL firstWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
+    static void V8CALL secondWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
 
     v8::Persistent<v8::Object> m_wrapper;
+#if V8_MAJOR_VERSION >= 7
+    TraceWrapperV8Reference<v8::Object> m_mainWorldWrapper;
+#endif
 };
 
 // Defines 'wrapperTypeInfo' virtual method which returns the WrapperTypeInfo of

@@ -115,6 +115,45 @@
     <Filter Include="src\doc">
       <UniqueIdentifier>{914b7827-bb92-41a7-969d-158720c3c48a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gpu">
+      <UniqueIdentifier>{69cce870-f4c5-4d7e-8ca9-33f4345dea89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\effects">
+      <UniqueIdentifier>{6f3fff0f-183c-4094-ae5a-5c5340c73991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl">
+      <UniqueIdentifier>{e15a6c86-e97f-4318-b98a-cbc40190229f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\glsl">
+      <UniqueIdentifier>{969f019e-a8d9-4faa-bf49-6a9725c19d17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\angle">
+      <UniqueIdentifier>{48b88165-f0e9-42d1-b80a-e36d7bf6aabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\builders">
+      <UniqueIdentifier>{4bf1eef9-d52d-4f87-b5de-5cdfce104a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\debug">
+      <UniqueIdentifier>{7038410e-9d3f-4738-9e13-f987ad695fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\egl">
+      <UniqueIdentifier>{96bbf41b-4dae-43b2-9ee2-691fe018ccba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\glx">
+      <UniqueIdentifier>{422a29a9-6f93-4551-98f3-12b87abaa3ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gpu\gl\win">
+      <UniqueIdentifier>{30f8c5ba-0e39-4a98-b110-e20dae18f8e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\gpu\effects">
+      <UniqueIdentifier>{6ad37398-b155-4a6d-bc23-6ddb13625537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\gpu\gl">
+      <UniqueIdentifier>{a5760969-ab17-45e0-ae85-7936b8511fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\gpu\gl\angle">
+      <UniqueIdentifier>{b96409f4-be70-4d90-ab37-a7534bcb9183}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1578,6 +1617,654 @@
     <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFGraphicState.h">
       <Filter>src\pdf</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrRRectEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrSimpleTextureEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrSingleTextureEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrTextureDomain.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrTextureStripAtlas.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrYUVtoRGBEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\Gr1DKernelEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrBezierEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrBicubicEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrBitmapTextGeoProc.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrConfigConversionEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrConvexPolyEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrConvolutionEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrCustomXfermodePriv.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrDashingEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrDisableColorXP.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrDistanceFieldGeoProc.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrDitherEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrMatrixConvolutionEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\effects\GrOvalEffect.h">
+      <Filter>src\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLFragmentShaderBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLGeometryShaderBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLPathProgramBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLProgramBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLShaderBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLShaderStringBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLVertexShaderBuilder.h">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrFakeRefObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrFBBindableObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrFrameBufferObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrProgramObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrRenderBufferObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrShaderObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrTextureObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrTextureUnitObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrVertexArrayObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\SkDebugGLContext.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrBufferObj.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\debug\GrDebugGL.h">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLVertexBuffer.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLXferProcessor.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLAssembleInterface.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLBufferImpl.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLCaps.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLContext.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLDefines.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLGeometryProcessor.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLGLSL.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLGpu.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLIndexBuffer.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLIRect.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLNameAllocator.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLNoOpInterface.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPath.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProcessor.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProgram.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProgramDataManager.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPathRange.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPathRendering.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLPrimitiveProcessor.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLProcessor.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLProgram.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLProgramDataManager.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLProgramDesc.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLRenderTarget.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLShaderVar.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLStencilAttachment.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLTexture.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLTextureRenderTarget.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLUniformHandle.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLUtil.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\gl\GrGLVertexArray.h">
+      <Filter>src\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\glsl\GrGLSL.h">
+      <Filter>src\gpu\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\glsl\GrGLSL_impl.h">
+      <Filter>src\gpu\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\glsl\GrGLSLCaps.h">
+      <Filter>src\gpu\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\SkGpuDevice.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\SkGpuFenceSync.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAAConvexPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAAConvexTessellator.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAADistanceFieldPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAAHairLinePathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAALinearizingConvexPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAARectRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAllocator.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAtlas.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAtlasTextContext.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrAutoLocaleSetter.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBatch.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBatchAtlas.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBatchFontCache.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBatchTarget.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBatchTest.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBlurUtils.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrBufferAllocPool.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrClipMaskCache.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrClipMaskManager.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrCommandBuilder.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrContextFactory.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrDashLinePathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrDefaultGeoProcFactory.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrDefaultPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrDrawTarget.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrFontAtlasSizes.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrFontScaler.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGeometryBuffer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGeometryProcessor.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGlyph.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGpu.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGpuFactory.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGpuResourceCacheAccess.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrGpuResourcePriv.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrImmediateDrawTarget.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrIndexBuffer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrInOrderCommandBuilder.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrInOrderDrawBuffer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrLayerCache.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrLayerHoister.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrMemoryPool.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrMurmur3HashKey.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrOrderedSet.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrOvalRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPath.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPathProcessor.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPathRange.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPathRendering.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPathUtils.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPendingFragmentStage.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPendingProgramElement.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPipeline.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPipelineBuilder.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPlotMgr.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrPrimitiveProcessor.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrProcOptInfo.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrProgramDesc.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRecordReplaceDraw.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRectanizer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRectanizer_pow2.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRectanizer_skyline.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRectBatch.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRedBlackTree.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrReducedClip.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrRenderTargetPriv.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrReorderCommandBuilder.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrResourceCache.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrResourceProvider.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrSoftwarePathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrStencil.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrStencilAndCoverPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrStencilAndCoverTextContext.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrStencilAttachment.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrStrokeInfo.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrSurfacePriv.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrSWMaskHelper.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTargetCommands.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTBSearch.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTemplates.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTessellatingPathRenderer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTest.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTestBatch.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTextBlobCache.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTextContext.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTexturePriv.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTraceMarker.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTracing.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrTRecorder.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrVertexBuffer.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\gpu\GrVertices.h">
+      <Filter>src\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrClip.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrColor.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrConfig.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrContext.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrContextOptions.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrCoordTransform.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrDrawContext.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrFragmentProcessor.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrFragmentStage.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrGpuResource.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrGpuResourceRef.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrInvariantOutput.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrPaint.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrPathRendererChain.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrProcessor.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrProcessorDataManager.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrProcessorUnitTest.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrProgramElement.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrRect.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrRenderTarget.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrResourceKey.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrShaderVar.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrSurface.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTestUtils.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTexture.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTextureAccess.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTextureProvider.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTypes.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrTypesPriv.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrXferProcessor.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\SkGr.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\SkGrPixelRef.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\SkGrTexturePixelRef.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrBlend.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\GrCaps.h">
+      <Filter>include\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\effects\GrCoverageSetOpXP.h">
+      <Filter>include\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\effects\GrCustomXfermode.h">
+      <Filter>include\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\effects\GrPorterDuffXferProcessor.h">
+      <Filter>include\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\effects\GrConstColorProcessor.h">
+      <Filter>include\gpu\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLFunctions.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLInterface.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLSLPrettyPrint.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\SkGLContext.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\SkNullGLContext.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLConfig.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLConfig_chrome.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\GrGLExtensions.h">
+      <Filter>include\gpu\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\include\gpu\gl\angle\SkANGLEGLContext.h">
+      <Filter>include\gpu\gl\angle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\skia\src\core\SkAdvancedTypefaceMetrics.cpp">
@@ -2426,9 +3113,6 @@
     <ClCompile Include="..\..\third_party\skia\src\ports\SkFontHost_win.cpp">
       <Filter>src\ports</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\skia\src\ports\SkFontMgr_win_gdi_factory.cpp">
-      <Filter>src\ports</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\skia\src\ports\SkGlobalInitialization_chromium.cpp">
       <Filter>src\ports</Filter>
     </ClCompile>
@@ -2617,6 +3301,555 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\skia\src\core\SkFlate.cpp">
       <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrPorterDuffXferProcessor.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrRRectEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrSimpleTextureEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrSingleTextureEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrTextureDomain.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrTextureStripAtlas.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrYUVtoRGBEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrBezierEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrBicubicEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrBitmapTextGeoProc.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrConfigConversionEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrConstColorProcessor.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrConvexPolyEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrConvolutionEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrCoverageSetOpXP.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrCustomXfermode.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrDashingEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrDisableColorXP.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrDistanceFieldGeoProc.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrDitherEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrMatrixConvolutionEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\effects\GrOvalEffect.cpp">
+      <Filter>src\gpu\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\angle\GrGLCreateANGLEInterface.cpp">
+      <Filter>src\gpu\gl\angle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\angle\SkANGLEGLContext.cpp">
+      <Filter>src\gpu\gl\angle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLGeometryShaderBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLPathProgramBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLProgramBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLShaderBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLShaderStringBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLSLPrettyPrint.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLVertexShaderBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\builders\GrGLFragmentShaderBuilder.cpp">
+      <Filter>src\gpu\gl\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrFrameBufferObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrGLCreateDebugInterface.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrProgramObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrShaderObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrTextureObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrTextureUnitObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\SkDebugGLContext.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrBufferObj.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\debug\GrDebugGL.cpp">
+      <Filter>src\gpu\gl\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLVertexBuffer.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLXferProcessor.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\SkGLContext.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\SkNullGLContext.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLAssembleInterface.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLBufferImpl.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLCaps.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLContext.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLCreateNativeInterface_none.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLCreateNullInterface.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLDefaultInterface_native.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLExtensions.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLGeometryProcessor.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLGLSL.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLGpu.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLGpuProgramCache.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLIndexBuffer.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLInterface.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLNameAllocator.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLNoOpInterface.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPath.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProcessor.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProgram.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPathProgramDataManager.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPathRange.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPathRendering.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLPrimitiveProcessor.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLProgram.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLProgramDataManager.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLProgramDesc.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLRenderTarget.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLStencilAttachment.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLTexture.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLUtil.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\gl\GrGLVertexArray.cpp">
+      <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\glsl\GrGLSLCaps.cpp">
+      <Filter>src\gpu\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\glsl\GrGLSL.cpp">
+      <Filter>src\gpu\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrXferProcessor.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\SkGpuDevice.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\SkGr.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\SkGrPixelRef.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\SkGrTexturePixelRef.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAAConvexPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAAConvexTessellator.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAADistanceFieldPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAAHairLinePathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAALinearizingConvexPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAARectRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAddPathRenderers_default.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAtlas.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrAtlasTextContext.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBatch.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBatchAtlas.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBatchFontCache.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBatchTarget.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBatchTest.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBlurUtils.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrBufferAllocPool.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrCaps.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrClip.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrClipMaskCache.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrClipMaskManager.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrCommandBuilder.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrContext.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrContextFactory.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrCoordTransform.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrDashLinePathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrDefaultGeoProcFactory.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrDefaultPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrDrawContext.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrDrawTarget.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrFontScaler.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrGpu.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrGpuFactory.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrGpuResource.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrGpuResourceRef.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrImmediateDrawTarget.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrInOrderCommandBuilder.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrInOrderDrawBuffer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrInvariantOutput.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrLayerCache.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrLayerHoister.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrMemoryPool.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrOvalRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPaint.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPath.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathProcessor.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathRange.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathRendererChain.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathRendering.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPathUtils.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPipeline.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPipelineBuilder.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrPrimitiveProcessor.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrProcessor.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrProcessorDataManager.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrProcOptInfo.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrProgramElement.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrRecordReplaceDraw.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrRectanizer_pow2.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrRectanizer_skyline.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrRectBatch.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrReducedClip.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrRenderTarget.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrReorderCommandBuilder.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrResourceCache.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrResourceProvider.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrSoftwarePathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrStencil.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrStencilAndCoverPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrStencilAndCoverTextContext.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrStencilAttachment.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrStrokeInfo.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrSurface.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrSWMaskHelper.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTargetCommands.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTessellatingPathRenderer.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTest.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTestUtils.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTextBlobCache.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTextContext.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTexture.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTextureAccess.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTextureProvider.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\gpu\GrTraceMarker.cpp">
+      <Filter>src\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\image\SkSurface_Gpu.cpp">
+      <Filter>src\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\image\SkImage_Gpu.cpp">
+      <Filter>src\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\SkTextureCompressor.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\SkTextureCompressor_ASTC.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\SkTextureCompressor_LATC.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\SkTextureCompressor_R11EAC.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\opts\SkTextureCompression_opts_none.cpp">
+      <Filter>src\opts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\ports\SkFontMgr_win_dw_factory.cpp">
+      <Filter>src\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\ports\SkFontMgr_win_dw.cpp">
+      <Filter>src\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\ports\SkScalerContext_win_dw.cpp">
+      <Filter>src\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\ports\SkTypeface_win_dw.cpp">
+      <Filter>src\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\ports\SkRemotableFontMgr_win_dw.cpp">
+      <Filter>src\ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\win\SkDWrite.cpp">
+      <Filter>src\utils\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\win\SkDWriteFontFileStream.cpp">
+      <Filter>src\utils\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\win\SkAutoCoInitialize.cpp">
+      <Filter>src\utils\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\utils\win\SkDWriteGeometrySink.cpp">
+      <Filter>src\utils\win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

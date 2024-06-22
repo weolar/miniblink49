@@ -33,6 +33,7 @@
 #include "wtf/Noncopyable.h"
 #include "wtf/ThreadingPrimitives.h"
 #include "wtf/Vector.h"
+#include "wtf/text/WTFString.h"
 
 namespace blink {
 
@@ -51,6 +52,10 @@ public:
         : m_isOnLine(true)
         , m_type(ConnectionTypeOther)
         , m_testUpdatesOnly(false)
+        , m_downlink(10)
+        , m_effectiveType("4g")
+        , m_rtt(100)
+        , m_saveData(false)
     {
     }
 
@@ -67,6 +72,34 @@ public:
         MutexLocker locker(m_mutex);
         return m_type;
     }
+
+    float downlink() const
+    {
+        MutexLocker locker(m_mutex);
+        return m_downlink;
+    }
+    void setDownlink(float f);
+
+    String effectiveType() const
+    {
+        MutexLocker locker(m_mutex);
+        return m_effectiveType;
+    }
+    void setEffectiveType(const String& type);
+
+    int rrt() const
+    {
+        MutexLocker locker(m_mutex);
+        return m_rtt;
+    }
+    void setRtt(int);
+
+    bool saveData() const
+    {
+        MutexLocker locker(m_mutex);
+        return m_saveData;
+    }
+    void setSaveData(bool b);
 
     void setWebConnectionType(WebConnectionType);
 
@@ -114,6 +147,11 @@ private:
     WebConnectionType m_type;
     ObserverListMap m_observers;
     bool m_testUpdatesOnly;
+
+    float m_downlink;
+    String m_effectiveType;
+    int m_rtt;
+    bool m_saveData;
 };
 
 CORE_EXPORT NetworkStateNotifier& networkStateNotifier();

@@ -20,6 +20,7 @@
 #include "core/frame/LocalDOMWindow.h"
 #include "core/frame/UseCounter.h"
 #include "platform/RuntimeEnabledFeatures.h"
+#include "platform/FileMetadata.h"
 #include "platform/TraceEvent.h"
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
@@ -124,7 +125,7 @@ static void pathAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
-static void pathaAttributeSetter(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
+static void pathAttributeSetter(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::String> propertyName = v8AtomicString(info.GetIsolate(), "path");
 
@@ -142,7 +143,7 @@ static void pathAttributeSetterCallback(const v8::FunctionCallbackInfo<v8::Value
 {
     v8::Local<v8::Value> v8Value = info[0];
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
-    FileV8Internal::pathaAttributeSetter(v8Value, info);
+    FileV8Internal::pathAttributeSetter(v8Value, info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
@@ -173,7 +174,16 @@ static void constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
         if (exceptionState.throwIfNeeded())
             return;
     }
-    RawPtr<File> impl = File::create(fileBits, fileName, options, exceptionState);
+
+    RawPtr<File> impl;
+    if (options.type().lower() == "mb/bin") {
+        FileMetadata metadata;
+        getFileMetadata(fileName, metadata);
+        KURL fileSystemURL(ParsedURLString, fileName);
+        impl = File::createForFileSystemFile(fileSystemURL, metadata, File::IsUserVisible);
+    } else
+        impl = File::create(fileBits, fileName, options, exceptionState);
+
     if (exceptionState.hadException()) {
         exceptionState.throwIfNeeded();
         return;
@@ -226,7 +236,9 @@ static void installV8FileTemplate(v8::Local<v8::FunctionTemplate> functionTempla
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8File::domTemplate(v8::Isolate* isolate)

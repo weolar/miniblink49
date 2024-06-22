@@ -170,6 +170,10 @@
 #include "wtf/PassRefPtr.h"
 #include "wtf/text/CString.h"
 
+namespace content {
+void traceEventSamplingState(const char* category, const char*  name, const char* funcName);
+}
+
 // By default, const char* argument values are assumed to have long-lived scope
 // and will not be copied. Use this macro to force a const char* to be copied.
 #define TRACE_STR_COPY(str) 
@@ -481,7 +485,7 @@
 // Syntactic sugars for the sampling tracing in the main thread.
 #define TRACE_EVENT_SCOPED_SAMPLING_STATE(category, name) 
 #define TRACE_EVENT_GET_SAMPLING_STATE() 
-#define TRACE_EVENT_SET_SAMPLING_STATE(category, name) 
+#define TRACE_EVENT_SET_SAMPLING_STATE(category, name) content::traceEventSamplingState(category, name, __FUNCTION__);
 #define TRACE_EVENT_SET_NONCONST_SAMPLING_STATE(categoryAndName) 
 
 // Macros to track the life time and value of arbitrary client objects.

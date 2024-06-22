@@ -80,14 +80,14 @@ Handle<Object> JSReceiver::GetDataProperty(Handle<JSReceiver> object,
   return GetDataProperty(&it);
 }
 
-MaybeHandle<Object> JSReceiver::GetPrototype(Isolate* isolate,
-                                             Handle<JSReceiver> receiver) {
+MaybeHandle<HeapObject> JSReceiver::GetPrototype(Isolate* isolate,
+                                                 Handle<JSReceiver> receiver) {
   // We don't expect access checks to be needed on JSProxy objects.
   DCHECK(!receiver->IsAccessCheckNeeded() || receiver->IsJSObject());
   PrototypeIterator iter(isolate, receiver, kStartAtReceiver,
                          PrototypeIterator::END_AT_NON_HIDDEN);
   do {
-    if (!iter.AdvanceFollowingProxies()) return MaybeHandle<Object>();
+    if (!iter.AdvanceFollowingProxies()) return MaybeHandle<HeapObject>();
   } while (!iter.IsAtEnd());
   return PrototypeIterator::GetCurrent(iter);
 }
@@ -541,6 +541,8 @@ AbstractCode JSFunction::abstract_code() {
   }
 }
 
+int JSFunction::length() { return shared()->length(); }
+
 Code JSFunction::code() const {
   return Code::cast(RELAXED_READ_FIELD(*this, kCodeOffset));
 }
@@ -650,12 +652,12 @@ bool JSFunction::PrototypeRequiresRuntimeLookup() {
   return !has_prototype_property() || map()->has_non_instance_prototype();
 }
 
-Object JSFunction::instance_prototype() {
+HeapObject JSFunction::instance_prototype() {
   DCHECK(has_instance_prototype());
   if (has_initial_map()) return initial_map()->prototype();
   // When there is no initial map and the prototype is a JSReceiver, the
   // initial map field is used for the prototype field.
-  return prototype_or_initial_map();
+  return HeapObject::cast(prototype_or_initial_map());
 }
 
 Object JSFunction::prototype() {
@@ -678,8 +680,6 @@ bool JSFunction::is_compiled() const {
 }
 
 bool JSFunction::NeedsResetDueToFlushedBytecode() {
-  if (!FLAG_flush_bytecode) return false;
-
   // Do a raw read for shared and code fields here since this function may be
   // called on a concurrent thread and the JSFunction might not be fully
   // initialized yet.
@@ -697,7 +697,7 @@ bool JSFunction::NeedsResetDueToFlushedBytecode() {
 }
 
 void JSFunction::ResetIfBytecodeFlushed() {
-  if (NeedsResetDueToFlushedBytecode()) {
+  if (FLAG_flush_bytecode && NeedsResetDueToFlushedBytecode()) {
     // Bytecode was flushed and function is now uncompiled, reset JSFunction
     // by setting code to CompileLazy and clearing the feedback vector.
     set_code(GetIsolate()->builtins()->builtin(i::Builtins::kCompileLazy));
@@ -752,7 +752,8 @@ ElementsKind JSObject::GetElementsKind() const {
       DCHECK(fixed_array->IsFixedArray());
       DCHECK(fixed_array->IsDictionary());
     } else {
-      DCHECK(kind > DICTIONARY_ELEMENTS);
+      DCHECK(kind > DICTIONARY_ELEMENTS ||
+             IsPackedFrozenOrSealedElementsKind(kind));
     }
     DCHECK(!IsSloppyArgumentsElementsKind(kind) ||
            (elements()->IsFixedArray() && elements()->length() >= 2));
@@ -793,6 +794,10 @@ bool JSObject::HasDictionaryElements() {
 
 bool JSObject::HasPackedElements() {
   return GetElementsKind() == PACKED_ELEMENTS;
+}
+
+bool JSObject::HasFrozenOrSealedElements() {
+  return IsPackedFrozenOrSealedElementsKind(GetElementsKind());
 }
 
 bool JSObject::HasFastArgumentsElements() {

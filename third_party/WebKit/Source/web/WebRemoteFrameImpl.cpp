@@ -299,6 +299,18 @@ v8::Local<v8::Context> WebRemoteFrameImpl::mainWorldScriptContext() const
     return v8::Local<v8::Context>();
 }
 
+int32_t WebRemoteFrameImpl::getScriptContextWorldId(v8::Local<v8::Context> scriptContext) const
+{
+    ASSERT_NOT_REACHED();
+    return 0;
+}
+
+v8::Local<v8::Context> WebRemoteFrameImpl::getScriptContextFromWorldId(v8::Isolate* isolate, int worldId) const
+{
+    ASSERT_NOT_REACHED();
+    return v8::Local<v8::Context>();
+}
+
 void WebRemoteFrameImpl::reload(bool ignoreCache)
 {
     ASSERT_NOT_REACHED();

@@ -54,6 +54,34 @@ static void typeAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void downlinkAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    NetworkInformation* impl = V8NetworkInformation::toImpl(holder);
+    v8SetReturnValue(info, impl->downlink());
+}
+
+static void effectiveTypeAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    NetworkInformation* impl = V8NetworkInformation::toImpl(holder);
+    v8SetReturnValueString(info, impl->effectiveType(), info.GetIsolate());
+}
+
+static void rrtAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    NetworkInformation* impl = V8NetworkInformation::toImpl(holder);
+    v8SetReturnValueInt(info, impl->rrt());
+}
+
+static void saveDataAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    NetworkInformation* impl = V8NetworkInformation::toImpl(holder);
+    v8SetReturnValueBool(info, impl->saveData());
+}
+
 static void ontypechangeAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -88,7 +116,11 @@ static void ontypechangeAttributeSetterCallback(const v8::FunctionCallbackInfo<v
 } // namespace NetworkInformationV8Internal
 
 static const V8DOMConfiguration::AccessorConfiguration V8NetworkInformationAccessors[] = {
-    {"type", NetworkInformationV8Internal::typeAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    //{"type", NetworkInformationV8Internal::typeAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"downlink", NetworkInformationV8Internal::downlinkAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"effectiveType", NetworkInformationV8Internal::effectiveTypeAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"rrt", NetworkInformationV8Internal::rrtAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"saveData", NetworkInformationV8Internal::saveDataAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"ontypechange", NetworkInformationV8Internal::ontypechangeAttributeGetterCallback, NetworkInformationV8Internal::ontypechangeAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 };
 
@@ -110,7 +142,9 @@ static void installV8NetworkInformationTemplate(v8::Local<v8::FunctionTemplate> 
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
     // Custom toString template
+#if V8_MAJOR_VERSION < 7
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
+#endif
 }
 
 v8::Local<v8::FunctionTemplate> V8NetworkInformation::domTemplate(v8::Isolate* isolate)
