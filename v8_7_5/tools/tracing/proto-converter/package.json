@@ -5,7 +5,7 @@
   },
   "devDependencies": {
     "@types/node": "^11.11.4",
-    "protobufjs": "^6.8.8",
+    "protobufjs": "^6.11.3",
     "typescript": "^3.3.4000"
   }
 }
