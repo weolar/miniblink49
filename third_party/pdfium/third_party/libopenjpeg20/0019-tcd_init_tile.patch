@@ -1,0 +1,21 @@
+diff --git a/third_party/libopenjpeg20/tcd.c b/third_party/libopenjpeg20/tcd.c
+index f0710cd14..35d15e3d1 100644
+--- a/third_party/libopenjpeg20/tcd.c
++++ b/third_party/libopenjpeg20/tcd.c
+@@ -1040,9 +1040,15 @@ static INLINE OPJ_BOOL opj_tcd_init_tile(opj_tcd_t *p_tcd, OPJ_UINT32 p_tile_no,
+                                                           cblkwidthexpn);
+                     l_current_precinct->ch = (OPJ_UINT32)((brcblkyend - tlcblkystart) >>
+                                                           cblkheightexpn);
+-
++                    if (l_current_precinct->cw && ((OPJ_UINT32)-1) / l_current_precinct->cw < l_current_precinct->ch) {
++                        return OPJ_FALSE;
++                    }
+                     l_nb_code_blocks = l_current_precinct->cw * l_current_precinct->ch;
+                     /*fprintf(stderr, "\t\t\t\t precinct_cw = %d x recinct_ch = %d\n",l_current_precinct->cw, l_current_precinct->ch);      */
++
++                    if (((OPJ_UINT32)-1) / (OPJ_UINT32)sizeof_block < l_nb_code_blocks) {
++                        return OPJ_FALSE;
++                    }
+                     l_nb_code_blocks_size = l_nb_code_blocks * (OPJ_UINT32)sizeof_block;
+ 
+                     if (!l_current_precinct->cblks.blocks && (l_nb_code_blocks > 0U)) {

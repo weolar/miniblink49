@@ -1,0 +1,181 @@
+diff --git a/third_party/libtiff/0017-safe_skews_in_gtTileContig.patch b/third_party/libtiff/0017-safe_skews_in_gtTileContig.patch
+index ad6d33dae..e69de29bb 100644
+--- a/third_party/libtiff/0017-safe_skews_in_gtTileContig.patch
++++ b/third_party/libtiff/0017-safe_skews_in_gtTileContig.patch
+@@ -1,88 +0,0 @@
+-diff --git a/third_party/libtiff/tif_getimage.c b/third_party/libtiff/tif_getimage.c
+-index 84cc1d1a7..82e19164e 100644
+---- a/third_party/libtiff/tif_getimage.c
+-+++ b/third_party/libtiff/tif_getimage.c
+-@@ -31,6 +31,7 @@
+-  */
+- #include "tiffiop.h"
+- #include <stdio.h>
+-+#include <limits.h>
+- 
+- static int gtTileContig(TIFFRGBAImage*, uint32*, uint32, uint32);
+- static int gtTileSeparate(TIFFRGBAImage*, uint32*, uint32, uint32);
+-@@ -629,6 +628,7 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+-     uint32 tw, th;
+-     unsigned char* buf;
+-     int32 fromskew, toskew;
+-+    int64 safeskew;
+-     uint32 nrow;
+-     int ret = 1, flip;
+-     uint32 this_tw, tocol;
+-@@ -649,19 +647,37 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+-     flip = setorientation(img);
+-     if (flip & FLIP_VERTICALLY) {
+- 	    y = h - 1;
+--	    toskew = -(int32)(tw + w);
+-+	    safeskew = 0;
+-+	    safeskew -= tw;
+-+	    safeskew -= w;
+-     }
+-     else {
+- 	    y = 0;
+--	    toskew = -(int32)(tw - w);
+-+	    safeskew = 0;
+-+	    safeskew -= tw;
+-+	    safeskew +=w;
+-     }
+-      
+-+    if(safeskew > INT_MAX || safeskew < INT_MIN){
+-+       _TIFFfree(buf);
+-+       TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
+-+       return (0);
+-+    }
+-+    toskew = safeskew;
+-+
+-     /*
+-      *	Leftmost tile is clipped on left side if col_offset > 0.
+-      */
+-     leftmost_fromskew = img->col_offset % tw;
+-     leftmost_tw = tw - leftmost_fromskew;
+--    leftmost_toskew = toskew + leftmost_fromskew;
+-+    safeskew = toskew;
+-+    safeskew += leftmost_fromskew;
+-+    if(safeskew > INT_MAX || safeskew < INT_MIN){
+-+       _TIFFfree(buf);
+-+       TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
+-+       return (0);
+-+    }
+-+    leftmost_toskew = safeskew;
+-     for (row = 0; row < h; row += nrow)
+-     {
+-         rowstoread = th - (row + img->row_offset) % th;
+-@@ -704,9 +684,24 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+- 		/*
+- 		 * Rightmost tile is clipped on right side.
+- 		 */
+--		fromskew = tw - (w - tocol);
+-+		safeskew = tw;
+-+		safeskew -= w;
+-+		safeskew += tocol;
+-+		if(safeskew > INT_MAX || safeskew < INT_MIN){
+-+		        _TIFFfree(buf);
+-+		        TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
+-+		        return (0);
+-+		}
+-+		fromskew = safeskew;
+- 		this_tw = tw - fromskew;
+--		this_toskew = toskew + fromskew;
+-+		safeskew = toskew;
+-+		safeskew += fromskew;
+-+		if(safeskew > INT_MAX || safeskew < INT_MIN){
+-+		        _TIFFfree(buf);
+-+		        TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
+-+		        return (0);
+-+		}
+-+		this_toskew = safeskew;
+- 	    }
+- 	    (*put)(img, raster+y*w+tocol, tocol, y, this_tw, nrow, fromskew, this_toskew, buf + pos);
+- 	    tocol += this_tw;
+diff --git a/third_party/libtiff/tif_getimage.c b/third_party/libtiff/tif_getimage.c
+index fc554ccab..fff3f7fde 100644
+--- a/third_party/libtiff/tif_getimage.c
++++ b/third_party/libtiff/tif_getimage.c
+@@ -31,6 +31,7 @@
+  */
+ #include "tiffiop.h"
+ #include <stdio.h>
++#include <limits.h>
+ 
+ static int gtTileContig(TIFFRGBAImage*, uint32*, uint32, uint32);
+ static int gtTileSeparate(TIFFRGBAImage*, uint32*, uint32, uint32);
+@@ -628,6 +629,7 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+     uint32 tw, th;
+     unsigned char* buf = NULL;
+     int32 fromskew, toskew;
++    int64 safeskew;
+     uint32 nrow;
+     int ret = 1, flip;
+     uint32 this_tw, tocol;
+@@ -648,19 +650,37 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+     flip = setorientation(img);
+     if (flip & FLIP_VERTICALLY) {
+ 	    y = h - 1;
+-	    toskew = -(int32)(tw + w);
++	    safeskew = 0;
++	    safeskew -= tw;
++	    safeskew -= w;
+     }
+     else {
+ 	    y = 0;
+-	    toskew = -(int32)(tw - w);
++	    safeskew = 0;
++	    safeskew -= tw;
++	    safeskew +=w;
+     }
+      
++    if(safeskew > INT_MAX || safeskew < INT_MIN){
++       _TIFFfree(buf);
++       TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
++       return (0);
++    }
++    toskew = safeskew;
++
+     /*
+      *	Leftmost tile is clipped on left side if col_offset > 0.
+      */
+     leftmost_fromskew = img->col_offset % tw;
+     leftmost_tw = tw - leftmost_fromskew;
+-    leftmost_toskew = toskew + leftmost_fromskew;
++    safeskew = toskew;
++    safeskew += leftmost_fromskew;
++    if(safeskew > INT_MAX || safeskew < INT_MIN){
++       _TIFFfree(buf);
++       TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
++       return (0);
++    }
++    leftmost_toskew = safeskew;
+     for (row = 0; ret != 0 && row < h; row += nrow)
+     {
+         rowstoread = th - (row + img->row_offset) % th;
+@@ -686,9 +706,24 @@ gtTileContig(TIFFRGBAImage* img, uint32* raster, uint32 w, uint32 h)
+ 		/*
+ 		 * Rightmost tile is clipped on right side.
+ 		 */
+-		fromskew = tw - (w - tocol);
++		safeskew = tw;
++		safeskew -= w;
++		safeskew += tocol;
++		if(safeskew > INT_MAX || safeskew < INT_MIN){
++		        _TIFFfree(buf);
++		        TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
++		        return (0);
++		}
++		fromskew = safeskew;
+ 		this_tw = tw - fromskew;
+-		this_toskew = toskew + fromskew;
++		safeskew = toskew;
++		safeskew += fromskew;
++		if(safeskew > INT_MAX || safeskew < INT_MIN){
++		        _TIFFfree(buf);
++		        TIFFErrorExt(tif->tif_clientdata, TIFFFileName(tif), "%s", "Invalid skew");
++		        return (0);
++		}
++		this_toskew = safeskew;
+ 	    }
+ 	    (*put)(img, raster+y*w+tocol, tocol, y, this_tw, nrow, fromskew, this_toskew, buf + pos);
+ 	    tocol += this_tw;

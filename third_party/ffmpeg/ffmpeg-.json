@@ -1,0 +1,32 @@
+[{
+	"var":[
+		{"sdkPath":"C:/cygwin64/usr/local/x86_64-unknown-linux-gnu/x86_64-unknown-linux-gnu"},
+		{"clangPath":"G:/cef73/src/third_party/llvm-build/Release+Asserts/bin"},
+		{"srcPath":"G:/mycode/mb"}
+	],
+	"compile":{
+//		"ccompiler":"${clangPath}/clang.exe",
+//		"cppcompiler":"${clangPath}/clang++.exe",
+//		"include":[
+//			"${srcPath}/third_party/ffmpeg"
+//		],
+//		"prebuildSrc":[
+//			"${srcPath}/third_party/freetype/src/src/winfonts/winfnt.c"
+//		],
+//		"src":[
+//			"${srcPath}/third_party/ffmpeg/libswscale/x86/rgb2rgb.c"
+//		],
+		"cmd":[
+			"-D_DEBUG
+		],
+		"objdir":"G:/mycode/mb/out/tmp/x64ffmpeg/release",
+		"outdir":"G:/mycode/mb/out/x64Release/plugins/ffmpeg",
+//		"target":"ffmpeg.dll",
+//		"beginLibs":[
+//		],
+//		"linkerCmd":[],
+//		"endLibs":[
+//		],
+		"linker":"G:/cef73/src/third_party/llvm-build/Release+Asserts/bin/lld-link.exe"
+	}
+}]

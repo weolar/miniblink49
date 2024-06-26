@@ -1,0 +1,16 @@
+diff --git a/third_party/libopenjpeg20/tcd.c b/third_party/libopenjpeg20/tcd.c
+index 1dd15405d..acc28dd55 100644
+--- a/third_party/libopenjpeg20/tcd.c
++++ b/third_party/libopenjpeg20/tcd.c
+@@ -818,6 +818,11 @@ static INLINE OPJ_BOOL opj_tcd_init_tile(opj_tcd_t *p_tcd, OPJ_UINT32 p_tile_no,
+         if (isEncoder) {
+             OPJ_SIZE_T l_tile_data_size;
+ 
++            if (l_tilec->x0 >= l_tilec->x1 || l_tilec->y0 >= l_tilec->y1) {
++                opj_event_msg(manager, EVT_ERROR, "Invalid tile data\n");
++                return OPJ_FALSE;
++            }
++
+             /* compute l_data_size with overflow check */
+             OPJ_SIZE_T w = (OPJ_SIZE_T)(l_tilec->x1 - l_tilec->x0);
+             OPJ_SIZE_T h = (OPJ_SIZE_T)(l_tilec->y1 - l_tilec->y0);

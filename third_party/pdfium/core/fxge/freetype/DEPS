@@ -1,0 +1,4 @@
+include_rules = [
+  '+third_party/freetype/include',
+  '+third_party/freetype/src/src',
+]

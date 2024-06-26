@@ -1,0 +1,15 @@
+diff --git a/third_party/libopenjpeg20/j2k.c b/third_party/libopenjpeg20/j2k.c
+index 8e35b33ee..d95963a5c 100644
+--- a/third_party/libopenjpeg20/j2k.c
++++ b/third_party/libopenjpeg20/j2k.c
+@@ -9527,6 +9527,10 @@ static OPJ_BOOL opj_j2k_read_SPCod_SPCoc(opj_j2k_t *p_j2k,
+             p_j2k->m_specific_param.m_decoder.m_default_tcp;
+ 
+     /* precondition again */
++    if (compno >= p_j2k->m_private_image->numcomps) {
++        return OPJ_FALSE;
++    }
++
+     assert(compno < p_j2k->m_private_image->numcomps);
+ 
+     l_tccp = &l_tcp->tccps[compno];

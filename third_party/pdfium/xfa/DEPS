@@ -1,0 +1,7 @@
+include_rules = [
+  '+core',
+  '+fxbarcode',
+
+  # xfa/fwl should be standalone. https://crbug.com/pdfium/507
+  '-xfa/fwl',
+]

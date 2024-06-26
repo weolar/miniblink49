@@ -1,0 +1,40 @@
+diff --git a/third_party/libtiff/tiffconf.h b/third_party/libtiff/tiffconf.h
+index 2a88cb75f..4d2d7c9d9 100644
+--- a/third_party/libtiff/tiffconf.h
++++ b/third_party/libtiff/tiffconf.h
+@@ -35,17 +35,26 @@
+ #define HAVE_SEARCH_H 1
+ #endif
+ 
+-static const size_t sizeOfInt = sizeof(int);
+-/* The size of a `int', as computed by sizeof. */
+-#define SIZEOF_INT sizeOfInt
+-
+-static const size_t sizeOfULong = sizeof(unsigned long);
++/* The size of a `int'. */
++/* According typedef int  int32_t; in the fx_system.h*/
++#define SIZEOF_INT 4
++
++/* Sunliang.Liu 20110325. We should config the correct long size for tif 
++   fax4decode optimize in tif_fax3.c  -- Linux64 decode issue. 
++   TESTDOC: Bug #23661 - z1.tif. */
++#if _FX_CPU_ == _FX_X64_ || _FX_CPU_ == _FX_IA64_
+ /* The size of `unsigned long', as computed by sizeof. */
+-#define SIZEOF_UNSIGNED_LONG sizeOfULong
++#define SIZEOF_UNSIGNED_LONG 8
++#else
++#define SIZEOF_UNSIGNED_LONG 4
++#endif
+ 
+-static const size_t sizeOfVoidP = sizeof(void*);
+-/* The size of void* as computed by sizeof. */
+-#define SIZEOF_VOIDP sizeOfVoidP
++/* The size of void*. */
++#ifdef __LP64__
++#define SIZEOF_VOIDP 8
++#else
++#define SIZEOF_VOIDP 4
++#endif
+ 
+ /* Signed 8-bit type */
+ #define TIFF_INT8_T signed char

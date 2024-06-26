@@ -1,0 +1,27 @@
+Name: Little CMS
+URL: http://www.littlecms.com/
+Version: 2.9
+Security Critical: yes
+License: MIT License
+
+Description:
+Color Management Engine.
+
+Local Modifications:
+
+0000-cmserr-changes.patch: change LCMS memory management methods to use PDFium's.
+0001-fix-include.patch: fix include in lcms2_internal.h.
+0002-old-performance-fix.patch: https://codereview.chromium.org/534363002/
+0003-old-uninitialized-in-LUTevalFloat.patch: https://codereview.chromium.org/380293002/
+0004-old-uninitialized-in-LUTeval16.patch: https://codereview.chromium.org/387273002/
+0005-old-fix-e-with-tilde.patch: like https://codereview.chromium.org/2411123003/ but better.
+0006-tag-type-confusion.patch: Fix a type confusion.
+0008-infinite-loop-GrowNamedColorList.patch: Fix infinite loop when calling GrowNamedColorList.
+0019-utf8.patch: Encode source files as utf-8.
+0026-more-unsupported-characters.patch: remove other unsupported characters.
+0027-changes-from-beginning-of-time.patch: commented changes from initial commit.
+0028-do-not-quickfloor.patch: flooring errors may cause heap-buffer-overflow.
+0029-drop-register-keyword.patch: Remove deprecated 'register' keyword.
+0030-const-data.patch: Mark many data structures as const.
+0031-wrong-tag-element-count.patch: Handle tag element count mismatch as an error.
+0032-cgats-allocation.patch: Add check on CGATS memory allocation.

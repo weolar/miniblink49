@@ -1,0 +1,14 @@
+diff --git a/third_party/libpng16/png.c b/third_party/libpng16/png.c
+index c183e3f..1cf5271 100644
+--- a/third_party/libpng16/png.c
++++ b/third_party/libpng16/png.c
+@@ -2464,7 +2464,8 @@ png_colorspace_set_rgb_coefficients(png_structrp png_ptr)
+ 
+ #endif /* COLORSPACE */
+ 
+-#ifdef __GNUC__
++/* #ifdef __GNUC__ */
++#if 1
+ /* This exists solely to work round a warning from GNU C. */
+ static int /* PRIVATE */
+ png_gt(size_t a, size_t b)

@@ -1,0 +1,1811 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\CNS1">
+      <UniqueIdentifier>{9F8EDAD5-01BA-79C3-C2BB-94164B6787F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\GB1">
+      <UniqueIdentifier>{17AF2EEB-3FF0-0830-A0A2-85D427B6184A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Japan1">
+      <UniqueIdentifier>{C02831B6-7A62-D8C3-3151-1A87C3FF41C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps">
+      <UniqueIdentifier>{84B48F7A-43E9-F609-B265-2F691E68E2CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_cmaps\Korea1">
+      <UniqueIdentifier>{120B17F0-18E2-95E8-7735-FC58C6340200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_edit">
+      <UniqueIdentifier>{4518E33F-501C-C045-53A7-684809EA553B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_edit">
+      <UniqueIdentifier>{4518E33F-501C-C045-53A7-684809EA553B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_edit">
+      <UniqueIdentifier>{4518E33F-501C-C045-53A7-684809EA553B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_edit">
+      <UniqueIdentifier>{4518E33F-501C-C045-53A7-684809EA553B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_edit">
+      <UniqueIdentifier>{4518E33F-501C-C045-53A7-684809EA553B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_font">
+      <UniqueIdentifier>{4833D42F-DA8E-64E9-3EE4-52218094C7EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_page">
+      <UniqueIdentifier>{72242711-B80A-7615-311F-CD3828934F36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_parser">
+      <UniqueIdentifier>{419F521D-82C9-6172-3996-FF2EBEEF9EBE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{B0072BF7-31F2-80C6-8CAF-75C8BB0DCADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\fpdf_render">
+      <UniqueIdentifier>{F8CF8CD5-A0B9-E45B-7DA5-9CCBF5731158}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\include\fpdfapi\fpdfapi.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_module.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_objects.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_page.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_pageobj.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_parser.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_render.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_resource.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfapi\fpdf_serial.h">
+      <Filter>core\include\fpdfapi</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_basic_module.cpp">
+      <Filter>core\src\fpdfapi</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_cmaps\cmap_int.h">
+      <Filter>core\src\fpdfapi\fpdf_cmaps</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\Adobe-CNS1-UCS2_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\B5pc-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\B5pc-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\cmaps_cns1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\CNS-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\CNS-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\ETen-B5-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\ETen-B5-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\ETenms-B5-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\ETenms-B5-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\HKscs-B5-H_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\HKscs-B5-V_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\UniCNS-UCS2-H_3.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\UniCNS-UCS2-V_3.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\CNS1\UniCNS-UTF16-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\fpdf_cmaps.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\Adobe-GB1-UCS2_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\cmaps_gb1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GB-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GB-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBK-EUC-H_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBK-EUC-V_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBK2K-H_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBK2K-V_5.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBKp-EUC-H_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBKp-EUC-V_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBpc-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\GBpc-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\UniGB-UCS2-H_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\GB1\UniGB-UCS2-V_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\83pv-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\90ms-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\90ms-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\90msp-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\90msp-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\90pv-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\Add-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\Add-RKSJ-V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\Adobe-Japan1-UCS2_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\cmaps_japan1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\EUC-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\EUC-V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\Ext-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\Ext-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\UniJIS-UCS2-HW-H_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\UniJIS-UCS2-HW-V_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\UniJIS-UCS2-H_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\UniJIS-UCS2-V_4.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Japan1\V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\Adobe-Korea1-UCS2_2.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\cmaps_korea1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSC-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSC-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSCms-UHC-HW-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSCms-UHC-HW-V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSCms-UHC-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSCms-UHC-V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\KSCpc-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\UniKS-UCS2-H_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\UniKS-UCS2-V_1.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_cmaps\Korea1\UniKS-UTF16-H_0.cpp">
+      <Filter>core\src\fpdfapi\fpdf_cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_edit\editint.h">
+      <Filter>core\src\fpdfapi\fpdf_edit</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_edit\fpdf_edit_content.cpp">
+      <Filter>core\src\fpdfapi\fpdf_edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_edit\fpdf_edit_create.cpp">
+      <Filter>core\src\fpdfapi\fpdf_edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_edit\fpdf_edit_doc.cpp">
+      <Filter>core\src\fpdfapi\fpdf_edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_edit\fpdf_edit_image.cpp">
+      <Filter>core\src\fpdfapi\fpdf_edit</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_font\font_int.h">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_font\fpdf_font.cpp">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_font\fpdf_font_charset.cpp">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_font\fpdf_font_cid.cpp">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_font\ttgsubtable.cpp">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_font\ttgsubtable.h">
+      <Filter>core\src\fpdfapi\fpdf_font</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_colors.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_doc.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_func.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_graph_state.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_image.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_parser.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_parser_old.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_path.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_page\fpdf_page_pattern.cpp">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_page\pageint.h">
+      <Filter>core\src\fpdfapi\fpdf_page</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_decode.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_document.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_encrypt.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_fdf.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_objects.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_parser.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_parser\fpdf_parser_utility.cpp">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_parser\parser_int.h">
+      <Filter>core\src\fpdfapi\fpdf_parser</Filter>
+    </ClInclude>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render_cache.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render_image.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render_loadimage.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render_pattern.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\fpdfapi\fpdf_render\fpdf_render_text.cpp">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClCompile>
+    <ClInclude Include="core\src\fpdfapi\fpdf_render\render_int.h">
+      <Filter>core\src\fpdfapi\fpdf_render</Filter>
+    </ClInclude>
+    <None Include="pdfium.gyp"/>
+  </ItemGroup>
+</Project>

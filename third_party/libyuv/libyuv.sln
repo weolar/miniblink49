@@ -1,0 +1,40 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "(libjpeg_turbo)", "..\..\..\libjpeg_turbo", "{8BDE7D70-C0A0-0C23-2BC8-768E0C8D91DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpeg", "..\libjpeg_turbo\libjpeg.vcxproj", "{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libyuv", "libyuv.vcxproj", "{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|Win32 = Debug|Win32
+		Release|x64 = Release|x64
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Debug|x64.ActiveCfg = Debug|x64
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Debug|x64.Build.0 = Debug|x64
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Debug|Win32.ActiveCfg = Debug|Win32
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Debug|Win32.Build.0 = Debug|Win32
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Release|x64.ActiveCfg = Release|x64
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Release|x64.Build.0 = Release|x64
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Release|Win32.ActiveCfg = Release|Win32
+		{84151A8D-FB8C-E3A8-5D33-F12E7AC56E14}.Release|Win32.Build.0 = Release|Win32
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Debug|x64.ActiveCfg = Debug|x64
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Debug|x64.Build.0 = Debug|x64
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Debug|Win32.Build.0 = Debug|Win32
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Release|x64.ActiveCfg = Release|x64
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Release|x64.Build.0 = Release|x64
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Release|Win32.ActiveCfg = Release|Win32
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EEDB4B8B-E1B7-A89E-70BE-E435DF587991} = {8BDE7D70-C0A0-0C23-2BC8-768E0C8D91DB}
+	EndGlobalSection
+EndGlobal

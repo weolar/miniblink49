@@ -1,0 +1,20 @@
+diff --git a/third_party/libopenjpeg20/jp2.c b/third_party/libopenjpeg20/jp2.c
+index 7ef7c9139..1fa607d66 100644
+--- a/third_party/libopenjpeg20/jp2.c
++++ b/third_party/libopenjpeg20/jp2.c
+@@ -593,6 +593,7 @@ static OPJ_BOOL opj_jp2_read_ihdr(opj_jp2_t *jp2,
+     }
+ 
+     /* allocate memory for components */
++    opj_free(jp2->comps);
+     jp2->comps = (opj_jp2_comps_t*) opj_calloc(jp2->numcomps,
+                  sizeof(opj_jp2_comps_t));
+     if (jp2->comps == 0) {
+@@ -1882,6 +1883,7 @@ void opj_jp2_setup_decoder(opj_jp2_t *jp2, opj_dparameters_t *parameters)
+ 
+     /* further JP2 initializations go here */
+     jp2->color.jp2_has_colr = 0;
++    jp2->comps = NULL;
+     jp2->ignore_pclr_cmap_cdef = parameters->flags &
+                                  OPJ_DPARAMETERS_IGNORE_PCLR_CMAP_CDEF_FLAG;
+ }

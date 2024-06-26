@@ -1,0 +1,57 @@
+diff --git a/third_party/libtiff/0028-nstrips-OOM.patch b/third_party/libtiff/0028-nstrips-OOM.patch
+index a6db66ee8..e69de29bb 100644
+--- a/third_party/libtiff/0028-nstrips-OOM.patch
++++ b/third_party/libtiff/0028-nstrips-OOM.patch
+@@ -1,26 +0,0 @@
+-diff --git a/third_party/libtiff/tif_dirread.c b/third_party/libtiff/tif_dirread.c
+-index 772ebaf7d..ab938eac9 100644
+---- a/third_party/libtiff/tif_dirread.c
+-+++ b/third_party/libtiff/tif_dirread.c
+-@@ -41,6 +41,7 @@
+- 
+- #include "tiffiop.h"
+- #include <float.h>
+-+#include <limits.h>
+- 
+- #define IGNORE 0          /* tag placeholder used below */
+- #define FAILED_FII    ((uint32) -1)
+-@@ -3638,6 +3639,13 @@ TIFFReadDirectory(TIFF* tif)
+- 		    isTiled(tif) ? "tiles" : "strips");
+- 		goto bad;
+- 	}
+-+	if (tif->tif_dir.td_nstrips > INT_MAX) {
+-+		TIFFErrorExt(tif->tif_clientdata, module,
+-+		    "Cannot handle %u number of %s",
+-+		    tif->tif_dir.td_nstrips,
+-+		    isTiled(tif) ? "tiles" : "strips");
+-+		goto bad;
+-+	}
+- 	tif->tif_dir.td_stripsperimage = tif->tif_dir.td_nstrips;
+- 	if (tif->tif_dir.td_planarconfig == PLANARCONFIG_SEPARATE)
+- 		tif->tif_dir.td_stripsperimage /= tif->tif_dir.td_samplesperpixel;
+diff --git a/third_party/libtiff/tif_dirread.c b/third_party/libtiff/tif_dirread.c
+index 5e62e8131..521dbf0a4 100644
+--- a/third_party/libtiff/tif_dirread.c
++++ b/third_party/libtiff/tif_dirread.c
+@@ -41,6 +41,7 @@
+ 
+ #include "tiffiop.h"
+ #include <float.h>
++#include <limits.h>
+ #include <stdlib.h>
+ 
+ #define IGNORE 0          /* tag placeholder used below */
+@@ -3743,6 +3744,13 @@ TIFFReadDirectory(TIFF* tif)
+ 		    isTiled(tif) ? "tiles" : "strips");
+ 		goto bad;
+ 	}
++	if (tif->tif_dir.td_nstrips > INT_MAX) {
++		TIFFErrorExt(tif->tif_clientdata, module,
++		    "Cannot handle %u number of %s",
++		    tif->tif_dir.td_nstrips,
++		    isTiled(tif) ? "tiles" : "strips");
++		goto bad;
++	}
+ 	tif->tif_dir.td_stripsperimage = tif->tif_dir.td_nstrips;
+ 	if (tif->tif_dir.td_planarconfig == PLANARCONFIG_SEPARATE)
+ 		tif->tif_dir.td_stripsperimage /= tif->tif_dir.td_samplesperpixel;

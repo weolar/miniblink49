@@ -1,0 +1,13 @@
+diff --git a/third_party/lcms/include/lcms2.h b/third_party/lcms/include/lcms2.h
+index 739e6e1f8..c84a4fd93 100644
+--- a/third_party/lcms/include/lcms2.h
++++ b/third_party/lcms/include/lcms2.h
+@@ -38,7 +38,7 @@
+ // #define CMS_DONT_USE_INT64        1
+ 
+ // Uncomment this if your compiler doesn't work with fast floor function
+-// #define CMS_DONT_USE_FAST_FLOOR 1
++#define CMS_DONT_USE_FAST_FLOOR 1
+ 
+ // Uncomment this line if you want lcms to use the black point tag in profile,
+ // if commented, lcms will compute the black point by its own.

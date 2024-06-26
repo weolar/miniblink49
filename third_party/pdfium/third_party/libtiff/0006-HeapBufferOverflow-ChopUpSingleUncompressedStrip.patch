@@ -1,0 +1,40 @@
+diff --git a/core/fxcodec/codec/ccodec_tiffmodule.cpp b/core/fxcodec/codec/ccodec_tiffmodule.cpp
+index 09cfea4..20fda63 100644
+--- a/core/fxcodec/codec/ccodec_tiffmodule.cpp
++++ b/core/fxcodec/codec/ccodec_tiffmodule.cpp
+@@ -79,6 +79,10 @@ int _TIFFmemcmp(const void* ptr1, const void* ptr2, tmsize_t size) {
+   return memcmp(ptr1, ptr2, (size_t)size);
+ }
+ 
++int _TIFFIfMultiplicationOverflow(tmsize_t op1, tmsize_t op2) {
++  return op1 > std::numeric_limits<tmsize_t>::max() / op2;
++}
++
+ TIFFErrorHandler _TIFFwarningHandler = nullptr;
+ TIFFErrorHandler _TIFFerrorHandler = nullptr;
+ 
+diff --git a/third_party/libtiff/tif_aux.c b/third_party/libtiff/tif_aux.c
+index 927150a..3ce3680 100644
+--- a/third_party/libtiff/tif_aux.c
++++ b/third_party/libtiff/tif_aux.c
+@@ -69,7 +69,7 @@ _TIFFCheckRealloc(TIFF* tif, void* buffer,
+ 	/*
+ 	 * XXX: Check for integer overflow.
+ 	 */
+-	if (nmemb && elem_size && bytes / elem_size == nmemb)
++	if (nmemb && elem_size && !_TIFFIfMultiplicationOverflow(nmemb, elem_size))
+ 		cp = _TIFFrealloc(buffer, bytes);
+ 
+ 	if (cp == NULL) {
+diff --git a/third_party/libtiff/tiffio.h b/third_party/libtiff/tiffio.h
+index 038b670..056aed2 100644
+--- a/third_party/libtiff/tiffio.h
++++ b/third_party/libtiff/tiffio.h
+@@ -298,6 +298,7 @@ extern void _TIFFmemset(void* p, int v, tmsize_t c);
+ extern void _TIFFmemcpy(void* d, const void* s, tmsize_t c);
+ extern int _TIFFmemcmp(const void* p1, const void* p2, tmsize_t c);
+ extern void _TIFFfree(void* p);
++extern int _TIFFIfMultiplicationOverflow(tmsize_t op1, tmsize_t op2);
+ 
+ /*
+ ** Stuff, related to tag handling and creating custom tags.

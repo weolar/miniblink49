@@ -1,0 +1,28 @@
+diff --git a/third_party/libopenjpeg20/jp2.c b/third_party/libopenjpeg20/jp2.c
+index f3ccb9974..882f1b649 100644
+--- a/third_party/libopenjpeg20/jp2.c
++++ b/third_party/libopenjpeg20/jp2.c
+@@ -1624,7 +1624,7 @@ OPJ_BOOL opj_jp2_decode(opj_jp2_t *jp2,
+             /* Part 1, I.5.3.4: Either both or none : */
+             if (!jp2->color.jp2_pclr->cmap) {
+                 opj_jp2_free_pclr(&(jp2->color));
+-            } else {
++            } else if (p_image->pdfium_use_colorspace) {
+                 if (!opj_jp2_apply_pclr(p_image, &(jp2->color), p_manager)) {
+                     return OPJ_FALSE;
+                 }
+diff --git a/third_party/libopenjpeg20/openjpeg.h b/third_party/libopenjpeg20/openjpeg.h
+index d571c516e..e8dbe4ff7 100644
+--- a/third_party/libopenjpeg20/openjpeg.h
++++ b/third_party/libopenjpeg20/openjpeg.h
+@@ -682,6 +682,10 @@ typedef struct opj_image {
+     OPJ_BYTE *icc_profile_buf;
+     /** size of ICC profile */
+     OPJ_UINT32 icc_profile_len;
++
++
++    /** Whether to apply PCLR or not */
++    OPJ_BOOL pdfium_use_colorspace;
+ } opj_image_t;
+ 
+ 

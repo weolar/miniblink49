@@ -1,0 +1,39 @@
+diff --git a/third_party/libopenjpeg20/jp2.c b/third_party/libopenjpeg20/jp2.c
+index da4e05f82..c9562f705 100644
+--- a/third_party/libopenjpeg20/jp2.c
++++ b/third_party/libopenjpeg20/jp2.c
+@@ -1073,8 +1073,8 @@ static OPJ_BOOL opj_jp2_apply_pclr(opj_image_t *image,
+             assert(pcol == 0);
+             new_comps[i] = old_comps[cmp];
+         } else {
+-            assert(i == pcol);
+-            new_comps[pcol] = old_comps[cmp];
++            assert( i == pcol ); // probably wrong?
++            new_comps[i] = old_comps[cmp];
+         }
+ 
+         /* Palette mapping: */
+@@ -1102,19 +1102,19 @@ static OPJ_BOOL opj_jp2_apply_pclr(opj_image_t *image,
+         pcol = cmap[i].pcol;
+         src = old_comps[cmp].data;
+         assert(src); /* verified above */
+-        max = new_comps[pcol].w * new_comps[pcol].h;
++        max = new_comps[i].w * new_comps[i].h;
+ 
+         /* Direct use: */
+         if (cmap[i].mtyp == 0) {
+-            assert(cmp == 0);
++            assert( cmp == 0 ); // probably wrong.
+             dst = new_comps[i].data;
+             assert(dst);
+             for (j = 0; j < max; ++j) {
+                 dst[j] = src[j];
+             }
+         } else {
+-            assert(i == pcol);
+-            dst = new_comps[pcol].data;
++            assert( i == pcol ); // probably wrong?
++            dst = new_comps[i].data;
+             assert(dst);
+             for (j = 0; j < max; ++j) {
+                 /* The index */

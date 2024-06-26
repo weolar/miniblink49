@@ -1,0 +1,13 @@
+diff --git a/third_party/libtiff/tif_aux.c b/third_party/libtiff/tif_aux.c
+index 3ce3680..bc4ea01 100644
+--- a/third_party/libtiff/tif_aux.c
++++ b/third_party/libtiff/tif_aux.c
+@@ -69,7 +69,7 @@ _TIFFCheckRealloc(TIFF* tif, void* buffer,
+ 	/*
+ 	 * XXX: Check for integer overflow.
+ 	 */
+-	if (nmemb && elem_size && !_TIFFIfMultiplicationOverflow(nmemb, elem_size))
++	if (nmemb > 0 && elem_size > 0 && !_TIFFIfMultiplicationOverflow(nmemb, elem_size))
+ 		cp = _TIFFrealloc(buffer, bytes);
+ 
+ 	if (cp == NULL) {

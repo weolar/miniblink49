@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\preprocessor">
+      <UniqueIdentifier>{56A90BCD-B311-1BEE-A8AC-25D8344BCE41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="compiler\preprocessor\DiagnosticsBase.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\DiagnosticsBase.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\DirectiveHandlerBase.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\DirectiveHandlerBase.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\DirectiveParser.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\DirectiveParser.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\ExpressionParser.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\ExpressionParser.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <None Include="compiler\preprocessor\ExpressionParser.y">
+      <Filter>compiler\preprocessor</Filter>
+    </None>
+    <ClCompile Include="compiler\preprocessor\Input.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Input.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\Lexer.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Lexer.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\Macro.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Macro.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\MacroExpander.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\MacroExpander.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\Preprocessor.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Preprocessor.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\preprocessor\SourceLocation.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\Token.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Token.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\preprocessor\Tokenizer.cpp">
+      <Filter>compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\preprocessor\Tokenizer.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <None Include="compiler\preprocessor\Tokenizer.l">
+      <Filter>compiler\preprocessor</Filter>
+    </None>
+    <ClInclude Include="compiler\preprocessor\numeric_lex.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\preprocessor\pp_utils.h">
+      <Filter>compiler\preprocessor</Filter>
+    </ClInclude>
+    <None Include="angle.gyp"/>
+  </ItemGroup>
+</Project>

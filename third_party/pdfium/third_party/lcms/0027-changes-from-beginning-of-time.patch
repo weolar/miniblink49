@@ -1,0 +1,152 @@
+diff --git a/third_party/lcms/src/cmscgats.c b/third_party/lcms/src/cmscgats.c
+index a0c25c024..55f74ede8 100644
+--- a/third_party/lcms/src/cmscgats.c
++++ b/third_party/lcms/src/cmscgats.c
+@@ -38,7 +38,10 @@
+ #define DEFAULT_DBL_FORMAT  "%.10g" // Double formatting
+ 
+ #ifdef CMS_IS_WINDOWS_
+-#    include <io.h>
++//sunliang.liu modified 2010426 for wince error
++# ifndef _WIN32_WCE
++#   include <io.h>
++# endif
+ #    define DIR_CHAR    '\\'
+ #else
+ #    define DIR_CHAR    '/'
+diff --git a/third_party/lcms/src/cmsgamma.c b/third_party/lcms/src/cmsgamma.c
+index eb3dd881c..6e36cf462 100644
+--- a/third_party/lcms/src/cmsgamma.c
++++ b/third_party/lcms/src/cmsgamma.c
+@@ -749,14 +749,19 @@ void CMSEXPORT cmsFreeToneCurve(cmsToneCurve* Curve)
+ {
+     cmsContext ContextID;
+ 
+-    if (Curve == NULL) return;
++    // added by Xiaochuan Liu
++    // Curve->InterpParams may be null
++    if (Curve == NULL || Curve->InterpParams == NULL) return;
+ 
+     ContextID = Curve ->InterpParams->ContextID;
+ 
+     _cmsFreeInterpParams(Curve ->InterpParams);
++    Curve ->InterpParams = NULL;
+ 
+-    if (Curve -> Table16)
++    if (Curve -> Table16) {
+         _cmsFree(ContextID, Curve ->Table16);
++        Curve ->Table16 = NULL;
++    }
+ 
+     if (Curve ->Segments) {
+ 
+@@ -766,20 +771,30 @@ void CMSEXPORT cmsFreeToneCurve(cmsToneCurve* Curve)
+ 
+             if (Curve ->Segments[i].SampledPoints) {
+                 _cmsFree(ContextID, Curve ->Segments[i].SampledPoints);
++                Curve ->Segments[i].SampledPoints = NULL;
+             }
+ 
+-            if (Curve ->SegInterp[i] != 0)
++            if (Curve ->SegInterp[i] != 0) {
+                 _cmsFreeInterpParams(Curve->SegInterp[i]);
++                Curve->SegInterp[i] = NULL;
++            }
+         }
+ 
+         _cmsFree(ContextID, Curve ->Segments);
++        Curve ->Segments = NULL;
+         _cmsFree(ContextID, Curve ->SegInterp);
++        Curve ->SegInterp = NULL;
+     }
+ 
+-    if (Curve -> Evals)
++    if (Curve -> Evals) {
+         _cmsFree(ContextID, Curve -> Evals);
++        Curve -> Evals = NULL;
++    }
+ 
+-    if (Curve) _cmsFree(ContextID, Curve);
++    if (Curve) {
++        _cmsFree(ContextID, Curve);
++        Curve = NULL;
++    }
+ }
+ 
+ // Utility function, free 3 gamma tables
+@@ -799,7 +814,10 @@ void CMSEXPORT cmsFreeToneCurveTriple(cmsToneCurve* Curve[3])
+ // Duplicate a gamma table
+ cmsToneCurve* CMSEXPORT cmsDupToneCurve(const cmsToneCurve* In)
+ {
+-    if (In == NULL || In ->Segments == NULL || In ->Table16 == NULL) return NULL;
++    // Xiaochuan Liu
++    // fix openpdf bug(mantis id:0055683, google id:360198)
++    // the function CurveSetElemTypeFree in cmslut.c also needs to check pointer
++    if (In == NULL || In ->InterpParams == NULL || In ->Segments == NULL || In ->Table16 == NULL) return NULL;
+ 
+     return  AllocateToneCurveStruct(In ->InterpParams ->ContextID, In ->nEntries, In ->nSegments, In ->Segments, In ->Table16);
+ }
+diff --git a/third_party/lcms/src/cmsio0.c b/third_party/lcms/src/cmsio0.c
+index 1b026488d..cc5f89064 100644
+--- a/third_party/lcms/src/cmsio0.c
++++ b/third_party/lcms/src/cmsio0.c
+@@ -479,6 +479,14 @@ cmsIOHANDLER* CMSEXPORT cmsGetProfileIOhandler(cmsHPROFILE hProfile)
+        return Icc->IOhandler;
+ }
+ 
++#ifdef _WIN32_WCE
++time_t wceex_time(time_t *timer);
++struct tm * wceex_gmtime(const time_t *timer);
++
++#define time wceex_time
++#define gmtime wceex_gmtime
++#endif
++
+ // Creates an empty structure holding all required parameters
+ cmsHPROFILE CMSEXPORT cmsCreateProfilePlaceholder(cmsContext ContextID)
+ {
+@@ -570,6 +578,14 @@ int _cmsSearchTag(_cmsICCPROFILE* Icc, cmsTagSignature sig, cmsBool lFollowLinks
+ 
+         // Yes, follow link
+         if (LinkedSig != (cmsTagSignature) 0) {
++            // fix bug mantis id#0055942
++            // assume that TRCTag and ColorantTag can't be linked.
++            // Xiaochuan Liu 2014-04-23
++            if ((sig == cmsSigRedTRCTag || sig == cmsSigGreenTRCTag || sig == cmsSigBlueTRCTag) && 
++                (LinkedSig == cmsSigRedColorantTag || LinkedSig == cmsSigGreenColorantTag || LinkedSig == cmsSigBlueColorantTag))
++            {
++                return n;
++            }
+             sig = LinkedSig;
+         }
+ 
+@@ -1363,6 +1379,12 @@ Error:
+     return 0;
+ }
+ 
++#ifdef _WIN32_WCE
++int wceex_unlink(const char *filename);
++#ifndef remove
++#   define remove wceex_unlink
++#endif
++#endif
+ 
+ // Low-level save to disk.
+ cmsBool  CMSEXPORT cmsSaveProfileToFile(cmsHPROFILE hProfile, const char* FileName)
+diff --git a/third_party/lcms/src/cmsio1.c b/third_party/lcms/src/cmsio1.c
+index 364741c9e..4b12ae18e 100644
+--- a/third_party/lcms/src/cmsio1.c
++++ b/third_party/lcms/src/cmsio1.c
+@@ -201,7 +201,11 @@ cmsPipeline* BuildGrayInputMatrixPipeline(cmsHPROFILE hProfile)
+     return Lut;
+ 
+ Error:
+-    cmsFreeToneCurve(GrayTRC);
++    // memory pointed by GrayTRC is not a new malloc memory, so don't free it here, 
++    // memory pointed by GrayTRC will be freed when hProfile is closed.
++    // test file :0047776_Pocket Medicine_ The Massachusetts General Hospital Handbook of Internal Medicine-2.pdf
++    // Xiaochuan Liu, 20140421
++    //cmsFreeToneCurve(GrayTRC);
+     cmsPipelineFree(Lut);
+     return NULL;
+ }

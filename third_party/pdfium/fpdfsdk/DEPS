@@ -1,0 +1,10 @@
+include_rules = [
+  '+core',
+  '+fxjs',
+  '+public',
+  '+v8',
+  '+xfa/fwl',
+  '+fxbarcode',
+  '+xfa/fxfa',
+  '+xfa/fxgraphics',
+]

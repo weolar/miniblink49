@@ -1,0 +1,92 @@
+Name: ffmpeg
+URL: http://ffmpeg.org/
+License: LGPL 2.1
+License File: CREDITS.chromium
+Upstream Git: git://source.ffmpeg.org/ffmpeg.git
+Last Upstream Merge: fe225b113b0553cdcf1a1d2fbdbe37c467d7951b, January 8 2016
+
+This file documents the layout of the Chromium copy of FFmpeg git, some common
+tasks, how to produce the FFmpeg include directory, and how to create the
+ffmpeg.gyp file and related configurations.
+
+FFmpeg Git Layout:
+==================
+
+Chromium's copy of FFmpeg is a fork of the upstream git repository, see the tags
+above for up-to-date cut information.  All of the Chromium-specific bits, minus
+the gyp files, are located under the chromium/ folder off the root.
+
+    ffmpeg.gyp: See the section on ffmpeg.gyp below.
+
+    ffmpeg_generated.gypi: Pregenerated gyp listing of files necessary to build
+      every platform.  See chromium/scripts/generate_gyp.py for more details.
+
+    chromium/scripts: Utilities for building the gyp and config files.
+
+    chromium/config/...: Pregenerated FFmpeg config options for each platform
+      and architecture; e.g., ChromeOS: ARM-Neon, Linux: X64, etc.
+
+    chromium/patches/README: Details of Chromium-specific changes that haven't
+      yet made it upstream.
+
+
+Help w/ Common Tasks:
+=====================
+
+-- Submitting changes to Chromium's FFmpeg Git repository.
+
+The goal of Chromium's FFmpeg repository is to just be a mirror of the upstream
+Git repository.  This means every change made must be upstreamed.  If you make
+a change, please add an entry to chromium/patches/README with a link to the
+tracking issue and code review for your change. Reviews are performed with
+Gerrit at https://chromium-review.googlesource.com.
+
+  1) Create a branch and make a local, single commit. Gerrit differs from
+     Rietveld in that you must have a single commit, so use git commit --amend
+     if you need to make changes. Verify that your commit contains a
+     Change-Id field, which is how Gerrit coalesces separate patch sets into the
+     same code review.
+
+  2) Upload for review:
+     git cl upload
+
+  3) Commit via https://chromium-review.googlesource.com once approved.
+
+  4) If needed, submit a Chromium-side change to update DEPS.
+
+-- Upstreaming a patch.
+
+  <checkout copy of upstream repo>
+  git checkout <hash of last Chromium FFmpeg, see tag above> -b my_patch
+  git apply <patch. pulled from code review or cherry-picked from this repo>
+  git rebase origin/master
+  < Follow FFmpeg guide: http://ffmpeg.org/developer.html#Submitting-patches-1 >
+
+Once your change has been upstreamed, please update the chromium/patches/README
+file with the status.  The next time an upstream merge is done, the committer
+will clear out all the patches which have been upstreamed.
+
+-- Cherry-picking a patch from upstream.
+
+  # Tell our repo about the upstream one.
+  git remote add upstream git://source.ffmpeg.org/ffmpeg.git
+  git fetch upstream
+
+  # Create a new branch based off of master for committing our patch.
+  git checkout origin/master -b my_new_branch
+
+  # Pull the patch out of upstream.
+  git cherry-pick -x <hash of commit in upstream>
+
+  <Follow rest of "Submitting changes to Chromium's FFmpeg Git repository.">
+
+
+Performing An Upstream Merge
+============================
+
+Currently this is an extremely tedious process that requires access to a Linux,
+Mac, and Windows development machine and lot of blood, sweat, and tears.
+
+The instructions are also prone to going stale, so in the interest of
+collaboration and sharing tips we have moved to a public document:
+https://docs.google.com/a/chromium.org/document/d/14bqZ9NISsyEO3948wehhJ7wc9deTIz-yHUhF1MQp7Po/edit#

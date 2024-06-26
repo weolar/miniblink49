@@ -1,0 +1,32 @@
+Name: OpenJPEG
+URL: http://www.openjpeg.org/
+Version: 2.3.0 (also update in opj_config*)
+Security Critical: yes
+License: 2-clause BSD
+
+Description:
+JPEG 2000 library.
+
+Local Modifications:
+
+0000-use-colorspace.patch: Makes it possible to not call opj_jp2_apply_pclr().
+0003-dwt-decode.patch: Check array bounds for opj_dwt_decode_1() and friends.
+0005-jp2_apply_pclr.patch: Fix out of bounds access.
+0006-tcd_init_tile.patch: Fix a divide by zero bug in opj_tcd_init_tile().
+0007-jp2_read_cmap.patch: Fix wrong rendering on greyscale images with index colorspace.
+0009-opj_pi_next.patch: Fix potential bad precno value in opj_pi_next* functions.
+0011-j2k_update_image_data.patch: Prevent bad signed -> unsigned casting.
+0012-mct_sse.patch: Don't use SSE intrinsics in 32-bit builds.
+0014-opj_jp2_read_ihdr_leak.patch: Memory leak in opj_jp2_read_ihdr().
+0015-read_SPCod_SPCoc_overflow.patch: Prevent a buffer overflow in opj_j2k_read_SPCod_SPCoc.
+0016-read_SQcd_SQcc_overflow.patch: Prevent a buffer overflow in opj_j2k_read_SQcd_SQcc.
+0019-tcd_init_tile.patch: Prevent integer overflows during calculation of |l_nb_code_blocks_size|.
+0022-jp2_apply_pclr_overflow.patch: Prevent integer overflow in opj_jp2_apply_pclr.
+0023-opj_j2k_read_mct_records.patch: Fix opj_j2k_read to prevent heap-use-after-free.
+0025-opj_j2k_add_mct_null_data.patch: Check m_data != null before trying to read from it.
+0026-use_opj_uint_ceildiv.patch: Remove (OPJ_UINT32)opj_int_ceildiv((OPJ_INT32)a, (OPJ_INT32) b).
+0033-undefined-shift-opj_t1_dec_clnpass.patch: fix undefined shifts originated from opj_t1_decode_cblk.
+0034-opj_malloc.patch: PDFium changes in opj_malloc.
+0035-opj_image_data_free.patch: Use the right free function in opj_jp2_apply_pclr.
+0036-opj_j2k_update_image_dimensions.patch: fix integer overflow.
+0037-opj_j2k_merge_ppt_leak.patch: fix memory leak.

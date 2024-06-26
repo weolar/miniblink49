@@ -1,0 +1,10 @@
+include_rules = [
+  '+core/fdrm',
+  '+core/fpdfapi',
+  '+core/fpdfdoc',
+  '+core/fxcrt',
+  '+core/fxge',
+  '+public',
+  '+fpdfsdk',
+  '+v8/include',
+]

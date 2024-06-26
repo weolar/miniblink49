@@ -1,0 +1,31 @@
+diff a/third_party/libpng16/pngmem.c b/third_party/libpng16/pngmem.c
+--- a/third_party/libpng16/pngmem.c
++++ b/third_party/libpng16/pngmem.c
+@@ -19,6 +19,9 @@
+ 
+ #include "pngpriv.h"
+ 
++void*	FXMEM_DefaultAlloc(size_t byte_size);
++void	FXMEM_DefaultFree(void* pointer);
++
+ #if defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED)
+ /* Free a png_struct */
+ void /* PRIVATE */
+@@ -92,7 +95,7 @@
+ 
+       else
+ #endif
+-         return malloc((size_t)size); /* checked for truncation above */
++         return FXMEM_DefaultAlloc(size);
+    }
+ 
+    else
+@@ -249,7 +252,7 @@
+       return;
+ #endif /* USER_MEM */
+ 
+-   free(ptr);
++   FXMEM_DefaultFree(ptr);
+ }
+ 
+ #ifdef PNG_USER_MEM_SUPPORTED

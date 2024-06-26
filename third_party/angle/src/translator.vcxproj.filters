@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="compiler\translator\ShaderLang.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\ShaderVars.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <None Include="angle.gyp"/>
+  </ItemGroup>
+</Project>

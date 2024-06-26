@@ -1,0 +1,114 @@
+diff --git a/third_party/lcms/src/cmsalpha.c b/third_party/lcms/src/cmsalpha.c
+index 7d6aa345f..566f5fe9b 100644
+--- a/third_party/lcms/src/cmsalpha.c
++++ b/third_party/lcms/src/cmsalpha.c
+@@ -252,7 +252,7 @@ int FormatterPos(cmsUInt32Number frm)
+ static
+ cmsFormatterAlphaFn _cmsGetFormatterAlpha(cmsContext id, cmsUInt32Number in, cmsUInt32Number out)
+ {
+-static cmsFormatterAlphaFn FormattersAlpha[5][5] = {
++static const cmsFormatterAlphaFn FormattersAlpha[5][5] = {
+ 
+        /* from 8 */  { copy8,      from8to16,   from8toHLF,   from8toFLT,   from8toDBL   },
+        /* from 16*/  { from16to8,  copy16,      from16toHLF,  from16toFLT,  from16toDBL  },
+diff --git a/third_party/lcms/src/cmsgamma.c b/third_party/lcms/src/cmsgamma.c
+index 6e36cf462..eadbed852 100644
+--- a/third_party/lcms/src/cmsgamma.c
++++ b/third_party/lcms/src/cmsgamma.c
+@@ -57,7 +57,7 @@ typedef struct _cmsParametricCurvesCollection_st {
+ static cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Number Params[], cmsFloat64Number R);
+ 
+ // The built-in list
+-static _cmsParametricCurvesCollection DefaultCurves = {
++static const _cmsParametricCurvesCollection DefaultCurves = {
+     9,                                  // # of curve types
+     { 1, 2, 3, 4, 5, 6, 7, 8, 108 },    // Parametric curve ID
+     { 1, 3, 4, 5, 7, 4, 5, 5, 1 },      // Parameters by type
+@@ -161,7 +161,7 @@ cmsBool _cmsRegisterParametricCurvesPlugin(cmsContext ContextID, cmsPluginBase*
+ 
+ // Search in type list, return position or -1 if not found
+ static
+-int IsInSet(int Type, _cmsParametricCurvesCollection* c)
++int IsInSet(int Type, const _cmsParametricCurvesCollection* c)
+ {
+     int i;
+ 
+@@ -174,9 +174,9 @@ int IsInSet(int Type, _cmsParametricCurvesCollection* c)
+ 
+ // Search for the collection which contains a specific type
+ static
+-_cmsParametricCurvesCollection *GetParametricCurveByType(cmsContext ContextID, int Type, int* index)
++const _cmsParametricCurvesCollection *GetParametricCurveByType(cmsContext ContextID, int Type, int* index)
+ {
+-    _cmsParametricCurvesCollection* c;
++    const _cmsParametricCurvesCollection* c;
+     int Position;
+     _cmsCurvesPluginChunkType* ctx = ( _cmsCurvesPluginChunkType*) _cmsContextGetClientChunk(ContextID, CurvesPlugin);
+ 
+@@ -269,7 +269,7 @@ cmsToneCurve* AllocateToneCurveStruct(cmsContext ContextID, cmsInt32Number nEntr
+     // is placed in advance to maximize performance.
+     if (Segments != NULL && (nSegments > 0)) {
+ 
+-        _cmsParametricCurvesCollection *c;
++        const _cmsParametricCurvesCollection *c;
+ 
+         p ->SegInterp = (cmsInterpParams**) _cmsCalloc(ContextID, nSegments, sizeof(cmsInterpParams*));
+         if (p ->SegInterp == NULL) goto Error;
+@@ -714,7 +714,7 @@ cmsToneCurve* CMSEXPORT cmsBuildParametricToneCurve(cmsContext ContextID, cmsInt
+     cmsCurveSegment Seg0;
+     int Pos = 0;
+     cmsUInt32Number size;
+-    _cmsParametricCurvesCollection* c = GetParametricCurveByType(ContextID, Type, &Pos);
++    const _cmsParametricCurvesCollection* c = GetParametricCurveByType(ContextID, Type, &Pos);
+ 
+     _cmsAssert(Params != NULL);
+ 
+diff --git a/third_party/lcms/src/cmshalf.c b/third_party/lcms/src/cmshalf.c
+index cdd4e37b7..cceb6f987 100644
+--- a/third_party/lcms/src/cmshalf.c
++++ b/third_party/lcms/src/cmshalf.c
+@@ -31,7 +31,7 @@
+ // This code is inspired in the paper "Fast Half Float Conversions"
+ // by Jeroen van der Zijp
+ 
+-static cmsUInt32Number Mantissa[2048] = {
++static const cmsUInt32Number Mantissa[2048] = {
+ 
+ 0x00000000, 0x33800000, 0x34000000, 0x34400000, 0x34800000, 0x34a00000,
+ 0x34c00000, 0x34e00000, 0x35000000, 0x35100000, 0x35200000, 0x35300000,
+@@ -377,7 +377,7 @@ static cmsUInt32Number Mantissa[2048] = {
+ 0x387fc000, 0x387fe000
+ };
+ 
+-static cmsUInt16Number Offset[64] = {
++static const cmsUInt16Number Offset[64] = {
+ 0x0000, 0x0400, 0x0400, 0x0400, 0x0400, 0x0400,
+ 0x0400, 0x0400, 0x0400, 0x0400, 0x0400, 0x0400,
+ 0x0400, 0x0400, 0x0400, 0x0400, 0x0400, 0x0400,
+@@ -391,7 +391,7 @@ static cmsUInt16Number Offset[64] = {
+ 0x0400, 0x0400, 0x0400, 0x0400
+ };
+ 
+-static cmsUInt32Number Exponent[64] = {
++static const cmsUInt32Number Exponent[64] = {
+ 0x00000000, 0x00800000, 0x01000000, 0x01800000, 0x02000000, 0x02800000,
+ 0x03000000, 0x03800000, 0x04000000, 0x04800000, 0x05000000, 0x05800000,
+ 0x06000000, 0x06800000, 0x07000000, 0x07800000, 0x08000000, 0x08800000,
+@@ -405,7 +405,7 @@ static cmsUInt32Number Exponent[64] = {
+ 0x8e000000, 0x8e800000, 0x8f000000, 0xc7800000
+ };
+ 
+-static cmsUInt16Number Base[512] = {
++static const cmsUInt16Number Base[512] = {
+ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+@@ -460,7 +460,7 @@ static cmsUInt16Number Base[512] = {
+ 0xfc00, 0xfc00
+ };
+ 
+-static cmsUInt8Number  Shift[512] = {
++static const cmsUInt8Number  Shift[512] = {
+ 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
+ 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
+ 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,

@@ -1,0 +1,4382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{3dd0d2ea-7ef6-4f9d-ba73-fbcc7911b6fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{b0886980-fc9b-41ca-ac2c-99acdfd458cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fdrm">
+      <UniqueIdentifier>{6d212e1c-3fc3-402d-8b48-4abf651ec3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfapi">
+      <UniqueIdentifier>{7a9d7bc8-4236-4f4c-94d7-e3a917db8756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdfdoc">
+      <UniqueIdentifier>{f14ddfce-bfd3-4971-95b5-03ea5e1dc64e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fpdftext">
+      <UniqueIdentifier>{1a49ffd7-c17e-4882-801e-77b923483929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fxcodec">
+      <UniqueIdentifier>{7fbf9029-efc5-4deb-b0ee-771f37417ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fxcrt">
+      <UniqueIdentifier>{07c8b0d7-4579-4aaf-a261-e2ee31831cb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include\fxge">
+      <UniqueIdentifier>{2737000f-0ff4-4d50-aad8-89203a13e21b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src">
+      <UniqueIdentifier>{000e5244-5bc7-457a-8f4e-96d5544c9eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fdrm">
+      <UniqueIdentifier>{319c3d0a-6a8e-4b30-9aa6-94af0396845b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi">
+      <UniqueIdentifier>{d45d2aa9-344a-4d71-aebc-771d30ba4ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfdoc">
+      <UniqueIdentifier>{159b6945-c1a8-4676-acbd-76eb9180eef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdftext">
+      <UniqueIdentifier>{36e97cdd-18a9-4c7e-8af7-919b86ee02f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcodec">
+      <UniqueIdentifier>{738867d3-53fc-4236-9892-86c44d4a85c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcrt">
+      <UniqueIdentifier>{7c2c27e0-f13c-42a1-adb4-fe7013b09b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge">
+      <UniqueIdentifier>{a88d6409-2f4a-4bc6-aaee-d8524faa86ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fdrm\crypto">
+      <UniqueIdentifier>{b7ff1bd1-d35a-4c8e-89a4-12966027ff36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcodec\codec">
+      <UniqueIdentifier>{0d1507bd-a741-41e6-a4b3-0088112e5c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcodec\jbig2">
+      <UniqueIdentifier>{f88cacf3-aede-47e4-ad4b-d076ef278039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\agg">
+      <UniqueIdentifier>{659c6c82-182a-4d3c-9b6c-3382068d539e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\fontdata">
+      <UniqueIdentifier>{c96d00e8-67e1-4ce0-9751-f851d525ef22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\fontdata\chromefontdata">
+      <UniqueIdentifier>{40b4cc77-f935-4b86-af7c-eb1778b07dd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\freetype">
+      <UniqueIdentifier>{ff1f3d42-62c1-4adb-97a5-09df30db6f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\win32">
+      <UniqueIdentifier>{ebc1f3d3-ba55-4db3-97f1-1bf88efb0096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fpdfsdk">
+      <UniqueIdentifier>{6f629e9d-97ba-4b41-8e4d-1941421c19e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{377d3472-f885-48d1-a7b7-d1f5e9326a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{94be5fc9-3d85-4748-a2cb-e380f9b5ba6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\agg23">
+      <UniqueIdentifier>{f8cdf2f9-7f8f-4ed5-b81e-1696e6d835e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\base">
+      <UniqueIdentifier>{978b75ea-b784-48ca-86af-d01a8b4cb012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\base\numerics">
+      <UniqueIdentifier>{f5de8bc3-ec3f-4b69-ba26-e16b1657b6d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\bigint">
+      <UniqueIdentifier>{714e5b59-277f-40dd-8b1d-dc9680e805ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype">
+      <UniqueIdentifier>{79cfde30-4955-4b03-b344-bf923149de03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include">
+      <UniqueIdentifier>{6951c7b4-a7b8-4d50-9947-1fcf8e997c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\libopenjpeg20">
+      <UniqueIdentifier>{2401cefe-3090-47fb-931d-508d6da509cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\dib">
+      <UniqueIdentifier>{ee55224c-6dad-4887-84cb-e01a5483573b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\cmaps">
+      <UniqueIdentifier>{cbb1d8e1-a0f7-4101-ada6-61f37ed86491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\cmaps\CNS1">
+      <UniqueIdentifier>{9312f2e2-d73f-4c4f-9846-d003cda58cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\cmaps\GB1">
+      <UniqueIdentifier>{c6982861-9e92-4769-be25-cdc4e67a53ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\cmaps\Japan1">
+      <UniqueIdentifier>{37efeb67-2765-4fab-bdf1-42f6901a248e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\cmaps\Korea1">
+      <UniqueIdentifier>{00731f48-37c2-4564-b1b0-91e2580d0652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\edit">
+      <UniqueIdentifier>{9d5c62d2-065b-4fc3-b77c-1a5d69ab22de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\font">
+      <UniqueIdentifier>{3624d274-7022-4143-b91c-fa1003642027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\page">
+      <UniqueIdentifier>{4bf0e008-d96a-4a80-af50-89152bdc297b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\parser">
+      <UniqueIdentifier>{8a9323fa-d674-41d7-ae9e-251b41806aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fpdfapi\render">
+      <UniqueIdentifier>{45a171eb-d4eb-4edb-83a4-aaf745e5b07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcodec\bmp">
+      <UniqueIdentifier>{7bbdc23b-6fc6-47e0-90b5-e15c1dfedee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcodec\gif">
+      <UniqueIdentifier>{6d442a5d-0921-444c-bd97-4ef1205c7e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcrt\css">
+      <UniqueIdentifier>{ba241ba1-892d-4222-8d6f-98a1c1475a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxcrt\xml">
+      <UniqueIdentifier>{63f0c64e-8f98-4068-9243-96842b87ea27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\src\fxge\skia">
+      <UniqueIdentifier>{0723cc30-a8ad-442b-bb11-3f1ac83f04d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fpdfsdk\formfiller">
+      <UniqueIdentifier>{07c3be80-7546-433e-8ab2-cf8fbf718b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fpdfsdk\fpdfxfa">
+      <UniqueIdentifier>{9c6e66ea-62c5-436f-ac8a-881b6d8ffedb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fpdfsdk\pwl">
+      <UniqueIdentifier>{ff8fdcb7-0f23-4a95-8fb8-b92cdb18a23c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public\cpp">
+      <UniqueIdentifier>{7d7081db-05e2-4f14-aed2-606c01ce19d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\base\allocator">
+      <UniqueIdentifier>{be5fff6a-d2b0-49ad-a036-84f9adcf9de0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\base\debug">
+      <UniqueIdentifier>{6c25603c-176f-4475-a5ab-9e2b5a21d885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\base\allocator\partition_allocator">
+      <UniqueIdentifier>{9eb67cb2-4d18-4ea7-90e3-21b052ca10d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\eu-strip">
+      <UniqueIdentifier>{0940888c-590a-40af-9505-71246c7b13d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\eu-strip\bin">
+      <UniqueIdentifier>{9cf167f0-59b8-4ee8-8d92-370d0f74f851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include\freetype-custom-config">
+      <UniqueIdentifier>{5e4bec44-4ab7-45dd-bbc9-ca4fe5252594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\lcms">
+      <UniqueIdentifier>{eeaca013-f794-43ec-93bd-862f2e258cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\lcms\include">
+      <UniqueIdentifier>{3b80e00e-5554-4663-9aa0-81e1308941ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\lcms\src">
+      <UniqueIdentifier>{23dbecf4-9722-409d-b7b7-61a6e7e0c633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\libpng16">
+      <UniqueIdentifier>{a1a55e3b-0fe2-4e71-bfa5-749b7e0d38ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\libpng16\arm">
+      <UniqueIdentifier>{c0cd11f9-cfd5-4c0f-a55d-f389fd76e213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\libpng16\intel">
+      <UniqueIdentifier>{bcb27251-a5dc-47fc-b888-2d7a9b9e3088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\libtiff">
+      <UniqueIdentifier>{50557bbd-0a64-45ce-9614-5c24a8f76d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\skia_shared">
+      <UniqueIdentifier>{bc1517a4-57f0-42db-85c8-da407122b865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include\freetype">
+      <UniqueIdentifier>{06b535c3-b1d6-45f2-bfaa-4ad8418d8280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include\freetype\config">
+      <UniqueIdentifier>{b4336f5b-0d4d-465f-b2d2-679590b90383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include\freetype\internal">
+      <UniqueIdentifier>{8f8289cb-86b3-408e-b8fb-d7f9bd5d858b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\freetype\include\freetype\internal\services">
+      <UniqueIdentifier>{3e4941b8-f9ab-4f0d-8882-c6ad68d6d1a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa">
+      <UniqueIdentifier>{8a3b6902-19a7-4149-883f-377a9be794a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fde">
+      <UniqueIdentifier>{3cf8ec44-24d9-4f40-add7-9f3ef8f82b69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fgas">
+      <UniqueIdentifier>{1fab1b76-e924-4f7f-85f2-ca9b8ca71e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fwl">
+      <UniqueIdentifier>{46fe1edb-ffe8-48e3-b93c-c099a8f70ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fxfa">
+      <UniqueIdentifier>{bc0dee37-46e4-487c-bb9f-d92c0c988df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fxgraphics">
+      <UniqueIdentifier>{260c638a-a19f-434b-b18b-9e27899af481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fgas\crt">
+      <UniqueIdentifier>{0850f679-38bd-4c39-9da8-06394120f83f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fgas\font">
+      <UniqueIdentifier>{dac2673f-39a1-4798-81c1-068ff4643863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fgas\layout">
+      <UniqueIdentifier>{928994ba-348d-4e52-9619-a456c097b5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fwl\theme">
+      <UniqueIdentifier>{3fb95c2d-6651-4121-b640-f4a1f35d6724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xfa\fxfa\parser">
+      <UniqueIdentifier>{badeb2a4-6853-4508-bb3c-df1b11311121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode">
+      <UniqueIdentifier>{ffade7b1-1b3c-446e-99a2-a577fa532546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\common">
+      <UniqueIdentifier>{2c584a0d-b427-4743-8f40-c6437774e339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\datamatrix">
+      <UniqueIdentifier>{c1db28e8-fd93-48c5-bd50-4af711c3ebba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\oned">
+      <UniqueIdentifier>{ce386ff1-8fd1-428c-8d7c-d9a263d48b84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\pdf417">
+      <UniqueIdentifier>{e304ac47-6160-43cd-85c2-8e94ba8a188b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\qrcode">
+      <UniqueIdentifier>{de99b468-9fb0-4496-aa29-29fc5e6d2848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fxbarcode\common\reedsolomon">
+      <UniqueIdentifier>{a02c4ba9-ff43-463c-bf10-fbfbd2c2f3a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\include\fpdfdoc\fpdf_doc.h">
+      <Filter>core\include\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfdoc\fpdf_tagged.h">
+      <Filter>core\include\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfdoc\fpdf_vt.h">
+      <Filter>core\include\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdfdoc\fpdf_ap.h">
+      <Filter>core\include\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fpdftext\fpdf_text.h">
+      <Filter>core\include\fpdftext</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcodec\fx_codec_def.h">
+      <Filter>core\include\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcodec\fx_codec_flate.h">
+      <Filter>core\include\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcodec\fx_codec.h">
+      <Filter>core\include\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_ext.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_memory.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_safe_types.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_stream.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_string.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_system.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_ucd.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_xml.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_basic.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_bidi.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxcrt\fx_coordinates.h">
+      <Filter>core\include\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fx_font.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fx_freetype.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fx_ge.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fx_ge_win32.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fpf.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\fxge\fx_dib.h">
+      <Filter>core\include\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lcms2-2.6\include\lcms2_plugin.h">
+      <Filter>third_party\lcms\include</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lcms2-2.6\include\lcms2.h">
+      <Filter>third_party\lcms\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fdrm\fx_crypt.h">
+      <Filter>core\include\fdrm</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cmaps\cmap_int.h">
+      <Filter>core\src\fpdfapi\cmaps</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cmaps\CNS1\cmaps_cns1.h">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cmaps\GB1\cmaps_gb1.h">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cmaps\Japan1\cmaps_japan1.h">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cmaps\Korea1\cmaps_korea1.h">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_encryptor.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_flateencoder.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_pagecontentgenerator.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_pagecontentmanager.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_stringarchivestream.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\edit\cpdf_creator.h">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_cid2unicodemap.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_cidfont.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmap.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmapmanager.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmapparser.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_font.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_fontencoding.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_fontglobals.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_simplefont.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_tounicodemap.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_truetypefont.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_type1font.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_type3char.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cpdf_type3font.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cfx_cttgsubtable.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\font\cfx_stockfontarray.h">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_textobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_textstate.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_tilingpattern.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\ipdf_page.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_allstates.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_clippath.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_color.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_colorspace.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_colorstate.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentmarkitem.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentmarks.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentparser.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_countedobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_devicecs.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_docpagedata.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_expintfunc.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_form.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_formobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_function.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_generalstate.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_graphicstates.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_iccprofile.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_image.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_imageobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_meshstream.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_page.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pagemodule.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobjectholder.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobjectlist.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_path.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pathobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_pattern.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_patterncs.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_psengine.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_psfunc.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_sampledfunc.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_shadingobject.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_shadingpattern.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_stitchfunc.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_streamcontentparser.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\page\cpdf_streamparser.h">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cpdf_modulemgr.h">
+      <Filter>core\src\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\cpdf_pagerendercontext.h">
+      <Filter>core\src\fpdfapi</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cfdf_document.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_array.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_boolean.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_cross_ref_avail.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_cross_ref_table.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_crypto_handler.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_data_avail.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_dictionary.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_document.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_hint_tables.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_indirect_object_holder.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_linearized_header.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_name.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_null.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_number.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_avail.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_stream.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_walker.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_page_object_avail.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_parser.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_read_validator.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_reference.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_security_handler.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_simple_parser.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_stream.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_stream_acc.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_string.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\cpdf_syntax_parser.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\fpdf_parser_decode.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\parser\fpdf_parser_utility.h">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_devicebuffer.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_dibbase.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_dibtransferfunc.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_docrenderdata.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_imagecacheentry.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_imageloader.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_imagerenderer.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_pagerendercache.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_progressiverenderer.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_rendercontext.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_renderoptions.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_renderstatus.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_scaledrenderbuffer.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_textrenderer.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_transferfunc.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_transparency.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_type3cache.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_type3glyphs.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfapi\render\cpdf_charposlist.h">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_generateap.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_line.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_lineinfo.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_word.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_wordinfo.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_wordplace.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_wordrange.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\csection.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\ctypeset.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\ipdf_formnotify.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\ipvt_fontmap.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cline.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_aaction.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_action.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_actionfields.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_annot.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_annotlist.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_apsettings.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_bookmark.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_bookmarktree.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_defaultappearance.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_dest.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_docjsactions.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_filespec.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_formcontrol.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_formfield.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_iconfit.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_interactiveform.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_link.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_linklist.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_metadata.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_nametree.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_numbertree.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_occontext.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_pagelabel.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_structelement.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_structtree.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_variabletext.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpdf_viewerpreferences.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_floatrect.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdfdoc\cpvt_fontmap.h">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdftext\cpdf_textpage.h">
+      <Filter>core\src\fpdftext</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdftext\cpdf_textpagefind.h">
+      <Filter>core\src\fpdftext</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdftext\unicodenormalizationdata.h">
+      <Filter>core\src\fpdftext</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fpdftext\cpdf_linkextract.h">
+      <Filter>core\src\fpdftext</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\fx_codec_def.h">
+      <Filter>core\src\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\JBig2_DocumentContext.h">
+      <Filter>core\src\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\fx_codec.h">
+      <Filter>core\src\fxcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\bmp\cfx_bmpcontext.h">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\bmp\cfx_bmpdecompressor.h">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\bmp\fx_bmp.h">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_progressivedecoder.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_scanlinedecoder.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_tiffmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\cfx_codec_memory.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\cjpx_decoder.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\codec_int.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\codec_module_iface.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_basicmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_bmpmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_faxmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_flatemodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_gifmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_iccmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_jbig2module.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_jpegmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_jpxmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\codec\ccodec_pngmodule.h">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_PddProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_SddProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Segment.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_SymbolDict.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_TrdProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_ArithDecoder.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_ArithIntDecoder.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_BitStream.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Context.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Define.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_GrdProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_GrrdProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HtrdProc.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HuffmanDecoder.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HuffmanTable.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Image.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Page.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_PatternDict.h">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\gif\cfx_lzwdecompressor.h">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\gif\cfx_gif.h">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcodec\gif\cfx_gifcontext.h">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csstextbuf.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssvalue.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssvaluelist.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssvaluelistparser.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_css.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csscolorvalue.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csscomputedstyle.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csscustomproperty.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssdata.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssdeclaration.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssenumvalue.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssexttextbuf.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssnumbervalue.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csspropertyholder.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssrulecollection.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssselector.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssstringvalue.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssstylerule.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssstyleselector.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_cssstylesheet.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\css\cfx_csssyntaxparser.h">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmltext.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlchardata.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmldocument.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlelement.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlinstruction.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlnode.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlparser.h">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\widestring.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\autorestorer.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\bytestring.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_binarybuf.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_bitstream.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_datetime.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_fileaccess_windows.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_fixedbufgrow.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_memorystream.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_readonlymemorystream.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_seekablemultistream.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_seekablestreamproxy.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_utf8decoder.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_utf8encoder.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\cfx_widetextbuf.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fileaccess_iface.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_bidi.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_codepage.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_coordinates.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_extension.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_memory.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_number.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_random.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_safe_types.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_stream.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_string.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_system.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\fx_unicode.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\maybe_owned.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\observable.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\pauseindicator_iface.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\retain_ptr.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\shared_copy_on_write.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\string_data_template.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\string_pool_template.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\string_view_template.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\unowned_ptr.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxcrt\weak_ptr.h">
+      <Filter>core\src\fxcrt</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\agg\fx_agg_driver.h">
+      <Filter>core\src\fxge\agg</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_bitmapstorer.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_dibbase.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_dibextractor.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_dibitmap.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_filtereddib.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_imagerenderer.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_imagestretcher.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_imagetransformer.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_scanlinecompositor.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cstretchengine.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\scanlinecomposer_iface.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\dib\cfx_bitmapcomposer.h">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\fontdata\chromefontdata\chromefontdata.h">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\skia\fx_skia_device.h">
+      <Filter>core\src\fxge\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\win32\cpsoutput.h">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\win32\win32_int.h">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\win32\cfx_psrenderer.h">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\win32\cfx_windowsdib.h">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_color.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_defaultrenderdevice.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_facecache.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_folderfontinfo.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_font.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_fontcache.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_fontmapper.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_fontmgr.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_gemodule.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_graphstate.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_graphstatedata.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_pathdata.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_renderdevice.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_substfont.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_unicodeencoding.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_unicodeencodingex.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_windowsrenderdevice.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cttfontdesc.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\fx_dib.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\fx_font.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\fx_freetype.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\renderdevicedriver_iface.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\systemfontinfo_iface.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fxge\cfx_cliprgn.h">
+      <Filter>core\src\fxge</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdf_annotcontext.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_actionhandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_annot.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_annothandlermgr.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_annotiteration.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_annotiterator.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_baannot.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_baannothandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_common.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_customaccess.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_fieldaction.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_filewriteadapter.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_formfillenvironment.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_helpers.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_interactiveform.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_pageview.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_widget.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_widgethandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_xfawidget.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cpdfsdk_xfawidgethandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\ipdfsdk_annothandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\ipdfsdk_pauseadapter.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\cfx_systemhandler.h">
+      <Filter>fpdfsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_context.h">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_docenvironment.h">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_page.h">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\fpdfxfa\cxfa_fwladaptertimermgr.h">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="public\cpp\fpdf_scopers.h">
+      <Filter>public\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="public\cpp\fpdf_deleters.h">
+      <Filter>public\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_formfill.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_fwlevent.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_ppo.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_progressive.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_save.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_searchex.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_structtree.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_sysfontinfo.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_text.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_transformpage.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdfview.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_annot.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_attachment.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_catalog.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_dataavail.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_doc.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_edit.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_ext.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\fpdf_flatten.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_rasterizer_scanline_aa.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_render_scanlines.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_renderer_base.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_renderer_scanline.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_rendering_buffer.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_scanline_u.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_shorten_path.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_vcgen_dash.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_vcgen_stroke.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_vertex_sequence.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_array.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_basics.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_clip_liang_barsky.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_color_gray.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_conv_adaptor_vcgen.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_conv_dash.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_conv_stroke.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_curves.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_math.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_math_stroke.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_path_storage.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\agg23\agg_pixfmt_gray.h">
+      <Filter>third_party\agg23</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_cookie.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_direct_map_extent.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_freelist_entry.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_oom.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_page.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_root_base.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\spin_lock.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\address_space_randomization.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\oom.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\oom_callback.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_constants.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_internal.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_internals_win.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_alloc.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_alloc_constants.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_bucket.h">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\debug\alias.h">
+      <Filter>third_party\base\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\numerics\safe_math.h">
+      <Filter>third_party\base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\numerics\safe_math_impl.h">
+      <Filter>third_party\base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\numerics\safe_conversions.h">
+      <Filter>third_party\base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\numerics\safe_conversions_impl.h">
+      <Filter>third_party\base\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\optional.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\ptr_util.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\span.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\stl_util.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\sys_byteorder.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\template_util.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\base_export.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\bits.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\compiler_specific.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\base\logging.h">
+      <Filter>third_party\base</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\BigIntegerUtils.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\BigUnsigned.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\BigUnsignedInABase.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\NumberlikeArray.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\BigInteger.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\bigint\BigIntegerLibrary.hh">
+      <Filter>third_party\bigint</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype-custom-config\ftmodule.h">
+      <Filter>third_party\freetype\include\freetype-custom-config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype-custom-config\ftoption.h">
+      <Filter>third_party\freetype\include\freetype-custom-config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\pstables.h">
+      <Filter>third_party\freetype\include</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lcms\src\lcms2_internal.h">
+      <Filter>third_party\lcms\src</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\t1_luts.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\t2.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\tcd.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\tgt.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\thread.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\tls_keys.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\bio.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\cio.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\dwt.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\event.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\function_list.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\image.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\indexbox_manager.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\invert.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\j2k.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\jp2.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\mct.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\mqc.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\mqc_inl.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\openjpeg.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_clock.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_codec.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_common.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_config.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_config_private.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_includes.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_intmath.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_inttypes.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_malloc.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\opj_stdint.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\pi.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\sparse_array.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libopenjpeg20\t1.h">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pngstruct.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\png.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pngconf.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pngdebug.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pnginfo.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pnglibconf.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pngprefix.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libpng16\pngpriv.h">
+      <Filter>third_party\libpng16</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tiff.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tiffconf.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tiffio.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tiffiop.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tiffvers.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\uvcode.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\t4.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tif_dir.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tif_fax3.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libtiff\tif_predict.h">
+      <Filter>third_party\libtiff</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\skia_shared\SkFloatToDecimal.h">
+      <Filter>third_party\skia_shared</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftheader.h">
+      <Filter>third_party\freetype\include\freetype\config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftmodule.h">
+      <Filter>third_party\freetype\include\freetype\config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftoption.h">
+      <Filter>third_party\freetype\include\freetype\config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftstdlib.h">
+      <Filter>third_party\freetype\include\freetype\config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftconfig.h">
+      <Filter>third_party\freetype\include\freetype\config</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svgldict.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svkern.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svmm.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpostnm.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svprop.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpscmap.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpsinfo.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svsfnt.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svttcmap.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svtteng.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svttglyf.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svcid.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svfntfmt.h">
+      <Filter>third_party\freetype\include\freetype\internal\services</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftserv.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftstream.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftvalid.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\internal.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\psaux.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\pshints.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\sfnt.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\t1types.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\tttypes.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\autohint.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftcalc.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftdebug.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftdriver.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftgloadr.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftmemory.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftobjs.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftpic.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftrfork.h">
+      <Filter>third_party\freetype\include\freetype\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftrender.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftsizes.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftsnames.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftsystem.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\fttrigon.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftttdrv.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\fttypes.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\t1tables.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ttnameid.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\tttables.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\tttags.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\freetype.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftadvanc.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftbitmap.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftcffdrv.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\fterrdef.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\fterrors.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftglyph.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftgzip.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftimage.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftincrem.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftlcdfil.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftlist.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftmm.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftmodapi.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftmoderr.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\freetype\ftoutln.h">
+      <Filter>third_party\freetype\include\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\freetype\include\ft2build.h">
+      <Filter>third_party\freetype\include</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_formfiller.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_interactiveformfiller.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_listbox.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_pushbutton.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_radiobutton.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_textfield.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_textobject.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cba_fontmap.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_button.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_checkbox.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="fpdfsdk\formfiller\cffl_combobox.h">
+      <Filter>fpdfsdk\formfiller</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fde\cfde_texteditengine.h">
+      <Filter>xfa\fde</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fde\cfde_textout.h">
+      <Filter>xfa\fde</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fde\cfde_wordbreak_data.h">
+      <Filter>xfa\fde</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fde\cfde_data.h">
+      <Filter>xfa\fde</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\crt\cfgas_formatstring.h">
+      <Filter>xfa\fgas\crt</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\crt\locale_iface.h">
+      <Filter>xfa\fgas\crt</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\crt\cfgas_decimal.h">
+      <Filter>xfa\fgas\crt</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\cfgas_fontmgr.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\cfgas_gefont.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\cfgas_pdffontmgr.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\cfx_fontsourceenum_file.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\fgas_fontutils.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\font\cfgas_defaultfontmanager.h">
+      <Filter>xfa\fgas\font</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\fx_linebreak.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_break.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_breakline.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_breakpiece.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_char.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_rtfbreak.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\cfx_txtbreak.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fgas\layout\fx_arabic.h">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_widgetproperties.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfx_barcode.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\fwl_widgetdef.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\fwl_widgethit.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\ifwl_adaptertimermgr.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\ifwl_themeprovider.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\ifwl_widgetdelegate.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_app.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_barcode.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_caret.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_checkbox.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_combobox.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_comboedit.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_combolist.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_datetimeedit.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_datetimepicker.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_edit.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_event.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventmouse.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventscroll.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventselectchanged.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventtarget.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventtextwillchange.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_eventvalidate.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_listbox.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_listitem.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_message.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_messagekey.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_messagekillfocus.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_messagemouse.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_messagemousewheel.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_messagesetfocus.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_monthcalendar.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_notedriver.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_noteloop.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_picturebox.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_pushbutton.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_scrollbar.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_themebackground.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_themepart.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_themetext.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_timer.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_timerinfo.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_widget.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fwl\cfwl_widgetmgr.h">
+      <Filter>xfa\fwl</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxgraphics\cxfa_gepattern.h">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxgraphics\cxfa_geshading.h">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxgraphics\cxfa_graphics.h">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxgraphics\cxfa_gecolor.h">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxgraphics\cxfa_gepath.h">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxfa\fxfa.h">
+      <Filter>xfa\fxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxfa\fxfa_basic.h">
+      <Filter>xfa\fxfa</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_datamatrix.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_ean8.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_ean13.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_eancode.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_onecode.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_pdf417i.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_qrcode.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_upca.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\utils.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\BC_Library.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\BC_TwoDimWriter.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\BC_Writer.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_codabar.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_code39.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_code128.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\cbc_codebase.h">
+      <Filter>fxbarcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256.h">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256Poly.h">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomon.h">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\common\BC_CommonBitMatrix.h">
+      <Filter>fxbarcode\common</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\common\BC_CommonByteMatrix.h">
+      <Filter>fxbarcode\common</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_Base256Encoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_C40Encoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_DataMatrixSymbolInfo144.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_DataMatrixWriter.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_DefaultPlacement.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_EdifactEncoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_Encoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_EncoderContext.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_ErrorCorrection.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_HighLevelEncoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_SymbolInfo.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_TextEncoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_X12Encoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\datamatrix\BC_ASCIIEncoder.h">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedCode39Writer.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedCode128Writer.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedEAN8Writer.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedEAN13Writer.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedEANChecksum.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedEANWriter.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OneDimWriter.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedUPCAWriter.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\oned\BC_OnedCodaBarWriter.h">
+      <Filter>fxbarcode\oned</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417BarcodeMatrix.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417BarcodeRow.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417ErrorCorrection.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417HighLevelEncoder.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417Writer.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417.h">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderBitVector.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderECBlocks.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderECBlocksData.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderEncoder.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderErrorCorrectionLevel.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMaskUtil.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMatrixUtil.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMode.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderVersion.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCodeWriter.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoder.h">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClInclude>
+    <ClInclude Include="xfa\fxfa\cxfa_ffdocview.h">
+      <Filter>xfa\fxfa</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="export.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\fpdf_cmaps.cpp">
+      <Filter>core\src\fpdfapi\cmaps</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\B5pc-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\cmaps_cns1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\CNS-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\CNS-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETen-B5-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETen-B5-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETenms-B5-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETenms-B5-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\HKscs-B5-H_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\HKscs-B5-V_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UCS2-H_3.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UCS2-V_3.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UTF16-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\Adobe-CNS1-UCS2_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\B5pc-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\CNS1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\cmaps_gb1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GB-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GB-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK2K-H_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK2K-V_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK-EUC-H_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK-EUC-V_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBKp-EUC-H_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBKp-EUC-V_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBpc-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBpc-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\UniGB-UCS2-H_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\UniGB-UCS2-V_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\Adobe-GB1-UCS2_5.cpp">
+      <Filter>core\src\fpdfapi\cmaps\GB1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\83pv-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90msp-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90msp-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90ms-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90ms-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90pv-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Add-RKSJ-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Add-RKSJ-V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Adobe-Japan1-UCS2_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\cmaps_japan1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\EUC-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\EUC-V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Ext-RKSJ-H_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Ext-RKSJ-V_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-H_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-HW-H_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-HW-V_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-V_4.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Japan1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSC-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSC-EUC-V_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-HW-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-HW-V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCpc-EUC-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UCS2-H_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UCS2-V_1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UTF16-H_0.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\Adobe-Korea1-UCS2_2.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\cmaps_korea1.cpp">
+      <Filter>core\src\fpdfapi\cmaps\Korea1</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_encryptor.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_flateencoder.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_pagecontentgenerator.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_pagecontentmanager.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_stringarchivestream.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\edit\cpdf_creator.cpp">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_cid2unicodemap.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_cidfont.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmap.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmapmanager.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmapparser.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_font.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_fontencoding.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_fontglobals.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_simplefont.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_tounicodemap.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_truetypefont.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_type1font.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_type3char.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cpdf_type3font.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cfx_cttgsubtable.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\font\cfx_stockfontarray.cpp">
+      <Filter>core\src\fpdfapi\font</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_textstate.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_tilingpattern.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_allstates.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_clippath.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_color.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_colorspace.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_colorstate.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentmarkitem.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentmarks.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentparser.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_devicecs.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_docpagedata.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_expintfunc.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_form.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_formobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_function.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_generalstate.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_graphicstates.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_iccprofile.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_image.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_imageobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_meshstream.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_page.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pagemodule.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobjectholder.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobjectlist.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_path.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pathobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_pattern.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_patterncs.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_psengine.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_psfunc.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_sampledfunc.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_shadingobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_shadingpattern.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_stitchfunc.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_streamcontentparser.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_streamparser.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\page\cpdf_textobject.cpp">
+      <Filter>core\src\fpdfapi\page</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fdrm\fx_crypt_sha.cpp">
+      <Filter>core\src\fdrm\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fdrm\fx_crypt_aes.cpp">
+      <Filter>core\src\fdrm\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fdrm\fx_crypt.cpp">
+      <Filter>core\src\fdrm\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cpdf_modulemgr.cpp">
+      <Filter>core\src\fpdfapi</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\cpdf_pagerendercontext.cpp">
+      <Filter>core\src\fpdfapi</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_array.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_boolean.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_cross_ref_avail.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_cross_ref_table.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_crypto_handler.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_data_avail.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_dictionary.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_document.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_hint_tables.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_indirect_object_holder.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_linearized_header.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_name.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_null.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_number.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_avail.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_stream.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_walker.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_page_object_avail.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_parser.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_read_validator.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_reference.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_security_handler.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_simple_parser.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_stream.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_stream_acc.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_string.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cpdf_syntax_parser.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\fpdf_parser_decode.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\fpdf_parser_utility.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\parser\cfdf_document.cpp">
+      <Filter>core\src\fpdfapi\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_dibbase.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_dibtransferfunc.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_docrenderdata.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_imagecacheentry.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_imageloader.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_imagerenderer.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_pagerendercache.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_progressiverenderer.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_rendercontext.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_renderoptions.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_renderstatus.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_scaledrenderbuffer.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_textrenderer.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_transferfunc.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_transparency.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_type3cache.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_type3glyphs.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_charposlist.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfapi\render\cpdf_devicebuffer.cpp">
+      <Filter>core\src\fpdfapi\render</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpvt_wordinfo.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\csection.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\ctypeset.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cline.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_aaction.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_action.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_actionfields.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_annot.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_annotlist.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_apsettings.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_bookmark.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_bookmarktree.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_defaultappearance.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_dest.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_docjsactions.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_filespec.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_formcontrol.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_formfield.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_iconfit.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_interactiveform.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_link.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_linklist.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_metadata.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_nametree.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_numbertree.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_occontext.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_pagelabel.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_structelement.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_structtree.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_variabletext.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpdf_viewerpreferences.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpvt_fontmap.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdfdoc\cpvt_generateap.cpp">
+      <Filter>core\src\fpdfdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdftext\cpdf_textpagefind.cpp">
+      <Filter>core\src\fpdftext</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdftext\unicodenormalizationdata.cpp">
+      <Filter>core\src\fpdftext</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdftext\cpdf_linkextract.cpp">
+      <Filter>core\src\fpdftext</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fpdftext\cpdf_textpage.cpp">
+      <Filter>core\src\fpdftext</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\bmp\cfx_bmpdecompressor.cpp">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\bmp\fx_bmp.cpp">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\bmp\cfx_bmpcontext.cpp">
+      <Filter>core\src\fxcodec\bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_scanlinedecoder.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_tiffmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\cfx_codec_memory.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\fx_codec.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_bmpmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_faxmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_flatemodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_gifmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_iccmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_jbig2module.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_jpegmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_jpxmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_pngmodule.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\codec\ccodec_progressivedecoder.cpp">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_PddProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_SddProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Segment.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_SymbolDict.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_TrdProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_ArithDecoder.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_ArithIntDecoder.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_BitStream.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Context.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_GrdProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_GrrdProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HtrdProc.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HuffmanDecoder.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HuffmanTable.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Image.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_PatternDict.cpp">
+      <Filter>core\src\fxcodec\jbig2</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\gif\cfx_lzwdecompressor.cpp">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\gif\cfx_gif.cpp">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcodec\gif\cfx_gifcontext.cpp">
+      <Filter>core\src\fxcodec\gif</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssvalue.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssvaluelist.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssvaluelistparser.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csscolorvalue.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csscomputedstyle.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csscustomproperty.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssdata.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssdeclaration.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssenumvalue.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssexttextbuf.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssnumbervalue.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csspropertyholder.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssrulecollection.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssselector.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssstringvalue.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssstylerule.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssstyleselector.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_cssstylesheet.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csssyntaxparser.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\css\cfx_csstextbuf.cpp">
+      <Filter>core\src\fxcrt\css</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlchardata.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmldocument.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlelement.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlinstruction.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlnode.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlparser.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\xml\cfx_xmltext.cpp">
+      <Filter>core\src\fxcrt\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\widestring.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\bytestring.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_binarybuf.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_bitstream.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_datetime.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_fileaccess_windows.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_memorystream.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_readonlymemorystream.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_seekablemultistream.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_seekablestreamproxy.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_utf8decoder.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_utf8encoder.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\cfx_widetextbuf.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_bidi.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_codepage.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_coordinates.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_extension.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_memory.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_number.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_random.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_stream.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_string.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_system.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxcrt\fx_unicode.cpp">
+      <Filter>core\src\fxcrt</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\agg\fx_agg_driver.cpp">
+      <Filter>core\src\fxge\agg</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_dibbase.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_dibextractor.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_dibitmap.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_filtereddib.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_imagerenderer.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_imagestretcher.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_imagetransformer.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_scanlinecompositor.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cstretchengine.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\fx_dib_main.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_bitmapcomposer.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\dib\cfx_bitmapstorer.cpp">
+      <Filter>core\src\fxge\dib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSans.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansBold.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansBoldItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansMM.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerif.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifBold.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifBoldItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifMM.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSymbol.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitDingbats.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixed.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedBold.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedBoldItalic.cpp">
+      <Filter>core\src\fxge\fontdata\chromefontdata</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\freetype\fx_freetype.cpp">
+      <Filter>core\src\fxge\freetype</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\cpsoutput.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\fx_win32_device.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\fx_win32_dib.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\fx_win32_gdipext.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\fx_win32_print.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\win32\cfx_psrenderer.cpp">
+      <Filter>core\src\fxge\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_color.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_facecache.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_folderfontinfo.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_font.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_fontcache.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_fontmapper.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_fontmgr.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_gemodule.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_graphstate.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_graphstatedata.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_pathdata.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_renderdevice.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_substfont.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_unicodeencoding.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_unicodeencodingex.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cttfontdesc.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fx_font.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fx_ge_fontmap.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fx_ge_linux.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\fx_ge_text.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\renderdevicedriver_iface.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="core\fxge\cfx_cliprgn.cpp">
+      <Filter>core\src\fxge</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\agg23\agg_rasterizer_scanline_aa.cpp">
+      <Filter>third_party\agg23</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\agg23\agg_vcgen_dash.cpp">
+      <Filter>third_party\agg23</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\agg23\agg_vcgen_stroke.cpp">
+      <Filter>third_party\agg23</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\agg23\agg_curves.cpp">
+      <Filter>third_party\agg23</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\agg23\agg_path_storage.cpp">
+      <Filter>third_party\agg23</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_oom.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_page.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_root_base.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\spin_lock.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\address_space_randomization.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\oom_callback.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\page_allocator.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_alloc.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_bucket.cc">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\base\debug\alias.cc">
+      <Filter>third_party\base\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\bigint\BigUnsigned.cc">
+      <Filter>third_party\bigint</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\bigint\BigUnsignedInABase.cc">
+      <Filter>third_party\bigint</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\bigint\BigInteger.cc">
+      <Filter>third_party\bigint</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\bigint\BigIntegerUtils.cc">
+      <Filter>third_party\bigint</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsmtrx.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsnamed.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsopt.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmspack.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmspcs.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsplugin.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsps2.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmssamp.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmssm.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmstypes.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsvirt.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmswtpnt.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsxform.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsalpha.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmscam02.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmscgats.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmscnvrt.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmserr.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsgamma.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsgmt.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmshalf.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsintrp.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsio0.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsio1.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmslut.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\lcms\src\cmsmd5.c">
+      <Filter>third_party\lcms\src</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\t2.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\tcd.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\tgt.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\thread.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\bio.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\cio.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\dwt.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\event.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\function_list.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\image.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\invert.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\j2k.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\jp2.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\mct.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\mqc.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\openjpeg.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\opj_clock.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\pi.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\sparse_array.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\t1.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libopenjpeg20\t1_generate_luts.c">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\intel\filter_sse2_intrinsics.c">
+      <Filter>third_party\libpng16\intel</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\intel\intel_init.c">
+      <Filter>third_party\libpng16\intel</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngrtran.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngrutil.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngset.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngtrans.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngwio.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngwrite.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngwtran.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngwutil.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\png.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngerror.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngget.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngmem.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngpread.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngread.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libpng16\pngrio.c">
+      <Filter>third_party\libpng16</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_thunder.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_tile.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_version.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_warning.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_write.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_zip.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_aux.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_close.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_codec.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_color.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_compress.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_dir.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_dirinfo.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_dirread.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_dirwrite.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_dumpmode.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_error.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_extension.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_fax3.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_fax3sm.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_flush.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_getimage.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_jpeg.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_luv.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_lzw.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_next.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_ojpeg.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_open.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_packbits.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_pixarlog.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_predict.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_print.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_read.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_strip.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libtiff\tif_swab.c">
+      <Filter>third_party\libtiff</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\skia_shared\SkFloatToDecimal.cpp">
+      <Filter>third_party\skia_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdf_view.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_helpers.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_customaccess.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdfxfa\cxfa_fwladaptertimermgr.cpp">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdfxfa\cpdfxfa_page.cpp">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdfxfa\cpdfxfa_context.cpp">
+      <Filter>fpdfsdk\fpdfxfa</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_formfillenvironment.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cfx_systemhandler.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdf_annotcontext.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_actionhandler.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_annot.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_annotiteration.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_baannot.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_annotiterator.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_baannothandler.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_fieldaction.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_filewriteadapter.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_interactiveform.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_pageview.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fde\cfde_texteditengine.cpp">
+      <Filter>xfa\fde</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fde\cfde_textout.cpp">
+      <Filter>xfa\fde</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fde\cfde_wordbreak_data.cpp">
+      <Filter>xfa\fde</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\crt\cfgas_formatstring.cpp">
+      <Filter>xfa\fgas\crt</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\crt\cfgas_decimal.cpp">
+      <Filter>xfa\fgas\crt</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\font\cfgas_gefont.cpp">
+      <Filter>xfa\fgas\font</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\font\cfgas_pdffontmgr.cpp">
+      <Filter>xfa\fgas\font</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\font\fgas_fontutils.cpp">
+      <Filter>xfa\fgas\font</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\font\cfgas_defaultfontmanager.cpp">
+      <Filter>xfa\fgas\font</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\font\cfgas_fontmgr.cpp">
+      <Filter>xfa\fgas\font</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\fx_linebreak.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_break.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_breakline.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_breakpiece.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_char.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_rtfbreak.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\cfx_txtbreak.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fgas\layout\fx_arabic.cpp">
+      <Filter>xfa\fgas\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_widgetproperties.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfx_barcode.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_app.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_barcode.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_caret.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_checkbox.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_combobox.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_comboedit.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_combolist.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_datetimeedit.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_datetimepicker.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_edit.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_event.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventmouse.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventscroll.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventselectchanged.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventtarget.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventtextwillchange.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_eventvalidate.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_listbox.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_listitem.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_message.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_messagekey.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_messagekillfocus.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_messagemouse.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_messagemousewheel.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_messagesetfocus.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_monthcalendar.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_notedriver.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_noteloop.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_picturebox.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_pushbutton.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_scrollbar.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_themepart.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_timer.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_timerinfo.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_widget.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fwl\cfwl_widgetmgr.cpp">
+      <Filter>xfa\fwl</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fxgraphics\cxfa_gepattern.cpp">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fxgraphics\cxfa_geshading.cpp">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fxgraphics\cxfa_graphics.cpp">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fxgraphics\cxfa_gecolor.cpp">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="xfa\fxgraphics\cxfa_gepath.cpp">
+      <Filter>xfa\fxgraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\cpdfsdk_annothandlermgr.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_ean8.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_ean13.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_eancode.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_onecode.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_pdf417i.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_qrcode.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_upca.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\BC_Library.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\BC_TwoDimWriter.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\BC_Writer.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_codabar.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_code39.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_code128.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_codebase.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\cbc_datamatrix.cpp">
+      <Filter>fxbarcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256.cpp">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256Poly.cpp">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomon.cpp">
+      <Filter>fxbarcode\common\reedsolomon</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\common\BC_CommonByteMatrix.cpp">
+      <Filter>fxbarcode\common</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\common\BC_CommonBitMatrix.cpp">
+      <Filter>fxbarcode\common</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_C40Encoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_DataMatrixSymbolInfo144.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_DataMatrixWriter.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_DefaultPlacement.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_EdifactEncoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_Encoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_EncoderContext.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_ErrorCorrection.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_HighLevelEncoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_SymbolInfo.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_TextEncoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_X12Encoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_ASCIIEncoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\datamatrix\BC_Base256Encoder.cpp">
+      <Filter>fxbarcode\datamatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedCode39Writer.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedCode128Writer.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedEAN8Writer.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedEAN13Writer.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedEANChecksum.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedEANWriter.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OneDimWriter.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedUPCAWriter.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\oned\BC_OnedCodaBarWriter.cpp">
+      <Filter>fxbarcode\oned</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417BarcodeMatrix.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417BarcodeRow.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417ErrorCorrection.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417HighLevelEncoder.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417Writer.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417.cpp">
+      <Filter>fxbarcode\pdf417</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderECBlocks.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderECBlocksData.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderEncoder.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderErrorCorrectionLevel.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMaskUtil.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMatrixUtil.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMode.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderVersion.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCodeWriter.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoder.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderBitVector.cpp">
+      <Filter>fxbarcode\qrcode</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdf_doc.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="fpdfsdk\fpdf_ext.cpp">
+      <Filter>fpdfsdk</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="core\fpdfapi\edit\DEPS">
+      <Filter>core\src\fpdfapi\edit</Filter>
+    </None>
+    <None Include="core\fxcodec\codec\DEPS">
+      <Filter>core\src\fxcodec\codec</Filter>
+    </None>
+    <None Include="core\fxcrt\DEPS">
+      <Filter>core\src\fxcrt</Filter>
+    </None>
+    <None Include="core\fxcrt\fx_ucddata.inc">
+      <Filter>core\src\fxcrt</Filter>
+    </None>
+    <None Include="core\fxge\dib\README.md">
+      <Filter>core\src\fxge\dib</Filter>
+    </None>
+    <None Include="core\fxge\skia\DEPS">
+      <Filter>core\src\fxge\skia</Filter>
+    </None>
+    <None Include="core\fxge\DEPS">
+      <Filter>core\src\fxge</Filter>
+    </None>
+    <None Include="fpdfsdk\DEPS">
+      <Filter>fpdfsdk</Filter>
+    </None>
+    <None Include="fpdfsdk\pwl\README.md">
+      <Filter>fpdfsdk\pwl</Filter>
+    </None>
+    <None Include="public\PRESUBMIT.py">
+      <Filter>public</Filter>
+    </None>
+    <None Include="public\README">
+      <Filter>public</Filter>
+    </None>
+    <None Include="third_party\base\allocator\partition_allocator\OWNERS">
+      <Filter>third_party\base\allocator\partition_allocator</Filter>
+    </None>
+    <None Include="third_party\bigint\LICENSE">
+      <Filter>third_party\bigint</Filter>
+    </None>
+    <None Include="third_party\libopenjpeg20\opj_config.h.cmake.in">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </None>
+    <None Include="third_party\libopenjpeg20\README.pdfium">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </None>
+    <None Include="xfa\fgas\layout\BUILD.gn">
+      <Filter>xfa\fgas\layout</Filter>
+    </None>
+    <None Include="xfa\fwl\theme\README.md">
+      <Filter>xfa\fwl\theme</Filter>
+    </None>
+    <None Include="xfa\fxfa\DEPS">
+      <Filter>xfa\fxfa</Filter>
+    </None>
+    <None Include="fxbarcode\DEPS">
+      <Filter>fxbarcode</Filter>
+    </None>
+    <None Include="fxbarcode\BUILD.gn">
+      <Filter>fxbarcode</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="third_party\libopenjpeg20\CMakeLists.txt">
+      <Filter>third_party\libopenjpeg20</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

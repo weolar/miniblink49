@@ -1,0 +1,41 @@
+diff --git a/third_party/lcms/src/cmsopt.c b/third_party/lcms/src/cmsopt.c
+index f838b6eb7..5ea1b4c85 100644
+--- a/third_party/lcms/src/cmsopt.c
++++ b/third_party/lcms/src/cmsopt.c
+@@ -1764,8 +1764,8 @@ cmsBool OptimizeMatrixShaper(cmsPipeline** Lut, cmsUInt32Number Intent, cmsUInt3
+         _cmsStageToneCurvesData* mpeC1 = (_cmsStageToneCurvesData*) cmsStageData(Curve1);
+         _cmsStageToneCurvesData* mpeC2 = (_cmsStageToneCurvesData*) cmsStageData(Curve2);
+ 
+-        // In this particular optimization, caché does not help as it takes more time to deal with
+-        // the caché that with the pixel handling
++        // In this particular optimization, cache does not help as it takes more time to deal with
++        // the cache that with the pixel handling
+         *dwFlags |= cmsFLAGS_NOCACHE;
+ 
+         // Setup the optimizarion routines
+diff --git a/third_party/lcms/src/cmstypes.c b/third_party/lcms/src/cmstypes.c
+index e95e6d910..0c24da162 100644
+--- a/third_party/lcms/src/cmstypes.c
++++ b/third_party/lcms/src/cmstypes.c
+@@ -4207,7 +4207,7 @@ cmsBool  Type_MPEcurve_Write(struct _cms_typehandler_struct* self, cmsIOHANDLER*
+ // The matrix is organized as an array of PxQ+Q elements, where P is the number of input channels to the
+ // matrix, and Q is the number of output channels. The matrix elements are each float32Numbers. The array
+ // is organized as follows:
+-// array = [e11, e12, …, e1P, e21, e22, …, e2P, …, eQ1, eQ2, …, eQP, e1, e2, …, eQ]
++// array = [e11, e12, ..., e1P, e21, e22, ..., e2P, ..., eQ1, eQ2, ..., eQP, e1, e2, ..., eQ]
+ 
+ static
+ void *Type_MPEmatrix_Read(struct _cms_typehandler_struct* self, cmsIOHANDLER* io, cmsUInt32Number* nItems, cmsUInt32Number SizeOfTag)
+@@ -4730,10 +4730,10 @@ void *Type_vcgt_Read(struct _cms_typehandler_struct* self,
+             // Y = cX + f             | X < d
+ 
+             // vcgt formula is:
+-            // Y = (Max – Min) * (X ^ Gamma) + Min
++            // Y = (Max - Min) * (X ^ Gamma) + Min
+ 
+             // So, the translation is
+-            // a = (Max – Min) ^ ( 1 / Gamma)
++            // a = (Max - Min) ^ ( 1 / Gamma)
+             // e = Min
+             // b=c=d=f=0
+ 

@@ -1,0 +1,1628 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\EGL">
+      <UniqueIdentifier>{79AE79DD-7922-70CC-3439-C9B3586338EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\EGL">
+      <UniqueIdentifier>{79AE79DD-7922-70CC-3439-C9B3586338EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\EGL">
+      <UniqueIdentifier>{79AE79DD-7922-70CC-3439-C9B3586338EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES2">
+      <UniqueIdentifier>{3FFE2AF8-8DA3-57BA-8037-4BE936BC5045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES2">
+      <UniqueIdentifier>{3FFE2AF8-8DA3-57BA-8037-4BE936BC5045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES2">
+      <UniqueIdentifier>{3FFE2AF8-8DA3-57BA-8037-4BE936BC5045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES3">
+      <UniqueIdentifier>{E18FF71E-3DE4-F6D0-36B6-93BA54EEDEE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES3">
+      <UniqueIdentifier>{E18FF71E-3DE4-F6D0-36B6-93BA54EEDEE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES3">
+      <UniqueIdentifier>{E18FF71E-3DE4-F6D0-36B6-93BA54EEDEE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLES3">
+      <UniqueIdentifier>{E18FF71E-3DE4-F6D0-36B6-93BA54EEDEE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLSLANG">
+      <UniqueIdentifier>{AD7D3D9B-E716-B150-1F3A-64569B7F5415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\GLSLANG">
+      <UniqueIdentifier>{AD7D3D9B-E716-B150-1F3A-64569B7F5415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include\KHR">
+      <UniqueIdentifier>{6D4588DE-6319-FB13-135F-FA88843373FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\include">
+      <UniqueIdentifier>{57CA55B8-BCC5-4000-CE3A-58972F82E9CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\depgraph">
+      <UniqueIdentifier>{233BE2B2-4E73-B3F0-20B8-25A55D8E5238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\timing">
+      <UniqueIdentifier>{E1BE6BE7-5019-57F8-5C7D-26FC8CE74904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\timing">
+      <UniqueIdentifier>{E1BE6BE7-5019-57F8-5C7D-26FC8CE74904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\timing">
+      <UniqueIdentifier>{E1BE6BE7-5019-57F8-5C7D-26FC8CE74904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator\timing">
+      <UniqueIdentifier>{E1BE6BE7-5019-57F8-5C7D-26FC8CE74904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler">
+      <UniqueIdentifier>{041FFD28-E4BD-ABC0-5AF7-A6D1560FAC0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compiler\translator">
+      <UniqueIdentifier>{502101C2-1680-5126-1D2E-39419A1AE009}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\EGL\egl.h">
+      <Filter>..\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EGL\eglext.h">
+      <Filter>..\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EGL\eglplatform.h">
+      <Filter>..\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2.h">
+      <Filter>..\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2ext.h">
+      <Filter>..\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2platform.h">
+      <Filter>..\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl3.h">
+      <Filter>..\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl3platform.h">
+      <Filter>..\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl31.h">
+      <Filter>..\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl32.h">
+      <Filter>..\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLSLANG\ShaderLang.h">
+      <Filter>..\include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLSLANG\ShaderVars.h">
+      <Filter>..\include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\KHR\khrplatform.h">
+      <Filter>..\include\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\angle_gl.h">
+      <Filter>..\include</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\BaseTypes.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\BuiltInFunctionEmulator.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\BuiltInFunctionEmulator.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\BuiltInFunctionEmulatorGLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\BuiltInFunctionEmulatorGLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Cache.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Cache.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\CallDAG.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\CallDAG.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\CodeGen.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Common.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Compiler.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Compiler.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\ConstantUnion.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Diagnostics.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Diagnostics.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\DirectiveHandler.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\DirectiveHandler.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\EmulatePrecision.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\EmulatePrecision.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\ExtensionBehavior.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ExtensionGLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ExtensionGLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\FlagStd140Structs.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\FlagStd140Structs.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ForLoopUnroll.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ForLoopUnroll.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\HashNames.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\InfoSink.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\InfoSink.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Initialize.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Initialize.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\InitializeDll.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\InitializeDll.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\InitializeGlobals.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\InitializeParseContext.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\InitializeParseContext.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\InitializeVariables.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\InitializeVariables.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\IntermNode.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\IntermNode.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\IntermTraverse.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Intermediate.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Intermediate.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\LoopInfo.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\LoopInfo.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\MMap.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\NodeSearch.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Operator.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Operator.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\OutputESSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\OutputESSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\OutputGLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\OutputGLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\OutputGLSLBase.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\OutputGLSLBase.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ParseContext.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ParseContext.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\PoolAlloc.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\PoolAlloc.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\Pragma.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\PruneEmptyDeclarations.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\PruneEmptyDeclarations.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RecordConstantPrecision.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RecordConstantPrecision.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RegenerateStructNames.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RegenerateStructNames.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RemovePow.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RemovePow.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RewriteDoWhile.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RewriteDoWhile.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="compiler\translator\RenameFunction.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ScalarizeVecAndMatConstructorArgs.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ScalarizeVecAndMatConstructorArgs.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\SearchSymbol.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\SearchSymbol.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\SymbolTable.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\SymbolTable.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\TranslatorESSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\TranslatorESSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\TranslatorGLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\TranslatorGLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\Types.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\Types.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\UnfoldShortCircuitAST.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\UnfoldShortCircuitAST.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ValidateGlobalInitializer.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ValidateGlobalInitializer.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ValidateLimitations.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ValidateLimitations.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ValidateOutputs.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ValidateOutputs.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ValidateSwitch.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ValidateSwitch.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\VariableInfo.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\VariableInfo.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\VariablePacker.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\VariablePacker.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\VersionGLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\VersionGLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\blocklayout.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\blocklayout.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\depgraph\DependencyGraph.cpp">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\depgraph\DependencyGraph.h">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\depgraph\DependencyGraphBuilder.cpp">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\depgraph\DependencyGraphBuilder.h">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\depgraph\DependencyGraphOutput.cpp">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\depgraph\DependencyGraphOutput.h">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\depgraph\DependencyGraphTraverse.cpp">
+      <Filter>compiler\translator\depgraph</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\glslang.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <None Include="compiler\translator\glslang.l">
+      <Filter>compiler\translator</Filter>
+    </None>
+    <None Include="compiler\translator\glslang.y">
+      <Filter>compiler\translator</Filter>
+    </None>
+    <ClCompile Include="compiler\translator\glslang_lex.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\glslang_tab.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\glslang_tab.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\intermOut.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\length_limits.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\parseConst.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="compiler\translator\timing\RestrictFragmentShaderTiming.cpp">
+      <Filter>compiler\translator\timing</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\timing\RestrictFragmentShaderTiming.h">
+      <Filter>compiler\translator\timing</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\timing\RestrictVertexShaderTiming.cpp">
+      <Filter>compiler\translator\timing</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\timing\RestrictVertexShaderTiming.h">
+      <Filter>compiler\translator\timing</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\util.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\util.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="third_party\compiler\ArrayBoundsClamper.cpp">
+      <Filter>third_party\compiler</Filter>
+    </ClCompile>
+    <ClInclude Include="third_party\compiler\ArrayBoundsClamper.h">
+      <Filter>third_party\compiler</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ArrayReturnValueToOutParameter.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ArrayReturnValueToOutParameter.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\ASTMetadataHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\ASTMetadataHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\blocklayoutHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\blocklayoutHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\BuiltInFunctionEmulatorHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\BuiltInFunctionEmulatorHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\OutputHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\OutputHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RemoveDynamicIndexing.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RemoveDynamicIndexing.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RemoveSwitchFallThrough.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RemoveSwitchFallThrough.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\RewriteElseBlocks.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\RewriteElseBlocks.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\SeparateArrayInitialization.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\SeparateArrayInitialization.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\SeparateDeclarations.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\SeparateDeclarations.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\SeparateExpressionsReturningArrays.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\SeparateExpressionsReturningArrays.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\StructureHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\StructureHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\TranslatorHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\TranslatorHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\UnfoldShortCircuitToIf.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\UnfoldShortCircuitToIf.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\UniformHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\UniformHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <ClCompile Include="compiler\translator\UtilsHLSL.cpp">
+      <Filter>compiler\translator</Filter>
+    </ClCompile>
+    <ClInclude Include="compiler\translator\UtilsHLSL.h">
+      <Filter>compiler\translator</Filter>
+    </ClInclude>
+    <None Include="angle.gyp"/>
+  </ItemGroup>
+</Project>

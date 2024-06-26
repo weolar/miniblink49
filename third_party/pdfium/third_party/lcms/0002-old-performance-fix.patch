@@ -1,0 +1,13 @@
+diff --git a/third_party/lcms/src/cmsgamma.c b/third_party/lcms/src/cmsgamma.c
+index edb8f6bba..eb3dd881c 100644
+--- a/third_party/lcms/src/cmsgamma.c
++++ b/third_party/lcms/src/cmsgamma.c
+@@ -799,7 +799,7 @@ void CMSEXPORT cmsFreeToneCurveTriple(cmsToneCurve* Curve[3])
+ // Duplicate a gamma table
+ cmsToneCurve* CMSEXPORT cmsDupToneCurve(const cmsToneCurve* In)
+ {
+-    if (In == NULL) return NULL;
++    if (In == NULL || In ->Segments == NULL || In ->Table16 == NULL) return NULL;
+ 
+     return  AllocateToneCurveStruct(In ->InterpParams ->ContextID, In ->nEntries, In ->nSegments, In ->Segments, In ->Table16);
+ }

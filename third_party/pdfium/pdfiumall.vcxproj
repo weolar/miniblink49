@@ -1,0 +1,1670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\fdrm\fx_crypt.h" />
+    <ClInclude Include="core\fpdfapi\cmaps\cmap_int.h" />
+    <ClInclude Include="core\fpdfapi\cmaps\CNS1\cmaps_cns1.h" />
+    <ClInclude Include="core\fpdfapi\cmaps\GB1\cmaps_gb1.h" />
+    <ClInclude Include="core\fpdfapi\cmaps\Japan1\cmaps_japan1.h" />
+    <ClInclude Include="core\fpdfapi\cmaps\Korea1\cmaps_korea1.h" />
+    <ClInclude Include="core\fpdfapi\cpdf_modulemgr.h" />
+    <ClInclude Include="core\fpdfapi\cpdf_pagerendercontext.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_creator.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_encryptor.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_flateencoder.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_pagecontentgenerator.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_pagecontentmanager.h" />
+    <ClInclude Include="core\fpdfapi\edit\cpdf_stringarchivestream.h" />
+    <ClInclude Include="core\fpdfapi\font\cfx_cttgsubtable.h" />
+    <ClInclude Include="core\fpdfapi\font\cfx_stockfontarray.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_cid2unicodemap.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_cidfont.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmap.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmapmanager.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_cmapparser.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_font.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_fontencoding.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_fontglobals.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_simplefont.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_tounicodemap.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_truetypefont.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_type1font.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_type3char.h" />
+    <ClInclude Include="core\fpdfapi\font\cpdf_type3font.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_allstates.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_clippath.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_color.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_colorspace.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_colorstate.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentmarkitem.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentmarks.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_contentparser.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_countedobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_devicecs.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_docpagedata.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_expintfunc.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_form.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_formobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_function.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_generalstate.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_graphicstates.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_iccprofile.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_image.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_imageobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_meshstream.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_page.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pagemodule.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobjectholder.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pageobjectlist.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_path.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pathobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_pattern.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_patterncs.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_psengine.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_psfunc.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_sampledfunc.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_shadingobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_shadingpattern.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_stitchfunc.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_streamcontentparser.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_streamparser.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_textobject.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_textstate.h" />
+    <ClInclude Include="core\fpdfapi\page\cpdf_tilingpattern.h" />
+    <ClInclude Include="core\fpdfapi\page\ipdf_page.h" />
+    <ClInclude Include="core\fpdfapi\parser\cfdf_document.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_array.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_boolean.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_cross_ref_avail.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_cross_ref_table.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_crypto_handler.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_data_avail.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_dictionary.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_document.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_hint_tables.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_indirect_object_holder.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_linearized_header.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_name.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_null.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_number.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_avail.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_stream.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_object_walker.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_page_object_avail.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_parser.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_read_validator.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_reference.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_security_handler.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_simple_parser.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_stream.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_stream_acc.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_string.h" />
+    <ClInclude Include="core\fpdfapi\parser\cpdf_syntax_parser.h" />
+    <ClInclude Include="core\fpdfapi\parser\fpdf_parser_decode.h" />
+    <ClInclude Include="core\fpdfapi\parser\fpdf_parser_utility.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_charposlist.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_devicebuffer.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_dibbase.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_dibtransferfunc.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_docrenderdata.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_imagecacheentry.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_imageloader.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_imagerenderer.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_pagerendercache.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_progressiverenderer.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_rendercontext.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_renderoptions.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_renderstatus.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_scaledrenderbuffer.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_textrenderer.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_transferfunc.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_transparency.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_type3cache.h" />
+    <ClInclude Include="core\fpdfapi\render\cpdf_type3glyphs.h" />
+    <ClInclude Include="core\fpdfdoc\cline.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_aaction.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_action.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_actionfields.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_annot.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_annotlist.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_apsettings.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_bookmark.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_bookmarktree.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_defaultappearance.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_dest.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_docjsactions.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_filespec.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_formcontrol.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_formfield.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_iconfit.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_interactiveform.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_link.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_linklist.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_metadata.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_nametree.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_numbertree.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_occontext.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_pagelabel.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_structelement.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_structtree.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_variabletext.h" />
+    <ClInclude Include="core\fpdfdoc\cpdf_viewerpreferences.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_floatrect.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_fontmap.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_generateap.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_line.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_lineinfo.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_word.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_wordinfo.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_wordplace.h" />
+    <ClInclude Include="core\fpdfdoc\cpvt_wordrange.h" />
+    <ClInclude Include="core\fpdfdoc\csection.h" />
+    <ClInclude Include="core\fpdfdoc\ctypeset.h" />
+    <ClInclude Include="core\fpdfdoc\ipdf_formnotify.h" />
+    <ClInclude Include="core\fpdfdoc\ipvt_fontmap.h" />
+    <ClInclude Include="core\fpdftext\cpdf_linkextract.h" />
+    <ClInclude Include="core\fpdftext\cpdf_textpage.h" />
+    <ClInclude Include="core\fpdftext\cpdf_textpagefind.h" />
+    <ClInclude Include="core\fpdftext\unicodenormalizationdata.h" />
+    <ClInclude Include="core\fxcodec\bmp\cfx_bmpcontext.h" />
+    <ClInclude Include="core\fxcodec\bmp\cfx_bmpdecompressor.h" />
+    <ClInclude Include="core\fxcodec\bmp\fx_bmp.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_basicmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_bmpmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_faxmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_flatemodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_gifmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_iccmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_jbig2module.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_jpegmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_jpxmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_pngmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_progressivedecoder.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_scanlinedecoder.h" />
+    <ClInclude Include="core\fxcodec\codec\ccodec_tiffmodule.h" />
+    <ClInclude Include="core\fxcodec\codec\cfx_codec_memory.h" />
+    <ClInclude Include="core\fxcodec\codec\cjpx_decoder.h" />
+    <ClInclude Include="core\fxcodec\codec\codec_int.h" />
+    <ClInclude Include="core\fxcodec\codec\codec_module_iface.h" />
+    <ClInclude Include="core\fxcodec\fx_codec.h" />
+    <ClInclude Include="core\fxcodec\fx_codec_def.h" />
+    <ClInclude Include="core\fxcodec\gif\cfx_gif.h" />
+    <ClInclude Include="core\fxcodec\gif\cfx_gifcontext.h" />
+    <ClInclude Include="core\fxcodec\gif\cfx_lzwdecompressor.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_ArithDecoder.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_ArithIntDecoder.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_BitStream.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Context.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Define.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_GrdProc.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_GrrdProc.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HtrdProc.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HuffmanDecoder.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_HuffmanTable.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Image.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Page.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_PatternDict.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_PddProc.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_SddProc.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_Segment.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_SymbolDict.h" />
+    <ClInclude Include="core\fxcodec\jbig2\JBig2_TrdProc.h" />
+    <ClInclude Include="core\fxcodec\JBig2_DocumentContext.h" />
+    <ClInclude Include="core\fxcrt\autorestorer.h" />
+    <ClInclude Include="core\fxcrt\bytestring.h" />
+    <ClInclude Include="core\fxcrt\cfx_binarybuf.h" />
+    <ClInclude Include="core\fxcrt\cfx_bitstream.h" />
+    <ClInclude Include="core\fxcrt\cfx_datetime.h" />
+    <ClInclude Include="core\fxcrt\cfx_fileaccess_windows.h" />
+    <ClInclude Include="core\fxcrt\cfx_fixedbufgrow.h" />
+    <ClInclude Include="core\fxcrt\cfx_memorystream.h" />
+    <ClInclude Include="core\fxcrt\cfx_readonlymemorystream.h" />
+    <ClInclude Include="core\fxcrt\cfx_seekablemultistream.h" />
+    <ClInclude Include="core\fxcrt\cfx_seekablestreamproxy.h" />
+    <ClInclude Include="core\fxcrt\cfx_utf8decoder.h" />
+    <ClInclude Include="core\fxcrt\cfx_utf8encoder.h" />
+    <ClInclude Include="core\fxcrt\cfx_widetextbuf.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_css.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csscolorvalue.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csscomputedstyle.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csscustomproperty.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssdata.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssdeclaration.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssenumvalue.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssexttextbuf.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssnumbervalue.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csspropertyholder.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssrulecollection.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssselector.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssstringvalue.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssstylerule.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssstyleselector.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssstylesheet.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csssyntaxparser.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_csstextbuf.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssvalue.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssvaluelist.h" />
+    <ClInclude Include="core\fxcrt\css\cfx_cssvaluelistparser.h" />
+    <ClInclude Include="core\fxcrt\fileaccess_iface.h" />
+    <ClInclude Include="core\fxcrt\fx_bidi.h" />
+    <ClInclude Include="core\fxcrt\fx_codepage.h" />
+    <ClInclude Include="core\fxcrt\fx_coordinates.h" />
+    <ClInclude Include="core\fxcrt\fx_extension.h" />
+    <ClInclude Include="core\fxcrt\fx_memory.h" />
+    <ClInclude Include="core\fxcrt\fx_number.h" />
+    <ClInclude Include="core\fxcrt\fx_random.h" />
+    <ClInclude Include="core\fxcrt\fx_safe_types.h" />
+    <ClInclude Include="core\fxcrt\fx_stream.h" />
+    <ClInclude Include="core\fxcrt\fx_string.h" />
+    <ClInclude Include="core\fxcrt\fx_system.h" />
+    <ClInclude Include="core\fxcrt\fx_unicode.h" />
+    <ClInclude Include="core\fxcrt\maybe_owned.h" />
+    <ClInclude Include="core\fxcrt\observable.h" />
+    <ClInclude Include="core\fxcrt\pauseindicator_iface.h" />
+    <ClInclude Include="core\fxcrt\retain_ptr.h" />
+    <ClInclude Include="core\fxcrt\shared_copy_on_write.h" />
+    <ClInclude Include="core\fxcrt\string_data_template.h" />
+    <ClInclude Include="core\fxcrt\string_pool_template.h" />
+    <ClInclude Include="core\fxcrt\string_view_template.h" />
+    <ClInclude Include="core\fxcrt\unowned_ptr.h" />
+    <ClInclude Include="core\fxcrt\weak_ptr.h" />
+    <ClInclude Include="core\fxcrt\widestring.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlchardata.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmldocument.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlelement.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlinstruction.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlnode.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmlparser.h" />
+    <ClInclude Include="core\fxcrt\xml\cfx_xmltext.h" />
+    <ClInclude Include="core\fxge\agg\fx_agg_driver.h" />
+    <ClInclude Include="core\fxge\cfx_cliprgn.h" />
+    <ClInclude Include="core\fxge\cfx_color.h" />
+    <ClInclude Include="core\fxge\cfx_defaultrenderdevice.h" />
+    <ClInclude Include="core\fxge\cfx_facecache.h" />
+    <ClInclude Include="core\fxge\cfx_folderfontinfo.h" />
+    <ClInclude Include="core\fxge\cfx_font.h" />
+    <ClInclude Include="core\fxge\cfx_fontcache.h" />
+    <ClInclude Include="core\fxge\cfx_fontmapper.h" />
+    <ClInclude Include="core\fxge\cfx_fontmgr.h" />
+    <ClInclude Include="core\fxge\cfx_gemodule.h" />
+    <ClInclude Include="core\fxge\cfx_graphstate.h" />
+    <ClInclude Include="core\fxge\cfx_graphstatedata.h" />
+    <ClInclude Include="core\fxge\cfx_pathdata.h" />
+    <ClInclude Include="core\fxge\cfx_renderdevice.h" />
+    <ClInclude Include="core\fxge\cfx_substfont.h" />
+    <ClInclude Include="core\fxge\cfx_unicodeencoding.h" />
+    <ClInclude Include="core\fxge\cfx_unicodeencodingex.h" />
+    <ClInclude Include="core\fxge\cfx_windowsrenderdevice.h" />
+    <ClInclude Include="core\fxge\cttfontdesc.h" />
+    <ClInclude Include="core\fxge\dib\cfx_bitmapcomposer.h" />
+    <ClInclude Include="core\fxge\dib\cfx_bitmapstorer.h" />
+    <ClInclude Include="core\fxge\dib\cfx_dibbase.h" />
+    <ClInclude Include="core\fxge\dib\cfx_dibextractor.h" />
+    <ClInclude Include="core\fxge\dib\cfx_dibitmap.h" />
+    <ClInclude Include="core\fxge\dib\cfx_filtereddib.h" />
+    <ClInclude Include="core\fxge\dib\cfx_imagerenderer.h" />
+    <ClInclude Include="core\fxge\dib\cfx_imagestretcher.h" />
+    <ClInclude Include="core\fxge\dib\cfx_imagetransformer.h" />
+    <ClInclude Include="core\fxge\dib\cfx_scanlinecompositor.h" />
+    <ClInclude Include="core\fxge\dib\cstretchengine.h" />
+    <ClInclude Include="core\fxge\dib\scanlinecomposer_iface.h" />
+    <ClInclude Include="core\fxge\fontdata\chromefontdata\chromefontdata.h" />
+    <ClInclude Include="core\fxge\fx_dib.h" />
+    <ClInclude Include="core\fxge\fx_font.h" />
+    <ClInclude Include="core\fxge\fx_freetype.h" />
+    <ClInclude Include="core\fxge\renderdevicedriver_iface.h" />
+    <ClInclude Include="core\fxge\skia\fx_skia_device.h" />
+    <ClInclude Include="core\fxge\systemfontinfo_iface.h" />
+    <ClInclude Include="core\fxge\win32\cfx_psrenderer.h" />
+    <ClInclude Include="core\fxge\win32\cfx_windowsdib.h" />
+    <ClInclude Include="core\fxge\win32\cpsoutput.h" />
+    <ClInclude Include="core\fxge\win32\win32_int.h" />
+    <ClInclude Include="core\include\fpdfdoc\fpdf_ap.h" />
+    <ClInclude Include="core\include\fpdfdoc\fpdf_doc.h" />
+    <ClInclude Include="core\include\fpdfdoc\fpdf_tagged.h" />
+    <ClInclude Include="core\include\fpdfdoc\fpdf_vt.h" />
+    <ClInclude Include="core\include\fpdftext\fpdf_text.h" />
+    <ClInclude Include="core\include\fxcodec\fx_codec.h" />
+    <ClInclude Include="core\include\fxcodec\fx_codec_def.h" />
+    <ClInclude Include="core\include\fxcodec\fx_codec_flate.h" />
+    <ClInclude Include="core\include\fxcrt\fx_basic.h" />
+    <ClInclude Include="core\include\fxcrt\fx_bidi.h" />
+    <ClInclude Include="core\include\fxcrt\fx_coordinates.h" />
+    <ClInclude Include="core\include\fxcrt\fx_ext.h" />
+    <ClInclude Include="core\include\fxcrt\fx_memory.h" />
+    <ClInclude Include="core\include\fxcrt\fx_safe_types.h" />
+    <ClInclude Include="core\include\fxcrt\fx_stream.h" />
+    <ClInclude Include="core\include\fxcrt\fx_string.h" />
+    <ClInclude Include="core\include\fxcrt\fx_system.h" />
+    <ClInclude Include="core\include\fxcrt\fx_ucd.h" />
+    <ClInclude Include="core\include\fxcrt\fx_xml.h" />
+    <ClInclude Include="core\include\fxge\fpf.h" />
+    <ClInclude Include="core\include\fxge\fx_dib.h" />
+    <ClInclude Include="core\include\fxge\fx_font.h" />
+    <ClInclude Include="core\include\fxge\fx_freetype.h" />
+    <ClInclude Include="core\include\fxge\fx_ge.h" />
+    <ClInclude Include="core\include\fxge\fx_ge_win32.h" />
+    <ClInclude Include="fpdfsdk\cfx_systemhandler.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_actionhandler.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_annot.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_annothandlermgr.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_annotiteration.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_annotiterator.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_baannot.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_baannothandler.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_common.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_customaccess.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_fieldaction.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_filewriteadapter.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_formfillenvironment.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_helpers.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_interactiveform.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_pageview.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_widget.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_widgethandler.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_xfawidget.h" />
+    <ClInclude Include="fpdfsdk\cpdfsdk_xfawidgethandler.h" />
+    <ClInclude Include="fpdfsdk\cpdf_annotcontext.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cba_fontmap.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_button.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_checkbox.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_combobox.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_formfiller.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_interactiveformfiller.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_listbox.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_pushbutton.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_radiobutton.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_textfield.h" />
+    <ClInclude Include="fpdfsdk\formfiller\cffl_textobject.h" />
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_context.h" />
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_docenvironment.h" />
+    <ClInclude Include="fpdfsdk\fpdfxfa\cpdfxfa_page.h" />
+    <ClInclude Include="fpdfsdk\fpdfxfa\cxfa_fwladaptertimermgr.h" />
+    <ClInclude Include="fpdfsdk\ipdfsdk_annothandler.h" />
+    <ClInclude Include="fpdfsdk\ipdfsdk_pauseadapter.h" />
+    <ClInclude Include="fxbarcode\BC_Library.h" />
+    <ClInclude Include="fxbarcode\BC_TwoDimWriter.h" />
+    <ClInclude Include="fxbarcode\BC_Writer.h" />
+    <ClInclude Include="fxbarcode\cbc_codabar.h" />
+    <ClInclude Include="fxbarcode\cbc_code128.h" />
+    <ClInclude Include="fxbarcode\cbc_code39.h" />
+    <ClInclude Include="fxbarcode\cbc_codebase.h" />
+    <ClInclude Include="fxbarcode\cbc_datamatrix.h" />
+    <ClInclude Include="fxbarcode\cbc_ean13.h" />
+    <ClInclude Include="fxbarcode\cbc_ean8.h" />
+    <ClInclude Include="fxbarcode\cbc_eancode.h" />
+    <ClInclude Include="fxbarcode\cbc_onecode.h" />
+    <ClInclude Include="fxbarcode\cbc_pdf417i.h" />
+    <ClInclude Include="fxbarcode\cbc_qrcode.h" />
+    <ClInclude Include="fxbarcode\cbc_upca.h" />
+    <ClInclude Include="fxbarcode\common\BC_CommonBitMatrix.h" />
+    <ClInclude Include="fxbarcode\common\BC_CommonByteMatrix.h" />
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomon.h" />
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256.h" />
+    <ClInclude Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256Poly.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_ASCIIEncoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_Base256Encoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_C40Encoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_DataMatrixSymbolInfo144.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_DataMatrixWriter.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_DefaultPlacement.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_EdifactEncoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_Encoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_EncoderContext.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_ErrorCorrection.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_HighLevelEncoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_SymbolInfo.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_TextEncoder.h" />
+    <ClInclude Include="fxbarcode\datamatrix\BC_X12Encoder.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedCodaBarWriter.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedCode128Writer.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedCode39Writer.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedEAN13Writer.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedEAN8Writer.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedEANChecksum.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedEANWriter.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OneDimWriter.h" />
+    <ClInclude Include="fxbarcode\oned\BC_OnedUPCAWriter.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417BarcodeMatrix.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417BarcodeRow.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417ErrorCorrection.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417HighLevelEncoder.h" />
+    <ClInclude Include="fxbarcode\pdf417\BC_PDF417Writer.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoder.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderBitVector.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderECBlocks.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderECBlocksData.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderEncoder.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderErrorCorrectionLevel.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMaskUtil.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMatrixUtil.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderMode.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCoderVersion.h" />
+    <ClInclude Include="fxbarcode\qrcode\BC_QRCodeWriter.h" />
+    <ClInclude Include="fxbarcode\utils.h" />
+    <ClInclude Include="public\cpp\fpdf_deleters.h" />
+    <ClInclude Include="public\cpp\fpdf_scopers.h" />
+    <ClInclude Include="public\fpdfview.h" />
+    <ClInclude Include="public\fpdf_annot.h" />
+    <ClInclude Include="public\fpdf_attachment.h" />
+    <ClInclude Include="public\fpdf_catalog.h" />
+    <ClInclude Include="public\fpdf_dataavail.h" />
+    <ClInclude Include="public\fpdf_doc.h" />
+    <ClInclude Include="public\fpdf_edit.h" />
+    <ClInclude Include="public\fpdf_ext.h" />
+    <ClInclude Include="public\fpdf_flatten.h" />
+    <ClInclude Include="public\fpdf_formfill.h" />
+    <ClInclude Include="public\fpdf_fwlevent.h" />
+    <ClInclude Include="public\fpdf_ppo.h" />
+    <ClInclude Include="public\fpdf_progressive.h" />
+    <ClInclude Include="public\fpdf_save.h" />
+    <ClInclude Include="public\fpdf_searchex.h" />
+    <ClInclude Include="public\fpdf_structtree.h" />
+    <ClInclude Include="public\fpdf_sysfontinfo.h" />
+    <ClInclude Include="public\fpdf_text.h" />
+    <ClInclude Include="public\fpdf_transformpage.h" />
+    <ClInclude Include="third_party\agg23\agg_array.h" />
+    <ClInclude Include="third_party\agg23\agg_basics.h" />
+    <ClInclude Include="third_party\agg23\agg_clip_liang_barsky.h" />
+    <ClInclude Include="third_party\agg23\agg_color_gray.h" />
+    <ClInclude Include="third_party\agg23\agg_conv_adaptor_vcgen.h" />
+    <ClInclude Include="third_party\agg23\agg_conv_dash.h" />
+    <ClInclude Include="third_party\agg23\agg_conv_stroke.h" />
+    <ClInclude Include="third_party\agg23\agg_curves.h" />
+    <ClInclude Include="third_party\agg23\agg_math.h" />
+    <ClInclude Include="third_party\agg23\agg_math_stroke.h" />
+    <ClInclude Include="third_party\agg23\agg_path_storage.h" />
+    <ClInclude Include="third_party\agg23\agg_pixfmt_gray.h" />
+    <ClInclude Include="third_party\agg23\agg_rasterizer_scanline_aa.h" />
+    <ClInclude Include="third_party\agg23\agg_renderer_base.h" />
+    <ClInclude Include="third_party\agg23\agg_renderer_scanline.h" />
+    <ClInclude Include="third_party\agg23\agg_rendering_buffer.h" />
+    <ClInclude Include="third_party\agg23\agg_render_scanlines.h" />
+    <ClInclude Include="third_party\agg23\agg_scanline_u.h" />
+    <ClInclude Include="third_party\agg23\agg_shorten_path.h" />
+    <ClInclude Include="third_party\agg23\agg_vcgen_dash.h" />
+    <ClInclude Include="third_party\agg23\agg_vcgen_stroke.h" />
+    <ClInclude Include="third_party\agg23\agg_vertex_sequence.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\address_space_randomization.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\oom.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\oom_callback.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_constants.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_internal.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\page_allocator_internals_win.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_alloc.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_alloc_constants.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_bucket.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_cookie.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_direct_map_extent.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_freelist_entry.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_oom.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_page.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\partition_root_base.h" />
+    <ClInclude Include="third_party\base\allocator\partition_allocator\spin_lock.h" />
+    <ClInclude Include="third_party\base\base_export.h" />
+    <ClInclude Include="third_party\base\bits.h" />
+    <ClInclude Include="third_party\base\compiler_specific.h" />
+    <ClInclude Include="third_party\base\debug\alias.h" />
+    <ClInclude Include="third_party\base\logging.h" />
+    <ClInclude Include="third_party\base\numerics\safe_conversions.h" />
+    <ClInclude Include="third_party\base\numerics\safe_conversions_impl.h" />
+    <ClInclude Include="third_party\base\numerics\safe_math.h" />
+    <ClInclude Include="third_party\base\numerics\safe_math_impl.h" />
+    <ClInclude Include="third_party\base\optional.h" />
+    <ClInclude Include="third_party\base\ptr_util.h" />
+    <ClInclude Include="third_party\base\span.h" />
+    <ClInclude Include="third_party\base\stl_util.h" />
+    <ClInclude Include="third_party\base\sys_byteorder.h" />
+    <ClInclude Include="third_party\base\template_util.h" />
+    <ClInclude Include="third_party\bigint\BigInteger.hh" />
+    <ClInclude Include="third_party\bigint\BigIntegerLibrary.hh" />
+    <ClInclude Include="third_party\bigint\BigIntegerUtils.hh" />
+    <ClInclude Include="third_party\bigint\BigUnsigned.hh" />
+    <ClInclude Include="third_party\bigint\BigUnsignedInABase.hh" />
+    <ClInclude Include="third_party\bigint\NumberlikeArray.hh" />
+    <ClInclude Include="third_party\freetype\include\freetype-custom-config\ftmodule.h" />
+    <ClInclude Include="third_party\freetype\include\freetype-custom-config\ftoption.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftheader.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftoption.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\freetype.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftadvanc.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftbitmap.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftcffdrv.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\fterrdef.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\fterrors.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftglyph.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftgzip.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftimage.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftincrem.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftlcdfil.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftlist.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftmm.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftmodapi.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftmoderr.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftoutln.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftrender.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftsizes.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftsnames.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftsystem.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\fttrigon.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ftttdrv.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\fttypes.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\autohint.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftcalc.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftdebug.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftdriver.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftgloadr.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftmemory.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftobjs.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftpic.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftrfork.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftserv.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftstream.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\ftvalid.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\internal.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\psaux.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\pshints.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svcid.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svfntfmt.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svgldict.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svkern.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svmm.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpostnm.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svprop.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpscmap.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svpsinfo.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svsfnt.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svttcmap.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svtteng.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\services\svttglyf.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\sfnt.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\t1types.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\internal\tttypes.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\t1tables.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\ttnameid.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\tttables.h" />
+    <ClInclude Include="third_party\freetype\include\freetype\tttags.h" />
+    <ClInclude Include="third_party\freetype\include\ft2build.h" />
+    <ClInclude Include="third_party\freetype\include\pstables.h" />
+    <ClInclude Include="third_party\lcms2-2.6\include\lcms2.h" />
+    <ClInclude Include="third_party\lcms2-2.6\include\lcms2_plugin.h" />
+    <ClInclude Include="third_party\lcms\src\lcms2_internal.h" />
+    <ClInclude Include="third_party\libopenjpeg20\bio.h" />
+    <ClInclude Include="third_party\libopenjpeg20\cio.h" />
+    <ClInclude Include="third_party\libopenjpeg20\dwt.h" />
+    <ClInclude Include="third_party\libopenjpeg20\event.h" />
+    <ClInclude Include="third_party\libopenjpeg20\function_list.h" />
+    <ClInclude Include="third_party\libopenjpeg20\image.h" />
+    <ClInclude Include="third_party\libopenjpeg20\indexbox_manager.h" />
+    <ClInclude Include="third_party\libopenjpeg20\invert.h" />
+    <ClInclude Include="third_party\libopenjpeg20\j2k.h" />
+    <ClInclude Include="third_party\libopenjpeg20\jp2.h" />
+    <ClInclude Include="third_party\libopenjpeg20\mct.h" />
+    <ClInclude Include="third_party\libopenjpeg20\mqc.h" />
+    <ClInclude Include="third_party\libopenjpeg20\mqc_inl.h" />
+    <ClInclude Include="third_party\libopenjpeg20\openjpeg.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_clock.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_codec.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_common.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_config.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_config_private.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_includes.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_intmath.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_inttypes.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_malloc.h" />
+    <ClInclude Include="third_party\libopenjpeg20\opj_stdint.h" />
+    <ClInclude Include="third_party\libopenjpeg20\pi.h" />
+    <ClInclude Include="third_party\libopenjpeg20\sparse_array.h" />
+    <ClInclude Include="third_party\libopenjpeg20\t1.h" />
+    <ClInclude Include="third_party\libopenjpeg20\t1_luts.h" />
+    <ClInclude Include="third_party\libopenjpeg20\t2.h" />
+    <ClInclude Include="third_party\libopenjpeg20\tcd.h" />
+    <ClInclude Include="third_party\libopenjpeg20\tgt.h" />
+    <ClInclude Include="third_party\libopenjpeg20\thread.h" />
+    <ClInclude Include="third_party\libopenjpeg20\tls_keys.h" />
+    <ClInclude Include="third_party\libpng16\png.h" />
+    <ClInclude Include="third_party\libpng16\pngconf.h" />
+    <ClInclude Include="third_party\libpng16\pngdebug.h" />
+    <ClInclude Include="third_party\libpng16\pnginfo.h" />
+    <ClInclude Include="third_party\libpng16\pnglibconf.h" />
+    <ClInclude Include="third_party\libpng16\pngprefix.h" />
+    <ClInclude Include="third_party\libpng16\pngpriv.h" />
+    <ClInclude Include="third_party\libpng16\pngstruct.h" />
+    <ClInclude Include="third_party\libtiff\t4.h" />
+    <ClInclude Include="third_party\libtiff\tiff.h" />
+    <ClInclude Include="third_party\libtiff\tiffconf.h" />
+    <ClInclude Include="third_party\libtiff\tiffio.h" />
+    <ClInclude Include="third_party\libtiff\tiffiop.h" />
+    <ClInclude Include="third_party\libtiff\tiffvers.h" />
+    <ClInclude Include="third_party\libtiff\tif_dir.h" />
+    <ClInclude Include="third_party\libtiff\tif_fax3.h" />
+    <ClInclude Include="third_party\libtiff\tif_predict.h" />
+    <ClInclude Include="third_party\libtiff\uvcode.h" />
+    <ClInclude Include="third_party\skia_shared\SkFloatToDecimal.h" />
+    <ClInclude Include="xfa\fde\cfde_data.h" />
+    <ClInclude Include="xfa\fde\cfde_texteditengine.h" />
+    <ClInclude Include="xfa\fde\cfde_textout.h" />
+    <ClInclude Include="xfa\fde\cfde_wordbreak_data.h" />
+    <ClInclude Include="xfa\fgas\crt\cfgas_decimal.h" />
+    <ClInclude Include="xfa\fgas\crt\cfgas_formatstring.h" />
+    <ClInclude Include="xfa\fgas\crt\locale_iface.h" />
+    <ClInclude Include="xfa\fgas\font\cfgas_defaultfontmanager.h" />
+    <ClInclude Include="xfa\fgas\font\cfgas_fontmgr.h" />
+    <ClInclude Include="xfa\fgas\font\cfgas_gefont.h" />
+    <ClInclude Include="xfa\fgas\font\cfgas_pdffontmgr.h" />
+    <ClInclude Include="xfa\fgas\font\cfx_fontsourceenum_file.h" />
+    <ClInclude Include="xfa\fgas\font\fgas_fontutils.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_break.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_breakline.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_breakpiece.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_char.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_rtfbreak.h" />
+    <ClInclude Include="xfa\fgas\layout\cfx_txtbreak.h" />
+    <ClInclude Include="xfa\fgas\layout\fx_arabic.h" />
+    <ClInclude Include="xfa\fgas\layout\fx_linebreak.h" />
+    <ClInclude Include="xfa\fwl\cfwl_app.h" />
+    <ClInclude Include="xfa\fwl\cfwl_barcode.h" />
+    <ClInclude Include="xfa\fwl\cfwl_caret.h" />
+    <ClInclude Include="xfa\fwl\cfwl_checkbox.h" />
+    <ClInclude Include="xfa\fwl\cfwl_combobox.h" />
+    <ClInclude Include="xfa\fwl\cfwl_comboedit.h" />
+    <ClInclude Include="xfa\fwl\cfwl_combolist.h" />
+    <ClInclude Include="xfa\fwl\cfwl_datetimeedit.h" />
+    <ClInclude Include="xfa\fwl\cfwl_datetimepicker.h" />
+    <ClInclude Include="xfa\fwl\cfwl_edit.h" />
+    <ClInclude Include="xfa\fwl\cfwl_event.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventmouse.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventscroll.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventselectchanged.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventtarget.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventtextwillchange.h" />
+    <ClInclude Include="xfa\fwl\cfwl_eventvalidate.h" />
+    <ClInclude Include="xfa\fwl\cfwl_listbox.h" />
+    <ClInclude Include="xfa\fwl\cfwl_listitem.h" />
+    <ClInclude Include="xfa\fwl\cfwl_message.h" />
+    <ClInclude Include="xfa\fwl\cfwl_messagekey.h" />
+    <ClInclude Include="xfa\fwl\cfwl_messagekillfocus.h" />
+    <ClInclude Include="xfa\fwl\cfwl_messagemouse.h" />
+    <ClInclude Include="xfa\fwl\cfwl_messagemousewheel.h" />
+    <ClInclude Include="xfa\fwl\cfwl_messagesetfocus.h" />
+    <ClInclude Include="xfa\fwl\cfwl_monthcalendar.h" />
+    <ClInclude Include="xfa\fwl\cfwl_notedriver.h" />
+    <ClInclude Include="xfa\fwl\cfwl_noteloop.h" />
+    <ClInclude Include="xfa\fwl\cfwl_picturebox.h" />
+    <ClInclude Include="xfa\fwl\cfwl_pushbutton.h" />
+    <ClInclude Include="xfa\fwl\cfwl_scrollbar.h" />
+    <ClInclude Include="xfa\fwl\cfwl_themebackground.h" />
+    <ClInclude Include="xfa\fwl\cfwl_themepart.h" />
+    <ClInclude Include="xfa\fwl\cfwl_themetext.h" />
+    <ClInclude Include="xfa\fwl\cfwl_timer.h" />
+    <ClInclude Include="xfa\fwl\cfwl_timerinfo.h" />
+    <ClInclude Include="xfa\fwl\cfwl_widget.h" />
+    <ClInclude Include="xfa\fwl\cfwl_widgetmgr.h" />
+    <ClInclude Include="xfa\fwl\cfwl_widgetproperties.h" />
+    <ClInclude Include="xfa\fwl\cfx_barcode.h" />
+    <ClInclude Include="xfa\fwl\fwl_widgetdef.h" />
+    <ClInclude Include="xfa\fwl\fwl_widgethit.h" />
+    <ClInclude Include="xfa\fwl\ifwl_adaptertimermgr.h" />
+    <ClInclude Include="xfa\fwl\ifwl_themeprovider.h" />
+    <ClInclude Include="xfa\fwl\ifwl_widgetdelegate.h" />
+    <ClInclude Include="xfa\fxfa\cxfa_ffdocview.h" />
+    <ClInclude Include="xfa\fxfa\fxfa.h" />
+    <ClInclude Include="xfa\fxfa\fxfa_basic.h" />
+    <ClInclude Include="xfa\fxgraphics\cxfa_gecolor.h" />
+    <ClInclude Include="xfa\fxgraphics\cxfa_gepath.h" />
+    <ClInclude Include="xfa\fxgraphics\cxfa_gepattern.h" />
+    <ClInclude Include="xfa\fxgraphics\cxfa_geshading.h" />
+    <ClInclude Include="xfa\fxgraphics\cxfa_graphics.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\fdrm\fx_crypt.cpp" />
+    <ClCompile Include="core\fdrm\fx_crypt_aes.cpp" />
+    <ClCompile Include="core\fdrm\fx_crypt_sha.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\Adobe-CNS1-UCS2_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\B5pc-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\B5pc-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\cmaps_cns1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\CNS-EUC-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\CNS-EUC-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETen-B5-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETen-B5-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETenms-B5-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\ETenms-B5-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\HKscs-B5-H_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\HKscs-B5-V_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UCS2-H_3.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UCS2-V_3.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\CNS1\UniCNS-UTF16-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\fpdf_cmaps.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\Adobe-GB1-UCS2_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\cmaps_gb1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GB-EUC-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GB-EUC-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK-EUC-H_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK-EUC-V_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK2K-H_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBK2K-V_5.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBKp-EUC-H_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBKp-EUC-V_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBpc-EUC-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\GBpc-EUC-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\UniGB-UCS2-H_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\GB1\UniGB-UCS2-V_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\83pv-RKSJ-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90ms-RKSJ-H_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90ms-RKSJ-V_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90msp-RKSJ-H_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90msp-RKSJ-V_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\90pv-RKSJ-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Add-RKSJ-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Add-RKSJ-V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Adobe-Japan1-UCS2_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\cmaps_japan1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\EUC-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\EUC-V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Ext-RKSJ-H_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\Ext-RKSJ-V_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-HW-H_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-HW-V_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-H_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\UniJIS-UCS2-V_4.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Japan1\V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\Adobe-Korea1-UCS2_2.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\cmaps_korea1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSC-EUC-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSC-EUC-V_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-HW-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-HW-V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCms-UHC-V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\KSCpc-EUC-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UCS2-H_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UCS2-V_1.cpp" />
+    <ClCompile Include="core\fpdfapi\cmaps\Korea1\UniKS-UTF16-H_0.cpp" />
+    <ClCompile Include="core\fpdfapi\cpdf_modulemgr.cpp" />
+    <ClCompile Include="core\fpdfapi\cpdf_pagerendercontext.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_creator.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_encryptor.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_flateencoder.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_pagecontentgenerator.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_pagecontentmanager.cpp" />
+    <ClCompile Include="core\fpdfapi\edit\cpdf_stringarchivestream.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cfx_cttgsubtable.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cfx_stockfontarray.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_cid2unicodemap.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_cidfont.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmap.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmapmanager.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_cmapparser.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_font.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_fontencoding.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_fontglobals.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_simplefont.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_tounicodemap.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_truetypefont.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_type1font.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_type3char.cpp" />
+    <ClCompile Include="core\fpdfapi\font\cpdf_type3font.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_allstates.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_clippath.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_color.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_colorspace.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_colorstate.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentmarkitem.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentmarks.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_contentparser.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_devicecs.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_docpagedata.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_expintfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_form.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_formobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_function.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_generalstate.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_graphicstates.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_iccprofile.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_image.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_imageobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_meshstream.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_page.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pagemodule.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobjectholder.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pageobjectlist.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_path.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pathobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_pattern.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_patterncs.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_psengine.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_psfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_sampledfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_shadingobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_shadingpattern.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_stitchfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_streamcontentparser.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_streamparser.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_textobject.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_textstate.cpp" />
+    <ClCompile Include="core\fpdfapi\page\cpdf_tilingpattern.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cfdf_document.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_array.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_boolean.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_cross_ref_avail.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_cross_ref_table.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_crypto_handler.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_data_avail.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_dictionary.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_document.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_hint_tables.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_indirect_object_holder.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_linearized_header.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_name.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_null.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_number.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_avail.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_stream.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_object_walker.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_page_object_avail.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_parser.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_read_validator.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_reference.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_security_handler.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_simple_parser.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_stream.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_stream_acc.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_string.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\cpdf_syntax_parser.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\fpdf_parser_decode.cpp" />
+    <ClCompile Include="core\fpdfapi\parser\fpdf_parser_utility.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_charposlist.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_devicebuffer.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_dibbase.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_dibtransferfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_docrenderdata.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_imagecacheentry.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_imageloader.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_imagerenderer.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_pagerendercache.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_progressiverenderer.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_rendercontext.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_renderoptions.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_renderstatus.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_scaledrenderbuffer.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_textrenderer.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_transferfunc.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_transparency.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_type3cache.cpp" />
+    <ClCompile Include="core\fpdfapi\render\cpdf_type3glyphs.cpp" />
+    <ClCompile Include="core\fpdfdoc\cline.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_aaction.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_action.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_actionfields.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_annot.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_annotlist.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_apsettings.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_bookmark.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_bookmarktree.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_defaultappearance.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_dest.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_docjsactions.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_filespec.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_formcontrol.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_formfield.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_iconfit.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_interactiveform.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_link.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_linklist.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_metadata.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_nametree.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_numbertree.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_occontext.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_pagelabel.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_structelement.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_structtree.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_variabletext.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpdf_viewerpreferences.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpvt_fontmap.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpvt_generateap.cpp" />
+    <ClCompile Include="core\fpdfdoc\cpvt_wordinfo.cpp" />
+    <ClCompile Include="core\fpdfdoc\csection.cpp" />
+    <ClCompile Include="core\fpdfdoc\ctypeset.cpp" />
+    <ClCompile Include="core\fpdftext\cpdf_linkextract.cpp" />
+    <ClCompile Include="core\fpdftext\cpdf_textpage.cpp" />
+    <ClCompile Include="core\fpdftext\cpdf_textpagefind.cpp" />
+    <ClCompile Include="core\fpdftext\unicodenormalizationdata.cpp" />
+    <ClCompile Include="core\fxcodec\bmp\cfx_bmpcontext.cpp" />
+    <ClCompile Include="core\fxcodec\bmp\cfx_bmpdecompressor.cpp" />
+    <ClCompile Include="core\fxcodec\bmp\fx_bmp.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_bmpmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_faxmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_flatemodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_gifmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_iccmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_jbig2module.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_jpegmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_jpxmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_pngmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_progressivedecoder.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_scanlinedecoder.cpp" />
+    <ClCompile Include="core\fxcodec\codec\ccodec_tiffmodule.cpp" />
+    <ClCompile Include="core\fxcodec\codec\cfx_codec_memory.cpp" />
+    <ClCompile Include="core\fxcodec\codec\fx_codec.cpp" />
+    <ClCompile Include="core\fxcodec\gif\cfx_gif.cpp" />
+    <ClCompile Include="core\fxcodec\gif\cfx_gifcontext.cpp" />
+    <ClCompile Include="core\fxcodec\gif\cfx_lzwdecompressor.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_ArithDecoder.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_ArithIntDecoder.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_BitStream.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Context.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_GrdProc.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_GrrdProc.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HtrdProc.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HuffmanDecoder.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_HuffmanTable.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Image.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_PatternDict.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_PddProc.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_SddProc.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_Segment.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_SymbolDict.cpp" />
+    <ClCompile Include="core\fxcodec\jbig2\JBig2_TrdProc.cpp" />
+    <ClCompile Include="core\fxcrt\bytestring.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_binarybuf.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_bitstream.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_datetime.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_fileaccess_windows.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_memorystream.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_readonlymemorystream.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_seekablemultistream.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_seekablestreamproxy.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_utf8decoder.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_utf8encoder.cpp" />
+    <ClCompile Include="core\fxcrt\cfx_widetextbuf.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csscolorvalue.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csscomputedstyle.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csscustomproperty.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssdata.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssdeclaration.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssenumvalue.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssexttextbuf.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssnumbervalue.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csspropertyholder.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssrulecollection.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssselector.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssstringvalue.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssstylerule.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssstyleselector.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssstylesheet.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csssyntaxparser.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_csstextbuf.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssvalue.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssvaluelist.cpp" />
+    <ClCompile Include="core\fxcrt\css\cfx_cssvaluelistparser.cpp" />
+    <ClCompile Include="core\fxcrt\fx_bidi.cpp" />
+    <ClCompile Include="core\fxcrt\fx_codepage.cpp" />
+    <ClCompile Include="core\fxcrt\fx_coordinates.cpp" />
+    <ClCompile Include="core\fxcrt\fx_extension.cpp" />
+    <ClCompile Include="core\fxcrt\fx_memory.cpp" />
+    <ClCompile Include="core\fxcrt\fx_number.cpp" />
+    <ClCompile Include="core\fxcrt\fx_random.cpp" />
+    <ClCompile Include="core\fxcrt\fx_stream.cpp" />
+    <ClCompile Include="core\fxcrt\fx_string.cpp" />
+    <ClCompile Include="core\fxcrt\fx_system.cpp" />
+    <ClCompile Include="core\fxcrt\fx_unicode.cpp" />
+    <ClCompile Include="core\fxcrt\widestring.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlchardata.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmldocument.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlelement.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlinstruction.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlnode.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmlparser.cpp" />
+    <ClCompile Include="core\fxcrt\xml\cfx_xmltext.cpp" />
+    <ClCompile Include="core\fxge\agg\fx_agg_driver.cpp" />
+    <ClCompile Include="core\fxge\cfx_cliprgn.cpp" />
+    <ClCompile Include="core\fxge\cfx_color.cpp" />
+    <ClCompile Include="core\fxge\cfx_facecache.cpp" />
+    <ClCompile Include="core\fxge\cfx_folderfontinfo.cpp" />
+    <ClCompile Include="core\fxge\cfx_font.cpp" />
+    <ClCompile Include="core\fxge\cfx_fontcache.cpp" />
+    <ClCompile Include="core\fxge\cfx_fontmapper.cpp" />
+    <ClCompile Include="core\fxge\cfx_fontmgr.cpp" />
+    <ClCompile Include="core\fxge\cfx_gemodule.cpp" />
+    <ClCompile Include="core\fxge\cfx_graphstate.cpp" />
+    <ClCompile Include="core\fxge\cfx_graphstatedata.cpp" />
+    <ClCompile Include="core\fxge\cfx_pathdata.cpp" />
+    <ClCompile Include="core\fxge\cfx_renderdevice.cpp" />
+    <ClCompile Include="core\fxge\cfx_substfont.cpp" />
+    <ClCompile Include="core\fxge\cfx_unicodeencoding.cpp" />
+    <ClCompile Include="core\fxge\cfx_unicodeencodingex.cpp" />
+    <ClCompile Include="core\fxge\cttfontdesc.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_bitmapcomposer.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_bitmapstorer.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_dibbase.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_dibextractor.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_dibitmap.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_filtereddib.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_imagerenderer.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_imagestretcher.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_imagetransformer.cpp" />
+    <ClCompile Include="core\fxge\dib\cfx_scanlinecompositor.cpp" />
+    <ClCompile Include="core\fxge\dib\cstretchengine.cpp" />
+    <ClCompile Include="core\fxge\dib\fx_dib_main.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitDingbats.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixed.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedBold.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedBoldItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitFixedItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSans.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansBold.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansBoldItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSansMM.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerif.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifBold.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifBoldItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifItalic.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSerifMM.cpp" />
+    <ClCompile Include="core\fxge\fontdata\chromefontdata\FoxitSymbol.cpp" />
+    <ClCompile Include="core\fxge\freetype\fx_freetype.cpp" />
+    <ClCompile Include="core\fxge\fx_font.cpp" />
+    <ClCompile Include="core\fxge\fx_ge_fontmap.cpp" />
+    <ClCompile Include="core\fxge\fx_ge_linux.cpp" />
+    <ClCompile Include="core\fxge\fx_ge_text.cpp" />
+    <ClCompile Include="core\fxge\renderdevicedriver_iface.cpp" />
+    <ClCompile Include="core\fxge\win32\cfx_psrenderer.cpp" />
+    <ClCompile Include="core\fxge\win32\cpsoutput.cpp" />
+    <ClCompile Include="core\fxge\win32\fx_win32_device.cpp" />
+    <ClCompile Include="core\fxge\win32\fx_win32_dib.cpp" />
+    <ClCompile Include="core\fxge\win32\fx_win32_gdipext.cpp" />
+    <ClCompile Include="core\fxge\win32\fx_win32_print.cpp" />
+    <ClCompile Include="export.cpp" />
+    <ClCompile Include="fpdfsdk\cfx_systemhandler.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_actionhandler.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_annot.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_annothandlermgr.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_annotiteration.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_annotiterator.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_baannot.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_baannothandler.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_customaccess.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_fieldaction.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_filewriteadapter.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_formfillenvironment.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_helpers.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_interactiveform.cpp" />
+    <ClCompile Include="fpdfsdk\cpdfsdk_pageview.cpp" />
+    <ClCompile Include="fpdfsdk\cpdf_annotcontext.cpp" />
+    <ClCompile Include="fpdfsdk\fpdfxfa\cpdfxfa_context.cpp" />
+    <ClCompile Include="fpdfsdk\fpdfxfa\cpdfxfa_page.cpp" />
+    <ClCompile Include="fpdfsdk\fpdfxfa\cxfa_fwladaptertimermgr.cpp" />
+    <ClCompile Include="fpdfsdk\fpdf_doc.cpp" />
+    <ClCompile Include="fpdfsdk\fpdf_ext.cpp" />
+    <ClCompile Include="fpdfsdk\fpdf_view.cpp" />
+    <ClCompile Include="fxbarcode\BC_Library.cpp" />
+    <ClCompile Include="fxbarcode\BC_TwoDimWriter.cpp" />
+    <ClCompile Include="fxbarcode\BC_Writer.cpp" />
+    <ClCompile Include="fxbarcode\cbc_codabar.cpp" />
+    <ClCompile Include="fxbarcode\cbc_code128.cpp" />
+    <ClCompile Include="fxbarcode\cbc_code39.cpp" />
+    <ClCompile Include="fxbarcode\cbc_codebase.cpp" />
+    <ClCompile Include="fxbarcode\cbc_datamatrix.cpp" />
+    <ClCompile Include="fxbarcode\cbc_ean13.cpp" />
+    <ClCompile Include="fxbarcode\cbc_ean8.cpp" />
+    <ClCompile Include="fxbarcode\cbc_eancode.cpp" />
+    <ClCompile Include="fxbarcode\cbc_onecode.cpp" />
+    <ClCompile Include="fxbarcode\cbc_pdf417i.cpp" />
+    <ClCompile Include="fxbarcode\cbc_qrcode.cpp" />
+    <ClCompile Include="fxbarcode\cbc_upca.cpp" />
+    <ClCompile Include="fxbarcode\common\BC_CommonBitMatrix.cpp" />
+    <ClCompile Include="fxbarcode\common\BC_CommonByteMatrix.cpp" />
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomon.cpp" />
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256.cpp" />
+    <ClCompile Include="fxbarcode\common\reedsolomon\BC_ReedSolomonGF256Poly.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_ASCIIEncoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_Base256Encoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_C40Encoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_DataMatrixSymbolInfo144.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_DataMatrixWriter.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_DefaultPlacement.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_EdifactEncoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_Encoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_EncoderContext.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_ErrorCorrection.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_HighLevelEncoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_SymbolInfo.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_TextEncoder.cpp" />
+    <ClCompile Include="fxbarcode\datamatrix\BC_X12Encoder.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedCodaBarWriter.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedCode128Writer.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedCode39Writer.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedEAN13Writer.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedEAN8Writer.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedEANChecksum.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedEANWriter.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OneDimWriter.cpp" />
+    <ClCompile Include="fxbarcode\oned\BC_OnedUPCAWriter.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417BarcodeMatrix.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417BarcodeRow.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417ErrorCorrection.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417HighLevelEncoder.cpp" />
+    <ClCompile Include="fxbarcode\pdf417\BC_PDF417Writer.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoder.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderBitVector.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderECBlocks.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderECBlocksData.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderEncoder.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderErrorCorrectionLevel.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMaskUtil.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMatrixUtil.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderMode.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCoderVersion.cpp" />
+    <ClCompile Include="fxbarcode\qrcode\BC_QRCodeWriter.cpp" />
+    <ClCompile Include="third_party\agg23\agg_curves.cpp" />
+    <ClCompile Include="third_party\agg23\agg_path_storage.cpp" />
+    <ClCompile Include="third_party\agg23\agg_rasterizer_scanline_aa.cpp" />
+    <ClCompile Include="third_party\agg23\agg_vcgen_dash.cpp" />
+    <ClCompile Include="third_party\agg23\agg_vcgen_stroke.cpp" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\address_space_randomization.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\oom_callback.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\page_allocator.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_alloc.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_bucket.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_oom.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_page.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\partition_root_base.cc" />
+    <ClCompile Include="third_party\base\allocator\partition_allocator\spin_lock.cc" />
+    <ClCompile Include="third_party\base\debug\alias.cc" />
+    <ClCompile Include="third_party\bigint\BigInteger.cc" />
+    <ClCompile Include="third_party\bigint\BigIntegerUtils.cc" />
+    <ClCompile Include="third_party\bigint\BigUnsigned.cc" />
+    <ClCompile Include="third_party\bigint\BigUnsignedInABase.cc" />
+    <ClCompile Include="third_party\lcms\src\cmsalpha.c" />
+    <ClCompile Include="third_party\lcms\src\cmscam02.c" />
+    <ClCompile Include="third_party\lcms\src\cmscgats.c" />
+    <ClCompile Include="third_party\lcms\src\cmscnvrt.c" />
+    <ClCompile Include="third_party\lcms\src\cmserr.c" />
+    <ClCompile Include="third_party\lcms\src\cmsgamma.c" />
+    <ClCompile Include="third_party\lcms\src\cmsgmt.c" />
+    <ClCompile Include="third_party\lcms\src\cmshalf.c" />
+    <ClCompile Include="third_party\lcms\src\cmsintrp.c" />
+    <ClCompile Include="third_party\lcms\src\cmsio0.c" />
+    <ClCompile Include="third_party\lcms\src\cmsio1.c" />
+    <ClCompile Include="third_party\lcms\src\cmslut.c" />
+    <ClCompile Include="third_party\lcms\src\cmsmd5.c" />
+    <ClCompile Include="third_party\lcms\src\cmsmtrx.c" />
+    <ClCompile Include="third_party\lcms\src\cmsnamed.c" />
+    <ClCompile Include="third_party\lcms\src\cmsopt.c" />
+    <ClCompile Include="third_party\lcms\src\cmspack.c" />
+    <ClCompile Include="third_party\lcms\src\cmspcs.c" />
+    <ClCompile Include="third_party\lcms\src\cmsplugin.c" />
+    <ClCompile Include="third_party\lcms\src\cmsps2.c" />
+    <ClCompile Include="third_party\lcms\src\cmssamp.c" />
+    <ClCompile Include="third_party\lcms\src\cmssm.c" />
+    <ClCompile Include="third_party\lcms\src\cmstypes.c" />
+    <ClCompile Include="third_party\lcms\src\cmsvirt.c" />
+    <ClCompile Include="third_party\lcms\src\cmswtpnt.c" />
+    <ClCompile Include="third_party\lcms\src\cmsxform.c" />
+    <ClCompile Include="third_party\libopenjpeg20\bio.c" />
+    <ClCompile Include="third_party\libopenjpeg20\cio.c" />
+    <ClCompile Include="third_party\libopenjpeg20\dwt.c" />
+    <ClCompile Include="third_party\libopenjpeg20\event.c" />
+    <ClCompile Include="third_party\libopenjpeg20\function_list.c" />
+    <ClCompile Include="third_party\libopenjpeg20\image.c" />
+    <ClCompile Include="third_party\libopenjpeg20\invert.c" />
+    <ClCompile Include="third_party\libopenjpeg20\j2k.c" />
+    <ClCompile Include="third_party\libopenjpeg20\jp2.c" />
+    <ClCompile Include="third_party\libopenjpeg20\mct.c" />
+    <ClCompile Include="third_party\libopenjpeg20\mqc.c" />
+    <ClCompile Include="third_party\libopenjpeg20\openjpeg.c" />
+    <ClCompile Include="third_party\libopenjpeg20\opj_clock.c" />
+    <ClCompile Include="third_party\libopenjpeg20\pi.c" />
+    <ClCompile Include="third_party\libopenjpeg20\sparse_array.c" />
+    <ClCompile Include="third_party\libopenjpeg20\t1.c" />
+    <ClCompile Include="third_party\libopenjpeg20\t1_generate_luts.c" />
+    <ClCompile Include="third_party\libopenjpeg20\t2.c" />
+    <ClCompile Include="third_party\libopenjpeg20\tcd.c" />
+    <ClCompile Include="third_party\libopenjpeg20\tgt.c" />
+    <ClCompile Include="third_party\libopenjpeg20\thread.c" />
+    <ClCompile Include="third_party\libpng16\intel\filter_sse2_intrinsics.c" />
+    <ClCompile Include="third_party\libpng16\intel\intel_init.c" />
+    <ClCompile Include="third_party\libpng16\png.c" />
+    <ClCompile Include="third_party\libpng16\pngerror.c" />
+    <ClCompile Include="third_party\libpng16\pngget.c" />
+    <ClCompile Include="third_party\libpng16\pngmem.c" />
+    <ClCompile Include="third_party\libpng16\pngpread.c" />
+    <ClCompile Include="third_party\libpng16\pngread.c" />
+    <ClCompile Include="third_party\libpng16\pngrio.c" />
+    <ClCompile Include="third_party\libpng16\pngrtran.c" />
+    <ClCompile Include="third_party\libpng16\pngrutil.c" />
+    <ClCompile Include="third_party\libpng16\pngset.c" />
+    <ClCompile Include="third_party\libpng16\pngtrans.c" />
+    <ClCompile Include="third_party\libpng16\pngwio.c" />
+    <ClCompile Include="third_party\libpng16\pngwrite.c" />
+    <ClCompile Include="third_party\libpng16\pngwtran.c" />
+    <ClCompile Include="third_party\libpng16\pngwutil.c" />
+    <ClCompile Include="third_party\libtiff\tif_aux.c" />
+    <ClCompile Include="third_party\libtiff\tif_close.c" />
+    <ClCompile Include="third_party\libtiff\tif_codec.c" />
+    <ClCompile Include="third_party\libtiff\tif_color.c" />
+    <ClCompile Include="third_party\libtiff\tif_compress.c" />
+    <ClCompile Include="third_party\libtiff\tif_dir.c" />
+    <ClCompile Include="third_party\libtiff\tif_dirinfo.c" />
+    <ClCompile Include="third_party\libtiff\tif_dirread.c" />
+    <ClCompile Include="third_party\libtiff\tif_dirwrite.c" />
+    <ClCompile Include="third_party\libtiff\tif_dumpmode.c" />
+    <ClCompile Include="third_party\libtiff\tif_error.c" />
+    <ClCompile Include="third_party\libtiff\tif_extension.c" />
+    <ClCompile Include="third_party\libtiff\tif_fax3.c" />
+    <ClCompile Include="third_party\libtiff\tif_fax3sm.c" />
+    <ClCompile Include="third_party\libtiff\tif_flush.c" />
+    <ClCompile Include="third_party\libtiff\tif_getimage.c" />
+    <ClCompile Include="third_party\libtiff\tif_jpeg.c" />
+    <ClCompile Include="third_party\libtiff\tif_luv.c" />
+    <ClCompile Include="third_party\libtiff\tif_lzw.c" />
+    <ClCompile Include="third_party\libtiff\tif_next.c" />
+    <ClCompile Include="third_party\libtiff\tif_ojpeg.c" />
+    <ClCompile Include="third_party\libtiff\tif_open.c" />
+    <ClCompile Include="third_party\libtiff\tif_packbits.c" />
+    <ClCompile Include="third_party\libtiff\tif_pixarlog.c" />
+    <ClCompile Include="third_party\libtiff\tif_predict.c" />
+    <ClCompile Include="third_party\libtiff\tif_print.c" />
+    <ClCompile Include="third_party\libtiff\tif_read.c" />
+    <ClCompile Include="third_party\libtiff\tif_strip.c" />
+    <ClCompile Include="third_party\libtiff\tif_swab.c" />
+    <ClCompile Include="third_party\libtiff\tif_thunder.c" />
+    <ClCompile Include="third_party\libtiff\tif_tile.c" />
+    <ClCompile Include="third_party\libtiff\tif_version.c" />
+    <ClCompile Include="third_party\libtiff\tif_warning.c" />
+    <ClCompile Include="third_party\libtiff\tif_write.c" />
+    <ClCompile Include="third_party\libtiff\tif_zip.c" />
+    <ClCompile Include="third_party\skia_shared\SkFloatToDecimal.cpp" />
+    <ClCompile Include="xfa\fde\cfde_texteditengine.cpp" />
+    <ClCompile Include="xfa\fde\cfde_textout.cpp" />
+    <ClCompile Include="xfa\fde\cfde_wordbreak_data.cpp" />
+    <ClCompile Include="xfa\fgas\crt\cfgas_decimal.cpp" />
+    <ClCompile Include="xfa\fgas\crt\cfgas_formatstring.cpp" />
+    <ClCompile Include="xfa\fgas\font\cfgas_defaultfontmanager.cpp" />
+    <ClCompile Include="xfa\fgas\font\cfgas_fontmgr.cpp" />
+    <ClCompile Include="xfa\fgas\font\cfgas_gefont.cpp" />
+    <ClCompile Include="xfa\fgas\font\cfgas_pdffontmgr.cpp" />
+    <ClCompile Include="xfa\fgas\font\fgas_fontutils.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_break.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_breakline.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_breakpiece.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_char.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_rtfbreak.cpp" />
+    <ClCompile Include="xfa\fgas\layout\cfx_txtbreak.cpp" />
+    <ClCompile Include="xfa\fgas\layout\fx_arabic.cpp" />
+    <ClCompile Include="xfa\fgas\layout\fx_linebreak.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_app.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_barcode.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_caret.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_checkbox.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_combobox.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_comboedit.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_combolist.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_datetimeedit.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_datetimepicker.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_edit.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_event.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventmouse.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventscroll.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventselectchanged.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventtarget.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventtextwillchange.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_eventvalidate.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_listbox.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_listitem.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_message.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_messagekey.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_messagekillfocus.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_messagemouse.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_messagemousewheel.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_messagesetfocus.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_monthcalendar.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_notedriver.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_noteloop.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_picturebox.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_pushbutton.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_scrollbar.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_themepart.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_timer.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_timerinfo.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_widget.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_widgetmgr.cpp" />
+    <ClCompile Include="xfa\fwl\cfwl_widgetproperties.cpp" />
+    <ClCompile Include="xfa\fwl\cfx_barcode.cpp" />
+    <ClCompile Include="xfa\fxgraphics\cxfa_gecolor.cpp" />
+    <ClCompile Include="xfa\fxgraphics\cxfa_gepath.cpp" />
+    <ClCompile Include="xfa\fxgraphics\cxfa_gepattern.cpp" />
+    <ClCompile Include="xfa\fxgraphics\cxfa_geshading.cpp" />
+    <ClCompile Include="xfa\fxgraphics\cxfa_graphics.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="core\fpdfapi\edit\DEPS" />
+    <None Include="core\fxcodec\codec\DEPS" />
+    <None Include="core\fxcrt\DEPS" />
+    <None Include="core\fxcrt\fx_ucddata.inc" />
+    <None Include="core\fxge\DEPS" />
+    <None Include="core\fxge\dib\README.md" />
+    <None Include="core\fxge\skia\DEPS" />
+    <None Include="fpdfsdk\DEPS" />
+    <None Include="fpdfsdk\pwl\README.md" />
+    <None Include="fxbarcode\BUILD.gn" />
+    <None Include="fxbarcode\DEPS" />
+    <None Include="public\PRESUBMIT.py" />
+    <None Include="public\README" />
+    <None Include="third_party\base\allocator\partition_allocator\OWNERS" />
+    <None Include="third_party\bigint\LICENSE" />
+    <None Include="third_party\libopenjpeg20\opj_config.h.cmake.in" />
+    <None Include="third_party\libopenjpeg20\README.pdfium" />
+    <None Include="xfa\fgas\layout\BUILD.gn" />
+    <None Include="xfa\fwl\theme\README.md" />
+    <None Include="xfa\fxfa\DEPS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="third_party\libopenjpeg20\CMakeLists.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{45AD0436-D3B5-407D-91BE-150D753C64E3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>fpdfapi</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <EmbedManifest>false</EmbedManifest>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <OutDir>..\..\out\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetPath>$(OutDir)lib\$(ProjectName)$(TargetExt)</TargetPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\mycode\miniblink49\trunk\third_party\pdfium\;..\..;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4018;4146;4333;4345;4267;4245;4310;4389;4701;4702;4706;4800;4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;FPDFSDK_EXPORTS=1;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;FT2_BUILD_LIBRARY;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../..;$(OutDir)gen;..\..;.;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <MASM>
+      <IncludePaths>E:\mycode\miniblink49\trunk\third_party\pdfium\third_party\libjpeg_turbo\simd</IncludePaths>
+    </MASM>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..;.;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4018;4146;4333;4345;4267;4245;4310;4389;4701;4702;4706;4800;4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../..;$(OutDir)gen;..\..;.;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\zlib;$(ProjectDir)\third_party\freetype\include\freetype;$(ProjectDir)\third_party\freetype\include;$(ProjectDir);..\..;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /Zc:sizedDealloc- /d2Zi+ /Zc:inline /Oy- /Gw /EHsc /Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4018;4146;4333;4345;4267;4245;4310;4389;4701;4702;4706;4800;4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>PDF_ENABLE_XFA=1;PDF_ENABLE_XFA_BMP=1;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;FT2_BUILD_LIBRARY;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;G:\mycode\mb\third_party\freetype\src\objs\Win32\Release Static\freetype.lib;G:\mycode\mb\out\Release\libjpeg.lib;G:\mycode\mb\out\Release\zlib.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <OutputFile>$(OutDir)pdfium.dll</OutputFile>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../..;$(OutDir)gen;..\..;.;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\zlib;$(ProjectDir)\third_party\freetype\include\freetype;$(ProjectDir)\third_party\freetype\include;$(ProjectDir);..\..;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /Zc:sizedDealloc- /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4005;4018;4146;4333;4345;4267;4245;4310;4389;4701;4702;4706;4800;4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>PDF_ENABLE_XFA=1;PDF_ENABLE_XFA_BMP=1;OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;FT2_BUILD_LIBRARY;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)lib\$(ProjectName)$(TargetExt)</OutputFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;G:\mycode\mb\third_party\freetype\src\objs\x64\Release Static\freetype.lib;G:\mycode\mb\out\x64Release\libjpeg.lib;G:\mycode\mb\out\x64Release\zlib.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <OutputFile>G:\mycode\mb\out\x64Release\plugins\pdfium.dll</OutputFile>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../..;$(OutDir)gen;..\..;.;third_party\freetype\include;third_party\freetype\include\freetype;$(OutDir)gen;..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>OPJ_STATIC;V8_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;PDF_ENABLE_V8;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

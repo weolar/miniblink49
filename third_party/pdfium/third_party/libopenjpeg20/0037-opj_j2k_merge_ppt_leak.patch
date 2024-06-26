@@ -1,0 +1,30 @@
+diff --git a/third_party/libopenjpeg20/j2k.c b/third_party/libopenjpeg20/j2k.c
+index cea614709..afcd597ee 100644
+--- a/third_party/libopenjpeg20/j2k.c
++++ b/third_party/libopenjpeg20/j2k.c
+@@ -4085,7 +4085,12 @@ static OPJ_BOOL opj_j2k_merge_ppt(opj_tcp_t *p_tcp, opj_event_mgr_t * p_manager)
+     /* preconditions */
+     assert(p_tcp != 00);
+     assert(p_manager != 00);
+-    assert(p_tcp->ppt_buffer == NULL);
++
++    if (p_tcp->ppt_buffer != NULL) {
++        opj_event_msg(p_manager, EVT_ERROR,
++                      "opj_j2k_merge_ppt() has already been called\n");
++        return OPJ_FALSE;
++    }
+ 
+     if (p_tcp->ppt == 0U) {
+         return OPJ_TRUE;
+@@ -8836,7 +8841,10 @@ OPJ_BOOL opj_j2k_read_tile_header(opj_j2k_t * p_j2k,
+ 
+     /* Current marker is the EOC marker ?*/
+     if (l_current_marker == J2K_MS_EOC) {
+-        p_j2k->m_specific_param.m_decoder.m_state = J2K_STATE_EOC;
++        if (p_j2k->m_specific_param.m_decoder.m_state != J2K_STATE_EOC) {
++            p_j2k->m_current_tile_number = 0;
++            p_j2k->m_specific_param.m_decoder.m_state = J2K_STATE_EOC;
++        }
+     }
+ 
+     /* FIXME DOC ???*/

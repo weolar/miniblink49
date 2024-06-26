@@ -1,0 +1,13 @@
+diff --git a/third_party/lcms/src/cmslut.c b/third_party/lcms/src/cmslut.c
+index df3dfc1ad..45f05c61d 100644
+--- a/third_party/lcms/src/cmslut.c
++++ b/third_party/lcms/src/cmslut.c
+@@ -1321,7 +1321,7 @@ void _LUTevalFloat(register const cmsFloat32Number In[], register cmsFloat32Numb
+ {
+     cmsPipeline* lut = (cmsPipeline*) D;
+     cmsStage *mpe;
+-    cmsFloat32Number Storage[2][MAX_STAGE_CHANNELS];
++    cmsFloat32Number Storage[2][MAX_STAGE_CHANNELS] = {0.0f};
+     int Phase = 0, NextPhase;
+ 
+     memmove(&Storage[Phase][0], In, lut ->InputChannels  * sizeof(cmsFloat32Number));

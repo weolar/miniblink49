@@ -1,0 +1,4 @@
+include_rules = [
+  '+xfa/fgas',
+  '+xfa/fxfa'
+]

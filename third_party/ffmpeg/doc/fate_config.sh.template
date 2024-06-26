@@ -1,0 +1,30 @@
+slot=                                    # some unique identifier
+repo=git://source.ffmpeg.org/ffmpeg.git  # the source repository
+#branch=release/2.6                       # the branch to test
+samples=                                 # path to samples directory
+workdir=                                 # directory in which to do all the work
+#fate_recv="ssh -T fate@fate.ffmpeg.org" # command to submit report
+comment=                                 # optional description
+build_only=     # set to "yes" for a compile-only instance that skips tests
+
+# the following are optional and map to configure options
+arch=
+cpu=
+cross_prefix=
+as=
+cc=
+ld=
+target_os=
+sysroot=
+target_exec=
+target_path=
+target_samples=
+extra_cflags=
+extra_ldflags=
+extra_libs=
+extra_conf=     # extra configure options not covered above
+
+#make=          # name of GNU make if not 'make'
+makeopts=       # extra options passed to 'make'
+#tar=           # command to create a tar archive from its arguments on stdout,
+                # defaults to 'tar c'

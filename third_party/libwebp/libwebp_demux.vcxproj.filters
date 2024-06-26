@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="demux">
+      <UniqueIdentifier>{31D2B758-73F7-2367-83ED-DD1CB9B19EBB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="demux\demux.c">
+      <Filter>demux</Filter>
+    </ClCompile>
+    <None Include="libwebp.gyp"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsp">
+      <UniqueIdentifier>{50285665-AF3D-D256-A760-0628BD9220BC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dsp\alpha_processing.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\alpha_processing_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\cpu.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\dec.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\dec_clip_tables.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\dec_mips32.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\dec_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\enc.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\enc_avx2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\enc_mips32.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\enc_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\lossless.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\lossless_mips32.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\lossless_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\upsampling.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\upsampling_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\yuv.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\yuv_mips32.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="dsp\yuv_sse2.c">
+      <Filter>dsp</Filter>
+    </ClCompile>
+    <None Include="libwebp.gyp"/>
+  </ItemGroup>
+</Project>

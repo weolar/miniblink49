@@ -1,0 +1,25 @@
+diff --git a/third_party/lcms/src/cmsnamed.c b/third_party/lcms/src/cmsnamed.c
+index 42bd36530..9cfd2282f 100644
+--- a/third_party/lcms/src/cmsnamed.c
++++ b/third_party/lcms/src/cmsnamed.c
+@@ -546,7 +546,7 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsAllocNamedColorList(cmsContext ContextID, cmsUIn
+ 
+     while (v -> Allocated < n) {
+         if (!GrowNamedColorList(v)) {
+-            _cmsFree(ContextID, (void*) v);
++            cmsFreeNamedColorList(v);
+             return NULL;
+         }
+     }
+@@ -579,7 +579,10 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsDupNamedColorList(const cmsNAMEDCOLORLIST* v)
+ 
+     // For really large tables we need this
+     while (NewNC ->Allocated < v ->Allocated){
+-        if (!GrowNamedColorList(NewNC)) return NULL;
++        if (!GrowNamedColorList(NewNC)) {
++            cmsFreeNamedColorList(NewNC);
++            return NULL;
++        }
+     }
+ 
+     memmove(NewNC ->Prefix, v ->Prefix, sizeof(v ->Prefix));

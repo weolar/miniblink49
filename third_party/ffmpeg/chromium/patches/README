@@ -1,0 +1,88 @@
+Current Status as of January 8, 2016
+
+Upstream cherry-picks:
+  Commit 63c9b30f98ce7d160b3a6dec1b36dc05fbb71941 fixes crash in qtpalette.c.
+  See https//crbug.com/583354.
+
+Autorename:
+  autorename_* files are renamed copies of various files that would cause
+    base name collisions from mac libtool. These files are generated
+    by generate_gyp.py. https://chromium-review.googlesource.com/#/c/274543/
+
+Current patches:
+  .gitignore has a "Chromium stuff" section.
+
+  Remove add_cflags "-mips64" from configure
+    This conflicts with --extra-cflags=-mips64r6 for mips64el. There are a
+    series of upstream patches changing how mips arch selection works, this may
+    be resolved shortly. (Those patches are not by Google though, and are also
+    the reason it broke.)
+
+  Changes/additions to compat/msvcrt/{snprintf.c,snprintf.h}
+  Changes/additions to compat/{strtod.c,strtod.h}
+    Commit b5269bfb48c71fe17c02eee00c71b1e9762497db changes these files and
+    relevant build rules to fix inconsistent linkage when building with MSVC.
+    The rules/files expose overriden symbols as externs and force inject these
+    headers when building with the component build.
+    strtod.h was added, so it may not appear in diffs that ignore additions.
+    f3299330654ac1b40c50b3cbcae619f42eb7d838 added an include to snprintf.c.
+
+  Fix pthreads emulation on Windows XP (compat/w32pthreads.h & libavcodec/vp8.c)
+    Emulation assumes Vista+ inside (_WIN32_WINNT >= 0x0600) checks. Replace
+    with WINDOWS_XP_SUPPORT_NEEDED define in compat/w32pthreads.h.
+
+    Add call to w32thread_init() in libavcodec/vp8.c.
+
+  Remove UNCHECKED_BITSTREAM_READER defines in libavcodec/
+    Remove "#define UNCHECKED_BITSTREAM_READER 1" from all codecs.
+    In Chromium, all codecs should use the safe bitstream reader.
+
+  Changes to libavcodec/utils.c
+    Disable deprecation warnings related to FF_API_AVPACKET_OLD_API.
+    We cannot just disable FF_API_AVPACKET_OLD_API because upstream does not yet
+    compile with it disabled. Therefore, suppress the warnings locally.
+
+  Revert 'sidx' processing for .mov containers. (libavformat/isom.h and mov.c)
+    Reverts commit 4ab56667594842283dc5ae07f0daba2a2cb4d3af.
+    'sidx' box processing is broken for MOV containers. http://crbug.com/568336.
+    Reported: http://ffmpeg.org/pipermail/ffmpeg-devel/2015-December/185040.html
+
+  Changes to libavformat/matroskadec.c
+    Add CONFIG_LZO and CONFIG_SIPR_DECODER (and other CONFIG_*) checks to remove
+    code that may be a security risk. Discuss with cevans@ before removing.
+
+    Remove extra const from static EbmlSyntax arrays. This fixes windows
+    compile error C4114, since EbmlSyntax struct is already defined with const.
+    TODO: push upstream.
+
+    Add call to matroska_read_close() to mitigate memory leak caught by
+    Valgrind.
+
+  Changes to libavformat/mp3dec.c
+    TODO(chcunningham/dalecurtis): https://crbug.com/504623 - Determine whether
+    these changes are still necessary and either remove or document them.
+
+  Changes to libavutil/arm/intmath.h
+    Remove static av_always_inline av_const unsigned av_clip_uintp2_arm() and
+    av_clip_intp2_arm() due to compilation failure.
+
+  Disable FMA3 instructions in libavutil/log.c (http://crbug.com/440892)
+    Remove call to _set_FMA3_enable() on Windows.
+    TODO: Remove once Chromium requires VS2015.
+
+  Changes to libavutil/mem.c
+    Enable av_max_alloc(0) to remove alloc size bound.
+
+  Changes to libavutil/timer.h
+    C++11 compatability for string concatenation (http://crbug.com/454590).
+    Add spaces between string literals and tokens.
+
+  Changes/additions to libavutil/x86/x86inc.asm
+    https://chromium-review.googlesource.com/#/c/272274/
+    Fixes the conditionals on Linux so that these symbols are hidden and
+    adds the Chromium-specific private_extern extension for hiding these
+    symbols on OSX.
+
+  Changes to libavformat/riffdec.c
+    Work around VC++ 2015 Update 1 compiler bug, crbug.com/581768 and
+    https://connect.microsoft.com/VisualStudio/feedback/details/2291638

@@ -1,0 +1,17 @@
+diff --git a/third_party/libopenjpeg20/j2k.c b/third_party/libopenjpeg20/j2k.c
+index ad6e1b86f..bf1cb4f36 100644
+--- a/third_party/libopenjpeg20/j2k.c
++++ b/third_party/libopenjpeg20/j2k.c
+@@ -9086,6 +9086,12 @@ static OPJ_BOOL opj_j2k_update_image_data(opj_tcd_t * p_tcd,
+          * */
+         assert(res_x0 >= 0);
+         assert(res_x1 >= 0);
++
++        /* Prevent bad casting to unsigned values in the subsequent lines. */
++        if ( res_x0 < 0 || res_x1 < 0 || res_y0 < 0 || res_y1 < 0 ) {
++            return OPJ_FALSE;
++        }
++
+         if (l_x0_dest < (OPJ_UINT32)res_x0) {
+             l_start_x_dest = (OPJ_UINT32)res_x0 - l_x0_dest;
+             l_offset_x0_src = 0;

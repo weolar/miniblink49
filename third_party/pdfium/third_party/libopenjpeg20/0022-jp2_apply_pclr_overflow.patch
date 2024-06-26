@@ -1,0 +1,52 @@
+diff --git a/third_party/libopenjpeg20/jp2.c b/third_party/libopenjpeg20/jp2.c
+index 1fa607d66..78a2d22ff 100644
+--- a/third_party/libopenjpeg20/jp2.c
++++ b/third_party/libopenjpeg20/jp2.c
+@@ -1049,6 +1049,14 @@ static OPJ_BOOL opj_jp2_apply_pclr(opj_image_t *image,
+     }
+ 
+     old_comps = image->comps;
++    /* Overflow check: prevent integer overflow */
++    for (i = 0; i < nr_channels; ++i) {
++      cmp = cmap[i].cmp;
++      if (old_comps[cmp].h == 0 || old_comps[cmp].w > ((OPJ_UINT32)-1) / sizeof(OPJ_INT32) / old_comps[cmp].h) {
++        return OPJ_FALSE;
++      }
++    }
++
+     new_comps = (opj_image_comp_t*)
+                 opj_malloc(nr_channels * sizeof(opj_image_comp_t));
+     if (!new_comps) {
+@@ -1093,21 +1101,27 @@ static OPJ_BOOL opj_jp2_apply_pclr(opj_image_t *image,
+         cmp = cmap[i].cmp;
+         pcol = cmap[i].pcol;
+         src = old_comps[cmp].data;
+-        assert(src); /* verified above */
++        dst = new_comps[i].data;
+         max = new_comps[i].w * new_comps[i].h;
+ 
++        /* Prevent null pointer access */
++        if (!src || !dst) {
++          for (j = 0; j < nr_channels; ++j) {
++            opj_free(new_comps[j].data);
++          }
++          opj_free(new_comps);
++          new_comps = NULL;
++          return OPJ_FALSE;
++        }
++
+         /* Direct use: */
+         if (cmap[i].mtyp == 0) {
+             assert( cmp == 0 ); // probably wrong.
+-            dst = new_comps[i].data;
+-            assert(dst);
+             for (j = 0; j < max; ++j) {
+                 dst[j] = src[j];
+             }
+         } else {
+             assert( i == pcol ); // probably wrong?
+-            dst = new_comps[i].data;
+-            assert(dst);
+             for (j = 0; j < max; ++j) {
+                 /* The index */
+                 if ((k = src[j]) < 0) {

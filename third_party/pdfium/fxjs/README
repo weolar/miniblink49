@@ -1,0 +1,41 @@
+There are two separate wrappers for V8 here.  One is called FXJS, and
+it is used by the non-XFA code.  The other is called FXJSE, and it is
+used only by the XFA code.  Additionally FXJSE may request services
+from FXJS to bridge the two.
+
+Both the FXJS and FXJSE binding code needs to be replaced by something
+saner, perhaps Gin or perhaps some IDL. See
+  https://bugs.chromium.org/p/pdfium/issues/detail?id=716
+for progress on the issue.
+
+FXJS binds objects by sticking a pointer to a CFXJS_PerObjectData in
+the V8 object's internal slot.  FXJSE binds objects by sticking a
+pointer to either an actual v8 function object or a CFXJSE_HostObject
+in the V8 object's internal slot, depending upon whether the object
+represents (in some notion) a "class" or an "instance". Also, V8 objects
+bound in one library may unexpectedly arrive at the other given a script
+that's trying to mess with us.
+
+To distinguish these cases, we use two internal slots for all bound
+objects, regardless of the FXJS/FXJSE distinction.  Slot 0 is the
+tag and contains either:
+  kPerObjectDataTag for FXJS objects, or
+  g_FXJSEHostObjectTag for FXJSE Host objects, or
+  g_FXJSEProxyObjectTag for a global proxy object under FXJSE, or
+  One of 4 specific FXJSE_CLASS_DESCRIPTOR globals for FXJSE classes:
+    GlobalClassDescriptor
+    NormalClassDescriptor
+    VariablesClassDescriptor
+    formcalc_fm2js_descriptor
+
+Slot 1's contents are determined by these tags:
+  kPerObjectDataTag means an aligned pointer to CFXJS_PerObjectData.
+  g_FXJSEHostObjectTag means an aligned pointer to CFXJSE_HostObject.
+  g_FXJSEProxyObjectTag means nullptr, and to check the prototype instead.
+  A FXJSE_CLASS_DESCRIPTOR pointer means to expect an actual v8 function
+  object (or a string naming that function),  and not an aligned pointer.
+
+Because PDFium uses V8 for various unrelated purposes, there may be up to
+four v8::Contexts (JS Global Objects) associated with each document. One is
+used by FXJS and holds objects as described by the js_api_reference.pdf
+specification. The others are used by FXJSE.

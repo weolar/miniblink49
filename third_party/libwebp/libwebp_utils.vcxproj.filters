@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{742E9A0E-D1B0-643D-E893-71064FFA2C51}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="utils\bit_reader.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\bit_writer.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\color_cache.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\filters.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\huffman.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\huffman_encode.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\quant_levels.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\quant_levels_dec.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\random.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\rescaler.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\thread.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.c">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <None Include="libwebp.gyp"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,34 @@
+diff --git a/third_party/libopenjpeg20/pi.c b/third_party/libopenjpeg20/pi.c
+index 91642ee4e..256fe37a1 100644
+--- a/third_party/libopenjpeg20/pi.c
++++ b/third_party/libopenjpeg20/pi.c
+@@ -445,6 +445,9 @@ static OPJ_BOOL opj_pi_next_rpcl(opj_pi_iterator_t * pi)
+                                                 (OPJ_INT32)(comp->dy << levelno)), (OPJ_INT32)res->pdy)
+                            - opj_int_floordivpow2(try0, (OPJ_INT32)res->pdy);
+                     pi->precno = (OPJ_UINT32)(prci + prcj * (OPJ_INT32)res->pw);
++                    if (pi->precno >= res->pw * res->ph) {
++                      return OPJ_FALSE;
++                    }
+                     for (pi->layno = pi->poc.layno0; pi->layno < pi->poc.layno1; pi->layno++) {
+                         index = pi->layno * pi->step_l + pi->resno * pi->step_r + pi->compno *
+                                 pi->step_c + pi->precno * pi->step_p;
+@@ -576,6 +579,9 @@ static OPJ_BOOL opj_pi_next_pcrl(opj_pi_iterator_t * pi)
+                                                 (OPJ_INT32)(comp->dy << levelno)), (OPJ_INT32)res->pdy)
+                            - opj_int_floordivpow2(try0, (OPJ_INT32)res->pdy);
+                     pi->precno = (OPJ_UINT32)(prci + prcj * (OPJ_INT32)res->pw);
++                    if (pi->precno >= res->pw * res->ph) {
++                      return OPJ_FALSE;
++                    }
+                     for (pi->layno = pi->poc.layno0; pi->layno < pi->poc.layno1; pi->layno++) {
+                         index = pi->layno * pi->step_l + pi->resno * pi->step_r + pi->compno *
+                                 pi->step_c + pi->precno * pi->step_p;
+@@ -704,6 +710,9 @@ static OPJ_BOOL opj_pi_next_cprl(opj_pi_iterator_t * pi)
+                                                 (OPJ_INT32)(comp->dy << levelno)), (OPJ_INT32)res->pdy)
+                            - opj_int_floordivpow2(try0, (OPJ_INT32)res->pdy);
+                     pi->precno = (OPJ_UINT32)(prci + prcj * (OPJ_INT32)res->pw);
++                    if (pi->precno >= res->pw * res->ph) {
++                      return OPJ_FALSE;
++                    }
+                     for (pi->layno = pi->poc.layno0; pi->layno < pi->poc.layno1; pi->layno++) {
+                         index = pi->layno * pi->step_l + pi->resno * pi->step_r + pi->compno *
+                                 pi->step_c + pi->precno * pi->step_p;

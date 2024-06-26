@@ -1,0 +1,89 @@
+/*
+ * Copyright 2007 Bobby Bingham
+ * Copyright Stefano Sabatini <stefasab gmail com>
+ * Copyright Vitor Sessak <vitor1001 gmail com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
+#include <string.h>
+#include <stdio.h>
+
+#include "libavutil/avassert.h"
+#include "libavutil/buffer.h"
+#include "libavutil/imgutils.h"
+#include "libavutil/mem.h"
+
+#include "avfilter.h"
+#include "internal.h"
+#include "video.h"
+
+#define BUFFER_ALIGN 32
+
+
+AVFrame *ff_null_get_video_buffer(AVFilterLink *link, int w, int h)
+{
+    return ff_get_video_buffer(link->dst->outputs[0], w, h);
+}
+
+AVFrame *ff_default_get_video_buffer(AVFilterLink *link, int w, int h)
+{
+    int pool_width = 0;
+    int pool_height = 0;
+    int pool_align = 0;
+    enum AVPixelFormat pool_format = AV_PIX_FMT_NONE;
+
+    if (!link->video_frame_pool) {
+        link->video_frame_pool = ff_video_frame_pool_init(av_buffer_allocz, w, h,
+                                                          link->format, BUFFER_ALIGN);
+        if (!link->video_frame_pool)
+            return NULL;
+    } else {
+        if (ff_video_frame_pool_get_config(link->video_frame_pool,
+                                           &pool_width, &pool_height,
+                                           &pool_format, &pool_align) < 0) {
+            return NULL;
+        }
+
+        if (pool_width != w || pool_height != h ||
+            pool_format != link->format || pool_align != BUFFER_ALIGN) {
+
+            ff_video_frame_pool_uninit((FFVideoFramePool **)&link->video_frame_pool);
+            link->video_frame_pool = ff_video_frame_pool_init(av_buffer_allocz, w, h,
+                                                              link->format, BUFFER_ALIGN);
+            if (!link->video_frame_pool)
+                return NULL;
+        }
+    }
+
+    return ff_video_frame_pool_get(link->video_frame_pool);
+}
+
+AVFrame *ff_get_video_buffer(AVFilterLink *link, int w, int h)
+{
+    AVFrame *ret = NULL;
+
+    FF_TPRINTF_START(NULL, get_video_buffer); ff_tlog_link(NULL, link, 0);
+
+    if (link->dstpad->get_video_buffer)
+        ret = link->dstpad->get_video_buffer(link, w, h);
+
+    if (!ret)
+        ret = ff_default_get_video_buffer(link, w, h);
+
+    return ret;
+}
