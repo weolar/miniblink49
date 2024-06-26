@@ -1,0 +1,1146 @@
+﻿
+<html>
+<script>
+var kWaittingImgSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHMAAABYCAYAAADGKMgTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJl" +
+"YWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4Onhtc" +
+"G1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAg" +
+"ICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdX" +
+"Q9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c" +
+"3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc" +
+"2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QzlDQUJBQURDRUEwMTFERjlEODJGRkI0ODkxREIzRjYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QzlDQUJBQUVDRU" +
+"EwMTFERjlEODJGRkI0ODkxREIzRjYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDOUNBQkFBQkNFQTAxMURGOUQ4MkZGQjQ4OTFEQjNG" +
+"NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDOUNBQkFBQ0NFQTAxMURGOUQ4MkZGQjQ4OTFEQjNGNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1" +
+"wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsYmPpwAAAQvSURBVHja7J2LkqsgDEBD5N7e///cbjUXWrftuviqJEEIM872QUeOx0AEZtZ9Xbq/bqAOCHiLAyDn4t8+vLuCbKmfk" +
+"eCfx9vQuQhJjKQBkCKodyoiq2cMIrvb4FAKcvBYvUgVxiAS+8FFPmxOZOwGE+08s0g34vlDIGvn0hP55ykyJSuj0FJExvZjlSL7MHKRwPUsRSR8RybHudBBiItbePmlInLgN6n" +
+"GOCMyFjSRdYjMLtNE6onMKtNE6or8HjMPXYWYBMRMKkD2GiJdH2d2iNWkKuNDJASRq4z+KGScviJFkS545MxcVRlfIjcVHxs7rUwzj1zv9UoS+d7eFMu03al6yWgEfZFLbUtG" +
+"Jrkd3Q0oQ76JTLU9xbL1s991yhC51Q9+1vWUIZJ3nFQU+WEyh6cSOTQi8kPGXQlQTM3DoSdS6PFDhZHgckTkrsg0kewi3dEVLH8Kkew7BMaFZR3Gi8sgcl2mLuRLpMQOAS2Rf" +
+"RihM/HF9UxafGBGNyiJxOesB/OaqxJjFHnfNpSLDwuE9KNIgaxVXWTeC/d7LIbHLjM9key76JQZ4xgJHH2Nn4GM48dNS6STEanB+BDJdLN6mmSt455PcZHhKj8jkjMwNRnvj1" +
+"fEx4eliJR6jizhZuU7yc9d2DoiuafoWmC8d7OlQDIOlC0wPrrZyu/WFiJyHELIK0LScsc4mwu58fP3Om5S9/5+FDkoMWKC8b2dbppkT9ho4Zo8vw+MLryLr6++EMjkE8TKd7R" +
+"QvwSRa1y0kW32t2+MX4szQMKQHF1raSI5GOl90gPFIKEBkbKMAJPZKy8FyT5F9wJUEwki88lPzmuqEWKQxLj6UYpIVsYX53WuIae/W1uIyJGTYGFhgGvM7BoQ2ZUkkisyu/s" +
+"hJ7IfD2mRXUkiOWR+360kGJG9UkRKMQJsXHNFBkhoQCSUJjJnZHYiz6wvQD2RUKbIXDJ/Qjp2VH2RTuScu7ez4Gnu1hYi8oDIozJNZEEij8g0kYWJ/HTMNJH5C+WY9EATWYfI" +
+"vZHZQXoFnBNSQ6QkI0DGaUjcCQkNiIQzitwq00SeQOQWmSbyJCLXxkwUhhzGQ7JgLSKXZKJC1qohsipGNJH1MKKJrIcRV8YPmhypz2HmO1iooy2SZjhhpq2wgVOd0SdEbtlN" +
+"nvqMVsCnf7WSnV27xjdcAyqFERUyOk2RVTOayIoY0UTWw4gmsh5GNJH1MKKJrIcRTWQ9jGgi62E8/K8wZooGJIDsDoHiGD3D3UrCkNJLWBqMmK1S4SKdicwr00Qqi8wl00QWID" +
+"KHTBNZiMijMk1kQSKP/NBEFpiZo4mshxFNZD2Me2eAtLodEpZ5SkY8ASQ0IFI0czKRJ2BEE1kPI5rIehjRRNbDiCayHkY0kfUwekVADZEajGIFW4BUZnSSMquHbIURTWQ9jGgi" +
+"62H8L8AAsU8V/hn+gYIAAAAASUVORK5CYII=";
+
+
+// Node object
+function Node(id, pid, name, url, title, target, icon, iconOpen, open) {
+	this.id = id;
+	this.pid = pid;
+	this.name = name;
+	this.url = url;
+	this.title = title;
+	this.target = target;
+	this.icon = icon;
+	this.iconOpen = iconOpen;
+	this._io = open || false;
+	this._is = false;
+	this._ls = false;
+	this._hc = false;
+	this._ai = 0;
+	this._p;
+
+};
+
+// Tree object
+function dTree(objName) {
+	this.config = {
+		target : null,
+		folderLinks : true,
+		useSelection : true,
+		useCookies : true,
+		useLines : true,
+		useIcons : true,
+		useStatusText : false,
+		closeSameLevel : false,
+		inOrder : false
+	}
+
+	this.icon = {
+		root : 'img/base.gif',
+		folder : 'img/folder.gif',
+		folderOpen : 'img/folderopen.gif',
+		node : 'img/page.gif',
+		empty : "data:image/gif;base64,R0lGODlhEgASAJEAAAAAAP///4CAgP///yH5BAEAAAMALAAAAAASABIAAAIPnI+py+0Po5y02ouz3pwXADs=",//'img/empty.gif',
+		line : "data:image/gif;base64,R0lGODlhEgASAIABAICAgP///yH5BAEAAAEALAAAAAASABIAAAIZjB+Ay+2rnpwo0uss3kfz7X1XKE5k+ZxoAQA7",//'img/line.gif',
+		join : "data:image/gif;base64,R0lGODlhEgASAIABAICAgP///yH5BAEAAAEALAAAAAASABIAAAIcjB+Ay+2rnpwo0uss3kf5BGocNJZiSZ2opK5BAQA7",//'img/join.gif',
+		joinBottom : "data:image/gif;base64,R0lGODlhEgASAIABAICAgP///yH5BAEAAAEALAAAAAASABIAAAIZjB+Ay+2rnpwo0uss3kf5BGrcSJbmiaZGAQA7",//'img/joinbottom.gif',
+		plus : "data:image/gif;base64,R0lGODlhEgASAJECAICAgAAAAP///wAAACH5BAEAAAIALAAAAAASABIAAAIqlC+Ay+2rnpygWvsizCcczWieAW7BeSaqookfZ4yqU5LZdU06vfe8rysAADs=",//'img/plus.gif',
+		plusBottom : "data:image/gif;base64,R0lGODlhEgASAJECAICAgAAAAP///wAAACH5BAEAAAIALAAAAAASABIAAAIplC+Ay+2rnpygWvsizCcczWieAW7BeSaqookfZ4yqU5LZdU36zvd+XwAAOw==",//'img/plusbottom.gif',
+		minus : "data:image/gif;base64,R0lGODlhEgASAJEDAIKCgoCAgAAAAP///yH5BAEAAAMALAAAAAASABIAAAInnD+By+2rnpyhWvsizE0zf4CIIpRlgiqaiDosa7zZdU22A9y6u98FADs=",//'img/minus.gif',
+		minusBottom : "data:image/gif;base64,R0lGODlhEgASAJECAICAgAAAAP///wAAACH5BAEAAAIALAAAAAASABIAAAImlC+Ay+2rnpygWvsizE0zf4CIEpRlgiqaiDosa7zZdU32jed6XgAAOw==",//'img/minusbottom.gif',
+		nlPlus : "data:image/gif;base64,R0lGODlhEgASAPcDAIKCgoCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAMALAAAAAASABIAAAhDAAcIHEiwoMGDCBMqXJgwgMOHDxseDCBR4L+BFBFmHHBR4EaDFP+JFDngY8GNHUtW5IhxJUGTLyFCZEizps2bOBMGBAA7",//'img/nolines_plus.gif',
+		nlMinus : "data:image/gif;base64,R0lGODlhEgASAPcDAIKCgoCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAMALAAAAAASABIAAAg6AAcIHEiwoMGDCBMqXJgwgMOHDxseDCDRIEWEFwtmtDjgn0ePAzZqnFhxJEaSGCFCZMiypcuXMBMGBAA7",//'img/nolines_minus.gif'
+	};
+
+	this.obj = objName;
+	this.aNodes = [];
+	this.aIndent = [];
+	this.root = new Node(-1);
+	this.selectedNode = null;
+	this.selectedFound = false;
+	this.completed = false;
+};
+
+// Adds a new node to the node array
+dTree.prototype.add = function(id, pid, name, url, title, target, icon, iconOpen, open) {
+	this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title, target, icon, iconOpen, open);
+
+};
+
+// Open/close all nodes
+
+dTree.prototype.openAll = function() {
+	this.oAll(true);
+};
+
+dTree.prototype.closeAll = function() {
+	this.oAll(false);
+};
+
+// Outputs the tree to the page
+dTree.prototype.toString = function() {
+	var str = '<div class="dtree">\n';
+	if (document.getElementById) {
+		if (this.config.useCookies) this.selectedNode = this.getSelected();
+		str += this.addNode(this.root);
+	} else
+		str += 'Browser not supported.';
+
+	str += '</div>';
+	if (!this.selectedFound) this.selectedNode = null;
+
+	this.completed = true;
+	return str;
+};
+
+// Creates the tree structure
+dTree.prototype.addNode = function(pNode) {
+	var str = '';
+	var n=0;
+	if (this.config.inOrder) n = pNode._ai;
+	for (n; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == pNode.id) {
+			var cn = this.aNodes[n];
+			cn._p = pNode;
+			cn._ai = n;
+			this.setCS(cn);
+			
+			if (!cn.target && this.config.target)
+				cn.target = this.config.target;
+
+			if (cn._hc && !cn._io && this.config.useCookies)
+				cn._io = this.isOpen(cn.id);
+
+			if (!this.config.folderLinks && cn._hc) 
+				cn.url = null;
+
+			if (this.config.useSelection && cn.id == this.selectedNode && !this.selectedFound) {
+					cn._is = true;
+					this.selectedNode = n;
+					this.selectedFound = true;
+			}
+
+			str += this.node(cn, n);
+			if (cn._ls)
+				break;
+		}
+	}
+
+	return str;
+};
+
+// Creates the node icon, url and text
+dTree.prototype.node = function(node, nodeId) {
+	var str = '<div class="dTreeNode">' + this.indent(node, nodeId);
+	if (this.config.useIcons) {
+		if (!node.icon)
+			node.icon = (this.root.id == node.pid) ? this.icon.root : ((node._hc) ? this.icon.folder : this.icon.node);
+	
+		if (!node.iconOpen) 
+			node.iconOpen = (node._hc) ? this.icon.folderOpen : this.icon.node;
+		if (this.root.id == node.pid) {
+			node.icon = this.icon.root;
+			node.iconOpen = this.icon.root;
+		}
+
+		str += '<img id="i' + this.obj + nodeId + '" src="' + ((node._io) ? node.iconOpen : node.icon) + '" alt="" />';
+	}
+
+	if (node.url) {
+		str += '<a id="s' + this.obj + nodeId + '" class="' + ((this.config.useSelection) ? ((node._is ? 'nodeSel' : 'node')) : 'node') + '" href="' + node.url + '"';
+		if (node.title)
+			str += ' title="' + node.title + '"';
+
+		if (node.target)
+			str += ' target="' + node.target + '"';
+
+		if (this.config.useStatusText)
+			str += ' onmouseover="window.status=\'' + node.name + '\';return true;" onmouseout="window.status=\'\';return true;" ';
+		if (this.config.useSelection && ((node._hc && this.config.folderLinks) || !node._hc))
+			str += ' onclick="javascript: ' + this.obj + '.s(' + nodeId + ');"';
+
+		str += '>';
+	} else if ((!this.config.folderLinks || !node.url) && node._hc && node.pid != this.root.id)
+		str += '<a href="javascript: ' + this.obj + '.o(' + nodeId + ');" class="node">';
+
+	str += node.name;
+
+	if (node.url || ((!this.config.folderLinks || !node.url) && node._hc))
+		str += '</a>';
+
+	str += '</div>';
+
+	if (node._hc) {
+		str += '<div id="d' + this.obj + nodeId + '" class="clip" style="display:' + ((this.root.id == node.pid || node._io) ? 'block' : 'none') + ';">';
+		str += this.addNode(node);
+		str += '</div>';
+	}
+
+	this.aIndent.pop();
+	return str;
+};
+
+// Adds the empty and line icons
+dTree.prototype.indent = function(node, nodeId) {
+	var str = '';
+	if (this.root.id != node.pid) {
+		for (var n=0; n<this.aIndent.length; n++)
+			str += '<img src="' + ( (this.aIndent[n] == 1 && this.config.useLines) ? this.icon.line : this.icon.empty ) + '" alt="" />';
+
+		(node._ls) ? this.aIndent.push(0) : this.aIndent.push(1);
+		if (node._hc) {
+			str += '<a href="javascript: ' + this.obj + '.o(' + nodeId + ');"><img id="j' + this.obj + nodeId + '" src="';
+			if (!this.config.useLines) str += (node._io) ? this.icon.nlMinus : this.icon.nlPlus;
+			else str += ( (node._io) ? ((node._ls && this.config.useLines) ? this.icon.minusBottom : this.icon.minus) : ((node._ls && this.config.useLines) ? this.icon.plusBottom : this.icon.plus ) );
+
+			str += '" alt="" /></a>';
+
+		} else 
+			str += '<img src="' + ( (this.config.useLines) ? ((node._ls) ? this.icon.joinBottom : this.icon.join ) : this.icon.empty) + '" alt="" />';
+	}
+
+	return str;
+};
+
+// Checks if a node has any children and if it is the last sibling
+dTree.prototype.setCS = function(node) {
+
+	var lastId;
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.id) node._hc = true;
+		if (this.aNodes[n].pid == node.pid) lastId = this.aNodes[n].id;
+	}
+	if (lastId==node.id) node._ls = true;
+};
+
+// Returns the selected node
+dTree.prototype.getSelected = function() {
+	var sn = this.getCookie('cs' + this.obj);
+	return (sn) ? sn : null;
+};
+
+// Highlights the selected node
+
+dTree.prototype.s = function(id) {
+	if (!this.config.useSelection) return;
+
+	var cn = this.aNodes[id];
+
+	if (cn._hc && !this.config.folderLinks) return;
+
+	if (this.selectedNode != id) {
+		if (this.selectedNode || this.selectedNode==0) {
+			eOld = document.getElementById("s" + this.obj + this.selectedNode);
+			eOld.className = "node";
+		}
+
+		eNew = document.getElementById("s" + this.obj + id);
+		eNew.className = "nodeSel";
+		this.selectedNode = id;
+		if (this.config.useCookies) this.setCookie('cs' + this.obj, cn.id);
+
+	}
+};
+
+// Toggle Open or close
+dTree.prototype.o = function(id) {
+	//console.log("open!~~");
+	var cn = this.aNodes[id];
+	this.nodeStatus(!cn._io, id, cn._ls);
+	cn._io = !cn._io;
+	if (this.config.closeSameLevel) this.closeLevel(cn);
+	if (this.config.useCookies) this.updateCookie();
+
+};
+
+// Open or close all nodes
+dTree.prototype.oAll = function(status) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n]._hc && this.aNodes[n].pid != this.root.id) {
+			this.nodeStatus(status, n, this.aNodes[n]._ls)
+			this.aNodes[n]._io = status;
+		}
+	}
+	if (this.config.useCookies) this.updateCookie();
+};
+
+// Opens the tree to a specific node
+dTree.prototype.openTo = function(nId, bSelect, bFirst) {
+	if (!bFirst) {
+		for (var n=0; n<this.aNodes.length; n++) {
+			if (this.aNodes[n].id == nId) {
+				nId=n;
+				break;
+			}
+		}
+	}
+
+	var cn=this.aNodes[nId];
+	if (cn.pid==this.root.id || !cn._p) return;
+
+	cn._io = true;
+	cn._is = bSelect;
+
+	if (this.completed && cn._hc) this.nodeStatus(true, cn._ai, cn._ls);
+	if (this.completed && bSelect) this.s(cn._ai);
+	else if (bSelect) this._sn=cn._ai;
+
+	this.openTo(cn._p._ai, false, true);
+};
+
+// Closes all nodes on the same level as certain node
+dTree.prototype.closeLevel = function(node) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.pid && this.aNodes[n].id != node.id && this.aNodes[n]._hc) {
+			this.nodeStatus(false, n, this.aNodes[n]._ls);
+			this.aNodes[n]._io = false;
+			this.closeAllChildren(this.aNodes[n]);
+		}
+	}
+}
+
+// Closes all children of a node
+dTree.prototype.closeAllChildren = function(node) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.id && this.aNodes[n]._hc) {
+			if (this.aNodes[n]._io) this.nodeStatus(false, n, this.aNodes[n]._ls);
+			this.aNodes[n]._io = false;
+			this.closeAllChildren(this.aNodes[n]);		
+		}
+	}
+}
+
+// Change the status of a node(open or closed)
+dTree.prototype.nodeStatus = function(status, id, bottom) {
+	eDiv	= document.getElementById('d' + this.obj + id);
+	eJoin	= document.getElementById('j' + this.obj + id);
+
+	if (this.config.useIcons) {
+		eIcon	= document.getElementById('i' + this.obj + id);
+		eIcon.src = (status) ? this.aNodes[id].iconOpen : this.aNodes[id].icon;
+	}
+
+	eJoin.src = (this.config.useLines)?
+	((status)?((bottom)?this.icon.minusBottom:this.icon.minus):((bottom)?this.icon.plusBottom:this.icon.plus)):
+	((status)?this.icon.nlMinus:this.icon.nlPlus);
+	eDiv.style.display = (status) ? 'block': 'none';
+};
+
+
+// [Cookie] Clears a cookie
+dTree.prototype.clearCookie = function() {
+	var now = new Date();
+	var yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+	this.setCookie('co'+this.obj, 'cookieValue', yesterday);
+	this.setCookie('cs'+this.obj, 'cookieValue', yesterday);
+};
+
+// [Cookie] Sets value in a cookie
+dTree.prototype.setCookie = function(cookieName, cookieValue, expires, path, domain, secure) {
+	document.cookie =
+		escape(cookieName) + '=' + escape(cookieValue)
+		+ (expires ? '; expires=' + expires.toGMTString() : '')
+		+ (path ? '; path=' + path : '')
+		+ (domain ? '; domain=' + domain : '')
+		+ (secure ? '; secure' : '');
+};
+
+// [Cookie] Gets a value from a cookie
+dTree.prototype.getCookie = function(cookieName) {
+	var cookieValue = '';
+	var posName = document.cookie.indexOf(escape(cookieName) + '=');
+	if (posName != -1) {
+		var posValue = posName + (escape(cookieName) + '=').length;
+		var endPos = document.cookie.indexOf(';', posValue);
+		if (endPos != -1) cookieValue = unescape(document.cookie.substring(posValue, endPos));
+		else cookieValue = unescape(document.cookie.substring(posValue));
+	}
+
+	return (cookieValue);
+};
+
+// [Cookie] Returns ids of open nodes as a string
+dTree.prototype.updateCookie = function() {
+	var str = '';
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n]._io && this.aNodes[n].pid != this.root.id) {
+			if (str) str += '.';
+			str += this.aNodes[n].id;
+		}
+	}
+
+	this.setCookie('co' + this.obj, str);
+};
+
+// [Cookie] Checks if a node id is in a cookie
+dTree.prototype.isOpen = function(id) {
+	var aOpen = this.getCookie('co' + this.obj).split('.');
+	for (var n=0; n<aOpen.length; n++)
+		if (aOpen[n] == id) return true;
+
+	return false;
+};
+
+// If Push and pop is not implemented by the browser
+if (!Array.prototype.push) {
+	Array.prototype.push = function array_push() {
+		for(var i = 0;i < arguments.length;i++)
+			this[this.length] = arguments[i];
+
+		return this.length;
+	}
+};
+
+if (!Array.prototype.pop) {
+	Array.prototype.pop = function array_pop() {
+		lastElement = this[this.length-1];
+		this.length = Math.max(this.length-1,0);
+		return lastElement;
+	}
+
+};
+</script>
+<style>
+.dtree {
+	font-family: Arial;
+	font-size: 12px;
+	color: #666;
+	white-space: nowrap;
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #333;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree .clip {
+	overflow: hidden;
+}
+</style>
+<style>
+
+/**/
+body {
+	margin: 0;
+	position: relative;
+}
+
+#navBar {
+	position: fixed;
+	z-index: 9;
+	top: 0;
+	width: 100%;
+	height: 60px;
+	display: flex;
+	background-color: #fbfbfb;
+	align-items: center;
+	border-bottom: 2px solid #e2e2e2;
+	min-width:1048px;
+}
+
+.marginSmall {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #000;
+	font-size: 1rem;
+	border-radius: 6px;
+	padding: 5px 15px;
+	margin: 0 15px;
+}
+
+.marginSmall img {
+	margin-right: 0.4525rem;
+}
+
+body {
+    user-select:none;
+	padding:0;
+	margin:0;
+}
+
+#tree_wrap {
+	display:none;
+	margin-top:1px;
+	position: fixed;
+}
+
+#tree_root {
+
+	border: 1px solid #E8E9F7; 
+	height: 100%;
+	width:160px;
+	overflow-x:scroll;
+	overflow-y:scroll;
+	z-index:2;
+	position: fixed;
+	padding:0;
+	margin:0;
+	background-color:#ffffff
+}
+
+.tree_btn {
+	padding-left:10;
+	font-size:13px;
+	text-decoration:none;
+}
+
+.tree_btn:hover {
+	text-decoration:underline;
+	color:red;
+}
+
+.des_text {
+	font-size: 14px;
+	/*text-shadow: 0px 0px 5px #16197b;*/
+}
+
+.des {
+	position: fixed;
+	bottom:10;
+	right:10;
+}
+
+.precent_des {
+	margin-left:45;
+}
+
+.button_wrap {
+	/*display:none;*/
+	position: fixed;
+	bottom:20;
+	right:-90;
+	opacity:1;
+	transition:right 0.7s;
+}
+
+.button_wrap:hover {
+	opacity:1;
+	right:0;
+}
+
+/* Common button styles */
+.button {
+	min-width: 80px;
+	height:30px;
+	display: block;
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	padding: 3px 0px;
+	border: none;
+	background: none;
+	color: inherit;
+	vertical-align: middle;
+	position: relative;
+	z-index: 1;
+}
+.button:focus {
+	outline: none;
+}
+
+.button > span {
+	vertical-align: middle;
+}
+
+/* Text color adjustments (we could stick to the "inherit" but that does not work well in Safari) */
+.bg-1 .button {
+	/* color: #37474f; */
+	/* border-color: #37474f; */
+}
+.bg-2 .button {
+	color: #ECEFF1;
+	border-color: #ECEFF1;
+}
+.bg-3 .button {
+	color: #fff;
+	border-color: #fff;
+}
+
+/* Sizes */
+.button--size-s {
+	font-size: 14px;
+}
+
+/* Typography and Roundedness */
+
+.button--text-thick {
+	font-weight: 300;
+	font-size:12px;
+}
+.button--round-s {
+	border-radius: 5px;
+}
+
+/* Borders */
+.button--border-thin {
+	border: 1px solid;
+}
+
+/* Individual button styles */
+/* Ujarak */
+.button--ujarak::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #d41e61;
+	z-index: -1;
+	opacity: 0;
+	transform: scale3d(0.7, 1, 1);
+	transition: transform 0.6s, opacity 0.6s;
+	transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+}
+.button--ujarak .button--round-s::before {
+	border-radius: 2px;
+}
+.button--ujarak .button--inverted::before {
+	background: #7986CB;
+}
+.button--ujarak:hover {
+	color: #fff;
+	border-color: #37474f;
+}
+.button--ujarak.button--inverted:hover {
+	color: #37474F;
+	border-color: #fff;
+	opacity:1;
+}
+.button--ujarak:hover::before {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+/* end ujarak ---- */
+
+#mask-tip-bg { 
+	/* ---*/ display: none; 
+	position: absolute; 
+	top: 0%; 
+	left: 0%; 
+	width: 100%; 
+	height: 100%; 
+	background-color: black; 
+	z-index:1001; 
+	opacity:.30; 
+	filter: alpha(opacity=30);
+}
+ 
+#mask-tip-show{ 
+	display: none; 
+	position: absolute; 
+	top: 25%; 
+	left: 32%; 
+	width: 33%; 
+	height: auto; 
+	padding: 8px;
+	border: 8px solid #E8E9F7; 
+	background-color: white; 
+	z-index:1002; 
+	overflow: auto;
+}
+
+#mask-tip-btn {
+	float:right
+}
+
+#preview {
+	width: 100%; /**/
+	height: 100%;
+	position:absolute;
+	
+	top: 80px;
+	left:0px;
+}
+
+.preview_img {
+	display:block;
+	margin-top:10px;
+	margin-bottom:10px;
+	
+	margin-left:auto;
+	margin-right:auto;
+	
+	border:1px solid black
+}
+</style>
+
+<style id="preview_img_size_style">
+
+.preview_img_size {
+	width:600px;
+	height:648px;
+}
+
+</style>
+
+<div class="mask-tip">
+	<div id="mask-tip-bg"></div>
+	<div id="mask-tip-show">
+		通知<hr/>
+		<div id="mask-tip-text">正在加载中...</div>
+		</p>
+		<div id="mask-tip-btn">
+			<!---->
+			<input type="submit" id="mask-tip-btn-preview" value="生成" onclick="getPreview()"/>
+			<input type="button" class="concel" value="取消" onclick="hideMaskTip()" />
+		</div>
+    </div>
+</div>
+
+<!-- -->
+
+<div id="navBar"><div class="des_text precent_des" id="pageZoom">100%</div>
+	<div class="marginSmall" onclick="scaleToRealSize();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAVCAYAAABCIB6VAAACd0lEQVQ4ja3TT4hVZRjH8c95z7mSYxT3QItCKGjbokXlIga5d8iY/BM2o4jIUItJJjEyuhSDWU0iyUQTiQ3UxlkollrU3KayvFa2kYhatGgjuBAijPeCmMHINC08t+69WNqMP3jgvM/ze77vc154klirrFMKO2Xp6nzs+Hldau7feN98ll3Mtx76GWKt8oCQzOV7G993e+PEwG2y8EmSpbsDtuF+NOJY/+0d0LcGV+AElrale9CIOx9a0QEdf/QONArWtoD1ReIenIp71iyH5huPVQvoLd2TFbkv40sPV6H52trl+KZgNLA+5OMnL6Ef07gbp+LedcOoY9lVoC3djHp89ZFhfFv0TqO/PHL4UoB8z4lZDOJ93IV3un7/37S08N5Z9A7m24/MQmg58rHjs8WUC1U933FstnX4Gxx3rRrCgUWAD8SJgaEOcBztG8FU+0ULUMBU3LdhBLJYqzyH8UUAu/V2c3LTsgxvFvFfmmv7/hqlGzjI/1MSa5VMKZCl/0QaJKWMLJAG81k2l289NA+xVkmEJFW64pOlklJqPg1kV3qSLBXwDC5fI+5tG2bldfiHQz5+8nU8dYNe4E9sKY8cnmxt3iQeLwoL1WVszrcfOUjn5k3hiUWAN+c7jr3XOrRv3hKsXgR4KE4M3NQBjqN9S3AUG3EWT+KP64BdwBacwVrMxH0beiDEWqUHM0XhDHrz5z9+F2vw+zWgq/IXZw7iQfyECj5rTm66NeBD9BWF3ny0fg7Kz37QKPIXrgL9DSvzVz4/DeUXpn9FFT+gF/WA/fgO1XzXp7+0d5efPnq6gLc/y0VU891f/NjuzWsfnS8m/gov/wW7p76DXbDSSwAAAABJRU5ErkJggg==">实际大小</div>
+	<div class="marginSmall" onclick="scaleToFitPageSize();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAB5UlEQVQ4jb2VQWsTURDHf7P7EqT4ATwUWvwAtlBxtywUCbKhhJLehBQ89SAe/ABStEI9ecuh0EOvpQerRptGLcRWiLz1op7UCsFC6LGQgz1UYj3sCy1pN32m1bnMvNmZ+Q9v5/9Ghp5eO0gJKBHSAgpICbFt/CliOy3giuDKAUrAEcHFaBPrCMYGx9QDaAENzlf6AbcN0NCT0WC36Ftrfh/wDNgDbhZDvd8t/tFm8AMYcGxaKZT9PmAV8IEs8OTuGz9tk6tODwFgHKgDNcAFBoHQgJ4dYCmnV4CV6Yo/C7Tms7pg2RhWV3QW+f8AmZKXz77wrvZSbKYa5O6/DUYSAcZK3hSwAPzsBQD4Dbx6uBF4bYcYJm8rkdtpoazgQ0r4lsDkYcPkT12YPOoKl5TgOMLFo1O0Dewa/TyhwwtGJ30X4ArwlXiUDwH0ZPRlrOQFwDqw+HIiWu/Mnq74wwDzWX0iwEw1uAf8IubIZ+j4B+/y0RYwCnxM6PA0WQZuPLhea7Ydx4hWzUc7PRZnLlOrd/r+OQ+snopC2R9XQob4JeXOa/+xEqrFUFfOBQB4D8wCl825DszZJFpd0VJON4kn4zuwBYTFUDe7Z8XSJlpLiTQsVqZriNayWJn9jhxuNBcYsOnob+UPrFhv53LB7DgAAAAASUVORK5CYII=">适配页面</div>
+	<div class="marginSmall" onclick="zoomIn();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAC3UlEQVQ4jaWUb2jWVRTHP7/v9yLGJKI/4IroxfAPrWWIuIHaYr3Q0EFEgUmY1cZKsNlD8kyfF1NJc4SPwsCQYEGQNhKMCHX4dwliEDQzm0NJX6wCLZEgkqHoi+c+7u5xbi86cLnnzz3fe849556McWj9tpMv2VplZ/Wyqh1kWVds/ST7Kwftza2suzmeL0CWCh9uPv60rd2yFtrCzpCFg0q7hWwcNKSg99auqD0+HqjKTK7zaBPwA7DwfhEkNAs40t072HZf0PbC4VrgW2Ba1N8CeoBFQBUwFZgDbAX+TXw/3bVvaNk9oGs6+rIIUBV114Gmj9YteCdeshXoAmryrXMLwLPAUDybAZ/t/uZC1RhQYCkwP9G99nHHou8j3wC0x9UIsO7tOb8BS4B/4pnpwPuVoG8k8v6uQuORynQqKbey7jKwPVG9ldqzNR19l2U9FSv8iq3/ZC2J1W+QVR9tA7b6Y/X7FfSzrYuO3WHrkZbmmmsAAahOLvkVeD2mW0nPxQXA2hW1+7t7B0eAKVH1OHCtnL7TyCdLfQJ6oMwE4CqlxwZ4BjiRHHyBWCBKPXwo8qd37jk3M4kS4M8UdIBSNQHe7Co0NpeBO4unNiagp/OtczeWHXfuObc5AfyjpblmuCwI+DoxLstv6b+nmSup+MXZmUAuUaUYCNgLDCe6L9dvO7k48ieATXEdAvik58xs4CCjn+UGUExBM4D2wuGlDvpudGjotq1eO+uRdcZBt2TNsLVcdpuDpqrURtj63UENbS/PGB4DCpDrPPqBrGIEZZIpRQKKg87ber6lueZqOf3SO216cQewHPh7sjeNKd9I5NnAsc8PXnpsTKRlym/pf0hWLg7pJysi/SsO6e0Kmm6rz9aDDncj/kVW04TN3lk8VS3rCQdNkXVlw7vzLqb27t7BelsHHPSwRy8/8H9+EAC79g3VOeiYrUcj6Igmd5uYVr866yylD/IjMALk7wCCcqLSEYBBLQAAAABJRU5ErkJggg==">放大</div>
+	<div class="marginSmall" onclick="zoomOut();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAACpElEQVQ4jaWUTUhVURDHf3PnnFNRqGlJFiFEaZTRJnJjEG4yKoIgNRTKxUsLKRMJgyLsSbooaxGVBK0SixZRhEGIfawMgr4kCCIipOKaGkJUktTC++T48XxCs7ozc+d3/nPOmSPMYGFlzXZUDhBIoajmYAIVoyGqL8TqTazpzGpp/jNTLYBMgpUfXIdKOyJFqEAgiCqYADEKqohVsOadGD2UGW96NBM0mACWxYqBZ0BRMgWe5QPdw/F4dVJoWBpbD9wDFkXxMeA6sAVYCMwHNgJngR9e7ZXh1pad09oPS2MC9CJsRgRUviOyO/vG1aczqRhsaFyFNV1iNF+cAWu+irOrM+obEosRADuAzV7d3mRAgKxzrR+AEmAkCi0Djkxtv9Lz72R3tHcnA06AW5o/Aue9UJWfl7A09hHIRQCRPaj8RKQkxek/EaOvxZn3WIM4iziTlV5bNwRggBxvkbfAPuBoKrWZ8aY7w/H4KOCi0HJgKNG++spTwWaxBYkPAwwwvtkABcDjOQB6h06dzvNUAnzxoS8ZP02A/dkd7bvmAh46dfqM535Or63rTzgBcNtL7gwrqqdd5qk2eOJkHlDvhXwGAdAJ9HuxjrCyZltSYEPjWuAB45MG8Au46P8jAGFpbAfC/WiiQOQvKrcI5LqovsIEY2J0DarlYrUaa+aLUaKJ+iTObsqobxiYBAUIy2LHEGmLoKS4p3hQxNk+caY4vbZuINE+ANm3rl0AyoHBVHsKjEZtJ6wA6Bm5dnnpJKUTiiuqMxCpjx7plVOUfose6TYxmivO3MWatGiikHmuT5wtnvWyh1WHc0R1BSZwYjRccqntvZ8fjscLseahOJsWQRFnu/5ngsbBrS0bxNkecWZJBB0NUpfNbosbT7wBtgLPgd/A8X8DV5Wp42KAigAAAABJRU5ErkJggg==">缩小</div>
+	<div class="marginSmall" onclick="showOrHideBookmark();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAVCAYAAACg/AXsAAABIElEQVQ4jc3Tu0pDQRDG8d+Zo2AgeAERIxaChZWdID6AhUVqG2tLSzsJvoT4Aj6AWFhb2YiVjdjZCF5AEI0XUIsc8Rh0jSSFHww77Oz+d2d2NrvcmVnPIjZFPiCCyImQRd7y8yD7mPuMF2sfRTSyy52Zhyyi8hn8E4SIZqCiO1WiSwDoK/n3uMM4zrGMx8TeSewiypATnGEF/Rj+BVL97ibzhUEN+6kUyupJTXpe2CNMYwRXWJOuSQ1b7ZALDBSQl2JsJiBVvGp7nXrJn/g4pRP1vCbtusBzIj6olfIXyKlWpy7iGHOj9cO3nwg3B0tV3CIvQ4YwVviz2L7eW2j++IuZQt5+k/HCaLX9aiKVL/o/HRvSXdmJngIN6adMArDxDhARLron1MiNAAAAAElFTkSuQmCC">显示目录</div>
+	<div class="marginSmall" onclick="savePdf();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFsSURBVEiJtdaxSxxREMfxT8TiUDxjY2EhqJWiSR0I2vgvWPkHRJGUgdTaaGGjRSCpUqTKPxBISGutHIeFWhjR8rxLCBKCl+K9hWOzd3u3d/eDYd8b9s13lpmdXdhBA80+7QZLMtTAS0xhDn/jupO9x15c1/AMr3GXhoxiAmcRlKiWlUmLHqLVYvZ1HEffd6yjkgAGqQ/x+i2BDBrwH2QYgARSwpd2gPmcAJP4E+8baXPPRxw9EYo0KRS5hCqe9pDtL6GL7lP+slB8zbgZtMpotnu8gWnogHSRZ7HVB/gR7/AjcaQDrWKjYHDx7FqrI6tNq3hbELCYdmQBXuBrQcBzfM4DXOCgIGA37cgCzOhch2sc4o0wsvcw3XI2F/AbVx0Al8KYOI37c+FtTs7mAvK0IGRPRlG7AYzJH3btNNYN4FaqE3rQSjeARewXBCxkAX4K/VvBOE6wWRDwKcaYwrL4nd8W5na/vy1pq+PVPybbZ4MPl1PPAAAAAElFTkSuQmCC">保存</div>
+	<div class="marginSmall" onclick="printPdf();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAABzElEQVQ4jZ2VQUgUURjHf/83MyHiobJZVtjSwGPCQgQdVl0Qdzt06RB5WUgIOuq1QyLhoVsdpYseCzxYeNDdg6ur5yIo8uJpCXKFlegQEeLBMabXPGfbPwzfzPe+95vvfd/jPWFpbP2gbqTxQGCAQMIzQgJfIIEn4QnMqd1aLlwqxhm+DY30BnjtGItrCsjaThf0S60UrqYRK412PhF6Y+3blUDKGcEFAdAHZCerrXza8iNg3/TuUd4XUUlo+sBHYMD62U3gcVqmMb0HvgIZoGUSgN1qBHgODLhq2o0WgVvgblQ3un/2YkNHgWYXwBzQcEGbwCHwu1YKf6aRKo12TwIjcflrQB2YL1dbO4GUc2ypAvAIKAIP06BxrQAXHWM/XJNs6BwwHGUK8Bnodcz9FdkhYPY86LT1/QoYdECvR3YQmLGh96zgBeAqwEYpHHIAAag02gB7nG76P5IdOLZ+sGmkYiB2DOwHUsYz+vB2ov9JAnTeE8VOjr5nwG2gED0An87L2JaxHdt3MpvAA+A45nZ2uiMoQL0cvuPvpl37H+g/NY2rXG3NBtILz+i7xIwvjqzrZMoT2U6vEwA2SuHLu7XDy8BTYMkRtmU7TgCjblX0jt4QvAAAAABJRU5ErkJggg==">打印</div>
+</div>
+
+<article id="preview">
+	<!--<div class="preview_img  portrait" ></div>-->
+	<!-- 
+		<img src="file:///d:/2.png" class="preview_img preview_img_size"/>
+		<img src="file:///d:/2.png" class="preview_img preview_img_size"/>
+	-->
+</article>
+
+<div id="tree_wrap">
+	<!--<p><a class="tree_btn" href="javascript: g_dTree.openAll();">展开</a><a class="tree_btn" href="javascript: g_dTree.closeAll();">折叠</a></p>-->
+	<div id="tree_root">
+	</div>
+</div>
+
+
+
+<div class="des des_text" id="pageNum">0/12</div>
+</div>
+
+<!-- 
+
+<div class="button_wrap">
+	<div class="des_text precent_des" id="pageZoom">100%</div>
+	
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="scaleToRealSize();">实际大小</button>
+	
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="scaleToFitPageSize();">适配页面</button>
+		
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="zoomIn();">放大</button>
+		
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="zoomOut();">缩小</button>
+		
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="showOrHideBookmark();">目录</button>
+		
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="printPdf();">打印</button>
+		
+	<button style="" 
+		class="button button--ujarak button--border-thin button--text-thick button--round-s"
+		onclick="savePdf();">保存</button>
+</div>
+-->
+
+<script>
+document.body.onselectstart = document.body.ondrag = function(){
+    return false;
+}
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+function showMaskTip(text, needShowBtn) { 
+	$("mask-tip-text").innerText = text;
+	$("mask-tip-bg").style.display = "block";
+	$("mask-tip-show").style.display = "block";
+	if (needShowBtn)
+		$("mask-tip-btn").style.display = "block";
+	else
+		$("mask-tip-btn").style.display = "none";
+}
+ 
+function hideMaskTip() {
+	$("mask-tip-bg").style.display = "none";
+	$("mask-tip-show").style.display = "none";	
+}
+
+var kWidthPadding = 50;
+var kHeightPadding = 10;
+var g_pdfRealSizeWidth = 0;
+var g_pdfRealSizeHeight = 0;
+var g_showedImgIndexs = [0, 1, 2];
+var kIsInMb = 'mbQuery' in window;
+var g_numOfPages = 0;
+var g_zoom = 1.0;
+
+const kFitPageMode = 1;
+const kRealSizeMode = 2;
+var g_mode = kFitPageMode;
+
+var g_pdfRealSizeWidth = 0;
+var g_pdfRealSizeHeight = 0;
+var g_heightWidthRatio = 1.0;
+var g_curWidth = 0;
+var g_curHeight = 0;
+var g_delayShowImgTimer = 0;
+
+function getFitedWidth() {
+	return window.innerWidth - kWidthPadding;
+}
+
+function getFitedWidth() {
+	return window.innerWidth - kWidthPadding;
+}
+
+function removeAllImg() {
+    var div = $("preview");
+    while(div.hasChildNodes()) {
+        div.removeChild(div.firstChild);
+    }
+}
+
+function isInViewPortOfElement (el) {
+    var viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    var r = el.getBoundingClientRect();
+    var top = r.top;
+    var bottom = r.bottom;
+
+    return (top >= 0 && top <= viewPortHeight) || (bottom >= 0 && bottom <= viewPortHeight) || (top <= 0 && bottom >= viewPortHeight);
+}
+
+function showImgInViewPortImpl() {
+	var isFirstShow = true;
+	for (var i = 0; i < g_numOfPages; ++i) {
+		
+		var imgNode = $("img_" + i);
+		var isIn = isInViewPortOfElement(imgNode);
+		if (!isIn)
+			continue;
+			
+		if (isFirstShow)
+			$("pageNum").innerText = i + 1 + "/" + g_numOfPages;
+		isFirstShow = false;
+			
+		if (kIsInMb) {
+			if (kWaittingImgSrc == imgNode.src) {
+				imgNode.src = "pdfviewer://img_src_" + i + "_" + g_curWidth + "_" + g_curHeight + "?" + Math.random();
+			}
+		} else {
+			imgNode.src = "d://2.png";
+		}
+	}
+}
+
+function showImgInViewPort() {
+	if (0 != g_delayShowImgTimer)
+		clearTimeout(g_delayShowImgTimer);
+		
+	g_delayShowImgTimer = setTimeout(function() {
+		g_delayShowImgTimer = 0;
+		showImgInViewPortImpl();
+		
+	}, 250);
+}
+
+window.onresize = function() {
+	for (var i = 0; i < g_numOfPages; ++i) {
+		var imgNode = $("img_" + i);
+		imgNode.src = kWaittingImgSrc;
+	}
+	showImgInViewPort();
+}
+
+window.onscroll = function() {
+	showImgInViewPort();
+}
+
+function imgDragStart() { return false; }
+
+window.onReflushImpl = function(numOfPages, width, height) {
+	g_numOfPages = numOfPages;
+	
+	width = Math.round(width);
+	height = Math.round(height);
+
+	var zoom = width / (g_pdfRealSizeWidth + 0.0);
+	if (zoom > 5 || zoom < 0.2)
+		return;
+	g_zoom = zoom;
+	g_curWidth = width;
+	g_curHeight = height;
+	
+	removeAllImg();
+	
+	$("pageZoom").innerText = Math.round(g_zoom * 100) + "%";
+	
+	var previewContainer = $("preview");
+	
+	for (var i = 0; i < numOfPages; ++i) {
+		var imgNode = document.createElement("img");
+		imgNode.ondragstart = imgDragStart;
+		imgNode.id = "img_" + i;
+		if (kIsInMb) {
+			//imgNode.src = "pdfviewer://img_src_" + i + "_" + width + "_" + height + "?" + Math.random();
+			imgNode.src = kWaittingImgSrc;
+		} else {
+			imgNode.src = "d://2.png";
+		}
+		var className = "preview_img preview_img_size";
+		imgNode.setAttribute("class", className); 
+		
+		previewContainer.appendChild(imgNode);
+	}
+	setImgWidthHeight(width, height);
+	showImgInViewPort();
+}
+
+window.onNativeReflush = function(numOfPages, realSizeWidth, realSizeHeight, errorText) {
+	if (errorText.length) {
+		showMaskTip(errorText, true);
+		return;
+	}
+	
+	g_pdfRealSizeWidth = realSizeWidth;
+	g_pdfRealSizeHeight = realSizeHeight;
+	g_heightWidthRatio = realSizeHeight / (realSizeWidth + 0.0);
+	
+	var width = 0;
+	var height = 0;
+	if (kRealSizeMode == g_mode) {
+		width = g_pdfRealSizeWidth;
+		height = g_pdfRealSizeHeight;
+	} else if (kFitPageMode == g_mode) {
+		width = getFitedWidth();
+		height = width * g_heightWidthRatio;
+	}
+	
+	onReflushImpl(numOfPages, width, height);
+}
+
+function setImgWidthHeight(width, height) {
+	var styleSheet = $("preview_img_size_style").sheet;
+	styleSheet.rules[0].style.width = width + "px";
+	styleSheet.rules[0].style.height = height + "px";
+}
+
+function scaleToRealSize() {
+	g_mode = kRealSizeMode;
+	onReflushImpl(g_numOfPages, g_pdfRealSizeWidth, g_pdfRealSizeHeight);
+}
+
+function scaleToFitPageSize() {
+	g_mode = kFitPageMode;
+
+	var width = getFitedWidth();
+	var height = width * g_heightWidthRatio;
+	
+	onReflushImpl(g_numOfPages, width, height);
+}
+
+function zoomIn() {
+	onReflushImpl(g_numOfPages, g_curWidth * 1.1, g_curHeight * 1.1);
+}
+
+function zoomOut() {
+	onReflushImpl(g_numOfPages, g_curWidth * 0.9, g_curHeight * 0.9);
+}
+
+var g_isBookmarkShow = false;
+
+function showOrHideBookmark() {
+	if (g_isBookmarkShow) {
+		g_isBookmarkShow = false;
+		$("tree_wrap").style.display = "none";
+	} else {
+		g_isBookmarkShow = true;
+		$("tree_wrap").style.display = "block";
+	}
+}
+
+function printPdf() {
+	window.print();
+}
+
+function savePdf() {
+	window.mbQuery(1, "", null);
+}
+
+/*
+var g_isDragging = false;
+var g_clientX = 0;
+var g_clientY = 0
+window.onmousedown = function(evt) {
+	g_isDragging = true;
+	g_clientX = evt.clientX;
+	g_clientY = evt.clientY;
+}
+
+window.onmousemove = function(evt) {
+	if (!g_isDragging)
+		return;
+
+	window.scrollTo(window.scrollX - (evt.clientX - g_clientX) / 5, window.scrollY - (evt.clientY - g_clientY)/5);
+}
+
+window.onmouseup = function(evt) {
+	g_isDragging = false;
+}
+*/
+var g_dTreeIdGen = 0;
+var g_dTree;
+
+function clickTreeNode(pageIndex) {
+	console.log("clickTreeNode:" + pageIndex + ", " + g_curHeight);
+	if (-1 != pageIndex && pageIndex >= 1)
+		window.scrollTo(window.scrollX, (g_curHeight + 12) * (pageIndex - 0) + 0);
+		
+	showImgInViewPort();
+}
+
+function urlDecode(text) {
+	if (0 != (text.length % 6))
+		return text;
+	var result = "";
+	for (var i = 0; i < text.length; i += 6) {
+		if ('%' != text[i] && '%' != text[i + 3])
+			return result;
+		var c1 = (text[i + 1]);
+		var c2 = (text[i + 2]);
+		var ch1 = parseInt(c1 + c2, 16);
+		
+		var c3 = (text[i + 4]);
+		var c4 = (text[i + 5]);
+		var ch2 = parseInt(c3 + c4, 16);
+		
+		var c = ch1 + (ch2 << 8);
+		result += String.fromCharCode(c);
+	}
+	return result;
+}
+
+function createItemsByArray(dTreeObj, parentId, arr) {
+	for (var i = 0; i < arr.length; ++i) {
+		var item = arr[i];
+		var id = g_dTreeIdGen++;
+		
+		var clickJs = "javascript:clickTreeNode(";
+		if ("action" in item && "pageIndex" in item.action)
+			clickJs += item.action.pageIndex;
+		else
+			clickJs += "-1";
+		clickJs += ")";
+		
+		//console.log((item.title));
+		//alert(urlDecode(item.title));
+			
+		dTreeObj.add(id, parentId, urlDecode(item.title), clickJs);
+		//dTreeObj.add(id, parentId, 'Node 4', 'example01.html');
+		if ("children" in item)
+			createItemsByArray(dTreeObj, id, item.children);
+	}
+	
+}
+
+window.onNativeBookmark = function(json) {
+	if (null == json)
+		return;
+		
+	showOrHideBookmark();
+	
+	g_dTree = new dTree("g_dTree");
+	g_dTree.config.useIcons = false;
+	
+	createItemsByArray(g_dTree, -1, json);
+	
+	var jsonHtml = g_dTree.toString();
+	$("tree_root").innerHTML = jsonHtml;
+}
+
+//// test
+var testBookmarkJson;
+
+function test() {
+	console.log("g_numOfPages:" + g_numOfPages);
+	onReflushImpl(g_numOfPages, 793 * 2.5, 1122 * 2.5);
+}
+
+if (!kIsInMb) {
+	onNativeReflush(5, 500, 600, "");
+	
+	setTimeout(function() {
+		onNativeBookmark(testBookmarkJson);
+	}, 100);
+}
+
+testBookmarkJson = ([{
+	'title':'hahahaha',
+	'action':{'pageIndex':1},
+	children:[
+		{
+		   'title':'hahahaha',
+		   'action':{'pageIndex':1},
+		   children:[]
+		},
+		{
+		   'title':'hahahaha',
+		   'action':{'pageIndex':1},
+		   children:[]
+		}
+	]
+}]);
+
+</script>
+
+</html>

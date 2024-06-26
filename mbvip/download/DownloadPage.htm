@@ -1,0 +1,252 @@
+﻿
+<html>
+
+<style>
+
+html, body{
+	background-color:#ededed
+}
+
+#download_list {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #909090;
+	
+	margin-top:10px;
+	width:710px;
+	height:500px;
+	overflow-y: scroll;
+}
+.download_item {
+	margin-top:6px;
+	display:block;
+	
+
+	height:40px;
+}
+
+.download_item_text {
+	margin-left:6px;
+	margin-top:0px;
+	display:inline;
+	font-size:14px;
+}
+
+.download_item_text_btn:hover {
+	cursor:hand;
+	background-color: #eeeeee;
+}
+
+.download_item_box {
+	display:inline-block;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #999999;
+
+	margin-top:0px;
+	margin-left:6px;
+	width:550px;
+	height:15px;
+	font-size:16px;
+}
+
+.download_item_box_progress {
+
+	background:#4CAF50;
+	width:1px;
+	height:16px;
+	/*position:absolute;*/
+	z-index:-1;
+	text-align:center;
+	font-size:12px;
+	white-space:nowrap;
+}
+
+#mask-tip-bg { 
+	display: none; 
+	position: absolute; 
+	top: 0%; 
+	left: 0%; 
+	width: 100%; 
+	height: 100%; 
+	background-color: black; 
+	z-index:1001; 
+	opacity:0.3;
+}
+ 
+#mask-tip-show{ 
+	display: none; 
+	position: absolute; 
+	top: 25%; 
+	left: 22%; 
+	width: 400px; 
+	height: 200px; 
+	padding: 8px;
+	border: 8px solid #E8E9F7; 
+	background-color: white; 
+	z-index:1002; 
+	overflow: auto;
+}
+
+#mask-tip-btn {
+	float:right
+}
+
+#mask-tip-text {
+	overflow-y: scroll;
+	height: 120px;
+	word-break:break-all;
+}
+
+</style>
+<body> 
+<div style="display:inline-block;text-align:center;width:650;-webkit-app-region:drag;">下载管理器</div><!--  -->
+<a style="left:680px;position:absolute;display:inline;" class="download_item_text_btn" onclick="closeMe();">关闭</a></br>
+<div class="mask-tip">
+    <div id="mask-tip-bg"></div>
+    <div id="mask-tip-show">
+        下载文件：<hr/>
+        <div id="mask-tip-text">正在加载中……</div>
+        </p>
+        <div id="mask-tip-btn">
+			<input type="submit" class="submit" value="确定" onclick="selectFilePath()"/>
+			<input type="button" class="concel" value="取消" onclick="cancelSelectFilePath()" />
+		</div>
+    </div>
+</div>
+
+<div id="download_list" >
+	<!--
+	<div class="download_item">
+		<div class="download_item_text">成功</div>
+		<div class="download_item_box">
+			<div class="download_item_box_progress">aaa.7z</div>
+		</div>
+
+		<a class="download_item_text download_item_text_btn">打开</a>
+		<a class="download_item_text download_item_text_btn">删除</a>
+	</div>
+	-->
+</div>
+<script>
+function $(id) {
+	return document.getElementById(id);
+}
+
+document.body.onselectstart = document.body.ondrag = function(){
+    return false;
+}
+
+function closeMe() {
+	mbQuery(0, "close");
+}
+
+var g_isMaskTipShow = false;
+var g_IdToAffirmNeedDownload = 0;
+var g_isSeleteingFilePath = false;
+
+function showMaskTip(id, text) {
+	g_isMaskTipShow = true;
+	
+	$("mask-tip-text").innerText = text;
+	$("mask-tip-bg").style.display ="block";
+	$("mask-tip-show").style.display ="block";
+	$("mask-tip-btn").style.display ="block";
+
+}
+
+function selectFilePath() {
+	if (0 == g_IdToAffirmNeedDownload || g_isSeleteingFilePath)
+		return;
+	g_isSeleteingFilePath = true;
+	mbQuery(g_IdToAffirmNeedDownload, "selectFilePath");
+}
+
+function cancelSelectFilePath() {
+	if (g_isSeleteingFilePath)
+		return;
+	hideMaskTip();
+
+	mbQuery(g_IdToAffirmNeedDownload, "cancelSelectFilePath");
+	g_IdToAffirmNeedDownload = 0;
+}
+ 
+function hideMaskTip() {
+	g_isMaskTipShow = false;
+	$("mask-tip-bg").style.display = "none";
+	$("mask-tip-show").style.display = "none";	
+}
+
+function onNativeDownloadFail(id) {
+	var node = $("download_item_text_" + id);
+	if (!node)
+		return;
+	node.innerText = "失败";
+}
+
+var kProgressWidth = 550;
+
+function onNativeDownloadProgress(id, progress) {
+	var node = $("download_item_box_progress_" + id);
+	if (!node)
+		return;
+	//console.log("onNativeDownloadProgress:" + progress);
+	node.setAttribute("style", "width:" + (progress * kProgressWidth));
+}
+
+function onNativeDownloadFinish(id) {
+	var node = $("download_item_text_" + id);
+	if (!node)
+		return;
+	node.innerText = "成功";
+	onNativeDownloadProgress(id, 1.0);
+}
+
+function onNativeSeletePathFinish(id, saveName) {
+	g_isSeleteingFilePath = false;
+	hideMaskTip();
+	
+	g_IdToAffirmNeedDownload = 0;
+	
+	if (0 == id)
+		return;
+	saveName = window.decodeURIComponent(saveName);
+	addDownloadItem(id, saveName);
+}
+
+function onNativeNewDownloadItem(id, url) {
+	if (0 != g_isMaskTipShow)
+		return;
+	url = window.atob(url);
+	g_IdToAffirmNeedDownload = id;
+	showMaskTip(id, url);
+}
+
+function openFile(id) {
+	console.log("openFile:" + id);
+	mbQuery(id, "openFile");
+}
+
+//showMaskTip(1, "xxxxxxxxxxxxxsadasdasdssssssssssssssssssssssssssssssssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
+function addDownloadItem(id, name) {
+	var html = 
+		"<div class='download_item_text' id='download_item_text_" + id + "'>下载中</div>" +
+		"<div class='download_item_box'>" +
+			"<div class='download_item_box_progress' id='download_item_box_progress_" + id + "'>" + name + "</div>" +
+			//"<div>" + name + "</div>" +
+		"</div>" +
+		"<a class='download_item_text download_item_text_btn' onclick='openFile(" + id + ")'>打开文件夹</a>";
+	var divNode = document.createElement('div');
+	divNode.innerHTML = html;
+	divNode.setAttribute("class", "download_item");
+	divNode.setAttribute("id", "download_item_" + id);
+	
+	
+	$("download_list").appendChild(divNode);
+}
+//addDownloadItem(1, "sdfsdfsssssss问ssssssssssssssssssdf");
+
+</script>
+</body>
+</html>

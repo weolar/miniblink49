@@ -1,0 +1,671 @@
+﻿<html>
+<style>
+body {
+	background-color:#F6F6F6;
+	overflow-y:hidden;
+}
+
+.main-container {
+	/*display: flex;*/
+	/*flex-flow: row;*/
+}
+
+.settings {
+	width:360px;
+	height: 100%;
+	border-style: solid; border-width: 2px; border-color: #787878;
+	background-color:#ffffff;
+	
+}
+
+.settings-header {
+	height: 130px;
+	border-style: solid; border-width: 0px 0px 1px 0px; border-color: #909090;
+	background-color:#efefef;
+	margin:0;
+	padding:0;
+	-webkit-app-region:drag;
+}
+
+.text-item {
+	margin-left: 20px;
+	margin-bottom: 5px;
+	color: #4a4a4a
+}
+
+.settings-set {
+}
+
+.printer-select {
+	margin-top:19px;
+}
+
+.select-right {
+	margin-right:25px;
+	float:right;
+}
+
+.select-item {
+	margin-top:40px;
+}
+
+.edge-distance {
+	margin-right:5px;
+	float:right;
+	width:26px;
+}
+
+#preview {
+	/*width: 100%;*/
+	height: 100%;
+	/*display:flex;*/
+	flex-direction:column;
+	/*justify-content:center;*/
+	align-items:center;
+	overflow-y:scroll;
+	/*flex-grow:1;*/
+	position:absolute;
+	top: 10px;
+	left:417px;
+}
+
+.preview-img {
+	margin-top:10px;
+	margin-bottom:10px;
+	margin-left:10px;
+	margin-right:10px;
+}
+
+.preview-img-portrait {
+
+	width:600px;
+	height:848px;
+	/*min-height:790px;
+	flex-basis: 700px;*/
+}
+
+.preview-img-landscape {
+	width:800px;
+	height:566px;
+	/*min-height:790px;
+	flex-basis: 700px;*/
+}
+
+#paper-text {
+	font-size:13px;
+	margin-left:5px;
+	color:#000000;
+	font-weight:bold;
+}
+
+
+#mask-tip-bg { 
+	/* ---*/ display: none; 
+	position: absolute; 
+	top: 0%; 
+	left: 0%; 
+	width: 100%; 
+	height: 100%; 
+	background-color: black; 
+	z-index:1001; 
+	opacity:.30; 
+	filter: alpha(opacity=30);
+}
+ 
+#mask-tip-show{ 
+	/* ---*/display: none; 
+	position: absolute; 
+	top: 25%; 
+	left: 32%; 
+	width: 33%; 
+	height: auto; 
+	padding: 8px;
+	border: 8px solid #E8E9F7; 
+	background-color: white; 
+	z-index:1002; 
+	overflow: auto;
+}
+
+#mask-tip-btn {
+	float:right
+}
+
+.drag-region { 
+	display: block; 
+	position: absolute; 
+	top: 0%; 
+	left: 0%; 
+	width: 50%; 
+	height: 50%; 
+	background-color: #112233; 
+	z-index:-1;
+	opacity:.8;
+	
+}
+</style>
+<body>
+
+<div class="mask-tip">
+    <div id="mask-tip-bg"></div>
+    <div id="mask-tip-show">
+        通知<hr/>
+        <div id="mask-tip-text">正在加载中...</div>
+        </p>
+        <div id="mask-tip-btn">
+			<!---->
+			<input type="submit" id="mask-tip-btn-preview" value="生成打印预览" onclick="toNativeGetPreview()"/>
+			<input type="button" class="concel" value="知道了" onclick="hideMaskTip()" />
+		</div>
+    </div>
+</div>
+
+
+<!-- console.log('main-container onmousedown'); onmousedown="window.mbQuery(4 + 1, 'drag', null);" -->
+
+<div class="main-container" > 
+	<div class="settings" >
+		<div class="settings-header">
+			<div class="text-item" style="padding-top:13px">打印</div>
+			<span class="text-item" style="font-size:13px">总计：</span>
+			<span id="paper-text">0张纸</span>
+			
+			<div style="margin-top:19px;margin-left:40px; ">
+				<button style="width:76;height:29px;display:inline" onclick="doPrint();">打印</button>
+				<button style="width:86;height:29px;display:inline" onclick="toNativeGetPreview();" id="create-preview">生成预览</button>
+				<button style="width:76;height:29px;display:inline" onclick="closeMe();">关闭</button>
+			</div>
+		</div>
+		
+		<div class="settings-set">
+			<div class="printer-select select-item">
+				<span class="text-item" style="font-size:13px">目标打印机</span>
+				
+				<select class="select-right" id="printer" onchange="printerChanged(this.id)">
+					<!--
+					<option value="volvo">Volvo</option>
+					-->
+				</select>
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">纸张尺寸</span>
+				<select class="select-right" id="paper-type" onchange="onPaperTypeChanged(this.id)">
+					<option value="A4">A4</option>
+				</select>
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">打印方向</span>
+				
+				<select class="select-right" id="orientation" onchange="onOrientationChanged(this.id)">
+					<option value="portrait">纵向</option>
+					<option value="landscape">横向</option>
+				</select>
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">单、双面打印</span>
+				
+				<select class="select-right" id="duplex" onchange="onDuplexChanged(this.id)">
+					<option value="duplex_simplex">单面打印</option>
+					<option value="duplex_horizontal">横向双面打印</option>
+					<option value="duplex_vertical">纵向双面打印</option>
+				</select>
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">边距(单位：毫米)</span>
+				<div class="select-right">
+					<input class="edge-distance" type="text" value="10" id="edge-distance-bottom" onkeyup="onEdgeDistanceChange(this.id)"onblur="onEdgeDistanceBlur(this.id)"></input>
+					<input class="edge-distance" type="text" value="0" id="edge-distance-right" onkeyup="onEdgeDistanceChange(this.id)" onblur="onEdgeDistanceBlur(this.id)"></input>
+					<input class="edge-distance" type="text" value="10" id="edge-distance-top" onkeyup="onEdgeDistanceChange(this.id)" onblur="onEdgeDistanceBlur(this.id)"></input>
+					<input class="edge-distance" type="text" value="0" id="edge-distance-left" onkeyup="onEdgeDistanceChange(this.id)" onblur="onEdgeDistanceBlur(this.id)"></input>
+					<br/>
+					<div style="font-size:13px;color:#ffaabb;"><p>顺序：左 上 右 下</p></div>
+				</div>
+				</p>
+			
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">份数</span>
+				<input class="select-right" type="text" value="" id="print-copies" ></input>
+				<p></p>
+			</div>
+			
+			<div class="paper-select select-item">
+				<span class="text-item" style="font-size:13px">打印页码</span>
+				<input class="select-right" type="text" value="" id="print-page-count" ></input>
+				<p></p>
+				<div class="select-right" style="font-size:13px;color:#ffaabb">
+					<p>格式例如：1-5/8/11-13，</p>
+					<p>使用英文“-”“/”分割。</p>
+					<p>为空表示全部打印</p>
+				</div>
+			</div>
+		
+			<div style="margin-left:160px;margin-top:150px;">
+				
+				<input type="checkbox" name="category" id="print-head-footer" onclick="onPrintHeadFooterClick('print-head-footer');" /><!-- checked -->
+				<div style="font-size:13px;color:#aaaaaa;display:inline">打印页表头页表尾</div>
+				</br>
+			
+				<input type="checkbox" name="category" id="print-backgroud" onclick="onPrintBackgroudClick('print-backgroud');" checked/>
+				<div style="font-size:13px;color:#aaaaaa;display:inline">打印页背景</div>
+			</div>
+		</div>
+	</div>
+ 
+ 	
+	<div id="preview">
+		<!--<div class="preview-img  portrait" ></div>-->
+		<!--
+		<img src="file:///d:/2.png" class="preview-img preview-img-landscape"/>
+		<img src="file:///d:/2.png" class="preview-img preview-img-landscape"/>
+		-->
+	</div>
+	
+
+</div>
+
+</body>
+
+<script>
+
+function $(id) {
+	return document.getElementById(id);
+}
+
+window.g_curSeletePrintSettings = {
+	devName: "",
+	isLandscape: false,
+	isPrintHeadFooter: false,
+	isPrintBackgroud: true,
+	dirty: false,
+	edgeDistanceLeft:0, // 0
+	edgeDistanceTop:10,
+	edgeDistanceRight:0, // 0
+	edgeDistanceBottom:10,
+	printerIndex:0,
+	copies: 1,
+	paperTypeName: "A4",
+	duplex: 0,
+	paperW: -1,
+	paperH: -1,
+	paperType: -1,
+};
+g_printerCount = 0;
+
+window.g_defaultSetting = {
+	//paperTypeName: "A4",
+	paperType: -1,
+};
+
+const kGetPreviewMsg = 2;
+const kDoPrintMsg = 3;
+const kDoCloseMsg = 4;
+
+var g_printersAndPaperTypes = null;
+
+window.onEdgeDistanceChange = function(id) {
+	var val = $(id).value;
+	val = val.replace(/[^\d]/g,'');
+	if (val.length >= 3)
+		val = val.substr(0, 2);
+		
+	changeEdgeDistanceVal(id, val);		
+	$(id).value = val;
+}
+
+window.onEdgeDistanceBlur = function(id) {
+	if (g_curSeletePrintSettings.dirty)
+		toNativeGetPreview();
+}
+
+window.onPaperTypeChanged = function (id) {
+	var obj = $(id);
+	var index = obj.selectedIndex;
+	var value = obj.options[index].value;
+	
+	var printerIndex = g_curSeletePrintSettings.printerIndex;
+
+	g_curSeletePrintSettings.paperTypeName = value;
+	g_curSeletePrintSettings.paperW = g_printersAndPaperTypes[printerIndex].paperInfo[index].width;
+	g_curSeletePrintSettings.paperH = g_printersAndPaperTypes[printerIndex].paperInfo[index].height;
+	g_curSeletePrintSettings.paperType = g_printersAndPaperTypes[printerIndex].paperInfo[index].paperType;
+
+	console.log("onPaperTypeChanged, printerIndex:" + printerIndex + ", paperType: " + g_curSeletePrintSettings.paperType);
+	toNativeGetPreview();
+}
+
+function changeEdgeDistanceVal(id, val) {
+	if ("edge-distance-bottom" == id && g_curSeletePrintSettings.edgeDistanceBottom != val) {
+		g_curSeletePrintSettings.edgeDistanceBottom = val;
+		g_curSeletePrintSettings.dirty = true;
+	} else if ("edge-distance-right" == id && g_curSeletePrintSettings.edgeDistanceRight != val) {
+		g_curSeletePrintSettings.edgeDistanceRight = val;
+		g_curSeletePrintSettings.dirty = true;
+	} else if ("edge-distance-top" == id && g_curSeletePrintSettings.edgeDistanceTop != val) {
+		g_curSeletePrintSettings.edgeDistanceTop = val;
+		g_curSeletePrintSettings.dirty = true;
+	} else if ("edge-distance-left" == id && g_curSeletePrintSettings.edgeDistanceLeft != val) {
+		g_curSeletePrintSettings.edgeDistanceLeft = val;
+		g_curSeletePrintSettings.dirty = true;
+	}
+}
+
+window.onPrintHeadFooterClick = function(id) {
+	var isChecked = $(id).checked;
+	if (g_curSeletePrintSettings.isPrintHeadFooter == isChecked)
+		return;
+	g_curSeletePrintSettings.isPrintHeadFooter = isChecked;
+	g_curSeletePrintSettings.dirty = true;
+}
+
+window.onPrintBackgroudClick = function(id) {
+	var isChecked = $(id).checked;
+	if (g_curSeletePrintSettings.isPrintBackgroud == isChecked)
+		return;
+	g_curSeletePrintSettings.isPrintBackgroud = isChecked;
+	g_curSeletePrintSettings.dirty = true;
+}
+
+window.onDuplexChanged = function(id) {
+	var obj = $(id);
+	var index = obj.selectedIndex;
+	var value = obj.options[index].value;
+	var duplex = 0;
+	console.log("onDuplexChanged:" + value);
+	if (value == "duplex_simplex")
+		duplex = 0;
+	else if (value == "duplex_horizontal")
+		duplex = 1;
+	else
+		duplex = 2;
+	
+	if (g_curSeletePrintSettings.duplex === duplex)
+		return;
+	g_curSeletePrintSettings.duplex = duplex;
+	g_curSeletePrintSettings.dirty = true;
+	toNativeGetPreview();
+}
+
+window.onOrientationChanged = function(id) {
+	var obj = $(id);
+	var index = obj.selectedIndex;
+	var value = obj.options[index].value;
+	var isLandscape = (value == "landscape") ? true : false;
+	
+	if (g_curSeletePrintSettings.isLandscape === isLandscape)
+		return;
+	g_curSeletePrintSettings.isLandscape = isLandscape;
+	g_curSeletePrintSettings.dirty = true;
+	toNativeGetPreview();
+}
+
+window.printerChanged = function(id) {
+	var obj = $(id);
+	var index = obj.selectedIndex;
+	var value = obj.options[index].value;
+	if (g_curSeletePrintSettings.devName === value)
+		return;
+
+	g_curSeletePrintSettings.devName = value;
+	g_curSeletePrintSettings.printerIndex = index;
+	g_curSeletePrintSettings.dirty = true;
+	
+	rebuildPaperType(0);
+	toNativeGetPreview();
+}
+
+function closeMe() {
+	mbQuery(kDoCloseMsg, "close");
+}
+
+function showMaskTip(text, needShowBtn, needShowPreviewBtn) { 
+	$("mask-tip-text").innerText = text;
+	$("mask-tip-bg").style.display = "block";
+	$("mask-tip-show").style.display = "block";
+	if (needShowBtn)
+		$("mask-tip-btn").style.display = "block";
+	else
+		$("mask-tip-btn").style.display = "none";
+		
+	if (needShowPreviewBtn)
+		$("mask-tip-btn-preview").style.display = "inline";
+	else
+		$("mask-tip-btn-preview").style.display = "none";
+}
+ 
+function hideMaskTip() {
+	$("mask-tip-bg").style.display = "none";
+	$("mask-tip-show").style.display = "none";	
+}
+
+function rebuildPaperType(printerIndex) {
+	var paperTypeSelect = $("paper-type");
+	paperTypeSelect.options.length = 0;
+	
+	if (printerIndex >= g_printersAndPaperTypes.length)
+		return;
+	
+	var paperInfo = g_printersAndPaperTypes[printerIndex].paperInfo;
+	for (var i = 0; i < paperInfo.length; ++i) {
+		if (-1 == g_defaultSetting.paperType)
+			break;
+		if (paperInfo[i].paperType != g_defaultSetting.paperType)
+			continue;
+		var temp = paperInfo[0];
+		paperInfo[0] = paperInfo[i];
+		paperInfo[i] = temp;
+		g_printersAndPaperTypes[printerIndex].paperInfo = paperInfo;
+		break;
+	}
+	g_defaultSetting.paperType = -1;
+	
+	for (var i = 0; i < paperInfo.length; ++i) {
+		var varItem = new Option(paperInfo[i].name, paperInfo[i].name);
+		paperTypeSelect.options.add(varItem);
+	}
+	
+	g_curSeletePrintSettings.paperTypeName = paperInfo[0].name;
+	g_curSeletePrintSettings.paperW = paperInfo[0].width;
+	g_curSeletePrintSettings.paperH = paperInfo[0].height;
+	g_curSeletePrintSettings.paperType = paperInfo[0].paperType;
+	
+	console.log("rebuildPaperType:" + g_curSeletePrintSettings.paperType);
+}
+
+function replaceAll(text) {
+	//console.log("replaceAll:" + text);
+	var s = text.replace(new RegExp('_backslash_', "g"), '\\');
+	return s;
+}
+
+//window.setDefaultParam = function (edgeDistances) {
+//	g_curSeletePrintSettings.edgeDistanceLeft = edgeDistances[0];
+//	g_curSeletePrintSettings.edgeDistanceTop = edgeDistances[1];
+//	g_curSeletePrintSettings.edgeDistanceRight = edgeDistances[2];
+//	g_curSeletePrintSettings.edgeDistanceBottom = edgeDistances[3];
+//	
+//	$("edge-distance-left").value = edgeDistances[0];
+//	$("edge-distance-top").value = edgeDistances[1];
+//	$("edge-distance-right").value = edgeDistances[2];
+//	$("edge-distance-bottom").value = edgeDistances[3];
+//}
+
+window.setDefaultParam = function (settings) {
+	g_curSeletePrintSettings.edgeDistanceLeft = settings.edgeDistanceLeft;
+	g_curSeletePrintSettings.edgeDistanceTop = settings.edgeDistanceTop;
+	g_curSeletePrintSettings.edgeDistanceRight = settings.edgeDistanceRight;
+	g_curSeletePrintSettings.edgeDistanceBottom = settings.edgeDistanceBottom;
+	
+	$("edge-distance-left").value = g_curSeletePrintSettings.edgeDistanceLeft;
+	$("edge-distance-top").value = g_curSeletePrintSettings.edgeDistanceTop;
+	$("edge-distance-right").value = g_curSeletePrintSettings.edgeDistanceRight;
+	$("edge-distance-bottom").value = g_curSeletePrintSettings.edgeDistanceBottom;
+	
+	$("orientation").options[settings.isLandscape ? 1 : 0].selected = true
+	g_curSeletePrintSettings.isLandscape = settings.isLandscape;
+	
+	$("print-copies").value = settings.copies;
+	g_curSeletePrintSettings.copies = settings.copies;
+	
+	$("print-head-footer").checked = settings.isPrintHeadFooter;
+	g_curSeletePrintSettings.isPrintHeadFooter = settings.isPrintHeadFooter;
+	
+	$("print-backgroud").checked = settings.isPrintBackgroud;
+	g_curSeletePrintSettings.isPrintBackgroud = settings.isPrintBackgroud;
+	
+	g_defaultSetting.paperType = settings.paperType;
+	console.log("setDefaultParam, g_defaultSetting.paperType:" + g_defaultSetting.paperType);
+}
+
+function findDefaultPaperType(paperType) {
+}
+
+window.addPrinter = function (printers) {
+	g_printersAndPaperTypes = printers;
+	
+	var printerSelect = $("printer");
+	printerSelect.options.length = 0;
+	
+	for (var i = 0; i < printers.length; ++i) {
+		var printerValue = printers[i].value;
+		var printerText = replaceAll(printers[i].text);
+		console.log("addPrinter:" + printerText);
+		if (0 == i)
+			g_curSeletePrintSettings.devName = printerValue;
+
+		var varItem = new Option(printerText, printerValue);
+		printerSelect.options.add(varItem);
+		
+		g_curSeletePrintSettings.dirty = false;
+	}
+	g_printerCount = printers.length;
+	
+	rebuildPaperType(0);
+}
+
+function removeAllPreview() {
+    var div = $("preview");
+    while(div.hasChildNodes()) {
+        div.removeChild(div.firstChild);
+    }
+}
+
+function onNativeGetPreview(numOfPages, response) {
+	console.log("onNativeGetPreview");
+
+	removeAllPreview();
+	
+	$("paper-text").innerText = numOfPages + "张纸"
+	var previewContainer = $("preview");
+	
+	for (var i = 0; i < numOfPages; ++i) {
+		var imgNode = document.createElement('img');
+
+		imgNode.src = "print://img_src_" + i + "?" + Math.random();
+		//imgNode.src = "d://2.png" + "?" + Math.random(); // TODO
+		var className = "preview-img preview-img-";
+		className += g_curSeletePrintSettings.isLandscape ? "landscape" : "portrait";
+		imgNode.setAttribute("class", className); 
+		
+		previewContainer.appendChild(imgNode);
+	}
+	
+	g_curSeletePrintSettings.dirty = false;
+	
+	hideMaskTip();
+	if (response.length > 0) {
+		showMaskTip(response, true, false);
+		return;
+	}
+	
+	//setTimeout(function() {
+		//hideMaskTip();
+		//$("create-preview").blur(); // fix chrome bug
+	//}, 5000);
+}
+
+function getCurSelectPrinter() {
+	//var obj = $("printer");
+	//var index = obj.selectedIndex;
+	//var text = obj.options[index].value;
+	//return text;
+	return g_curSeletePrintSettings.devName;
+}
+
+function toNativeGetPreview() {
+	if (0 == g_printerCount) {
+		showMaskTip("当前没有打印机", true, false);
+		return;
+	}
+		
+	showMaskTip("正在生成预览中", false, false);
+	//getCurSelectPrinter()
+	var message = g_curSeletePrintSettings.isLandscape ? "1," : "0,";
+	message += g_curSeletePrintSettings.isPrintHeadFooter ? "1," : "0,";
+	message += g_curSeletePrintSettings.isPrintBackgroud ? "1," : "0,";
+	message += g_curSeletePrintSettings.duplex + ",";
+	message += g_curSeletePrintSettings.devName + "###";
+	message += g_curSeletePrintSettings.edgeDistanceLeft + ",";
+	message += g_curSeletePrintSettings.edgeDistanceTop + ",";
+	message += g_curSeletePrintSettings.edgeDistanceRight + ",";
+	message += g_curSeletePrintSettings.edgeDistanceBottom + ",";
+	
+	message += g_curSeletePrintSettings.paperW + ",";
+	message += g_curSeletePrintSettings.paperH + ",";
+	message += g_curSeletePrintSettings.paperType + ",";
+	
+	console.log("toNativeGetPreview:" + g_curSeletePrintSettings.paperW);
+	
+	mbQuery(kGetPreviewMsg, message, onNativeGetPreview);
+}
+
+function doPrint() {
+	var printPageCount = $("print-page-count").value;
+	console.log("printPageCount:" + printPageCount);
+	
+	var printCopies = $("print-copies").value;
+	console.log("printCopies:" + printCopies);
+	
+	if (0 == g_printerCount) {
+		showMaskTip("当前没有打印机", true, false);
+		return;
+	}
+	
+	if (printPageCount == "全部打印" || printPageCount == "")
+		printPageCount = "1-9999";
+		
+	if (printCopies == "")
+		printCopies = "1";
+	
+	if (g_curSeletePrintSettings.dirty) {
+		showMaskTip("改变设置后请点击\"生成预览\"才能打印", true, true);
+		return;
+	}
+	
+	showMaskTip("正在打印中", false, false);
+	
+	var doPrintText = printCopies + "|" + printPageCount + "|" +  getCurSelectPrinter();
+	
+	mbQuery(kDoPrintMsg, doPrintText, function(isOk, msgIfFail) {
+		hideMaskTip();
+		showMaskTip(isOk ? "打印成功" : msgIfFail, true, false);
+		setTimeout(function() {
+			hideMaskTip();
+		}, 4000);
+		
+	});
+}
+
+if ("mbQuery" in window) {
+	setTimeout(function() {
+		//toNativeGetPreview();
+	}, 1000);
+}
+
+</script>
+
+</html>
