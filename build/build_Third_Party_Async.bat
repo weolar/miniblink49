@@ -1,0 +1,100 @@
+call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat" %2
+set VisualStudioVersion=16.0
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project angle
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project harfbuzz 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project libcurl 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project libpng 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project libxml 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project openssl 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project ots 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project skia 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Debug|Win32" /Out ../out/Debug/build.log /Project zlib
+
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project angle
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project harfbuzz 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project libcurl 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project libpng 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project libxml 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project openssl 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project ots 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project skia 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Release|Win32" /Out ../out/Release/build.log /Project zlib
+
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project angle
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project harfbuzz
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project libcurl 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project libpng 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project libxml 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project openssl 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project ots 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project skia 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Release_NoNode|Win32" /Out ../out/Release_vc6/build.log /Project zlib
+
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project angle
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project harfbuzz
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project libcurl 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project libpng 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project libxml 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project openssl 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project ots 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project skia 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Release_vc6|Win32" /Out ../out/Release_vc6/build.log /Project zlib
+
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project angle
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project harfbuzz
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project libcurl 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project libpng 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project libxml 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project openssl 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project ots 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project skia 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Debug|x64" /Out ../out/x64/Debug/build.log /Project zlib
+
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project angle
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project orig_chrome
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project harfbuzz 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project libcurl 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project libjpeg 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project libpng 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project libxml 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project openssl 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project ots 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project skia 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project v8_4_8 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project v8_5_7 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project v8_5_7_1 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project wolfssl 
+start devenv miniblink.sln /build "Release|x64" /Out ../out/x64/Release/build.log /Project zlib
+
+start devenv miniblink.sln /build "Release_NoNode|x64" /Out ../out/x64/Release/build.log /Project libcurl 
+pause

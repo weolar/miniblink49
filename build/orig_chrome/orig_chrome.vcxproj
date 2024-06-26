@@ -1,0 +1,2295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_vc6|Win32">
+      <Configuration>Release_vc6</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9D432EA2-14A4-4DFA-A66E-F51B0B15F716}</ProjectGuid>
+    <RootNamespace>orig_chrome</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../third_party/ffmpeg;../../third_party/ffmpeg/chromium/config/Chromium/win/ia32;../../third_party/mesa/src/include;../../third_party/khronos;../../third_party/WebKit;../../third_party/skia/include/gpu;../../third_party/skia/include/utils;../../third_party/skia/include/private;../../third_party/skia/include/ports;../../third_party/skia/include/pathops;../../third_party/skia/include/images;../../third_party/skia/include/effects;../../third_party/skia/include/device;../../third_party/skia/include/codec;../../third_party/skia/include/;../../third_party/skia/include/core/;../../third_party/skia/include/config/;../../third_party/angle/include;../../orig_chrome/gpu/GLES2;../../orig_chrome/gpu/;../../orig_chrome/;../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;USE_AURA;GR_GL_USE_NEW_SHADER_SOURCE_SIGNATURE;USE_PROPRIETARY_CODECS=1;ENABLE_HEVC_DEMUXING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4503</DisableSpecificWarnings>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <AdditionalIncludeDirectories>../../third_party/ffmpeg;../../third_party/ffmpeg/chromium/config/Chromium/win/ia32;../../third_party/mesa/src/include;../../third_party/khronos;../../third_party/WebKit;../../third_party/skia/include/gpu;../../third_party/skia/include/utils;../../third_party/skia/include/private;../../third_party/skia/include/ports;../../third_party/skia/include/pathops;../../third_party/skia/include/images;../../third_party/skia/include/effects;../../third_party/skia/include/device;../../third_party/skia/include/codec;../../third_party/skia/include/;../../third_party/skia/include/core/;../../third_party/skia/include/config/;../../third_party/angle/include;../../orig_chrome/gpu/GLES2;../../orig_chrome/gpu/;../../orig_chrome/;../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;USING_VC6RT=1;USE_AURA;NDEBUG;GR_GL_USE_NEW_SHADER_SOURCE_SIGNATURE;USE_PROPRIETARY_CODECS=1;ENABLE_HEVC_DEMUXING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/EHsc /Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4503</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../third_party/libxml/src;../../third_party/libxml/src/include;../../third_party/libxml/win32;../../third_party/libxml/win32/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_LIB;USE_AURA;NDEBUG;GR_GL_USE_NEW_SHADER_SOURCE_SIGNATURE=1;USE_PROPRIETARY_CODECS=1;ENABLE_HEVC_DEMUXING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../third_party/ffmpeg;../../third_party/ffmpeg/chromium/config/Chromium/win/ia32;../../third_party/mesa/src/include;../../third_party/khronos;../../third_party/WebKit;../../third_party/skia/include/gpu;../../third_party/skia/include/utils;../../third_party/skia/include/private;../../third_party/skia/include/ports;../../third_party/skia/include/pathops;../../third_party/skia/include/images;../../third_party/skia/include/effects;../../third_party/skia/include/device;../../third_party/skia/include/codec;../../third_party/skia/include/;../../third_party/skia/include/core/;../../third_party/skia/include/config/;../../third_party/angle/include;../../orig_chrome/gpu/GLES2;../../orig_chrome/gpu/;../../orig_chrome/;../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <DisableSpecificWarnings>4530</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;USE_AURA;GR_GL_USE_NEW_SHADER_SOURCE_SIGNATURE=1;USE_PROPRIETARY_CODECS=1;ENABLE_HEVC_DEMUXING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../third_party/ffmpeg;../../third_party/ffmpeg/chromium/config/Chromium/win/ia32;../../third_party/mesa/src/include;../../third_party/khronos;../../third_party/WebKit;../../third_party/skia/include/gpu;../../third_party/skia/include/utils;../../third_party/skia/include/private;../../third_party/skia/include/ports;../../third_party/skia/include/pathops;../../third_party/skia/include/images;../../third_party/skia/include/effects;../../third_party/skia/include/device;../../third_party/skia/include/codec;../../third_party/skia/include/;../../third_party/skia/include/core/;../../third_party/skia/include/config/;../../third_party/angle/include;../../orig_chrome/gpu/GLES2;../../orig_chrome/gpu/;../../orig_chrome/;../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MinSpace</Optimization>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../third_party/mesa/src/include;../../third_party/khronos;../../third_party/WebKit;../../third_party/skia/include/gpu;../../third_party/skia/include/utils;../../third_party/skia/include/private;../../third_party/skia/include/ports;../../third_party/skia/include/pathops;../../third_party/skia/include/images;../../third_party/skia/include/effects;../../third_party/skia/include/device;../../third_party/skia/include/codec;../../third_party/skia/include/;../../third_party/skia/include/core/;../../third_party/skia/include/config/;../../third_party/angle/include;../../orig_chrome/gpu/GLES2;../../orig_chrome/gpu/;../../orig_chrome/;../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;USE_AURA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\base\files\file_path.cc" />
+    <ClCompile Include="..\..\base\files\file_path_constants.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\at_exit.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\barrier_closure.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\base_paths.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\base_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\big_endian.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\bind_helpers.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\build_time.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\callback_helpers.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\callback_internal.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\check_example.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\cpu.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\alias.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\asan_invalid_access.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\debugger.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\debugger_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\dump_without_crashing.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\gdi_debug_util_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\profiler.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\stack_trace.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\debug\task_annotator.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\deferred_sequenced_task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\files\file_util_win_small.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\guid.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\guid_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\hash.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\lazy_instance.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\location_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\logging_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\logging_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\aligned_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\discardable_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\discardable_memory_allocator.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\discardable_shared_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\memory_pressure_listener.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\memory_pressure_monitor.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\memory_pressure_monitor_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\ref_counted.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\ref_counted_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\shared_memory_handle_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\shared_memory_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\singleton.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\memory\weak_ptr.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\incoming_task_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\message_loop.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\message_loop_task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\message_pump.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\message_pump_default.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\message_loop\message_pump_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\native_library_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\path_service.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\pending_task.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\pickle.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\process\process_handle.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\process\process_handle_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\process\process_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\profiler\alternate_timer.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\profiler\test_support_library.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\profiler\tracked_time.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\rand_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\rand_util_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\run_loop.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\scoped_native_library.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\sequenced_task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\sequence_checker_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\latin1_string_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\nullable_string16.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\pattern_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\safe_sprintf.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\stringprintf.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\string_number_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\string_piece.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\string_split.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\string_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\string_util_constants.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\sys_string_conversions_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\utf_offset_string_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\utf_string_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\strings\utf_string_conversion_utils.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\supports_user_data.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\cancellation_flag.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\condition_variable_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\lock.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\lock_impl_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\waitable_event_watcher_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\synchronization\waitable_event_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\sync_socket_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\sys_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\sys_info_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\third_party\nspr\prtime.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\non_thread_safe_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\platform_thread_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\post_task_and_reply_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\sequenced_task_runner_handle.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\sequenced_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\simple_thread.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_checker_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_collision_warner.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_id_name_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_local_storage.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_local_storage_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_local_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\thread_restrictions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\watchdog.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\threading\worker_pool_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\thread_task_runner_handle.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\timer\elapsed_timer.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\timer\hi_res_timer_manager_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\timer\mock_timer.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\timer\timer_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\time\clock_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\time\default_clock.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\time\default_tick_clock.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\time\tick_clock.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\trace_event\trace_empty.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\tracked_objects.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\tracking_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\value_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\enum_variant.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\iat_patch_function.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\iunknown_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\message_window.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\object_watcher.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\registry.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\resource_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\scoped_bstr.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\scoped_handle.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\scoped_process_information.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\windows_version.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\win_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\base\win\wrapped_window_proc.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_cc.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_curve.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_events.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_host.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_id_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_player.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_registrar.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\animation_timeline.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\element_animations.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\keyframed_animation_curve.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\layer_animation_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller_linear_fade.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller_thinning.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\scroll_offset_animation_curve.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\timing_function.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\transform_operation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\animation\transform_operations.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\delayed_unique_notifier.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\invalidation_region.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\list_container_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\math_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\region_base_cc.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\rolling_time_delta_history.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\rtree.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\simple_enclosed_region.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\switches_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\tiling_data.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\base\unique_notifier.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\scrollbar_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_animation_curve_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_animation_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_compositor_animation_player_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_compositor_animation_timeline_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_compositor_support_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_content_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_display_item_list_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_external_bitmap_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_external_texture_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_filter_animation_curve_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_filter_operations_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_float_animation_curve_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_image_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_layer_impl_fixed_bounds.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_nine_patch_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_scrollbar_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_scroll_offset_animation_curve_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_to_cc_animation_delegate_adapter.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_transform_animation_curve_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\blink\web_transform_operations_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\benchmark_instrumentation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\debug_colors.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\debug_rect_history.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\frame_rate_counter.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\frame_timing_request.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\frame_timing_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\frame_viewer_instrumentation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\invalidation_benchmark.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\lap_timer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\layer_tree_debug_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\micro_benchmark.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\micro_benchmark_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\micro_benchmark_controller_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\micro_benchmark_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\paint_time_counter.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\picture_debug_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\picture_record_benchmark.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\rasterize_and_record_benchmark.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\rasterize_and_record_benchmark_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\rendering_stats.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\rendering_stats_instrumentation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\traced_display_item_list.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\traced_value.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\unittest_only_benchmark.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\debug\unittest_only_benchmark_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\input_handler.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\layer_selection_bound.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\page_scale_animation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\scroll_elasticity_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\scroll_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\input\top_controls_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\delegated_frame_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\delegated_frame_resource_collection.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\delegated_renderer_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\delegated_renderer_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\draw_properties.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\heads_up_display_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\heads_up_display_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\io_surface_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\io_surface_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\layer_position_constraint.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\layer_utils.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\nine_patch_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\nine_patch_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\painted_scrollbar_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\painted_scrollbar_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\picture_image_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\picture_image_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\picture_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\picture_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\render_surface_draw_properties.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\render_surface_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\scrollbar_layer_impl_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\solid_color_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\solid_color_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\solid_color_scrollbar_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\solid_color_scrollbar_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\surface_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\surface_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\texture_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\texture_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\ui_resource_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\ui_resource_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\video_frame_provider_client_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\video_layer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\video_layer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\layers\viewport.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\begin_frame_args.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\bsp_tree.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\bsp_walk_action.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\compositor_frame.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\compositor_frame_ack.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\compositor_frame_metadata.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\context_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\copy_output_request.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\copy_output_result.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\delegated_frame_data.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\delegating_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\direct_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\dynamic_geometry_binding.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\filter_operation.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\filter_operations.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\geometry_binding.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\gl_frame_data.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\gl_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\gl_renderer_draw_cache.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\latency_info_swap_promise.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\layer_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\managed_memory_policy.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\output_surface.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_candidate.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_processor.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_strategy_all_or_nothing.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_strategy_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_strategy_sandwich.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_strategy_single_on_top.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\overlay_strategy_underlay.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\program_binding.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\renderer_capabilities.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\renderer_settings.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\render_surface_filters.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\shader.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\software_frame_data.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\software_output_device.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\software_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\static_geometry_binding.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\texture_mailbox_deleter.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\output\viewport_selection_bound.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\clip_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\clip_path_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\compositing_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\discardable_image_map.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_item_list.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_item_list_bounds_calculator.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_item_list_settings.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_list_raster_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\display_list_recording_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\drawing_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\filter_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\float_clip_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\largest_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\picture.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\raster_source_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\playback\transform_display_item.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\content_draw_quad_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\debug_border_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\draw_polygon.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\io_surface_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\largest_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\picture_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\render_pass.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\render_pass_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\render_pass_id.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\shared_quad_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\solid_color_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\stream_video_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\surface_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\texture_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\tile_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\quads\yuv_video_draw_quad.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\bitmap_tile_task_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\gpu_rasterizer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\gpu_tile_task_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\one_copy_tile_task_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\raster_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\scoped_gpu_raster.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\task_graph_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\texture_compressor.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\texture_compressor_etc1.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\texture_compressor_etc1_sse.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\tile_task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\tile_task_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\raster\zero_copy_tile_task_worker_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\memory_history.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\resource_format.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\resource_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\resource_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\scoped_resource.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\scoped_ui_resource.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\shared_bitmap.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\single_release_callback.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\single_release_callback_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\texture_mailbox.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\transferable_resource.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\ui_resource_bitmap.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\ui_resource_request.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\resources\video_resource_updater.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\begin_frame_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\begin_frame_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\compositor_timing_history.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\delay_based_time_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\scheduler.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\scheduler_settings.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\scheduler\scheduler_state_machine.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\display.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\display_scheduler.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\onscreen_display_client.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_aggregator.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_display_output_surface.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_hittest.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_id_allocator.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\surfaces\surface_resource_holder.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\eviction_tile_priority_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\image_decode_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\picture_layer_tiling.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\picture_layer_tiling_set.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\prioritized_tile.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue_all.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue_required.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tile.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tile_draw_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tile_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tile_priority.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tiling_set_eviction_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tiling_set_raster_queue_all.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\tiles\tiling_set_raster_queue_required.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\blocking_task_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\damage_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\draw_property_utils.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\latency_info_swap_promise_monitor.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\layer_tree_host.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\layer_tree_host_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\layer_tree_host_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\layer_tree_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\layer_tree_settings.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\occlusion.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\occlusion_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\property_tree.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\property_tree_builder.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\proxy.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\proxy_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\single_thread_proxy.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\swap_promise_monitor.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\task_runner_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\threaded_channel.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\thread_proxy.cc" />
+    <ClCompile Include="..\..\orig_chrome\cc\trees\tree_synchronizer.cc" />
+    <ClCompile Include="..\..\orig_chrome\content\compositor\EmptyOutputSurface.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\compositor\GpuOutputSurface.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\compositor\SoftwareOutputDevice.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\compositor\SoftwareOutputSurface.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\gpu\ChildGpuMemoryBufferManager.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\gpu\CommandBufferMetrics.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\gpu\ContextProviderCommandBuffer.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\gpu\GrcontextForWebgraphicscontext3d.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\LayerTreeWrap.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\media\audio_device_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\content\media\audio_renderer_mixer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\content\media\renderer_webaudiodevice_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\content\OrigChromeMgr.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\RasterWorkerPool.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\RenderWidgetCompositor.cpp" />
+    <ClCompile Include="..\..\orig_chrome\content\WebSharedBitmapManager.cpp" />
+    <ClCompile Include="..\..\orig_chrome\gpu\blink\webgraphicscontext3d_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\blink\webgraphicscontext3d_in_process_command_buffer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\buffer_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\client_context_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\cmd_buffer_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\fenced_allocator.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_cmd_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_c_lib.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_implementation.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface_stub.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_lib.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_trace_implementation.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gl_in_process_context.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_client_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_memory_buffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\mapped_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\program_info_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\query_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\ring_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\share_group.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\transfer_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\client\vertex_array_object_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\capabilities.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\cmd_buffer_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\debug_marker_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_format.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_utils.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\id_allocator.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\mailbox.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\mailbox_holder.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\common\value_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_delegate.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_idle.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_share_group.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_stub.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_sync.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\buffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\City.cpp" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\cmd_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\command_buffer_service.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\common_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\context_group.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\context_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\error_state.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\feature_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\framebuffer_completeness_cache.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\framebuffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_clear_framebuffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_copy_texture_chromium.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_validation.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gl_context_virtual.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gl_state_restorer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_control_service.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_scheduler.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_service_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_state_tracer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_tracer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\id_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\image_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\image_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\in_process_command_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\logger.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager_sync.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\path_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\program_cache.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\program_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\query_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\renderbuffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\shader_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\shader_translator.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\shader_translator_cache.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\sync_point_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\texture_definition.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\texture_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\transfer_buffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\valuebuffer_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\vertex_array_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\command_buffer\service\vertex_attrib_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\config\gpu_config_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\gpu\skia_bindings\gl_bindings_skia_cmd_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_device_name.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_device_thread.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_input_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_input_device.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_input_ipc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_manager_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_controller.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_device.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_dispatcher.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_dispatcher_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_ipc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_proxy.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_resampler.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_output_stream_sink.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_parameters.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\audio_power_monitor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\clockless_audio_sink.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\fake_audio_input_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\fake_audio_log_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\fake_audio_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\fake_audio_output_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\fake_audio_worker.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\null_audio_sink.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\point_audio.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\sample_rates.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\scoped_task_runner_observer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\simple_sources.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\sounds\audio_stream_handler.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\sounds\sounds_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\sounds\wav_audio_handler.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\virtual_audio_input_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\virtual_audio_output_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\audio_device_listener_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\audio_low_latency_output_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\audio_manager_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\avrt_wrapper_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\core_audio_util_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\device_enumeration_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\wavein_input_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\audio\win\waveout_output_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_block_fifo.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_buffer_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_buffer_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_bus.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_decoder_config.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_discard_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_fifo.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_hardware_config.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_hash.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_pull_fifo.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_renderer_mixer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_renderer_mixer_input.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_shifter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_splicer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_timestamp_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\audio_video_metadata_extractor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\bitstream_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\bit_reader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\bit_reader_core.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\byte_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_callback_promise.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_context.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_initialized_promise.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_key_information.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_promise.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\cdm_promise_adapter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\channel_layout.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\channel_mixer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\channel_mixing_matrix.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\container_names.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\data_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\data_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\decoder_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\decoder_buffer_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\decryptor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\decrypt_config.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\demuxer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\demuxer_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\demuxer_stream_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\djb2.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\key_systems.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\key_systems_support_uma.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\key_system_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_client.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_file_checker.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_keys.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_log.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_permission.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_resources.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\media_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\mime_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\moving_average.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\multi_channel_resampler.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\null_video_sink.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\pipeline.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\player_tracker.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\ranges.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\renderer_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\renderer_media.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\sample_format.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\seekable_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\serial_runner.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_c.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_sse2.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_ssse3.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\convert_yuv_to_rgb_c.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\convert_yuv_to_rgb_x86.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\filter_yuv_c.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\simd\filter_yuv_sse2.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\sinc_resampler.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\stream_parser_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\text_cue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\text_ranges.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\text_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\text_track_config.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\time_delta_interpolator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\vector_math.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_capturer_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_capture_types.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_decoder_config.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_frame.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_frame_metadata.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_frame_pool.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_types.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\video_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\wall_clock_time_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\base\yuv_convert.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\active_loader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\buffered_data_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\buffered_data_source_host_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\buffered_resource_loader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\cache_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\cdm_result_promise_helper.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\cdm_session_adapter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\encrypted_media_player_support.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\key_system_config_selector.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\multibuffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\new_session_cdm_result_promise.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\texttrack_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\video_frame_compositor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webaudiosourceprovider_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webencryptedmediaclient_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webinbandtexttrack_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webmediaplayer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webmediaplayer_params.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webmediaplayer_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\webmediasource_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\blink\websourcebuffer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\cdm\key_system_names.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\ffmpeg\ffmpeg_common.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\audio_clock.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\audio_file_reader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\audio_renderer_algorithm.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\blocking_url_protocol.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\chunk_demuxer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decoder_selector.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decoder_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decoder_stream_traits.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decrypting_audio_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decrypting_demuxer_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\decrypting_video_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\default_media_permission.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_aac_bitstream_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_audio_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_demuxer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_glue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_h264_to_annex_b_bitstream_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_h265_to_annex_b_bitstream_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ffmpeg_video_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\file_data_source.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\frame_processor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\gpu_video_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\h264_bit_reader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\h264_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\h264_to_annex_b_bitstream_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\h265_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\in_memory_url_protocol.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\ivf_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\jpeg_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\source_buffer_platform.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\source_buffer_range.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\source_buffer_stream.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\stream_parser_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\video_cadence_estimator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\video_renderer_algorithm.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\vp8_bool_decoder.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\vp8_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\vp9_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\vp9_raw_bits_reader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\filters\wsola_internals.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\common\offset_byte_queue.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\es_adapter_video.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\es_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\es_parser_adts.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\es_parser_h264.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\es_parser_mpeg1audio.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\mp2t_stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\timestamp_unroller.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\ts_packet.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pat.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pes.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pmt.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp2t\ts_section_psi.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\aac.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\avc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\bitstream_converter.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\box_definitions.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\box_reader.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\cenc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\es_descriptor.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\hevc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\mp4_stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\sample_to_group_iterator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mp4\track_run_iterator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mpeg\adts_constants.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mpeg\adts_stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mpeg\mpeg1_audio_stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\mpeg\mpeg_audio_stream_parser_base.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_audio_client.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_cluster_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_constants.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_content_encodings.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_content_encodings_client.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_crypto_helpers.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_info_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_stream_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_tracks_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_video_client.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\formats\webm\webm_webvtt_parser.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\renderers\audio_renderer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\renderers\default_renderer_factory.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\renderers\renderer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\renderers\skcanvas_video_renderer.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\renderers\video_renderer_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\fake_video_encode_accelerator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\h264_poc.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\jpeg_decode_accelerator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\picture_video.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\video_decode_accelerator.cc" />
+    <ClCompile Include="..\..\orig_chrome\media\video\video_encode_accelerator.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\events\Latency_info_empty.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\animation\tween.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\buffer_format_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\display_gfx.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\box_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\cubic_bezier.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\dip_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\insets.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\insets_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\matrix3_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\point.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\point3_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\point_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\point_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\quad_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\rect_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\rect_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\rect_gfx.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\scroll_offset.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\size.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\size_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\size_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\vector2d.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\vector2d_conversions.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\vector2d_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\geometry\vector3d_f.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\gpu_memory_buffer.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\skia_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\transform.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gfx\transform_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\angle_platform_impl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\egl_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_bindings.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_gl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_context.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_context_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_context_stub.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_context_stub_with_extensions.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_context_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_egl_api_implementation.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_enums.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_fence.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_fence_apple.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_fence_arb.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_fence_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_fence_nv.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_gl_api_implementation.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_image_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_image_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_image_ref_counted_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_image_shared_memory.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_image_stub.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_implementation.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_implementation_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_share_group.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_state_restorer.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface_egl.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface_osmesa.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface_overlay.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface_stub.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_surface_win.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_switches.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gl_version_info.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gpu_switching_manager.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\gpu_timing.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\scoped_api.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\scoped_binders.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\scoped_make_current.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\sync_control_vsync_provider.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\trace_util.cc" />
+    <ClCompile Include="..\..\orig_chrome\ui\gl\vsync_provider_win.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\base\files\file.h" />
+    <ClInclude Include="..\..\base\files\file_path.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomicops.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomicops_internals_atomicword_compat.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomicops_internals_portable.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomicops_internals_x86_msvc.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomic_ref_count.h" />
+    <ClInclude Include="..\..\orig_chrome\base\atomic_sequence_num.h" />
+    <ClInclude Include="..\..\orig_chrome\base\at_exit.h" />
+    <ClInclude Include="..\..\orig_chrome\base\auto_reset.h" />
+    <ClInclude Include="..\..\orig_chrome\base\barrier_closure.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base64.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base64url.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base_export.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base_paths.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base_paths_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\base_switches.h" />
+    <ClInclude Include="..\..\orig_chrome\base\basictypes.h" />
+    <ClInclude Include="..\..\orig_chrome\base\big_endian.h" />
+    <ClInclude Include="..\..\orig_chrome\base\bind.h" />
+    <ClInclude Include="..\..\orig_chrome\base\bind_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\base\bind_internal.h" />
+    <ClInclude Include="..\..\orig_chrome\base\bind_internal_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\bits.h" />
+    <ClInclude Include="..\..\orig_chrome\base\build_time.h" />
+    <ClInclude Include="..\..\orig_chrome\base\callback.h" />
+    <ClInclude Include="..\..\orig_chrome\base\callback_forward.h" />
+    <ClInclude Include="..\..\orig_chrome\base\callback_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\base\callback_internal.h" />
+    <ClInclude Include="..\..\orig_chrome\base\callback_list.h" />
+    <ClInclude Include="..\..\orig_chrome\base\cancelable_callback.h" />
+    <ClInclude Include="..\..\orig_chrome\base\command_line.h" />
+    <ClInclude Include="..\..\orig_chrome\base\compiler_specific.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\adapters.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\hash_tables.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\linked_list.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\mru_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\scoped_ptr_hash_map.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\scoped_ptr_map.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\small_map.h" />
+    <ClInclude Include="..\..\orig_chrome\base\containers\stack_container.h" />
+    <ClInclude Include="..\..\orig_chrome\base\cpu.h" />
+    <ClInclude Include="..\..\orig_chrome\base\critical_closure.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\alias.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\asan_invalid_access.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\crash_logging.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\debugger.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\dump_without_crashing.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\gdi_debug_util_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\leak_annotations.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\leak_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\proc_maps_linux.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\profiler.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\stack_trace.h" />
+    <ClInclude Include="..\..\orig_chrome\base\debug\task_annotator.h" />
+    <ClInclude Include="..\..\orig_chrome\base\deferred_sequenced_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\environment.h" />
+    <ClInclude Include="..\..\orig_chrome\base\event_types.h" />
+    <ClInclude Include="..\..\orig_chrome\base\feature_list.h" />
+    <ClInclude Include="..\..\orig_chrome\base\files\file_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\file_path.h" />
+    <ClInclude Include="..\..\orig_chrome\base\file_version_info.h" />
+    <ClInclude Include="..\..\orig_chrome\base\file_version_info_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\format_macros.h" />
+    <ClInclude Include="..\..\orig_chrome\base\gtest_prod_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\guid.h" />
+    <ClInclude Include="..\..\orig_chrome\base\hash.h" />
+    <ClInclude Include="..\..\orig_chrome\base\id_map.h" />
+    <ClInclude Include="..\..\orig_chrome\base\lazy_instance.h" />
+    <ClInclude Include="..\..\orig_chrome\base\location.h" />
+    <ClInclude Include="..\..\orig_chrome\base\logging.h" />
+    <ClInclude Include="..\..\orig_chrome\base\logging_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\macros.h" />
+    <ClInclude Include="..\..\orig_chrome\base\md5.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\aligned_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\discardable_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\discardable_memory_allocator.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\discardable_shared_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\linked_ptr.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\manual_constructor.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\memory_pressure_listener.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\memory_pressure_monitor.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\memory_pressure_monitor_chromeos.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\memory_pressure_monitor_mac.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\memory_pressure_monitor_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\raw_scoped_refptr_mismatch_checker.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\ref_counted.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\ref_counted_delete_on_message_loop.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\ref_counted_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\scoped_policy.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\scoped_ptr.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\scoped_vector.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\shared_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\shared_memory_handle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\singleton.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\singleton_objc.h" />
+    <ClInclude Include="..\..\orig_chrome\base\memory\weak_ptr.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\incoming_task_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_loop.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_loop_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_default.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_dispatcher.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_glib.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_io_ios.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_libevent.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\message_pump_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\message_loop\timer_slack.h" />
+    <ClInclude Include="..\..\orig_chrome\base\move.h" />
+    <ClInclude Include="..\..\orig_chrome\base\native_library.h" />
+    <ClInclude Include="..\..\orig_chrome\base\numerics\safe_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\numerics\safe_conversions_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\numerics\safe_math.h" />
+    <ClInclude Include="..\..\orig_chrome\base\numerics\safe_math_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\observer_list.h" />
+    <ClInclude Include="..\..\orig_chrome\base\observer_list_threadsafe.h" />
+    <ClInclude Include="..\..\orig_chrome\base\path_service.h" />
+    <ClInclude Include="..\..\orig_chrome\base\pending_task.h" />
+    <ClInclude Include="..\..\orig_chrome\base\pickle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\port.h" />
+    <ClInclude Include="..\..\orig_chrome\base\process\process.h" />
+    <ClInclude Include="..\..\orig_chrome\base\process\process_handle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\alternate_timer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\native_stack_sampler.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\scoped_profile.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\scoped_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\stack_sampling_profiler.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\tracked_time.h" />
+    <ClInclude Include="..\..\orig_chrome\base\profiler\win32_stack_frame_unwinder.h" />
+    <ClInclude Include="..\..\orig_chrome\base\rand_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\run_loop.h" />
+    <ClInclude Include="..\..\orig_chrome\base\scoped_clear_errno.h" />
+    <ClInclude Include="..\..\orig_chrome\base\scoped_generic.h" />
+    <ClInclude Include="..\..\orig_chrome\base\scoped_native_library.h" />
+    <ClInclude Include="..\..\orig_chrome\base\scoped_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sequenced_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sequenced_task_runner_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sequence_checker.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sequence_checker_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sha1.h" />
+    <ClInclude Include="..\..\orig_chrome\base\single_thread_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\stl_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\latin1_string_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\nullable_string16.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\pattern.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\safe_sprintf.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string16.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\stringize_macros.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\stringprintf.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_number_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_piece.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_split.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_tokenizer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\string_util_win.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\sys_string_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\utf_offset_string_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\utf_string_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\strings\utf_string_conversion_utils.h" />
+    <ClInclude Include="..\..\orig_chrome\base\supports_user_data.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\cancellation_flag.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\condition_variable.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\lock.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\lock_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\spin_wait.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\waitable_event.h" />
+    <ClInclude Include="..\..\orig_chrome\base\synchronization\waitable_event_watcher.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sync_socket.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sys_byteorder.h" />
+    <ClInclude Include="..\..\orig_chrome\base\sys_info.h" />
+    <ClInclude Include="..\..\orig_chrome\base\task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\task_runner_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\template_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\third_party\nspr\prtime.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\non_thread_safe.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\non_thread_safe_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\platform_thread.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\post_task_and_reply_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\sequenced_task_runner_handle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\sequenced_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\simple_thread.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_checker.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_checker_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_collision_warner.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_id_name_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_local.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_local_storage.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\thread_restrictions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\watchdog.h" />
+    <ClInclude Include="..\..\orig_chrome\base\threading\worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\base\thread_task_runner_handle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\timer\elapsed_timer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\timer\hi_res_timer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\base\timer\mock_timer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\timer\timer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\time\clock.h" />
+    <ClInclude Include="..\..\orig_chrome\base\time\default_clock.h" />
+    <ClInclude Include="..\..\orig_chrome\base\time\default_tick_clock.h" />
+    <ClInclude Include="..\..\orig_chrome\base\time\tick_clock.h" />
+    <ClInclude Include="..\..\orig_chrome\base\time\time.h" />
+    <ClInclude Include="..\..\orig_chrome\base\tracked_objects.h" />
+    <ClInclude Include="..\..\orig_chrome\base\tracking_info.h" />
+    <ClInclude Include="..\..\orig_chrome\base\tuple.h" />
+    <ClInclude Include="..\..\orig_chrome\base\values.h" />
+    <ClInclude Include="..\..\orig_chrome\base\value_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\base\version.h" />
+    <ClInclude Include="..\..\orig_chrome\base\vlog.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\enum_variant.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\event_trace_consumer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\event_trace_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\event_trace_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\i18n.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\iat_patch_function.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\iunknown_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\message_window.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\metro.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\object_watcher.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\pe_image.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\process_startup_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\registry.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\resource_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_bstr.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_comptr.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_com_initializer.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_co_mem.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_gdi_object.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_handle.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_hdc.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_hglobal.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_process_information.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_propvariant.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_select_object.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\scoped_variant.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\shortcut.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\startup_information.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\windows_version.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\win_util.h" />
+    <ClInclude Include="..\..\orig_chrome\base\win\wrapped_window_proc.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_curve.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_delegate.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_events.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_host.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_id_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_player.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_registrar.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\animation_timeline.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\element_animations.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\keyframed_animation_curve.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\layer_animation_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\layer_animation_event_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\layer_animation_value_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\layer_animation_value_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller_linear_fade.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\scrollbar_animation_controller_thinning.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\scroll_offset_animation_curve.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\timing_function.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\transform_operation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\animation\transform_operations.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\cc_export.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\completion_event.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\delayed_unique_notifier.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\histograms.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\invalidation_region.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\list_container.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\list_container_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\math_util.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\random_access_list_container.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\region.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\resource_id.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\rolling_time_delta_history.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\rtree.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\scoped_ptr_algorithm.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\scoped_ptr_deque.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\scoped_ptr_vector.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\sidecar_list_container.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\simple_enclosed_region.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\switches.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\synced_property.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\tiling_data.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\time_util.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\base\unique_notifier.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\context_provider_web_context.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\scrollbar_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_animation_curve_common.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_animation_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_blend_mode.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_compositor_animation_player_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_compositor_animation_timeline_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_compositor_support_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_content_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_display_item_list_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_external_bitmap_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_external_texture_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_filter_animation_curve_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_filter_operations_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_float_animation_curve_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_image_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_layer_impl_fixed_bounds.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_nine_patch_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_scrollbar_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_scroll_offset_animation_curve_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_to_cc_animation_delegate_adapter.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_transform_animation_curve_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\blink\web_transform_operations_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\benchmark_instrumentation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\debug_colors.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\debug_rect_history.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\devtools_instrumentation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\frame_rate_counter.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\frame_timing_request.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\frame_timing_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\frame_viewer_instrumentation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\invalidation_benchmark.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\lap_timer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\layer_tree_debug_state.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\micro_benchmark.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\micro_benchmark_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\micro_benchmark_controller_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\micro_benchmark_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\paint_time_counter.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\picture_debug_util.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\picture_record_benchmark.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\rasterize_and_record_benchmark.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\rasterize_and_record_benchmark_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\rendering_stats.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\rendering_stats_instrumentation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\ring_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\traced_display_item_list.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\traced_picture.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\traced_value.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\unittest_only_benchmark.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\debug\unittest_only_benchmark_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\input_handler.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\layer_scroll_offset_delegate.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\layer_selection_bound.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\page_scale_animation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\scrollbar.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\scroll_elasticity_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\scroll_state.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\selection.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\selection_bound_type.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\top_controls_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\top_controls_manager_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\input\top_controls_state.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\append_quads_data.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\content_layer_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\delegated_frame_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\delegated_frame_resource_collection.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\delegated_renderer_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\delegated_renderer_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\draw_properties.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\heads_up_display_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\heads_up_display_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\io_surface_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\io_surface_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_iterator.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_lists.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_position_constraint.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\layer_utils.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\nine_patch_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\nine_patch_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\painted_scrollbar_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\painted_scrollbar_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\paint_properties.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\picture_image_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\picture_image_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\picture_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\picture_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\render_pass_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\render_surface.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\render_surface_draw_properties.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\render_surface_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\scrollbar_layer_impl_base.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\scrollbar_layer_interface.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\scrollbar_theme_painter.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\scroll_blocks_on.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\solid_color_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\solid_color_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\solid_color_scrollbar_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\solid_color_scrollbar_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\surface_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\surface_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\texture_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\texture_layer_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\texture_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\ui_resource_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\ui_resource_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\video_frame_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\video_frame_provider_client_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\video_layer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\video_layer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\layers\viewport.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\begin_frame_args.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\bsp_compare_result.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\bsp_tree.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\bsp_walk_action.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\compositor_frame.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\compositor_frame_ack.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\compositor_frame_metadata.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\context_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\copy_output_request.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\copy_output_result.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\delegated_frame_data.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\delegating_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\direct_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\dynamic_geometry_binding.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\filter_operation.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\filter_operations.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\geometry_binding.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\gl_frame_data.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\gl_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\gl_renderer_draw_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\latency_info_swap_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\layer_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\managed_memory_policy.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\output_surface.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\output_surface_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_candidate.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_candidate_validator.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_processor.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_strategy_all_or_nothing.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_strategy_common.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_strategy_sandwich.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_strategy_single_on_top.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\overlay_strategy_underlay.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\program_binding.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\renderer_capabilities.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\renderer_settings.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\render_surface_filters.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\shader.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\software_frame_data.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\software_output_device.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\software_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\static_geometry_binding.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\swap_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\texture_mailbox_deleter.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\output\viewport_selection_bound.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\clip_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\clip_path_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\compositing_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\discardable_image_map.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_item_list.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_item_list_bounds_calculator.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_item_list_settings.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_item_proto_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_list_raster_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\display_list_recording_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\drawing_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\draw_image.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\filter_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\float_clip_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\largest_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\picture.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\picture_pile.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\picture_pile_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\pixel_ref_map.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\position_image.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\raster_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\raster_source_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\recording_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\playback\transform_display_item.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\proto\cc_proto_export.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\proto\gfx_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\proto\skia_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\checkerboard_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\content_draw_quad_base.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\debug_border_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\draw_polygon.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\io_surface_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\largest_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\picture_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\render_pass.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\render_pass_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\render_pass_id.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\shared_quad_state.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\solid_color_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\stream_video_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\surface_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\texture_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\tile_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\quads\yuv_video_draw_quad.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\bitmap_tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\gpu_rasterizer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\gpu_tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\one_copy_tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\pixel_buffer_tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\raster_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\scoped_gpu_raster.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\task_graph_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\texture_compressor.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\texture_compressor_etc1.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\texture_compressor_etc1_sse.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\tile_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\raster\zero_copy_tile_task_worker_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\memory_history.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\platform_color.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\release_callback.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\release_callback_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\resource.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\resource_format.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\resource_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\resource_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\resource_util.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\returned_resource.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\return_callback.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\scoped_resource.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\scoped_ui_resource.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\shared_bitmap.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\shared_bitmap_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\single_release_callback.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\single_release_callback_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\texture_mailbox.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\transferable_resource.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\ui_resource_bitmap.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\ui_resource_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\ui_resource_request.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\resources\video_resource_updater.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\begin_frame_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\begin_frame_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\commit_earlyout_reason.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\compositor_timing_history.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\delay_based_time_source.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\draw_result.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\scheduler.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\scheduler_settings.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\scheduler_state_machine.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\scheduler\video_frame_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\display.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\display_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\display_scheduler.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\onscreen_display_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surfaces_export.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_aggregator.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_aggregator_test_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_damage_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_display_output_surface.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_factory_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_hittest.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_id.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_id_allocator.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_resource_holder.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\surfaces\surface_sequence.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\eviction_tile_priority_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\image_decode_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\picture_layer_tiling.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\picture_layer_tiling_set.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\prioritized_tile.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue_all.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\raster_tile_priority_queue_required.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tile.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tile_draw_info.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tile_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tile_priority.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tiling_set_eviction_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tiling_set_raster_queue_all.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\tiles\tiling_set_raster_queue_required.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\blocking_task_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\channel_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\channel_main.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\damage_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\draw_property_utils.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\latency_info_swap_promise_monitor.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_host.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_host_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_host_common.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_host_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_host_single_thread_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\layer_tree_settings.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\mutator_host_client.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\occlusion.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\occlusion_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\property_tree.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\property_tree_builder.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\proxy.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\proxy_common.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\proxy_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\proxy_main.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\scoped_abort_remaining_swap_promises.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\single_thread_proxy.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\swap_promise_monitor.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\task_runner_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\threaded_channel.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\thread_proxy.h" />
+    <ClInclude Include="..\..\orig_chrome\cc\trees\tree_synchronizer.h" />
+    <ClInclude Include="..\..\orig_chrome\content\compositor\EmptyOutputSurface.h" />
+    <ClInclude Include="..\..\orig_chrome\content\compositor\GpuOutputSurface.h" />
+    <ClInclude Include="..\..\orig_chrome\content\compositor\SoftwareOutputDevice.h" />
+    <ClInclude Include="..\..\orig_chrome\content\compositor\SoftwareOutputSurface.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\ChildGpuMemoryBufferManager.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\CommandBufferClientImpl.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\CommandBufferMetrics.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\CommandBufferServiceStub.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\ContextProviderCommandBuffer.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\GpuChannelMgr.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\GrcontextForWebgraphicscontext3d.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\ImageTransportSurface.h" />
+    <ClInclude Include="..\..\orig_chrome\content\gpu\WgContext3dCmdBufImpl.h" />
+    <ClInclude Include="..\..\orig_chrome\content\LayerTreeWrap.h" />
+    <ClInclude Include="..\..\orig_chrome\content\media\audio_device_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\content\media\audio_renderer_mixer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\content\media\renderer_webaudiodevice_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\content\OrigChromeMgr.h" />
+    <ClInclude Include="..\..\orig_chrome\content\RasterWorkerPool.h" />
+    <ClInclude Include="..\..\orig_chrome\content\RenderWidgetCompositor.h" />
+    <ClInclude Include="..\..\orig_chrome\content\WebPageOcBridge.h" />
+    <ClInclude Include="..\..\orig_chrome\content\WebSharedBitmapManager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\blink\gpu_blink_export.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\blink\webgraphicscontext3d_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\blink\webgraphicscontext3d_in_process_command_buffer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\buffer_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\client_context_state.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\client_context_state_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\client_context_state_impl_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\cmd_buffer_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\context_support.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\fenced_allocator.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_cmd_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_cmd_helper_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_c_lib_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_c_lib_export.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_implementation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_implementation_impl_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_impl_export.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface_stub.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface_stub_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_interface_stub_impl_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_lib.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_trace_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_trace_implementation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gles2_trace_implementation_impl_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gl_in_process_context.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gl_in_process_context_export.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_control.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_memory_buffer_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_memory_buffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_memory_buffer_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\gpu_switches.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\mapped_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\program_info_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\query_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\ref_counted.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\ring_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\share_group.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\transfer_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\client\vertex_array_object_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\bitfield_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\capabilities.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\cmd_buffer_common.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\command_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\command_buffer_shared.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\constants.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\debug_marker_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_format.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_format_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_ids.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_ids_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_utils.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_utils_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_cmd_utils_implementation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gles2_utils_export.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\gpu_memory_allocation.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\id_allocator.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\mailbox.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\mailbox_holder.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\thread_local.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\time.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\trace_event.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\common\value_state.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_delegate.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_idle.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_share_group.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_stub.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\async_pixel_transfer_manager_sync.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\buffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\City.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\cmd_buffer_engine.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\cmd_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\command_buffer_service.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\common_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\context_group.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\context_state.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\context_state_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\context_state_impl_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\error_state.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\feature_info.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\framebuffer_completeness_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\framebuffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_clear_framebuffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_copy_texture_chromium.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_decoder_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_validation.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_validation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gles2_cmd_validation_implementation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gl_context_virtual.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gl_state_restorer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gl_utils.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_control_service.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_memory_buffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_scheduler.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_state_tracer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_switches.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\gpu_tracer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\id_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\image_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\image_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\in_process_command_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\logger.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_manager_sync.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\mailbox_synchronizer.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\memory_program_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\memory_tracking.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\path_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\program_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\program_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\query_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\renderbuffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\shader_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\shader_translator.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\shader_translator_cache.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\stream_texture_manager_in_process_android.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\sync_point_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\test_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\texture_definition.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\texture_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\transfer_buffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\valuebuffer_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\vertex_array_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\command_buffer\service\vertex_attrib_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\GLES2\gl2chromium.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\GLES2\gl2chromium_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\GLES2\gl2extchromium.h" />
+    <ClInclude Include="..\..\orig_chrome\gpu\skia_bindings\gl_bindings_skia_cmd_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\agc_audio_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_device_name.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_device_thread.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_input_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_input_device.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_input_ipc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_input_writer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_io.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_logging.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_manager_base.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_manager_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_controller.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_device.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_dispatcher.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_dispatcher_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_ipc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_proxy.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_resampler.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_output_stream_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_parameters.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_power_monitor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\audio_source_diverter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\clockless_audio_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\fake_audio_input_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\fake_audio_log_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\fake_audio_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\fake_audio_output_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\fake_audio_worker.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\null_audio_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\point.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\sample_rates.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\scoped_task_runner_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\simple_sources.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\sounds\audio_stream_handler.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\sounds\sounds_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\sounds\wav_audio_handler.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\virtual_audio_input_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\virtual_audio_output_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\audio_device_listener_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\audio_low_latency_input_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\audio_low_latency_output_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\audio_manager_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\avrt_wrapper_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\core_audio_util_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\device_enumeration_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\wavein_input_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\audio\win\waveout_output_win.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_block_fifo.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_buffer_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_buffer_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_bus.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_capturer_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_decoder_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_discard_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_fifo.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_hardware_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_hash.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_pull_fifo.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_renderer_mixer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_renderer_mixer_input.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_renderer_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_shifter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_splicer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_timestamp_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\audio_video_metadata_extractor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\bind_to_current_loop.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\bitstream_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\bit_reader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\bit_reader_core.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\buffering_state.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\byte_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_callback_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_context.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_initialized_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_key_information.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\cdm_promise_adapter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\channel_layout.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\channel_mixer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\channel_mixing_matrix.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\container_names.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\data_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\data_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\decoder_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\decoder_buffer_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\decryptor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\decrypt_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\demuxer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\demuxer_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\demuxer_stream_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\djb2.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\eme_constants.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\keyboard_event_counter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\key_systems.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\key_systems_support_uma.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\key_system_info.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\limits.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_client.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_export.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_file_checker.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_keys.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_log.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_log_event.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_permission.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_resources.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_switches.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\media_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\mime_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\moving_average.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\multi_channel_resampler.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\null_video_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\output_device.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\pipeline.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\pipeline_status.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\player_tracker.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\ranges.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\renderer_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\sample_format.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\seekable_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\serial_runner.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_ssse3.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\simd\convert_yuv_to_rgb.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\simd\filter_yuv.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\sinc_resampler.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\stream_parser_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\text_cue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\text_ranges.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\text_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\text_track.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\text_track_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\timestamp_constants.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\time_delta_interpolator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\time_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\user_input_monitor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\vector_math.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\vector_math_testing.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_capturer_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_capture_types.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_codecs.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_decoder_config.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_frame.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_frame_metadata.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_frame_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_renderer_sink.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_rotation.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_types.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\video_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\wall_clock_time_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\win\mf_initializer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\base\yuv_convert.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\active_loader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\buffered_data_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\buffered_data_source_host_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\buffered_resource_loader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\cache_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\cdm_result_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\cdm_result_promise_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\cdm_session_adapter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\encrypted_media_player_support.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\interval_map.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\key_system_config_selector.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\lru.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\media_blink_export.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\multibuffer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\new_session_cdm_result_promise.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\texttrack_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\video_frame_compositor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webaudiosourceprovider_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webcontentdecryptionmoduleaccess_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webcontentdecryptionmodulesession_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webcontentdecryptionmodule_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webencryptedmediaclient_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webinbandtexttrack_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webmediaplayer_delegate.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webmediaplayer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webmediaplayer_params.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webmediaplayer_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\webmediasource_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\blink\websourcebuffer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\cdm\key_system_names.h" />
+    <ClInclude Include="..\..\orig_chrome\media\ffmpeg\ffmpeg_common.h" />
+    <ClInclude Include="..\..\orig_chrome\media\ffmpeg\ffmpeg_deleters.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\audio_clock.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\audio_file_reader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\audio_renderer_algorithm.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\blocking_url_protocol.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\chunk_demuxer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\context_3d.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decoder_selector.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decoder_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decoder_stream_traits.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decrypting_audio_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decrypting_demuxer_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\decrypting_video_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\default_media_permission.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_aac_bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_audio_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_demuxer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_glue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_h264_to_annex_b_bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_h265_to_annex_b_bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ffmpeg_video_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\file_data_source.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\frame_processor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\gpu_video_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\h264_bit_reader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\h264_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\h264_to_annex_b_bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\h265_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\in_memory_url_protocol.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\ivf_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\jpeg_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\opus_audio_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\opus_constants.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\source_buffer_platform.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\source_buffer_range.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\source_buffer_stream.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\stream_parser_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\video_cadence_estimator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\video_renderer_algorithm.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\vp8_bool_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\vp8_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\vp9_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\vp9_raw_bits_reader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\vpx_video_decoder.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\webvtt_util.h" />
+    <ClInclude Include="..\..\orig_chrome\media\filters\wsola_internals.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\common\offset_byte_queue.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\es_adapter_video.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\es_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\es_parser_adts.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\es_parser_h264.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\es_parser_mpeg1audio.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\mp2t_common.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\mp2t_stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\timestamp_unroller.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_packet.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_section.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pat.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pes.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_section_pmt.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp2t\ts_section_psi.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\aac.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\avc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\bitstream_converter.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\box_definitions.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\box_reader.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\cenc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\es_descriptor.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\fourccs.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\hevc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\mp4_stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\rcheck.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\sample_to_group_iterator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mp4\track_run_iterator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mpeg\adts_constants.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mpeg\adts_stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mpeg\mpeg1_audio_stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\mpeg\mpeg_audio_stream_parser_base.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_audio_client.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_cluster_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_constants.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_content_encodings.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_content_encodings_client.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_crypto_helpers.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_info_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_stream_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_tracks_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_video_client.h" />
+    <ClInclude Include="..\..\orig_chrome\media\formats\webm\webm_webvtt_parser.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\audio_renderer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\default_renderer_factory.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\gpu_video_accelerator_factories.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\renderer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\skcanvas_video_renderer.h" />
+    <ClInclude Include="..\..\orig_chrome\media\renderers\video_renderer_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\fake_video_encode_accelerator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\gpu_memory_buffer_video_frame_pool.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\h264_poc.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\jpeg_decode_accelerator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\picture.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\video_decode_accelerator.h" />
+    <ClInclude Include="..\..\orig_chrome\media\video\video_encode_accelerator.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\events\latency_info.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\animation\tween.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\buffer_format_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\display.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\box_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\cubic_bezier.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\dip_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\insets.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\insets_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\matrix3_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\point.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\point3_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\point_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\point_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\quad_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\rect.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\rect_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\rect_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\safe_integer_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\scroll_offset.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\size.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\size_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\size_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\vector2d.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\vector2d_conversions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\vector2d_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\geometry\vector3d_f.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\gpu_memory_buffer.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\skia_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\switches.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\transform.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gfx\transform_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\angle_platform_impl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\egl_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_api_autogen_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_api_autogen_gl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_gl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_glx.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_mock.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_osmesa.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_bindings_autogen_wgl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_cgl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_glx.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_osmesa.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_stub.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_stub_with_extensions.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_context_wgl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_egl_api_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_enums.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_enums_implementation_autogen.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_export.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_fence.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_fence_apple.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_fence_arb.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_fence_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_fence_nv.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_glx_api_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_gl_api_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_helper.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_io_surface.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_ozone_native_pixmap.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_ref_counted_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_shared_memory.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_stub.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_image_surface_texture.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_mock_autogen_gl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_osmesa_api_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_share_group.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_state_restorer.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_egl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_glx.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_osmesa.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_overlay.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_stub.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_surface_wgl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_switches.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_version_info.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gl_wgl_api_implementation.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gpu_preference.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gpu_switching_manager.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gpu_switching_observer.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gpu_timing.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\gpu_timing_fake.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\scoped_api.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\scoped_binders.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\scoped_cgl.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\scoped_make_current.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\sync_control_vsync_provider.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\trace_util.h" />
+    <ClInclude Include="..\..\orig_chrome\ui\gl\vsync_provider_win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\orig_chrome\base\base.isolate" />
+    <None Include="..\..\orig_chrome\base\BUILD.gn" />
+    <None Include="..\..\orig_chrome\base\debug\BUILD.gn" />
+    <None Include="..\..\orig_chrome\base\debug\OWNERS" />
+    <None Include="..\..\orig_chrome\base\DEPS" />
+    <None Include="..\..\orig_chrome\base\memory\BUILD.gn" />
+    <None Include="..\..\orig_chrome\base\memory\OWNERS" />
+    <None Include="..\..\orig_chrome\base\OWNERS" />
+    <None Include="..\..\orig_chrome\base\PRESUBMIT.py" />
+    <None Include="..\..\orig_chrome\base\strings\OWNERS" />
+    <None Include="..\..\orig_chrome\base\threading\OWNERS" />
+    <None Include="..\..\orig_chrome\base\win\OWNERS" />
+    <None Include="..\..\orig_chrome\cc\base\DEPS" />
+    <None Include="..\..\orig_chrome\cc\debug\OWNERS" />
+    <None Include="..\..\orig_chrome\cc\surfaces\BUILD.gn" />
+    <None Include="..\..\orig_chrome\cc\surfaces\OWNERS" />
+    <None Include="..\..\orig_chrome\gpu\command_buffer\client\BUILD.gn" />
+    <None Include="..\..\orig_chrome\gpu\command_buffer\service\BUILD.gn" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_ssse3.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_rgb_to_yuv_ssse3.inc" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_yuva_to_argb_mmx.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_yuva_to_argb_mmx.inc" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_yuv_to_rgb_mmx.inc" />
+    <None Include="..\..\orig_chrome\media\base\simd\convert_yuv_to_rgb_sse.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\empty_register_state_mmx.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\linear_scale_yuv_to_rgb_mmx.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\linear_scale_yuv_to_rgb_mmx.inc" />
+    <None Include="..\..\orig_chrome\media\base\simd\linear_scale_yuv_to_rgb_sse.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\media_export.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\scale_yuv_to_rgb_mmx.asm" />
+    <None Include="..\..\orig_chrome\media\base\simd\scale_yuv_to_rgb_mmx.inc" />
+    <None Include="..\..\orig_chrome\media\base\simd\scale_yuv_to_rgb_sse.asm" />
+    <None Include="..\..\orig_chrome\ui\gfx\geometry\BUILD.gn" />
+    <None Include="..\..\orig_chrome\ui\gfx\geometry\OWNERS" />
+    <None Include="..\..\orig_chrome\ui\gl\OWNERS" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_vc6|Win32">
+      <Configuration>Release_vc6</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\node\src\async-wrap-inl.h" />
+    <ClInclude Include="..\..\node\src\async-wrap.h" />
+    <ClInclude Include="..\..\node\src\base-object-inl.h" />
+    <ClInclude Include="..\..\node\src\base-object.h" />
+    <ClInclude Include="..\..\node\src\base64.h" />
+    <ClInclude Include="..\..\node\src\bootstrap_node_js.h" />
+    <ClInclude Include="..\..\node\src\config.h" />
+    <ClInclude Include="..\..\node\src\connection_wrap.h" />
+    <ClInclude Include="..\..\node\src\connect_wrap.h" />
+    <ClInclude Include="..\..\node\src\debug-agent.h" />
+    <ClInclude Include="..\..\node\src\env-inl.h" />
+    <ClInclude Include="..\..\node\src\env.h" />
+    <ClInclude Include="..\..\node\src\handle_wrap.h" />
+    <ClInclude Include="..\..\node\src\http_parser.h" />
+    <ClInclude Include="..\..\node\src\inspector_agent.h" />
+    <ClInclude Include="..\..\node\src\inspector_socket.h" />
+    <ClInclude Include="..\..\node\src\js_stream.h" />
+    <ClInclude Include="..\..\node\src\node.h" />
+    <ClInclude Include="..\..\node\src\node_api.h" />
+    <ClInclude Include="..\..\node\src\node_api_types.h" />
+    <ClInclude Include="..\..\node\src\node_buffer.h" />
+    <ClInclude Include="..\..\node\src\node_constants.h" />
+    <ClInclude Include="..\..\node\src\node_counters.h" />
+    <ClInclude Include="..\..\node\src\node_crypto.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_bio.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_groups.h" />
+    <ClInclude Include="..\..\node\src\node_dtrace.h" />
+    <ClInclude Include="..\..\node\src\node_etw_provider.h" />
+    <ClInclude Include="..\..\node\src\node_file.h" />
+    <ClInclude Include="..\..\node\src\node_http_parser.h" />
+    <ClInclude Include="..\..\node\src\node_i18n.h" />
+    <ClInclude Include="..\..\node\src\node_internals.h" />
+    <ClInclude Include="..\..\node\src\node_javascript.h" />
+    <ClInclude Include="..\..\node\src\node_lttng.h" />
+    <ClInclude Include="..\..\node\src\node_lttng_provider.h" />
+    <ClInclude Include="..\..\node\src\node_lttng_tp.h" />
+    <ClInclude Include="..\..\node\src\node_mutex.h" />
+    <ClInclude Include="..\..\node\src\node_natives.h" />
+    <ClInclude Include="..\..\node\src\node_object_wrap.h" />
+    <ClInclude Include="..\..\node\src\node_perfctr_provider.h" />
+    <ClInclude Include="..\..\node\src\node_revert.h" />
+    <ClInclude Include="..\..\node\src\node_root_certs.h" />
+    <ClInclude Include="..\..\node\src\node_stat_watcher.h" />
+    <ClInclude Include="..\..\node\src\node_url.h" />
+    <ClInclude Include="..\..\node\src\node_version.h" />
+    <ClInclude Include="..\..\node\src\node_watchdog.h" />
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h" />
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h" />
+    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h" />
+    <ClInclude Include="..\..\node\src\node_wrap.h" />
+    <ClInclude Include="..\..\node\src\pipe_wrap.h" />
+    <ClInclude Include="..\..\node\src\req-wrap-inl.h" />
+    <ClInclude Include="..\..\node\src\req-wrap.h" />
+    <ClInclude Include="..\..\node\src\spawn_sync.h" />
+    <ClInclude Include="..\..\node\src\stream_base-inl.h" />
+    <ClInclude Include="..\..\node\src\stream_base.h" />
+    <ClInclude Include="..\..\node\src\stream_wrap.h" />
+    <ClInclude Include="..\..\node\src\string_bytes.h" />
+    <ClInclude Include="..\..\node\src\string_search.h" />
+    <ClInclude Include="..\..\node\src\tcp_wrap.h" />
+    <ClInclude Include="..\..\node\src\tls_wrap.h" />
+    <ClInclude Include="..\..\node\src\tree.h" />
+    <ClInclude Include="..\..\node\src\tty_wrap.h" />
+    <ClInclude Include="..\..\node\src\udp_wrap.h" />
+    <ClInclude Include="..\..\node\src\util-inl.h" />
+    <ClInclude Include="..\..\node\src\util.h" />
+    <ClInclude Include="..\..\node\src\v8abbr.h" />
+    <ClInclude Include="..\..\node\uv\include\android-ifaddrs.h" />
+    <ClInclude Include="..\..\node\uv\include\pthread-barrier.h" />
+    <ClInclude Include="..\..\node\uv\include\pthread-fixes.h" />
+    <ClInclude Include="..\..\node\uv\include\stdint-msvc2008.h" />
+    <ClInclude Include="..\..\node\uv\include\tree.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-aix.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-bsd.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-darwin.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-errno.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-linux.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-sunos.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-threadpool.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-unix.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-version.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-win.h" />
+    <ClInclude Include="..\..\node\uv\include\uv.h" />
+    <ClInclude Include="..\..\node\uv\src\heap-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\queue.h" />
+    <ClInclude Include="..\..\node\uv\src\uv-common.h" />
+    <ClInclude Include="..\..\node\uv\src\win\atomicops-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\handle-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\internal.h" />
+    <ClInclude Include="..\..\node\uv\src\win\req-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\stream-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\winapi.h" />
+    <ClInclude Include="..\..\node\uv\src\win\winsock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\node\src\async-wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\backtrace_win32.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\cares_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connection_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connect_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\debug-agent.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\env.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\handle_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\http_parser.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\js_stream.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_api.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_buffer.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_config.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_constants.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_contextify.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_counters.cc" />
+    <ClCompile Include="..\..\node\src\node_crypto.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_dtrace.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_file.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_http_parser.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_i18n.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_javascript.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_node.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_os.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_revert.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_stat_watcher.cc" />
+    <ClCompile Include="..\..\node\src\node_url.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_util.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_v8.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_watchdog.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider_empty.cc" />
+    <ClCompile Include="..\..\node\src\node_zlib.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\pipe_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\process_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\signal_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\spawn_sync.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_base.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_bytes.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_search.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tcp_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\timer_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tls_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tty_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\udp_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\util1.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\uv.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\inet.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\threadpool.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\uv-common.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\version.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\async.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\core.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\dl.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\error.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\handle.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\poll.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\req.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\signal.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\thread-win.c" />
+    <ClCompile Include="..\..\node\uv\src\win\timer-win.c">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tty.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\udp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\util.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\node\src\CNNICHashWhitelist.inc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{416F8F99-1338-4514-A44C-28CCEB5FD710}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>libpng</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>node</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;NODE_WANT_INTERNALS;HAVE_OPENSSL;CARES_STATICLIB;BUILDING_UV_SHARED;_WIN32_WINNT=0x0601;HAVE_PERFCTR=1;ENABLE_NODEJS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <MinimalRebuild>false</MinimalRebuild>
+      <CallingConvention>Cdecl</CallingConvention>
+      <AdditionalIncludeDirectories>../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include;../../node/uv/include;../../v8_7_5/include;../../;../../third_party/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)nodejs.lib</OutputFile>
+    </Lib>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;USING_VC6RT=1;WIN32;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;NODE_WANT_INTERNALS;HAVE_OPENSSL;CARES_STATICLIB;BUILDING_UV_SHARED;_WIN32_WINNT=0x0601;HAVE_PERFCTR=1;ENABLE_NODEJS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include;../../node/uv/include;../../v8_5_7/include;../../;../../third_party/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4530;</DisableSpecificWarnings>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)nodejs.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;NODE_WANT_INTERNALS;HAVE_OPENSSL;CARES_STATICLIB;BUILDING_UV_SHARED;_WIN32_WINNT=0x0601;HAVE_PERFCTR=1;ENABLE_NODEJS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../node/openssl;../../node/openssl/openssl/include;../../node/cares/include;../../node/uv/include;../../v8_7_5/include;../../;../../third_party/zlib</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)nodejs.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
