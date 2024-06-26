@@ -1,0 +1,48 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef mc_blink_WebFilterOperationsImpl_h
+#define mc_blink_WebFilterOperationsImpl_h
+
+#include "mc/animation/FilterOperations.h"
+#include "third_party/WebKit/public/platform/WebFilterOperations.h"
+
+namespace mc_blink {
+
+class WebFilterOperationsImpl : public blink::WebFilterOperations {
+public:
+    WebFilterOperationsImpl();
+    WebFilterOperationsImpl(const WebFilterOperations& filters);
+    ~WebFilterOperationsImpl() override;
+
+    const mc::FilterOperations& asFilterOperations() const;
+
+    // Implementation of blink::WebFilterOperations methods
+    void appendGrayscaleFilter(float amount) override;
+    void appendSepiaFilter(float amount) override;
+    void appendSaturateFilter(float amount) override;
+    void appendHueRotateFilter(float amount) override;
+    void appendInvertFilter(float amount) override;
+    void appendBrightnessFilter(float amount) override;
+    void appendContrastFilter(float amount) override;
+    void appendOpacityFilter(float amount) override;
+    void appendBlurFilter(float amount) override;
+    void appendDropShadowFilter(blink::WebPoint offset,
+        float std_deviation,
+        blink::WebColor color) override;
+    void appendColorMatrixFilter(SkScalar matrix[20]) override;
+    void appendZoomFilter(float amount, int inset) override;
+    void appendSaturatingBrightnessFilter(float amount) override;
+    void appendReferenceFilter(SkImageFilter* image_filter) override;
+
+    void clear() override;
+    bool isEmpty() const override;
+
+private:
+    mc::FilterOperations m_filterOperations;
+};
+
+}  // namespace cc_blink
+
+#endif  // CC_BLINK_WEB_FILTER_OPERATIONS_IMPL_H_
