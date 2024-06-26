@@ -1,0 +1,4385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\sounds">
+      <UniqueIdentifier>{B00ADD68-24A9-3AF7-AEBE-0831EDDC1AC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\content">
+      <UniqueIdentifier>{4D624FB1-28CC-8F22-E07A-F14373BC38A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffmpeg">
+      <UniqueIdentifier>{D4EF0570-F7DB-697C-F41C-C2D1A5CC3B21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffmpeg">
+      <UniqueIdentifier>{D4EF0570-F7DB-697C-F41C-C2D1A5CC3B21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffmpeg">
+      <UniqueIdentifier>{D4EF0570-F7DB-697C-F41C-C2D1A5CC3B21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{F3A37434-27F9-10FD-07ED-564C9FD8C09B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\webm">
+      <UniqueIdentifier>{BEAEFAB4-558F-17A1-F73D-AFEE50FD1A2A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdm">
+      <UniqueIdentifier>{9D2557A0-D334-F1EB-617C-179BF2723096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp2t">
+      <UniqueIdentifier>{31EEC938-8A45-FCC1-74D4-ECEDF45488C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mp4">
+      <UniqueIdentifier>{2A0EC54E-581E-A0DC-CE33-2A1AE636C628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats">
+      <UniqueIdentifier>{4C1827BE-A8C1-D0D6-7E9F-847C6E6DAC9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="formats\mpeg">
+      <UniqueIdentifier>{1BF0D286-1819-358B-42DB-654AF451C34F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\simd">
+      <UniqueIdentifier>{D11A6EE5-9897-707D-CCC7-99DBD688FC1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\alsa">
+      <UniqueIdentifier>{7CA7E62E-46E4-BA34-B6EE-43E49EDF1D5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\cras">
+      <UniqueIdentifier>{68A07F91-1DEC-EA22-825D-3B587DC910AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\pulse">
+      <UniqueIdentifier>{94AA8498-0B24-ECDF-425D-26525609DF0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\linux">
+      <UniqueIdentifier>{978C4E9B-8123-1CA3-A70B-0A340D4435AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture">
+      <UniqueIdentifier>{561AE994-EA99-4D7E-A11C-130A7D74FFEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video">
+      <UniqueIdentifier>{5A4388DD-8A3A-FA65-0F09-87F605ED3291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="capture\video\mac">
+      <UniqueIdentifier>{DDBFF7CF-DBCF-B2FC-793A-DB701B563E8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ozone">
+      <UniqueIdentifier>{4466B58C-3D48-288C-1476-DD15C5EEC0EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ozone">
+      <UniqueIdentifier>{4466B58C-3D48-288C-1476-DD15C5EEC0EA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio\agc_audio_stream.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_device_name.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_device_name.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_device_thread.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_device_thread.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_input_controller.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_input_controller.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_input_device.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_input_device.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_input_ipc.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_input_ipc.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio_io.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_manager.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_manager.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_manager_base.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_manager_base.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_controller.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_controller.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_device.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_device.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_dispatcher.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_dispatcher.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_dispatcher_impl.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_dispatcher_impl.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_ipc.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_ipc.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_proxy.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_proxy.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_resampler.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_resampler.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_output_stream_sink.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_output_stream_sink.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\audio_power_monitor.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_power_monitor.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio_source_diverter.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\clockless_audio_sink.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\clockless_audio_sink.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\fake_audio_input_stream.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\fake_audio_input_stream.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\fake_audio_log_factory.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\fake_audio_log_factory.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\fake_audio_manager.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\fake_audio_manager.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\fake_audio_output_stream.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\fake_audio_output_stream.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\fake_audio_worker.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\fake_audio_worker.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\null_audio_sink.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\null_audio_sink.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\sample_rates.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\sample_rates.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\scoped_task_runner_observer.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\scoped_task_runner_observer.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\simple_sources.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\simple_sources.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\sounds\audio_stream_handler.cc">
+      <Filter>audio\sounds</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\sounds\audio_stream_handler.h">
+      <Filter>audio\sounds</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\sounds\sounds_manager.cc">
+      <Filter>audio\sounds</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\sounds\sounds_manager.h">
+      <Filter>audio\sounds</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\sounds\wav_audio_handler.cc">
+      <Filter>audio\sounds</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\sounds\wav_audio_handler.h">
+      <Filter>audio\sounds</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\virtual_audio_input_stream.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\virtual_audio_input_stream.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\virtual_audio_output_stream.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\virtual_audio_output_stream.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\audio_device_listener_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\audio_device_listener_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\audio_low_latency_input_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\audio_low_latency_input_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\audio_low_latency_output_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\audio_low_latency_output_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\audio_manager_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\audio_manager_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\avrt_wrapper_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\avrt_wrapper_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\core_audio_util_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\core_audio_util_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\device_enumeration_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\device_enumeration_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\wavein_input_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\wavein_input_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\win\waveout_output_win.cc">
+      <Filter>audio\win</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\win\waveout_output_win.h">
+      <Filter>audio\win</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_block_fifo.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_block_fifo.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_buffer_converter.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_buffer_converter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_buffer_queue.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_buffer_queue.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\audio_capturer_source.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_converter.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_converter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_decoder.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_decoder.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_decoder_config.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_decoder_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_discard_helper.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_discard_helper.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_fifo.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_fifo.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_hardware_config.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_hardware_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_hash.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_hash.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_pull_fifo.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_pull_fifo.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_renderer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_renderer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_renderer_mixer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_renderer_mixer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_renderer_mixer_input.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_renderer_mixer_input.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\audio_renderer_sink.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_shifter.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_shifter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_splicer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_splicer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_timestamp_helper.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_timestamp_helper.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_video_metadata_extractor.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_video_metadata_extractor.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\bind_to_current_loop.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\bit_reader.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\bit_reader.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\bit_reader_core.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\bit_reader_core.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\bitstream_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\bitstream_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\buffering_state.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\byte_queue.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\byte_queue.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_callback_promise.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_callback_promise.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\cdm_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_context.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_context.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_factory.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_factory.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_initialized_promise.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_initialized_promise.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_key_information.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_key_information.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_promise.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_promise.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\cdm_promise_adapter.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\cdm_promise_adapter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\channel_mixer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\channel_mixer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\channel_mixing_matrix.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\channel_mixing_matrix.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\container_names.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\container_names.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\data_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\data_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\data_source.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\data_source.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\decoder_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\decoder_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\decoder_buffer_queue.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\decoder_buffer_queue.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\decrypt_config.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\decrypt_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\decryptor.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\decryptor.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\demuxer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\demuxer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\demuxer_stream.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\demuxer_stream.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\demuxer_stream_provider.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\demuxer_stream_provider.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\djb2.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\djb2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\eme_constants.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\key_system_info.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\key_system_info.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\key_systems.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\key_systems.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\key_systems_support_uma.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\key_systems_support_uma.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\keyboard_event_counter.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\keyboard_event_counter.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_client.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_client.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_file_checker.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_file_checker.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_keys.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_keys.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_log.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_log.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\media_log_event.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_permission.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_permission.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_resources.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_resources.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_switches.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_switches.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\media_util.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\media_util.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\mime_util.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\mime_util.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\moving_average.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\moving_average.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\multi_channel_resampler.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\multi_channel_resampler.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\null_video_sink.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\null_video_sink.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\output_device.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\pipeline.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\pipeline.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\pipeline_status.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\player_tracker.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\player_tracker.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\ranges.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\ranges.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\renderer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\renderer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\renderer_factory.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\renderer_factory.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\sample_format.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\sample_format.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\seekable_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\seekable_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\serial_runner.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\serial_runner.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\simd\convert_rgb_to_yuv.h">
+      <Filter>base\simd</Filter>
+    </ClInclude>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_c.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClInclude Include="base\simd\convert_yuv_to_rgb.h">
+      <Filter>base\simd</Filter>
+    </ClInclude>
+    <ClCompile Include="base\simd\convert_yuv_to_rgb_c.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClInclude Include="base\simd\filter_yuv.h">
+      <Filter>base\simd</Filter>
+    </ClInclude>
+    <ClCompile Include="base\simd\filter_yuv_c.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="base\sinc_resampler.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\sinc_resampler.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\stream_parser.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\stream_parser.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\stream_parser_buffer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\stream_parser_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\text_cue.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\text_cue.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\text_ranges.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\text_ranges.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\text_renderer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\text_renderer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\text_track.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\text_track_config.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\text_track_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\time_delta_interpolator.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\time_delta_interpolator.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\time_source.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\timestamp_constants.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\user_input_monitor.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\user_input_monitor.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\user_input_monitor_win.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\video_capture_types.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_capture_types.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_capturer_source.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_capturer_source.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_decoder.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_decoder.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_decoder_config.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_decoder_config.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_frame.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_frame.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_frame_metadata.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_frame_metadata.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_frame_pool.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_frame_pool.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_renderer.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_renderer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\video_rotation.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_types.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_types.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\video_util.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\video_util.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\wall_clock_time_source.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\wall_clock_time_source.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\win\mf_initializer.cc">
+      <Filter>base\win</Filter>
+    </ClCompile>
+    <ClInclude Include="base\win\mf_initializer.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClCompile Include="base\yuv_convert.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\yuv_convert.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\animated_content_sampler.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\animated_content_sampler.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\capture_resolution_chooser.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\capture_resolution_chooser.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\feedback_signal_accumulator.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\feedback_signal_accumulator.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\screen_capture_device_core.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\screen_capture_device_core.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\thread_safe_capture_oracle.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\thread_safe_capture_oracle.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\smooth_event_sampler.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\smooth_event_sampler.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\content\video_capture_oracle.cc">
+      <Filter>capture\content</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\content\video_capture_oracle.h">
+      <Filter>capture\content</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\fake_video_capture_device.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\fake_video_capture_device.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\fake_video_capture_device_factory.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\fake_video_capture_device_factory.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\file_video_capture_device.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\file_video_capture_device.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\file_video_capture_device_factory.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\file_video_capture_device_factory.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\video_capture_device.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\video_capture_device.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\video_capture_device_factory.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\video_capture_device_factory.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\video_capture_device_info.cc">
+      <Filter>capture\video</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\video_capture_device_info.h">
+      <Filter>capture\video</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\capability_list_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\capability_list_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\filter_base_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\filter_base_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\pin_base_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\pin_base_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClInclude Include="capture\video\win\sink_filter_observer_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\sink_filter_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\sink_filter_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\sink_input_pin_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\sink_input_pin_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\video_capture_device_factory_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\video_capture_device_factory_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\video_capture_device_mf_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\video_capture_device_mf_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\video\win\video_capture_device_win.cc">
+      <Filter>capture\video\win</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\video\win\video_capture_device_win.h">
+      <Filter>capture\video\win</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\aes_decryptor.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\aes_decryptor.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\cdm_adapter.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\cdm_adapter.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\default_cdm_factory.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\default_cdm_factory.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\json_web_key.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\json_web_key.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\key_system_names.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\key_system_names.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\player_tracker_impl.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\player_tracker_impl.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\proxy_decryptor.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\proxy_decryptor.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\supported_cdm_versions.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\supported_cdm_versions.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="ffmpeg\ffmpeg_common.cc">
+      <Filter>ffmpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="ffmpeg\ffmpeg_common.h">
+      <Filter>ffmpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="ffmpeg\ffmpeg_deleters.h">
+      <Filter>ffmpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\audio_clock.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\audio_clock.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\audio_file_reader.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\audio_file_reader.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\audio_renderer_algorithm.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\audio_renderer_algorithm.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\blocking_url_protocol.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\blocking_url_protocol.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\chunk_demuxer.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\chunk_demuxer.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\context_3d.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decoder_selector.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decoder_selector.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decoder_stream.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decoder_stream.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decoder_stream_traits.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decoder_stream_traits.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decrypting_audio_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decrypting_audio_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decrypting_demuxer_stream.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decrypting_demuxer_stream.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\decrypting_video_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\decrypting_video_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\default_media_permission.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\default_media_permission.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_audio_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_audio_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\ffmpeg_bitstream_converter.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_demuxer.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_demuxer.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_glue.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_glue.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_video_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_video_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\file_data_source.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\file_data_source.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\frame_processor.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\frame_processor.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\gpu_video_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\gpu_video_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\h264_bit_reader.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\h264_bit_reader.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\h264_parser.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\h264_parser.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ivf_parser.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ivf_parser.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\in_memory_url_protocol.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\in_memory_url_protocol.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\jpeg_parser.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\jpeg_parser.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\opus_audio_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\opus_audio_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\opus_constants.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\opus_constants.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\source_buffer_range.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\source_buffer_range.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\source_buffer_stream.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\source_buffer_stream.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\stream_parser_factory.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\stream_parser_factory.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\video_cadence_estimator.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\video_cadence_estimator.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\video_renderer_algorithm.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\video_renderer_algorithm.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\vp8_bool_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\vp8_bool_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\vp8_parser.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\vp8_parser.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\vp9_parser.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\vp9_parser.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\vp9_raw_bits_reader.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\vp9_raw_bits_reader.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\vpx_video_decoder.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\vpx_video_decoder.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\webvtt_util.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\wsola_internals.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\wsola_internals.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\common\offset_byte_queue.cc">
+      <Filter>formats\common</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\common\offset_byte_queue.h">
+      <Filter>formats\common</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_audio_client.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_audio_client.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_cluster_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_cluster_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_constants.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_constants.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_content_encodings.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_content_encodings.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_content_encodings_client.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_content_encodings_client.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_crypto_helpers.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_crypto_helpers.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_info_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_info_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_stream_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_stream_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_tracks_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_tracks_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_video_client.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\webm\webm_video_client.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\webm\webm_webvtt_parser.cc">
+      <Filter>formats\webm</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\audio_renderer_impl.cc">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClInclude Include="renderers\audio_renderer_impl.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClCompile Include="renderers\default_renderer_factory.cc">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClInclude Include="renderers\default_renderer_factory.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\gpu_video_accelerator_factories.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClCompile Include="renderers\renderer_impl.cc">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClInclude Include="renderers\renderer_impl.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClCompile Include="renderers\skcanvas_video_renderer.cc">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClInclude Include="renderers\skcanvas_video_renderer.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClCompile Include="renderers\video_renderer_impl.cc">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClInclude Include="renderers\video_renderer_impl.h">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClCompile Include="video\fake_video_encode_accelerator.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\fake_video_encode_accelerator.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\gpu_memory_buffer_video_frame_pool.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\gpu_memory_buffer_video_frame_pool.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\h264_poc.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\h264_poc.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\jpeg_decode_accelerator.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\jpeg_decode_accelerator.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\picture.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\picture.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\video_decode_accelerator.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\video_decode_accelerator.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClCompile Include="video\video_encode_accelerator.cc">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClInclude Include="video\video_encode_accelerator.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClInclude Include="formats\webm\webm_webvtt_parser.h">
+      <Filter>formats\webm</Filter>
+    </ClInclude>
+    <ClCompile Include="capture\webm_muxer.cc">
+      <Filter>capture</Filter>
+    </ClCompile>
+    <ClInclude Include="capture\webm_muxer.h">
+      <Filter>capture</Filter>
+    </ClInclude>
+    <ClCompile Include="cdm\cenc_utils.cc">
+      <Filter>cdm</Filter>
+    </ClCompile>
+    <ClInclude Include="cdm\cenc_utils.h">
+      <Filter>cdm</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_aac_bitstream_converter.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_aac_bitstream_converter.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\ffmpeg_h264_to_annex_b_bitstream_converter.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\ffmpeg_h264_to_annex_b_bitstream_converter.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="filters\h264_to_annex_b_bitstream_converter.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\h264_to_annex_b_bitstream_converter.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\es_adapter_video.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\es_adapter_video.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\es_parser.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\es_parser.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\es_parser_adts.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\es_parser_adts.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\es_parser_h264.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\es_parser_h264.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\es_parser_mpeg1audio.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\es_parser_mpeg1audio.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClInclude Include="formats\mp2t\mp2t_common.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\mp2t_stream_parser.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\mp2t_stream_parser.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\timestamp_unroller.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\timestamp_unroller.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\ts_packet.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\ts_packet.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClInclude Include="formats\mp2t\ts_section.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\ts_section_pat.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\ts_section_pat.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\ts_section_pes.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\ts_section_pes.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\ts_section_pmt.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\ts_section_pmt.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp2t\ts_section_psi.cc">
+      <Filter>formats\mp2t</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp2t\ts_section_psi.h">
+      <Filter>formats\mp2t</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\aac.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\aac.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\avc.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\avc.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\bitstream_converter.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\bitstream_converter.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\box_definitions.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\box_definitions.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\box_reader.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\box_reader.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\cenc.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\cenc.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\es_descriptor.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\es_descriptor.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\mp4_stream_parser.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\mp4_stream_parser.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\sample_to_group_iterator.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\sample_to_group_iterator.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mp4\track_run_iterator.cc">
+      <Filter>formats\mp4</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mp4\track_run_iterator.h">
+      <Filter>formats\mp4</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mpeg\adts_constants.cc">
+      <Filter>formats\mpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mpeg\adts_constants.h">
+      <Filter>formats\mpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mpeg\adts_stream_parser.cc">
+      <Filter>formats\mpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mpeg\adts_stream_parser.h">
+      <Filter>formats\mpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mpeg\mpeg1_audio_stream_parser.cc">
+      <Filter>formats\mpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mpeg\mpeg1_audio_stream_parser.h">
+      <Filter>formats\mpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="formats\mpeg\mpeg_audio_stream_parser_base.cc">
+      <Filter>formats\mpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="formats\mpeg\mpeg_audio_stream_parser_base.h">
+      <Filter>formats\mpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_sse2.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_ssse3.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="base\simd\convert_yuv_to_rgb_x86.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="base\simd\filter_yuv_sse2.cc">
+      <Filter>base\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="filters\source_buffer_platform.cc">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClInclude Include="filters\source_buffer_platform.h">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <None Include="media.gyp"/>
+  </ItemGroup>
+</Project>

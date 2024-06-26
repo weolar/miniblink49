@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quads">
+      <UniqueIdentifier>{FE023935-9975-C730-78B0-4AE1E6DAFC83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="layers\layer_perftest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\picture_layer_impl_perftest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="quads\draw_quad_perftest.cc">
+      <Filter>quads</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\task_graph_runner_perftest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\texture_compressor_perftest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\tile_task_worker_pool_perftest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_aggregator_perftest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="test\cc_test_suite.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\run_all_perftests.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\picture_layer_tiling_perftest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\tile_manager_perftest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_common_perftest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_perftest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\occlusion_tracker_perftest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <None Include="cc_tests.gyp"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,52 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/ui.gni")
+import("//ui/ozone/ozone.gni")
+
+component("devices") {
+  sources = [
+    "device_data_manager.cc",
+    "device_data_manager.h",
+    "device_hotplug_event_observer.h",
+    "device_util_linux.cc",
+    "device_util_linux.h",
+    "events_devices_export.h",
+    "input_device.cc",
+    "input_device.h",
+    "input_device_event_observer.h",
+    "keyboard_device.cc",
+    "keyboard_device.h",
+    "touchscreen_device.cc",
+    "touchscreen_device.h",
+  ]
+
+  defines = [ "EVENTS_DEVICES_IMPLEMENTATION" ]
+
+  deps = [
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//skia",
+    "//ui/gfx",
+    "//ui/gfx/geometry",
+  ]
+
+  if (use_x11 || ozone_platform_x11) {
+    configs += [ "//build/config/linux:x11" ]
+
+    sources += [
+      "x11/device_data_manager_x11.cc",
+      "x11/device_data_manager_x11.h",
+      "x11/device_list_cache_x11.cc",
+      "x11/device_list_cache_x11.h",
+      "x11/touch_factory_x11.cc",
+      "x11/touch_factory_x11.h",
+    ]
+
+    deps += [
+      "//ui/events:events_base",
+      "//ui/gfx/x",
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+include_rules = [
+  "+cc/input/input_handler.h",
+  "+cc/input/main_thread_scrolling_reason.h",
+  "+cc/input/scroll_elasticity_helper.h",
+  "+cc/trees/swap_promise_monitor.h",
+  
+  "+third_party/WebKit/public/platform/WebGestureCurve.h",
+  "+third_party/WebKit/public/platform/WebGestureCurveTarget.h",
+  "+third_party/WebKit/public/platform/WebFloatPoint.h",
+  "+third_party/WebKit/public/platform/WebFloatSize.h",
+  "+third_party/WebKit/public/platform/WebPoint.h",
+  "+third_party/WebKit/public/web/WebActiveWheelFlingParameters.h",
+  "+third_party/WebKit/public/web/WebInputEvent.h",
+  
+  "+ui/gfx/geometry",
+  "+ui/events"
+]

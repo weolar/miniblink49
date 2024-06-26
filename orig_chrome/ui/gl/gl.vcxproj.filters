@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gl_bindings.cc"/>
+    <ClInclude Include="gl_bindings.h"/>
+    <ClCompile Include="gl_bindings_autogen_gl.cc"/>
+    <ClInclude Include="gl_bindings_autogen_gl.h"/>
+    <ClCompile Include="gl_bindings_autogen_osmesa.cc"/>
+    <ClInclude Include="gl_bindings_autogen_osmesa.h"/>
+    <ClCompile Include="gl_bindings_skia_in_process.cc"/>
+    <ClInclude Include="gl_bindings_skia_in_process.h"/>
+    <ClCompile Include="gl_context.cc"/>
+    <ClInclude Include="gl_context.h"/>
+    <ClCompile Include="gl_context_osmesa.cc"/>
+    <ClInclude Include="gl_context_osmesa.h"/>
+    <ClCompile Include="gl_context_stub.cc"/>
+    <ClInclude Include="gl_context_stub.h"/>
+    <ClCompile Include="gl_context_stub_with_extensions.cc"/>
+    <ClInclude Include="gl_context_stub_with_extensions.h"/>
+    <ClCompile Include="gl_context_win.cc"/>
+    <ClCompile Include="gl_enums.cc"/>
+    <ClInclude Include="gl_enums.h"/>
+    <ClInclude Include="gl_enums_implementation_autogen.h"/>
+    <ClInclude Include="gl_export.h"/>
+    <ClCompile Include="gl_fence.cc"/>
+    <ClInclude Include="gl_fence.h"/>
+    <ClCompile Include="gl_fence_arb.cc"/>
+    <ClInclude Include="gl_fence_arb.h"/>
+    <ClCompile Include="gl_fence_nv.cc"/>
+    <ClInclude Include="gl_fence_nv.h"/>
+    <ClCompile Include="gl_gl_api_implementation.cc"/>
+    <ClInclude Include="gl_gl_api_implementation.h"/>
+    <ClInclude Include="gl_image.h"/>
+    <ClCompile Include="gl_image_memory.cc"/>
+    <ClInclude Include="gl_image_memory.h"/>
+    <ClCompile Include="gl_image_ref_counted_memory.cc"/>
+    <ClInclude Include="gl_image_ref_counted_memory.h"/>
+    <ClCompile Include="gl_image_shared_memory.cc"/>
+    <ClInclude Include="gl_image_shared_memory.h"/>
+    <ClCompile Include="gl_image_stub.cc"/>
+    <ClInclude Include="gl_image_stub.h"/>
+    <ClCompile Include="gl_implementation.cc"/>
+    <ClInclude Include="gl_implementation.h"/>
+    <ClCompile Include="gl_implementation_win.cc"/>
+    <ClCompile Include="gl_osmesa_api_implementation.cc"/>
+    <ClInclude Include="gl_osmesa_api_implementation.h"/>
+    <ClCompile Include="gl_share_group.cc"/>
+    <ClInclude Include="gl_share_group.h"/>
+    <ClCompile Include="gl_state_restorer.cc"/>
+    <ClInclude Include="gl_state_restorer.h"/>
+    <ClCompile Include="gl_surface.cc"/>
+    <ClInclude Include="gl_surface.h"/>
+    <ClCompile Include="gl_surface_osmesa.cc"/>
+    <ClInclude Include="gl_surface_osmesa.h"/>
+    <ClCompile Include="gl_surface_stub.cc"/>
+    <ClInclude Include="gl_surface_stub.h"/>
+    <ClCompile Include="gl_surface_win.cc"/>
+    <ClCompile Include="gl_switches.cc"/>
+    <ClInclude Include="gl_switches.h"/>
+    <ClCompile Include="gl_version_info.cc"/>
+    <ClInclude Include="gl_version_info.h"/>
+    <ClCompile Include="gpu_switching_manager.cc"/>
+    <ClInclude Include="gpu_switching_manager.h"/>
+    <ClInclude Include="gpu_switching_observer.h"/>
+    <ClCompile Include="gpu_timing.cc"/>
+    <ClInclude Include="gpu_timing.h"/>
+    <ClCompile Include="scoped_api.cc"/>
+    <ClInclude Include="scoped_api.h"/>
+    <ClCompile Include="scoped_binders.cc"/>
+    <ClInclude Include="scoped_binders.h"/>
+    <ClCompile Include="scoped_make_current.cc"/>
+    <ClInclude Include="scoped_make_current.h"/>
+    <ClCompile Include="sync_control_vsync_provider.cc"/>
+    <ClInclude Include="sync_control_vsync_provider.h"/>
+    <ClCompile Include="trace_util.cc"/>
+    <ClInclude Include="trace_util.h"/>
+    <ClCompile Include="egl_util.cc"/>
+    <ClInclude Include="egl_util.h"/>
+    <ClCompile Include="gl_bindings_autogen_egl.cc"/>
+    <ClInclude Include="gl_bindings_autogen_egl.h"/>
+    <ClCompile Include="gl_context_egl.cc"/>
+    <ClInclude Include="gl_context_egl.h"/>
+    <ClCompile Include="gl_egl_api_implementation.cc"/>
+    <ClInclude Include="gl_egl_api_implementation.h"/>
+    <ClCompile Include="gl_fence_egl.cc"/>
+    <ClInclude Include="gl_fence_egl.h"/>
+    <ClCompile Include="gl_image_egl.cc"/>
+    <ClInclude Include="gl_image_egl.h"/>
+    <ClCompile Include="gl_surface_egl.cc"/>
+    <ClInclude Include="gl_surface_egl.h"/>
+    <ClCompile Include="angle_platform_impl.cc"/>
+    <ClInclude Include="angle_platform_impl.h"/>
+    <ClCompile Include="gl_bindings_autogen_wgl.cc"/>
+    <ClInclude Include="gl_bindings_autogen_wgl.h"/>
+    <ClCompile Include="gl_context_wgl.cc"/>
+    <ClInclude Include="gl_context_wgl.h"/>
+    <ClCompile Include="gl_surface_wgl.cc"/>
+    <ClInclude Include="gl_surface_wgl.h"/>
+    <ClCompile Include="gl_wgl_api_implementation.cc"/>
+    <ClInclude Include="gl_wgl_api_implementation.h"/>
+    <None Include="gl.gyp"/>
+  </ItemGroup>
+</Project>

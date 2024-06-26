@@ -1,0 +1,12 @@
+set noparent
+dcheng@chromium.org
+inferno@chromium.org
+jln@chromium.org
+jschuh@chromium.org
+kenrb@chromium.org
+nasko@chromium.org
+palmer@chromium.org
+tsepez@chromium.org
+
+per-file *.gyp*=*
+per-file BUILD.gn=*

@@ -1,0 +1,102 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//testing/test.gni")
+
+# GYP version: //cc/blink/cc_blink.gyp:cc_blink
+component("blink") {
+  output_name = "cc_blink"
+
+  sources = [
+    "cc_blink_export.h",
+    "context_provider_web_context.h",
+    "scrollbar_impl.cc",
+    "scrollbar_impl.h",
+    "web_animation_curve_common.cc",
+    "web_animation_curve_common.h",
+    "web_animation_impl.cc",
+    "web_animation_impl.h",
+    "web_compositor_animation_player_impl.cc",
+    "web_compositor_animation_player_impl.h",
+    "web_compositor_animation_timeline_impl.cc",
+    "web_compositor_animation_timeline_impl.h",
+    "web_compositor_support_impl.cc",
+    "web_compositor_support_impl.h",
+    "web_content_layer_impl.cc",
+    "web_content_layer_impl.h",
+    "web_display_item_list_impl.cc",
+    "web_display_item_list_impl.h",
+    "web_external_bitmap_impl.cc",
+    "web_external_bitmap_impl.h",
+    "web_external_texture_layer_impl.cc",
+    "web_external_texture_layer_impl.h",
+    "web_filter_animation_curve_impl.cc",
+    "web_filter_animation_curve_impl.h",
+    "web_filter_operations_impl.cc",
+    "web_filter_operations_impl.h",
+    "web_float_animation_curve_impl.cc",
+    "web_float_animation_curve_impl.h",
+    "web_image_layer_impl.cc",
+    "web_image_layer_impl.h",
+    "web_layer_impl.cc",
+    "web_layer_impl.h",
+    "web_layer_impl_fixed_bounds.cc",
+    "web_layer_impl_fixed_bounds.h",
+    "web_scroll_offset_animation_curve_impl.cc",
+    "web_scroll_offset_animation_curve_impl.h",
+    "web_scrollbar_layer_impl.cc",
+    "web_scrollbar_layer_impl.h",
+    "web_to_cc_animation_delegate_adapter.cc",
+    "web_to_cc_animation_delegate_adapter.h",
+    "web_transform_animation_curve_impl.cc",
+    "web_transform_animation_curve_impl.h",
+    "web_transform_operations_impl.cc",
+    "web_transform_operations_impl.h",
+  ]
+
+  defines = [ "CC_BLINK_IMPLEMENTATION" ]
+
+  public_deps = [
+    "//skia",
+  ]
+
+  deps = [
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//cc",
+    "//gpu",
+    "//third_party/WebKit/public:blink",
+    "//ui/gfx",
+    "//ui/gfx/geometry",
+  ]
+}
+
+# GYP version: //cc/blink/cc_blink_tests.gyp:cc_blink_unittests
+# TODO(GYP): make linking work on the mac.
+if (!is_mac) {
+  test("cc_blink_unittests") {
+    sources = [
+      "web_animation_unittest.cc",
+      "web_float_animation_curve_unittest.cc",
+      "web_layer_impl_fixed_bounds_unittest.cc",
+
+      # Setup.
+      "test/cc_blink_test_suite.cc",
+      "test/run_all_unittests.cc",
+    ]
+
+    deps = [
+      ":blink",
+      "//base/test:test_support",
+      "//base/third_party/dynamic_annotations",
+      "//skia",
+      "//testing/gtest",
+      "//third_party/WebKit/public:blink",
+      "//ui/gfx/geometry",
+      "//ui/gfx:test_support",
+      "//cc",
+      "//cc:test_support",
+    ]
+  }
+}

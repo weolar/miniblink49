@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging\proto">
+      <UniqueIdentifier>{E1E178F4-6F78-9A60-32B7-00150F9D2998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging\proto">
+      <UniqueIdentifier>{E1E178F4-6F78-9A60-32B7-00150F9D2998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\tools">
+      <UniqueIdentifier>{A0946190-5491-4D66-7E51-19400E36F078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\tools\protoc_wrapper">
+      <UniqueIdentifier>{34D2DD54-FDF8-D9D8-4C83-CA01DBAC57A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\pyproto">
+      <UniqueIdentifier>{A5155811-51E5-1087-45BA-D2802E9B53B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\pyproto\media">
+      <UniqueIdentifier>{2699B576-DA2C-16EE-9C4A-F0CAB500D719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\pyproto\media\cast">
+      <UniqueIdentifier>{C862B4C1-82E6-A117-15BF-FB2958E7F586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\pyproto\media\cast\logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\pyproto\media\cast\logging\proto">
+      <UniqueIdentifier>{E1E178F4-6F78-9A60-32B7-00150F9D2998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out">
+      <UniqueIdentifier>{456EFA50-5ADA-2D4B-BB76-1BD6B9BCA3A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media">
+      <UniqueIdentifier>{2699B576-DA2C-16EE-9C4A-F0CAB500D719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast">
+      <UniqueIdentifier>{C862B4C1-82E6-A117-15BF-FB2958E7F586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast\logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast\logging\proto">
+      <UniqueIdentifier>{E1E178F4-6F78-9A60-32B7-00150F9D2998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out">
+      <UniqueIdentifier>{456EFA50-5ADA-2D4B-BB76-1BD6B9BCA3A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media">
+      <UniqueIdentifier>{2699B576-DA2C-16EE-9C4A-F0CAB500D719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast">
+      <UniqueIdentifier>{C862B4C1-82E6-A117-15BF-FB2958E7F586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast\logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\protoc_out\media\cast\logging\proto">
+      <UniqueIdentifier>{E1E178F4-6F78-9A60-32B7-00150F9D2998}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="logging\proto\proto_utils.cc">
+      <Filter>logging\proto</Filter>
+    </ClCompile>
+    <None Include="logging\proto\raw_events.proto">
+      <Filter>logging\proto</Filter>
+    </None>
+    <None Include="cast.gyp"/>
+    <None Include="..\..\tools\protoc_wrapper\protoc_wrapper.py">
+      <Filter>..\..\tools\protoc_wrapper</Filter>
+    </None>
+    <None Include="$(OutDir)\protoc.exe">
+      <Filter>$(OutDir)</Filter>
+    </None>
+    <None Include="$(OutDir)\pyproto\media\cast\logging\proto\raw_events_pb2.py">
+      <Filter>$(OutDir)\pyproto\media\cast\logging\proto</Filter>
+    </None>
+    <ClCompile Include="$(OutDir)gen\protoc_out\media\cast\logging\proto\raw_events.pb.cc">
+      <Filter>$(OutDir)gen\protoc_out\media\cast\logging\proto</Filter>
+    </ClCompile>
+    <ClInclude Include="$(OutDir)gen\protoc_out\media\cast\logging\proto\raw_events.pb.h">
+      <Filter>$(OutDir)gen\protoc_out\media\cast\logging\proto</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

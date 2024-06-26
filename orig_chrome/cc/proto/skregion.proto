@@ -1,0 +1,20 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto2";
+
+option optimize_for = LITE_RUNTIME;
+
+package cc.proto;
+
+message SkRegion {
+  enum Op {
+    Op_Difference = 0;
+    Op_Intersect = 1;
+    Op_Union = 2;
+    Op_XOR = 3;
+    Op_ReverseDifference = 4;
+    Op_Replace = 5;
+  }
+}

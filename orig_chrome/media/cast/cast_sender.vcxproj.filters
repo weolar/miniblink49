@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sender">
+      <UniqueIdentifier>{DF678346-E992-34D6-39AF-22C09FA29B10}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cast_sender.h"/>
+    <ClCompile Include="cast_sender_impl.cc"/>
+    <ClInclude Include="cast_sender_impl.h"/>
+    <ClCompile Include="sender\audio_encoder.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\audio_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\audio_sender.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\audio_sender.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\congestion_control.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\congestion_control.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\external_video_encoder.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\external_video_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\fake_software_video_encoder.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\fake_software_video_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\frame_sender.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\frame_sender.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\performance_metrics_overlay.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\performance_metrics_overlay.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\sender_encoded_frame.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\sender_encoded_frame.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\size_adaptable_video_encoder_base.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\size_adaptable_video_encoder_base.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClInclude Include="sender\software_video_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\video_encoder.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\video_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\video_encoder_impl.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\video_encoder_impl.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClInclude Include="sender\video_frame_factory.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\video_sender.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\video_sender.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\vp8_encoder.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <ClInclude Include="sender\vp8_encoder.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClInclude Include="sender\vp8_quantizer_parser.h">
+      <Filter>sender</Filter>
+    </ClInclude>
+    <ClCompile Include="sender\vp8_quantizer_parser.cc">
+      <Filter>sender</Filter>
+    </ClCompile>
+    <None Include="cast.gyp"/>
+  </ItemGroup>
+</Project>

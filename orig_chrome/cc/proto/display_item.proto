@@ -1,0 +1,93 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto2";
+
+import "skregion.proto";
+import "skrrect.proto";
+import "skxfermode.proto";
+import "rect.proto";
+import "rectf.proto";
+import "transform.proto";
+
+option optimize_for = LITE_RUNTIME;
+
+package cc.proto;
+
+message DisplayItemListSettings {
+  optional bool use_cached_picture = 1;
+}
+
+message DisplayItemList {
+  repeated DisplayItem items = 1;
+  optional cc.proto.Rect layer_rect = 2;
+  optional DisplayItemListSettings settings = 3;
+}
+
+message DisplayItem {
+  enum Type {
+    Type_Clip = 1;
+    Type_EndClip = 2;
+    Type_ClipPath = 3;
+    Type_EndClipPath = 4;
+    Type_Compositing = 5;
+    Type_EndCompositing = 6;
+    Type_Drawing = 7;
+    Type_Filter = 8;
+    Type_EndFilter = 9;
+    Type_FloatClip = 10;
+    Type_EndFloatClip = 11;
+    Type_Transform = 12;
+    Type_EndTransform = 13;
+  }
+
+  optional Type type = 1;
+
+  // Unique DisplayItem types.  |type| determines which one (if any) is valid.
+  optional ClipDisplayItem clip_item = 1000;
+  optional ClipPathDisplayItem clip_path_item = 1001;
+  optional CompositingDisplayItem compositing_item = 1002;
+  optional DrawingDisplayItem drawing_item = 1003;
+  optional FilterDisplayItem filter_item = 1004;
+  optional FloatClipDisplayItem float_clip_item = 1005;
+  optional TransformDisplayItem transform_item = 1006;
+}
+
+message ClipDisplayItem {
+  optional cc.proto.Rect clip_rect = 1;
+
+  repeated cc.proto.SkRRect rounded_rects = 2;
+}
+
+message ClipPathDisplayItem {
+  optional cc.proto.SkRegion.Op clip_op = 1;
+  optional bool antialias = 2;
+  optional bytes clip_path = 3; /* SkPath */
+}
+
+message CompositingDisplayItem {
+  optional uint32 alpha = 1;
+
+  optional cc.proto.SkXfermode.Mode mode = 2;
+  optional cc.proto.RectF bounds = 3;
+  optional bytes color_filter = 4; /* SkColorFilter */
+}
+
+message DrawingDisplayItem {
+  optional bytes picture = 1; /* SkPicture */
+}
+
+message FilterDisplayItem {
+  optional cc.proto.RectF bounds = 1;
+
+  // TODO(dtrainor): Support FilterOperations.
+}
+
+message FloatClipDisplayItem {
+  optional cc.proto.RectF clip_rect = 1;
+}
+
+message TransformDisplayItem {
+  optional cc.proto.Transform transform = 1;
+}

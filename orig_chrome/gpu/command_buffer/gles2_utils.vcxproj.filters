@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\gles2_cmd_format.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClCompile Include="common\gles2_cmd_utils.cc">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClInclude Include="common\gles2_cmd_utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\gles2_utils_export.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <None Include="command_buffer.gyp"/>
+  </ItemGroup>
+</Project>

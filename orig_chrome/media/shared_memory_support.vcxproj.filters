@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{D4AF4849-65C6-75FE-2B6E-F6BD18C08214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="audio\audio_parameters.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\audio_parameters.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="audio\point.cc">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClInclude Include="audio\point.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClCompile Include="base\audio_bus.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\audio_bus.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\channel_layout.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\channel_layout.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\limits.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\media_export.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClCompile Include="base\vector_math.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClInclude Include="base\vector_math.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <None Include="media.gyp"/>
+  </ItemGroup>
+</Project>

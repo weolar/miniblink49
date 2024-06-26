@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\cc_blink_test_suite.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\run_all_unittests.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="web_animation_unittest.cc"/>
+    <ClCompile Include="web_float_animation_curve_unittest.cc"/>
+    <ClCompile Include="web_layer_impl_fixed_bounds_unittest.cc"/>
+    <None Include="cc_blink_tests.gyp"/>
+  </ItemGroup>
+</Project>

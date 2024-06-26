@@ -1,0 +1,56 @@
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/protobuf/proto_library.gni")
+
+# Use a group here to allow external targets to depend on "cc/proto" instead of
+# cc/proto:cc_proto.  We need a group because other component targets are named
+# "proto" which breaks component builds.  A group doesn't have the same issue.
+group("proto") {
+  public_deps = [
+    ":cc_proto",
+  ]
+}
+
+component("cc_proto") {
+  # Only expose the target to the "proto" group.
+  visibility = [ ":proto" ]
+
+  public_deps = [
+    ":proto_internal",
+  ]
+}
+
+proto_library("proto_internal") {
+  # Only expose the target to the "cc_proto" target.
+  visibility = [ ":cc_proto" ]
+
+  sources = [
+    # TODO(dtrainor): Move protos to their correct packages once it's possible
+    # to include protos from other directories/targets (crbug.com/542423).
+    "display_item.proto",
+    "point.proto",
+    "pointf.proto",
+    "rect.proto",
+    "rectf.proto",
+    "size.proto",
+    "sizef.proto",
+    "skregion.proto",
+    "skrrect.proto",
+    "skxfermode.proto",
+    "transform.proto",
+  ]
+
+  deps = [
+    "//third_party/protobuf:protobuf_lite",
+  ]
+
+  cc_generator_options = "dllexport_decl=CC_PROTO_EXPORT:"
+  cc_include = "cc/proto/cc_proto_export.h"
+
+  defines = [ "CC_PROTO_IMPLEMENTATION" ]
+
+  # Warn if clang creates exit destructors.
+  extra_configs = [ "//build/config/compiler:wexit_time_destructors" ]
+}

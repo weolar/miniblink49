@@ -1,0 +1,11 @@
+include_rules = [
+  # Remove DEPS allowed by ui/base
+  "-grit",
+  "-jni",
+  "-net",
+  "-skia",
+  "-third_party",
+  "-ui",
+
+  "+ui/events",
+]

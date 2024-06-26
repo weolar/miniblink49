@@ -1,0 +1,20 @@
+include_rules = [
+  "+gpu/GLES2",
+  "+gpu/command_buffer/client/context_support.h",
+  "+gpu/command_buffer/client/gles2_interface.h",
+  "+gpu/command_buffer/client/gles2_interface_stub.h", # for tests
+  "+gpu/command_buffer/client/gpu_memory_buffer_manager.h",
+  "+gpu/command_buffer/common/capabilities.h",
+  "+gpu/command_buffer/common/gpu_memory_allocation.h",
+  "+gpu/command_buffer/common/mailbox.h",
+  "+gpu/command_buffer/common/mailbox_holder.h",
+  "+media",
+  "+skia/ext",
+  "+third_party/khronos/GLES2/gl2.h",
+  "+third_party/khronos/GLES2/gl2ext.h",
+  "+third_party/skia/include",
+  "+ui/events/latency_info.h",
+  "+ui/gfx",
+  "+ui/gl",
+  "-cc/blink",
+]

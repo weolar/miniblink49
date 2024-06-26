@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{2F5FD094-EF52-77F7-7AA8-4327A01BF747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logging">
+      <UniqueIdentifier>{3D8BE72E-CED2-B63E-4DF6-7C1E66BA0B9E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cast_config.cc"/>
+    <ClInclude Include="cast_config.h"/>
+    <ClInclude Include="cast_defines.h"/>
+    <ClCompile Include="cast_environment.cc"/>
+    <ClInclude Include="cast_environment.h"/>
+    <ClCompile Include="common\clock_drift_smoother.cc">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClInclude Include="common\clock_drift_smoother.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClCompile Include="common\transport_encryption_handler.cc">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClInclude Include="common\transport_encryption_handler.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\encoding_event_subscriber.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\encoding_event_subscriber.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\log_deserializer.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\log_deserializer.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\log_event_dispatcher.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\log_event_dispatcher.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\log_serializer.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\log_serializer.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\logging_defines.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\logging_defines.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="logging\raw_event_subscriber.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\raw_event_subscriber_bundle.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\raw_event_subscriber_bundle.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClInclude Include="logging\receiver_time_offset_estimator.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\receiver_time_offset_estimator_impl.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\receiver_time_offset_estimator_impl.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\simple_event_subscriber.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\simple_event_subscriber.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <ClCompile Include="logging\stats_event_subscriber.cc">
+      <Filter>logging</Filter>
+    </ClCompile>
+    <ClInclude Include="logging\stats_event_subscriber.h">
+      <Filter>logging</Filter>
+    </ClInclude>
+    <None Include="cast.gyp"/>
+  </ItemGroup>
+</Project>

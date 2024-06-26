@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="surfaces\display.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\display.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaces\display_client.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\display_scheduler.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\display_scheduler.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\onscreen_display_client.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\onscreen_display_client.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_aggregator.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_aggregator.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_display_output_surface.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_display_output_surface.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_factory.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_factory.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaces\surface_factory_client.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_hittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_hittest.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaces\surface_id.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_id_allocator.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_id_allocator.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_manager.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_manager.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_resource_holder.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_resource_holder.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaces\surfaces_export.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <None Include="cc.gyp"/>
+  </ItemGroup>
+</Project>

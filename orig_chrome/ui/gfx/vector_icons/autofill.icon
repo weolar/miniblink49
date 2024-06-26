@@ -1,0 +1,29 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+MOVE_TO, 6, 34.5f,
+LINE_TO, 6, 42,
+LINE_TO, 13.5f, 42,
+LINE_TO, 35.63f, 19.87f,
+LINE_TO, 28.13f, 12.37f,
+LINE_TO, 6, 34.5f,
+LINE_TO, 6, 34.5f,
+CLOSE,
+MOVE_TO, 41.41f, 14.09f,
+CUBIC_TO, 42.2f, 13.3f, 42.2f, 12.04f, 41.41f, 11.26f,
+LINE_TO, 36.74f, 6.59f,
+CUBIC_TO, 35.96f, 5.8f, 34.7f, 5.8f, 33.91f, 6.59f,
+LINE_TO, 30.25f, 10.25f,
+LINE_TO, 37.75f, 17.75f,
+LINE_TO, 41.41f, 14.09f,
+LINE_TO, 41.41f, 14.09f,
+CLOSE,
+MOVE_TO, 24, 38,
+LINE_TO, 20, 42,
+LINE_TO, 42, 42,
+LINE_TO, 42, 38,
+LINE_TO, 24, 38,
+LINE_TO, 24, 38,
+CLOSE,
+END

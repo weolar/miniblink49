@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7BC483B0-BE41-DE0B-33B6-F300518CBCAD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>media</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <EmbedManifest>false</EmbedManifest>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <OutDir>..\out\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetPath>$(OutDir)\$(ProjectName)$(TargetExt)</TargetPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /we4389 /bigobj /Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4702;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;cfgmgr32.lib;powrprof.lib;setupapi.lib;advapi32.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;dxguid.lib;setupapi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;mf.dll;mfplat.dll;mfreadwrite.dll;cfgmgr32.dll;powrprof.dll;setupapi.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..;$(OutDir)gen;$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /we4389 /bigobj /Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4702;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;cfgmgr32.lib;powrprof.lib;setupapi.lib;advapi32.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;dxguid.lib;setupapi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;mf.dll;mfplat.dll;mfreadwrite.dll;cfgmgr32.dll;powrprof.dll;setupapi.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..;$(OutDir)gen;$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /we4389 /bigobj /Zc:sizedDealloc- /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4702;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;cfgmgr32.lib;powrprof.lib;setupapi.lib;advapi32.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;dxguid.lib;setupapi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;mf.dll;mfplat.dll;mfreadwrite.dll;cfgmgr32.dll;powrprof.dll;setupapi.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..;$(OutDir)gen;$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /we4389 /bigobj /Zc:sizedDealloc- /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4589;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4995;4996;4456;4457;4458;4459;4702;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;cfgmgr32.lib;powrprof.lib;setupapi.lib;advapi32.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;dxguid.lib;setupapi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;mf.dll;mfplat.dll;mfreadwrite.dll;cfgmgr32.dll;powrprof.dll;setupapi.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..;$(OutDir)gen;$(OutDir)gen;..\third_party\wtl\include;..;..\third_party\khronos;..\gpu;..\skia\config;$(OutDir)gen\angle;..\third_party\icu\source\common;..\third_party\icu\source\i18n;$(OutDir)gen\blpwtk2\public;$(OutDir)gen\blpv8\public;$(OutDir)gen\blppdfutil\public;..\skia\ext;..\third_party\skia\include\core;..\third_party\skia\include\effects;..\third_party\skia\include\pdf;..\third_party\skia\include\gpu;..\third_party\skia\include\lazy;..\third_party\skia\include\pathops;..\third_party\skia\include\pipe;..\third_party\skia\include\ports;..\third_party\skia\include\utils;..\third_party\libyuv\include;..\third_party\libyuv;..\third_party\opus\src\include;..\third_party\ffmpeg\chromium\config\Chrome\win\ia32;..\third_party\ffmpeg;..\third_party\libvpx_new\source\libvpx;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;CLD_VERSION=2;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;DISABLE_NACL;CHROMIUM_BUILD;CR_CLANG_REVISION=247874-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;USE_PROPRIETARY_CODECS;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;FIELDTRIAL_TESTING_ENABLED;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PDF=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;MEDIA_IMPLEMENTATION;USE_NEON;U_USING_ICU_NAMESPACE=0;U_ENABLE_DYLOAD=0;SKIA_DLL;GR_GL_IGNORE_ES3_MSAA=0;SK_SUPPORT_GPU=1;SK_IGNORE_LINEONLY_AA_CONVEX_PATH_OPTS;SK_IGNORE_GL_TEXTURE_TARGET;GR_GL_FUNCTION_TYPE=__stdcall;USE_LIBPCI=1;USE_OPENSSL=1;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="media.gyp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio\agc_audio_stream.h"/>
+    <ClInclude Include="audio\audio_device_name.h"/>
+    <ClInclude Include="audio\audio_device_thread.h"/>
+    <ClInclude Include="audio\audio_input_controller.h"/>
+    <ClInclude Include="audio\audio_input_device.h"/>
+    <ClInclude Include="audio\audio_input_ipc.h"/>
+    <ClInclude Include="audio\audio_io.h"/>
+    <ClInclude Include="audio\audio_manager.h"/>
+    <ClInclude Include="audio\audio_manager_base.h"/>
+    <ClInclude Include="audio\audio_output_controller.h"/>
+    <ClInclude Include="audio\audio_output_device.h"/>
+    <ClInclude Include="audio\audio_output_dispatcher.h"/>
+    <ClInclude Include="audio\audio_output_dispatcher_impl.h"/>
+    <ClInclude Include="audio\audio_output_ipc.h"/>
+    <ClInclude Include="audio\audio_output_proxy.h"/>
+    <ClInclude Include="audio\audio_output_resampler.h"/>
+    <ClInclude Include="audio\audio_output_stream_sink.h"/>
+    <ClInclude Include="audio\audio_power_monitor.h"/>
+    <ClInclude Include="audio\audio_source_diverter.h"/>
+    <ClInclude Include="audio\clockless_audio_sink.h"/>
+    <ClInclude Include="audio\fake_audio_input_stream.h"/>
+    <ClInclude Include="audio\fake_audio_log_factory.h"/>
+    <ClInclude Include="audio\fake_audio_manager.h"/>
+    <ClInclude Include="audio\fake_audio_output_stream.h"/>
+    <ClInclude Include="audio\fake_audio_worker.h"/>
+    <ClInclude Include="audio\null_audio_sink.h"/>
+    <ClInclude Include="audio\sample_rates.h"/>
+    <ClInclude Include="audio\scoped_task_runner_observer.h"/>
+    <ClInclude Include="audio\simple_sources.h"/>
+    <ClInclude Include="audio\sounds\audio_stream_handler.h"/>
+    <ClInclude Include="audio\sounds\sounds_manager.h"/>
+    <ClInclude Include="audio\sounds\wav_audio_handler.h"/>
+    <ClInclude Include="audio\virtual_audio_input_stream.h"/>
+    <ClInclude Include="audio\virtual_audio_output_stream.h"/>
+    <ClInclude Include="audio\win\audio_device_listener_win.h"/>
+    <ClInclude Include="audio\win\audio_low_latency_input_win.h"/>
+    <ClInclude Include="audio\win\audio_low_latency_output_win.h"/>
+    <ClInclude Include="audio\win\audio_manager_win.h"/>
+    <ClInclude Include="audio\win\avrt_wrapper_win.h"/>
+    <ClInclude Include="audio\win\core_audio_util_win.h"/>
+    <ClInclude Include="audio\win\device_enumeration_win.h"/>
+    <ClInclude Include="audio\win\wavein_input_win.h"/>
+    <ClInclude Include="audio\win\waveout_output_win.h"/>
+    <ClInclude Include="base\audio_block_fifo.h"/>
+    <ClInclude Include="base\audio_buffer.h"/>
+    <ClInclude Include="base\audio_buffer_converter.h"/>
+    <ClInclude Include="base\audio_buffer_queue.h"/>
+    <ClInclude Include="base\audio_capturer_source.h"/>
+    <ClInclude Include="base\audio_converter.h"/>
+    <ClInclude Include="base\audio_decoder.h"/>
+    <ClInclude Include="base\audio_decoder_config.h"/>
+    <ClInclude Include="base\audio_discard_helper.h"/>
+    <ClInclude Include="base\audio_fifo.h"/>
+    <ClInclude Include="base\audio_hardware_config.h"/>
+    <ClInclude Include="base\audio_hash.h"/>
+    <ClInclude Include="base\audio_pull_fifo.h"/>
+    <ClInclude Include="base\audio_renderer.h"/>
+    <ClInclude Include="base\audio_renderer_mixer.h"/>
+    <ClInclude Include="base\audio_renderer_mixer_input.h"/>
+    <ClInclude Include="base\audio_renderer_sink.h"/>
+    <ClInclude Include="base\audio_shifter.h"/>
+    <ClInclude Include="base\audio_splicer.h"/>
+    <ClInclude Include="base\audio_timestamp_helper.h"/>
+    <ClInclude Include="base\audio_video_metadata_extractor.h"/>
+    <ClInclude Include="base\bind_to_current_loop.h"/>
+    <ClInclude Include="base\bit_reader.h"/>
+    <ClInclude Include="base\bit_reader_core.h"/>
+    <ClInclude Include="base\bitstream_buffer.h"/>
+    <ClInclude Include="base\buffering_state.h"/>
+    <ClInclude Include="base\byte_queue.h"/>
+    <ClInclude Include="base\cdm_callback_promise.h"/>
+    <ClInclude Include="base\cdm_config.h"/>
+    <ClInclude Include="base\cdm_context.h"/>
+    <ClInclude Include="base\cdm_factory.h"/>
+    <ClInclude Include="base\cdm_initialized_promise.h"/>
+    <ClInclude Include="base\cdm_key_information.h"/>
+    <ClInclude Include="base\cdm_promise.h"/>
+    <ClInclude Include="base\cdm_promise_adapter.h"/>
+    <ClInclude Include="base\channel_mixer.h"/>
+    <ClInclude Include="base\channel_mixing_matrix.h"/>
+    <ClInclude Include="base\container_names.h"/>
+    <ClInclude Include="base\data_buffer.h"/>
+    <ClInclude Include="base\data_source.h"/>
+    <ClInclude Include="base\decoder_buffer.h"/>
+    <ClInclude Include="base\decoder_buffer_queue.h"/>
+    <ClInclude Include="base\decrypt_config.h"/>
+    <ClInclude Include="base\decryptor.h"/>
+    <ClInclude Include="base\demuxer.h"/>
+    <ClInclude Include="base\demuxer_stream.h"/>
+    <ClInclude Include="base\demuxer_stream_provider.h"/>
+    <ClInclude Include="base\djb2.h"/>
+    <ClInclude Include="base\eme_constants.h"/>
+    <ClInclude Include="base\key_system_info.h"/>
+    <ClInclude Include="base\key_systems.h"/>
+    <ClInclude Include="base\key_systems_support_uma.h"/>
+    <ClInclude Include="base\keyboard_event_counter.h"/>
+    <ClInclude Include="base\media.h"/>
+    <ClInclude Include="base\media_client.h"/>
+    <ClInclude Include="base\media_file_checker.h"/>
+    <ClInclude Include="base\media_keys.h"/>
+    <ClInclude Include="base\media_log.h"/>
+    <ClInclude Include="base\media_log_event.h"/>
+    <ClInclude Include="base\media_permission.h"/>
+    <ClInclude Include="base\media_resources.h"/>
+    <ClInclude Include="base\media_switches.h"/>
+    <ClInclude Include="base\media_util.h"/>
+    <ClInclude Include="base\mime_util.h"/>
+    <ClInclude Include="base\moving_average.h"/>
+    <ClInclude Include="base\multi_channel_resampler.h"/>
+    <ClInclude Include="base\null_video_sink.h"/>
+    <ClInclude Include="base\output_device.h"/>
+    <ClInclude Include="base\pipeline.h"/>
+    <ClInclude Include="base\pipeline_status.h"/>
+    <ClInclude Include="base\player_tracker.h"/>
+    <ClInclude Include="base\ranges.h"/>
+    <ClInclude Include="base\renderer.h"/>
+    <ClInclude Include="base\renderer_factory.h"/>
+    <ClInclude Include="base\sample_format.h"/>
+    <ClInclude Include="base\seekable_buffer.h"/>
+    <ClInclude Include="base\serial_runner.h"/>
+    <ClInclude Include="base\simd\convert_rgb_to_yuv.h"/>
+    <ClInclude Include="base\simd\convert_yuv_to_rgb.h"/>
+    <ClInclude Include="base\simd\filter_yuv.h"/>
+    <ClInclude Include="base\sinc_resampler.h"/>
+    <ClInclude Include="base\stream_parser.h"/>
+    <ClInclude Include="base\stream_parser_buffer.h"/>
+    <ClInclude Include="base\text_cue.h"/>
+    <ClInclude Include="base\text_ranges.h"/>
+    <ClInclude Include="base\text_renderer.h"/>
+    <ClInclude Include="base\text_track.h"/>
+    <ClInclude Include="base\text_track_config.h"/>
+    <ClInclude Include="base\time_delta_interpolator.h"/>
+    <ClInclude Include="base\time_source.h"/>
+    <ClInclude Include="base\timestamp_constants.h"/>
+    <ClInclude Include="base\user_input_monitor.h"/>
+    <ClInclude Include="base\video_capture_types.h"/>
+    <ClInclude Include="base\video_capturer_source.h"/>
+    <ClInclude Include="base\video_decoder.h"/>
+    <ClInclude Include="base\video_decoder_config.h"/>
+    <ClInclude Include="base\video_frame.h"/>
+    <ClInclude Include="base\video_frame_metadata.h"/>
+    <ClInclude Include="base\video_frame_pool.h"/>
+    <ClInclude Include="base\video_renderer.h"/>
+    <ClInclude Include="base\video_rotation.h"/>
+    <ClInclude Include="base\video_types.h"/>
+    <ClInclude Include="base\video_util.h"/>
+    <ClInclude Include="base\wall_clock_time_source.h"/>
+    <ClInclude Include="base\win\mf_initializer.h"/>
+    <ClInclude Include="base\yuv_convert.h"/>
+    <ClInclude Include="capture\content\animated_content_sampler.h"/>
+    <ClInclude Include="capture\content\capture_resolution_chooser.h"/>
+    <ClInclude Include="capture\content\feedback_signal_accumulator.h"/>
+    <ClInclude Include="capture\content\screen_capture_device_core.h"/>
+    <ClInclude Include="capture\content\thread_safe_capture_oracle.h"/>
+    <ClInclude Include="capture\content\smooth_event_sampler.h"/>
+    <ClInclude Include="capture\content\video_capture_oracle.h"/>
+    <ClInclude Include="capture\video\fake_video_capture_device.h"/>
+    <ClInclude Include="capture\video\fake_video_capture_device_factory.h"/>
+    <ClInclude Include="capture\video\file_video_capture_device.h"/>
+    <ClInclude Include="capture\video\file_video_capture_device_factory.h"/>
+    <ClInclude Include="capture\video\video_capture_device.h"/>
+    <ClInclude Include="capture\video\video_capture_device_factory.h"/>
+    <ClInclude Include="capture\video\video_capture_device_info.h"/>
+    <ClInclude Include="capture\video\win\capability_list_win.h"/>
+    <ClInclude Include="capture\video\win\filter_base_win.h"/>
+    <ClInclude Include="capture\video\win\pin_base_win.h"/>
+    <ClInclude Include="capture\video\win\sink_filter_observer_win.h"/>
+    <ClInclude Include="capture\video\win\sink_filter_win.h"/>
+    <ClInclude Include="capture\video\win\sink_input_pin_win.h"/>
+    <ClInclude Include="capture\video\win\video_capture_device_factory_win.h"/>
+    <ClInclude Include="capture\video\win\video_capture_device_mf_win.h"/>
+    <ClInclude Include="capture\video\win\video_capture_device_win.h"/>
+    <ClInclude Include="cdm\aes_decryptor.h"/>
+    <ClInclude Include="cdm\cdm_adapter.h"/>
+    <ClInclude Include="cdm\default_cdm_factory.h"/>
+    <ClInclude Include="cdm\json_web_key.h"/>
+    <ClInclude Include="cdm\key_system_names.h"/>
+    <ClInclude Include="cdm\player_tracker_impl.h"/>
+    <ClInclude Include="cdm\proxy_decryptor.h"/>
+    <ClInclude Include="cdm\supported_cdm_versions.h"/>
+    <ClInclude Include="ffmpeg\ffmpeg_common.h"/>
+    <ClInclude Include="ffmpeg\ffmpeg_deleters.h"/>
+    <ClInclude Include="filters\audio_clock.h"/>
+    <ClInclude Include="filters\audio_file_reader.h"/>
+    <ClInclude Include="filters\audio_renderer_algorithm.h"/>
+    <ClInclude Include="filters\blocking_url_protocol.h"/>
+    <ClInclude Include="filters\chunk_demuxer.h"/>
+    <ClInclude Include="filters\context_3d.h"/>
+    <ClInclude Include="filters\decoder_selector.h"/>
+    <ClInclude Include="filters\decoder_stream.h"/>
+    <ClInclude Include="filters\decoder_stream_traits.h"/>
+    <ClInclude Include="filters\decrypting_audio_decoder.h"/>
+    <ClInclude Include="filters\decrypting_demuxer_stream.h"/>
+    <ClInclude Include="filters\decrypting_video_decoder.h"/>
+    <ClInclude Include="filters\default_media_permission.h"/>
+    <ClInclude Include="filters\ffmpeg_audio_decoder.h"/>
+    <ClInclude Include="filters\ffmpeg_bitstream_converter.h"/>
+    <ClInclude Include="filters\ffmpeg_demuxer.h"/>
+    <ClInclude Include="filters\ffmpeg_glue.h"/>
+    <ClInclude Include="filters\ffmpeg_video_decoder.h"/>
+    <ClInclude Include="filters\file_data_source.h"/>
+    <ClInclude Include="filters\frame_processor.h"/>
+    <ClInclude Include="filters\gpu_video_decoder.h"/>
+    <ClInclude Include="filters\h264_bit_reader.h"/>
+    <ClInclude Include="filters\h264_parser.h"/>
+    <ClInclude Include="filters\ivf_parser.h"/>
+    <ClInclude Include="filters\in_memory_url_protocol.h"/>
+    <ClInclude Include="filters\jpeg_parser.h"/>
+    <ClInclude Include="filters\opus_audio_decoder.h"/>
+    <ClInclude Include="filters\opus_constants.h"/>
+    <ClInclude Include="filters\source_buffer_range.h"/>
+    <ClInclude Include="filters\source_buffer_stream.h"/>
+    <ClInclude Include="filters\stream_parser_factory.h"/>
+    <ClInclude Include="filters\video_cadence_estimator.h"/>
+    <ClInclude Include="filters\video_renderer_algorithm.h"/>
+    <ClInclude Include="filters\vp8_bool_decoder.h"/>
+    <ClInclude Include="filters\vp8_parser.h"/>
+    <ClInclude Include="filters\vp9_parser.h"/>
+    <ClInclude Include="filters\vp9_raw_bits_reader.h"/>
+    <ClInclude Include="filters\vpx_video_decoder.h"/>
+    <ClInclude Include="filters\webvtt_util.h"/>
+    <ClInclude Include="filters\wsola_internals.h"/>
+    <ClInclude Include="formats\common\offset_byte_queue.h"/>
+    <ClInclude Include="formats\webm\webm_audio_client.h"/>
+    <ClInclude Include="formats\webm\webm_cluster_parser.h"/>
+    <ClInclude Include="formats\webm\webm_constants.h"/>
+    <ClInclude Include="formats\webm\webm_content_encodings.h"/>
+    <ClInclude Include="formats\webm\webm_content_encodings_client.h"/>
+    <ClInclude Include="formats\webm\webm_crypto_helpers.h"/>
+    <ClInclude Include="formats\webm\webm_info_parser.h"/>
+    <ClInclude Include="formats\webm\webm_parser.h"/>
+    <ClInclude Include="formats\webm\webm_stream_parser.h"/>
+    <ClInclude Include="formats\webm\webm_tracks_parser.h"/>
+    <ClInclude Include="formats\webm\webm_video_client.h"/>
+    <ClInclude Include="renderers\audio_renderer_impl.h"/>
+    <ClInclude Include="renderers\default_renderer_factory.h"/>
+    <ClInclude Include="renderers\gpu_video_accelerator_factories.h"/>
+    <ClInclude Include="renderers\renderer_impl.h"/>
+    <ClInclude Include="renderers\skcanvas_video_renderer.h"/>
+    <ClInclude Include="renderers\video_renderer_impl.h"/>
+    <ClInclude Include="video\fake_video_encode_accelerator.h"/>
+    <ClInclude Include="video\gpu_memory_buffer_video_frame_pool.h"/>
+    <ClInclude Include="video\h264_poc.h"/>
+    <ClInclude Include="video\jpeg_decode_accelerator.h"/>
+    <ClInclude Include="video\picture.h"/>
+    <ClInclude Include="video\video_decode_accelerator.h"/>
+    <ClInclude Include="video\video_encode_accelerator.h"/>
+    <ClInclude Include="formats\webm\webm_webvtt_parser.h"/>
+    <ClInclude Include="capture\webm_muxer.h"/>
+    <ClInclude Include="cdm\cenc_utils.h"/>
+    <ClInclude Include="filters\ffmpeg_aac_bitstream_converter.h"/>
+    <ClInclude Include="filters\ffmpeg_h264_to_annex_b_bitstream_converter.h"/>
+    <ClInclude Include="filters\h264_to_annex_b_bitstream_converter.h"/>
+    <ClInclude Include="formats\mp2t\es_adapter_video.h"/>
+    <ClInclude Include="formats\mp2t\es_parser.h"/>
+    <ClInclude Include="formats\mp2t\es_parser_adts.h"/>
+    <ClInclude Include="formats\mp2t\es_parser_h264.h"/>
+    <ClInclude Include="formats\mp2t\es_parser_mpeg1audio.h"/>
+    <ClInclude Include="formats\mp2t\mp2t_common.h"/>
+    <ClInclude Include="formats\mp2t\mp2t_stream_parser.h"/>
+    <ClInclude Include="formats\mp2t\timestamp_unroller.h"/>
+    <ClInclude Include="formats\mp2t\ts_packet.h"/>
+    <ClInclude Include="formats\mp2t\ts_section.h"/>
+    <ClInclude Include="formats\mp2t\ts_section_pat.h"/>
+    <ClInclude Include="formats\mp2t\ts_section_pes.h"/>
+    <ClInclude Include="formats\mp2t\ts_section_pmt.h"/>
+    <ClInclude Include="formats\mp2t\ts_section_psi.h"/>
+    <ClInclude Include="formats\mp4\aac.h"/>
+    <ClInclude Include="formats\mp4\avc.h"/>
+    <ClInclude Include="formats\mp4\bitstream_converter.h"/>
+    <ClInclude Include="formats\mp4\box_definitions.h"/>
+    <ClInclude Include="formats\mp4\box_reader.h"/>
+    <ClInclude Include="formats\mp4\cenc.h"/>
+    <ClInclude Include="formats\mp4\es_descriptor.h"/>
+    <ClInclude Include="formats\mp4\mp4_stream_parser.h"/>
+    <ClInclude Include="formats\mp4\sample_to_group_iterator.h"/>
+    <ClInclude Include="formats\mp4\track_run_iterator.h"/>
+    <ClInclude Include="formats\mpeg\adts_constants.h"/>
+    <ClInclude Include="formats\mpeg\adts_stream_parser.h"/>
+    <ClInclude Include="formats\mpeg\mpeg1_audio_stream_parser.h"/>
+    <ClInclude Include="formats\mpeg\mpeg_audio_stream_parser_base.h"/>
+    <ClInclude Include="filters\source_buffer_platform.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="audio\audio_device_name.cc"/>
+    <ClCompile Include="audio\audio_device_thread.cc"/>
+    <ClCompile Include="audio\audio_input_controller.cc"/>
+    <ClCompile Include="audio\audio_input_device.cc"/>
+    <ClCompile Include="audio\audio_input_ipc.cc"/>
+    <ClCompile Include="audio\audio_manager.cc"/>
+    <ClCompile Include="audio\audio_manager_base.cc"/>
+    <ClCompile Include="audio\audio_output_controller.cc"/>
+    <ClCompile Include="audio\audio_output_device.cc"/>
+    <ClCompile Include="audio\audio_output_dispatcher.cc"/>
+    <ClCompile Include="audio\audio_output_dispatcher_impl.cc"/>
+    <ClCompile Include="audio\audio_output_ipc.cc"/>
+    <ClCompile Include="audio\audio_output_proxy.cc"/>
+    <ClCompile Include="audio\audio_output_resampler.cc"/>
+    <ClCompile Include="audio\audio_output_stream_sink.cc"/>
+    <ClCompile Include="audio\audio_power_monitor.cc"/>
+    <ClCompile Include="audio\clockless_audio_sink.cc"/>
+    <ClCompile Include="audio\fake_audio_input_stream.cc"/>
+    <ClCompile Include="audio\fake_audio_log_factory.cc"/>
+    <ClCompile Include="audio\fake_audio_manager.cc"/>
+    <ClCompile Include="audio\fake_audio_output_stream.cc"/>
+    <ClCompile Include="audio\fake_audio_worker.cc"/>
+    <ClCompile Include="audio\null_audio_sink.cc"/>
+    <ClCompile Include="audio\sample_rates.cc"/>
+    <ClCompile Include="audio\scoped_task_runner_observer.cc"/>
+    <ClCompile Include="audio\simple_sources.cc"/>
+    <ClCompile Include="audio\sounds\audio_stream_handler.cc"/>
+    <ClCompile Include="audio\sounds\sounds_manager.cc"/>
+    <ClCompile Include="audio\sounds\wav_audio_handler.cc"/>
+    <ClCompile Include="audio\virtual_audio_input_stream.cc"/>
+    <ClCompile Include="audio\virtual_audio_output_stream.cc"/>
+    <ClCompile Include="audio\win\audio_device_listener_win.cc"/>
+    <ClCompile Include="audio\win\audio_low_latency_input_win.cc"/>
+    <ClCompile Include="audio\win\audio_low_latency_output_win.cc"/>
+    <ClCompile Include="audio\win\audio_manager_win.cc"/>
+    <ClCompile Include="audio\win\avrt_wrapper_win.cc"/>
+    <ClCompile Include="audio\win\core_audio_util_win.cc"/>
+    <ClCompile Include="audio\win\device_enumeration_win.cc"/>
+    <ClCompile Include="audio\win\wavein_input_win.cc"/>
+    <ClCompile Include="audio\win\waveout_output_win.cc"/>
+    <ClCompile Include="base\audio_block_fifo.cc"/>
+    <ClCompile Include="base\audio_buffer.cc"/>
+    <ClCompile Include="base\audio_buffer_converter.cc"/>
+    <ClCompile Include="base\audio_buffer_queue.cc"/>
+    <ClCompile Include="base\audio_converter.cc"/>
+    <ClCompile Include="base\audio_decoder.cc"/>
+    <ClCompile Include="base\audio_decoder_config.cc"/>
+    <ClCompile Include="base\audio_discard_helper.cc"/>
+    <ClCompile Include="base\audio_fifo.cc"/>
+    <ClCompile Include="base\audio_hardware_config.cc"/>
+    <ClCompile Include="base\audio_hash.cc"/>
+    <ClCompile Include="base\audio_pull_fifo.cc"/>
+    <ClCompile Include="base\audio_renderer.cc"/>
+    <ClCompile Include="base\audio_renderer_mixer.cc"/>
+    <ClCompile Include="base\audio_renderer_mixer_input.cc"/>
+    <ClCompile Include="base\audio_shifter.cc"/>
+    <ClCompile Include="base\audio_splicer.cc"/>
+    <ClCompile Include="base\audio_timestamp_helper.cc"/>
+    <ClCompile Include="base\audio_video_metadata_extractor.cc"/>
+    <ClCompile Include="base\bit_reader.cc"/>
+    <ClCompile Include="base\bit_reader_core.cc"/>
+    <ClCompile Include="base\bitstream_buffer.cc"/>
+    <ClCompile Include="base\byte_queue.cc"/>
+    <ClCompile Include="base\cdm_callback_promise.cc"/>
+    <ClCompile Include="base\cdm_context.cc"/>
+    <ClCompile Include="base\cdm_factory.cc"/>
+    <ClCompile Include="base\cdm_initialized_promise.cc"/>
+    <ClCompile Include="base\cdm_key_information.cc"/>
+    <ClCompile Include="base\cdm_promise.cc"/>
+    <ClCompile Include="base\cdm_promise_adapter.cc"/>
+    <ClCompile Include="base\channel_mixer.cc"/>
+    <ClCompile Include="base\channel_mixing_matrix.cc"/>
+    <ClCompile Include="base\container_names.cc"/>
+    <ClCompile Include="base\data_buffer.cc"/>
+    <ClCompile Include="base\data_source.cc"/>
+    <ClCompile Include="base\decoder_buffer.cc"/>
+    <ClCompile Include="base\decoder_buffer_queue.cc"/>
+    <ClCompile Include="base\decrypt_config.cc"/>
+    <ClCompile Include="base\decryptor.cc"/>
+    <ClCompile Include="base\demuxer.cc"/>
+    <ClCompile Include="base\demuxer_stream.cc"/>
+    <ClCompile Include="base\demuxer_stream_provider.cc"/>
+    <ClCompile Include="base\djb2.cc"/>
+    <ClCompile Include="base\key_system_info.cc"/>
+    <ClCompile Include="base\key_systems.cc"/>
+    <ClCompile Include="base\key_systems_support_uma.cc"/>
+    <ClCompile Include="base\keyboard_event_counter.cc"/>
+    <ClCompile Include="base\media.cc"/>
+    <ClCompile Include="base\media_client.cc"/>
+    <ClCompile Include="base\media_file_checker.cc"/>
+    <ClCompile Include="base\media_keys.cc"/>
+    <ClCompile Include="base\media_log.cc"/>
+    <ClCompile Include="base\media_permission.cc"/>
+    <ClCompile Include="base\media_resources.cc"/>
+    <ClCompile Include="base\media_switches.cc"/>
+    <ClCompile Include="base\media_util.cc"/>
+    <ClCompile Include="base\mime_util.cc"/>
+    <ClCompile Include="base\moving_average.cc"/>
+    <ClCompile Include="base\multi_channel_resampler.cc"/>
+    <ClCompile Include="base\null_video_sink.cc"/>
+    <ClCompile Include="base\pipeline.cc"/>
+    <ClCompile Include="base\player_tracker.cc"/>
+    <ClCompile Include="base\ranges.cc"/>
+    <ClCompile Include="base\renderer.cc"/>
+    <ClCompile Include="base\renderer_factory.cc"/>
+    <ClCompile Include="base\sample_format.cc"/>
+    <ClCompile Include="base\seekable_buffer.cc"/>
+    <ClCompile Include="base\serial_runner.cc"/>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_c.cc"/>
+    <ClCompile Include="base\simd\convert_yuv_to_rgb_c.cc"/>
+    <ClCompile Include="base\simd\filter_yuv_c.cc"/>
+    <ClCompile Include="base\sinc_resampler.cc"/>
+    <ClCompile Include="base\stream_parser.cc"/>
+    <ClCompile Include="base\stream_parser_buffer.cc"/>
+    <ClCompile Include="base\text_cue.cc"/>
+    <ClCompile Include="base\text_ranges.cc"/>
+    <ClCompile Include="base\text_renderer.cc"/>
+    <ClCompile Include="base\text_track_config.cc"/>
+    <ClCompile Include="base\time_delta_interpolator.cc"/>
+    <ClCompile Include="base\user_input_monitor.cc"/>
+    <ClCompile Include="base\user_input_monitor_win.cc"/>
+    <ClCompile Include="base\video_capture_types.cc"/>
+    <ClCompile Include="base\video_capturer_source.cc"/>
+    <ClCompile Include="base\video_decoder.cc"/>
+    <ClCompile Include="base\video_decoder_config.cc"/>
+    <ClCompile Include="base\video_frame.cc"/>
+    <ClCompile Include="base\video_frame_metadata.cc"/>
+    <ClCompile Include="base\video_frame_pool.cc"/>
+    <ClCompile Include="base\video_renderer.cc"/>
+    <ClCompile Include="base\video_types.cc"/>
+    <ClCompile Include="base\video_util.cc"/>
+    <ClCompile Include="base\wall_clock_time_source.cc"/>
+    <ClCompile Include="base\win\mf_initializer.cc"/>
+    <ClCompile Include="base\yuv_convert.cc"/>
+    <ClCompile Include="capture\content\animated_content_sampler.cc"/>
+    <ClCompile Include="capture\content\capture_resolution_chooser.cc"/>
+    <ClCompile Include="capture\content\feedback_signal_accumulator.cc"/>
+    <ClCompile Include="capture\content\screen_capture_device_core.cc"/>
+    <ClCompile Include="capture\content\thread_safe_capture_oracle.cc"/>
+    <ClCompile Include="capture\content\smooth_event_sampler.cc"/>
+    <ClCompile Include="capture\content\video_capture_oracle.cc"/>
+    <ClCompile Include="capture\video\fake_video_capture_device.cc"/>
+    <ClCompile Include="capture\video\fake_video_capture_device_factory.cc"/>
+    <ClCompile Include="capture\video\file_video_capture_device.cc"/>
+    <ClCompile Include="capture\video\file_video_capture_device_factory.cc"/>
+    <ClCompile Include="capture\video\video_capture_device.cc"/>
+    <ClCompile Include="capture\video\video_capture_device_factory.cc"/>
+    <ClCompile Include="capture\video\video_capture_device_info.cc"/>
+    <ClCompile Include="capture\video\win\capability_list_win.cc"/>
+    <ClCompile Include="capture\video\win\filter_base_win.cc"/>
+    <ClCompile Include="capture\video\win\pin_base_win.cc"/>
+    <ClCompile Include="capture\video\win\sink_filter_win.cc"/>
+    <ClCompile Include="capture\video\win\sink_input_pin_win.cc"/>
+    <ClCompile Include="capture\video\win\video_capture_device_factory_win.cc"/>
+    <ClCompile Include="capture\video\win\video_capture_device_mf_win.cc"/>
+    <ClCompile Include="capture\video\win\video_capture_device_win.cc"/>
+    <ClCompile Include="cdm\aes_decryptor.cc"/>
+    <ClCompile Include="cdm\cdm_adapter.cc"/>
+    <ClCompile Include="cdm\default_cdm_factory.cc"/>
+    <ClCompile Include="cdm\json_web_key.cc"/>
+    <ClCompile Include="cdm\key_system_names.cc"/>
+    <ClCompile Include="cdm\player_tracker_impl.cc"/>
+    <ClCompile Include="cdm\proxy_decryptor.cc"/>
+    <ClCompile Include="cdm\supported_cdm_versions.cc"/>
+    <ClCompile Include="ffmpeg\ffmpeg_common.cc"/>
+    <ClCompile Include="filters\audio_clock.cc"/>
+    <ClCompile Include="filters\audio_file_reader.cc"/>
+    <ClCompile Include="filters\audio_renderer_algorithm.cc"/>
+    <ClCompile Include="filters\blocking_url_protocol.cc"/>
+    <ClCompile Include="filters\chunk_demuxer.cc"/>
+    <ClCompile Include="filters\decoder_selector.cc"/>
+    <ClCompile Include="filters\decoder_stream.cc"/>
+    <ClCompile Include="filters\decoder_stream_traits.cc"/>
+    <ClCompile Include="filters\decrypting_audio_decoder.cc"/>
+    <ClCompile Include="filters\decrypting_demuxer_stream.cc"/>
+    <ClCompile Include="filters\decrypting_video_decoder.cc"/>
+    <ClCompile Include="filters\default_media_permission.cc"/>
+    <ClCompile Include="filters\ffmpeg_audio_decoder.cc"/>
+    <ClCompile Include="filters\ffmpeg_demuxer.cc"/>
+    <ClCompile Include="filters\ffmpeg_glue.cc"/>
+    <ClCompile Include="filters\ffmpeg_video_decoder.cc"/>
+    <ClCompile Include="filters\file_data_source.cc"/>
+    <ClCompile Include="filters\frame_processor.cc"/>
+    <ClCompile Include="filters\gpu_video_decoder.cc"/>
+    <ClCompile Include="filters\h264_bit_reader.cc"/>
+    <ClCompile Include="filters\h264_parser.cc"/>
+    <ClCompile Include="filters\ivf_parser.cc"/>
+    <ClCompile Include="filters\in_memory_url_protocol.cc"/>
+    <ClCompile Include="filters\jpeg_parser.cc"/>
+    <ClCompile Include="filters\opus_audio_decoder.cc"/>
+    <ClCompile Include="filters\opus_constants.cc"/>
+    <ClCompile Include="filters\source_buffer_range.cc"/>
+    <ClCompile Include="filters\source_buffer_stream.cc"/>
+    <ClCompile Include="filters\stream_parser_factory.cc"/>
+    <ClCompile Include="filters\video_cadence_estimator.cc"/>
+    <ClCompile Include="filters\video_renderer_algorithm.cc"/>
+    <ClCompile Include="filters\vp8_bool_decoder.cc"/>
+    <ClCompile Include="filters\vp8_parser.cc"/>
+    <ClCompile Include="filters\vp9_parser.cc"/>
+    <ClCompile Include="filters\vp9_raw_bits_reader.cc"/>
+    <ClCompile Include="filters\vpx_video_decoder.cc"/>
+    <ClCompile Include="filters\wsola_internals.cc"/>
+    <ClCompile Include="formats\common\offset_byte_queue.cc"/>
+    <ClCompile Include="formats\webm\webm_audio_client.cc"/>
+    <ClCompile Include="formats\webm\webm_cluster_parser.cc"/>
+    <ClCompile Include="formats\webm\webm_constants.cc"/>
+    <ClCompile Include="formats\webm\webm_content_encodings.cc"/>
+    <ClCompile Include="formats\webm\webm_content_encodings_client.cc"/>
+    <ClCompile Include="formats\webm\webm_crypto_helpers.cc"/>
+    <ClCompile Include="formats\webm\webm_info_parser.cc"/>
+    <ClCompile Include="formats\webm\webm_parser.cc"/>
+    <ClCompile Include="formats\webm\webm_stream_parser.cc"/>
+    <ClCompile Include="formats\webm\webm_tracks_parser.cc"/>
+    <ClCompile Include="formats\webm\webm_video_client.cc"/>
+    <ClCompile Include="formats\webm\webm_webvtt_parser.cc"/>
+    <ClCompile Include="renderers\audio_renderer_impl.cc"/>
+    <ClCompile Include="renderers\default_renderer_factory.cc"/>
+    <ClCompile Include="renderers\renderer_impl.cc"/>
+    <ClCompile Include="renderers\skcanvas_video_renderer.cc"/>
+    <ClCompile Include="renderers\video_renderer_impl.cc"/>
+    <ClCompile Include="video\fake_video_encode_accelerator.cc"/>
+    <ClCompile Include="video\gpu_memory_buffer_video_frame_pool.cc"/>
+    <ClCompile Include="video\h264_poc.cc"/>
+    <ClCompile Include="video\jpeg_decode_accelerator.cc"/>
+    <ClCompile Include="video\picture.cc"/>
+    <ClCompile Include="video\video_decode_accelerator.cc"/>
+    <ClCompile Include="video\video_encode_accelerator.cc"/>
+    <ClCompile Include="capture\webm_muxer.cc"/>
+    <ClCompile Include="cdm\cenc_utils.cc"/>
+    <ClCompile Include="filters\ffmpeg_aac_bitstream_converter.cc"/>
+    <ClCompile Include="filters\ffmpeg_h264_to_annex_b_bitstream_converter.cc"/>
+    <ClCompile Include="filters\h264_to_annex_b_bitstream_converter.cc"/>
+    <ClCompile Include="formats\mp2t\es_adapter_video.cc"/>
+    <ClCompile Include="formats\mp2t\es_parser.cc"/>
+    <ClCompile Include="formats\mp2t\es_parser_adts.cc"/>
+    <ClCompile Include="formats\mp2t\es_parser_h264.cc"/>
+    <ClCompile Include="formats\mp2t\es_parser_mpeg1audio.cc"/>
+    <ClCompile Include="formats\mp2t\mp2t_stream_parser.cc"/>
+    <ClCompile Include="formats\mp2t\timestamp_unroller.cc"/>
+    <ClCompile Include="formats\mp2t\ts_packet.cc"/>
+    <ClCompile Include="formats\mp2t\ts_section_pat.cc"/>
+    <ClCompile Include="formats\mp2t\ts_section_pes.cc"/>
+    <ClCompile Include="formats\mp2t\ts_section_pmt.cc"/>
+    <ClCompile Include="formats\mp2t\ts_section_psi.cc"/>
+    <ClCompile Include="formats\mp4\aac.cc"/>
+    <ClCompile Include="formats\mp4\avc.cc"/>
+    <ClCompile Include="formats\mp4\bitstream_converter.cc"/>
+    <ClCompile Include="formats\mp4\box_definitions.cc"/>
+    <ClCompile Include="formats\mp4\box_reader.cc"/>
+    <ClCompile Include="formats\mp4\cenc.cc"/>
+    <ClCompile Include="formats\mp4\es_descriptor.cc"/>
+    <ClCompile Include="formats\mp4\mp4_stream_parser.cc"/>
+    <ClCompile Include="formats\mp4\sample_to_group_iterator.cc"/>
+    <ClCompile Include="formats\mp4\track_run_iterator.cc"/>
+    <ClCompile Include="formats\mpeg\adts_constants.cc"/>
+    <ClCompile Include="formats\mpeg\adts_stream_parser.cc"/>
+    <ClCompile Include="formats\mpeg\mpeg1_audio_stream_parser.cc"/>
+    <ClCompile Include="formats\mpeg\mpeg_audio_stream_parser_base.cc"/>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_sse2.cc"/>
+    <ClCompile Include="base\simd\convert_rgb_to_yuv_ssse3.cc"/>
+    <ClCompile Include="base\simd\convert_yuv_to_rgb_x86.cc"/>
+    <ClCompile Include="base\simd\filter_yuv_sse2.cc"/>
+    <ClCompile Include="filters\source_buffer_platform.cc"/>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+  <Target Name="Build">
+    <Exec Command="call ninja.exe -C $(OutDir) $(ProjectName)"/>
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="call ninja.exe -C $(OutDir) -tclean $(ProjectName)"/>
+  </Target>
+  <Target Name="ClCompile">
+    <Exec Command="call P:\dev\depot_tools\python276_bin\python.exe $(OutDir)gyp-win-tool cl-compile $(ProjectDir) $(SelectedFiles)"/>
+  </Target>
+</Project>

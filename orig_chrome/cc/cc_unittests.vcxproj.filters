@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{DBBAC0A6-BB0A-CA51-45CC-DA4574B671E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{FBAE646B-1E91-2C58-956B-A42D67D8DA0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{FBAE646B-1E91-2C58-956B-A42D67D8DA0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{FBAE646B-1E91-2C58-956B-A42D67D8DA0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{2F6C04D2-C90B-4FD0-8BF5-B540F7C337DA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{2F6C04D2-C90B-4FD0-8BF5-B540F7C337DA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layers">
+      <UniqueIdentifier>{EAFA666A-961B-FA79-BC53-06BA70E47686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="output">
+      <UniqueIdentifier>{1B773BFF-A815-A9FA-3A3C-55AAE0C14CAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="playback">
+      <UniqueIdentifier>{0ED83590-FAEF-CD4F-8D1E-62ECAF2A7B8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="playback">
+      <UniqueIdentifier>{0ED83590-FAEF-CD4F-8D1E-62ECAF2A7B8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="playback">
+      <UniqueIdentifier>{0ED83590-FAEF-CD4F-8D1E-62ECAF2A7B8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="playback">
+      <UniqueIdentifier>{0ED83590-FAEF-CD4F-8D1E-62ECAF2A7B8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quads">
+      <UniqueIdentifier>{FE023935-9975-C730-78B0-4AE1E6DAFC83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quads">
+      <UniqueIdentifier>{FE023935-9975-C730-78B0-4AE1E6DAFC83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quads">
+      <UniqueIdentifier>{FE023935-9975-C730-78B0-4AE1E6DAFC83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{31536FBA-5A6E-62AD-0D34-50B79CE8CD75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{DBDFE05D-196B-6A9E-2601-108FBFB9C13E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{6E2ECA78-269C-E38B-35F5-7DC0EB12DA6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="surfaces">
+      <UniqueIdentifier>{11868456-7D97-D44D-C42F-3C3707EFE842}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\cc_test_suite.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\run_all_unittests.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animation_host_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animation_player_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animation_timeline_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\animation_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\element_animations_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\keyframed_animation_curve_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\layer_animation_controller_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\scroll_offset_animation_curve_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\scrollbar_animation_controller_linear_fade_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\scrollbar_animation_controller_thinning_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\transform_operations_unittest.cc">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="base\delayed_unique_notifier_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\float_quad_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\histograms_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\list_container_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\math_util_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\random_access_list_container_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\region_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\rolling_time_delta_history_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\rtree_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\scoped_ptr_vector_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\simple_enclosed_region_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\tiling_data_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\unique_notifier_unittest.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\frame_timing_tracker_unittest.cc">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\micro_benchmark_controller_unittest.cc">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\rendering_stats_unittest.cc">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="input\scroll_state_unittest.cc">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\top_controls_manager_unittest.cc">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\delegated_frame_provider_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\delegated_frame_resource_collection_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\delegated_renderer_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\delegated_renderer_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\heads_up_display_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\heads_up_display_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\io_surface_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\layer_iterator_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\layer_position_constraint_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\layer_utils_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\nine_patch_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\nine_patch_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\painted_scrollbar_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\picture_image_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\picture_image_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\picture_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\picture_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\render_surface_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\render_surface_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\scrollbar_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\solid_color_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\solid_color_scrollbar_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\surface_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\surface_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\texture_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\texture_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\ui_resource_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\ui_resource_layer_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\video_frame_provider_client_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="layers\video_layer_impl_unittest.cc">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="output\begin_frame_args_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\bsp_tree_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\delegating_renderer_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\filter_operations_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\gl_renderer_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\layer_quad_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\output_surface_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\overlay_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\renderer_pixeltest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\renderer_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\shader_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\software_renderer_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="output\texture_mailbox_deleter_unittest.cc">
+      <Filter>output</Filter>
+    </ClCompile>
+    <ClCompile Include="playback\discardable_image_map_unittest.cc">
+      <Filter>playback</Filter>
+    </ClCompile>
+    <ClCompile Include="playback\display_item_list_unittest.cc">
+      <Filter>playback</Filter>
+    </ClCompile>
+    <ClCompile Include="playback\display_list_raster_source_unittest.cc">
+      <Filter>playback</Filter>
+    </ClCompile>
+    <ClCompile Include="playback\display_list_recording_source_unittest.cc">
+      <Filter>playback</Filter>
+    </ClCompile>
+    <ClCompile Include="quads\draw_polygon_unittest.cc">
+      <Filter>quads</Filter>
+    </ClCompile>
+    <ClCompile Include="quads\draw_quad_unittest.cc">
+      <Filter>quads</Filter>
+    </ClCompile>
+    <ClCompile Include="quads\render_pass_unittest.cc">
+      <Filter>quads</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\scoped_gpu_raster_unittest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\task_graph_runner_unittest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\texture_compressor_etc1_unittest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="raster\tile_task_worker_pool_unittest.cc">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\platform_color_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_pool_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_provider_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_util_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\scoped_resource_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\video_resource_updater_unittest.cc">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\begin_frame_source_unittest.cc">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\compositor_timing_history_unittest.cc">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\delay_based_time_source_unittest.cc">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\scheduler_state_machine_unittest.cc">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\scheduler_unittest.cc">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="test\layer_tree_json_parser_unittest.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ordered_simple_task_runner_unittest.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_web_graphics_context_3d_unittest.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\picture_layer_tiling_set_unittest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\picture_layer_tiling_unittest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\tile_manager_unittest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="tiles\tile_priority_unittest.cc">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\blocking_task_runner_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\damage_tracker_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_common_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_impl_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_blending.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_filters.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_masks.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_readback.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_synchronous.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_pixeltest_tiles.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_animation.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_animation_timelines.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_context.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_copyrequest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_damage.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_delegated.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_occlusion.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_picture.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_proxy.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_scroll.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_host_unittest_video.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\layer_tree_impl_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\occlusion_tracker_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\occlusion_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\property_tree_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="trees\tree_synchronizer_unittest.cc">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\display_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\display_scheduler_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_aggregator_test_helpers.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClInclude Include="surfaces\surface_aggregator_test_helpers.h">
+      <Filter>surfaces</Filter>
+    </ClInclude>
+    <ClCompile Include="surfaces\surface_aggregator_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_display_output_surface_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_factory_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_hittest_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surface_unittest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="surfaces\surfaces_pixeltest.cc">
+      <Filter>surfaces</Filter>
+    </ClCompile>
+    <None Include="cc_tests.gyp"/>
+  </ItemGroup>
+</Project>

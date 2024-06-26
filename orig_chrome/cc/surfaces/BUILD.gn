@@ -1,0 +1,63 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+source_set("surface_id") {
+  sources = [
+    "surface_id.h",
+  ]
+
+  deps = [
+    "//base",
+  ]
+}
+
+component("surfaces") {
+  output_name = "cc_surfaces"
+  sources = [
+    "display.cc",
+    "display.h",
+    "display_client.h",
+    "display_scheduler.cc",
+    "display_scheduler.h",
+    "onscreen_display_client.cc",
+    "onscreen_display_client.h",
+    "surface.cc",
+    "surface.h",
+    "surface_aggregator.cc",
+    "surface_aggregator.h",
+    "surface_display_output_surface.cc",
+    "surface_display_output_surface.h",
+    "surface_factory.cc",
+    "surface_factory.h",
+    "surface_factory_client.h",
+    "surface_hittest.cc",
+    "surface_hittest.h",
+    "surface_id_allocator.cc",
+    "surface_id_allocator.h",
+    "surface_manager.cc",
+    "surface_manager.h",
+    "surface_resource_holder.cc",
+    "surface_resource_holder.h",
+    "surfaces_export.h",
+  ]
+
+  defines = [ "CC_SURFACES_IMPLEMENTATION=1" ]
+
+  deps = [
+    ":surface_id",
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//cc",
+    "//gpu/command_buffer/client:gles2_interface",
+    "//skia",
+    "//ui/events:events_base",
+    "//ui/gfx",
+    "//ui/gfx/geometry",
+  ]
+
+  if (is_android && !is_debug) {
+    configs -= [ "//build/config/compiler:default_optimization" ]
+    configs += [ "//build/config/compiler:optimize_max" ]
+  }
+}

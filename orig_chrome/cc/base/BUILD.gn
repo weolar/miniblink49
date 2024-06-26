@@ -1,0 +1,58 @@
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+source_set("base") {
+  visibility = [ "//cc" ]
+
+  sources = [
+    "completion_event.h",
+    "delayed_unique_notifier.cc",
+    "delayed_unique_notifier.h",
+    "histograms.cc",
+    "histograms.h",
+    "invalidation_region.cc",
+    "invalidation_region.h",
+    "list_container.h",
+    "list_container_helper.cc",
+    "list_container_helper.h",
+    "math_util.cc",
+    "math_util.h",
+    "random_access_list_container.h",
+    "region.cc",
+    "region.h",
+    "resource_id.h",
+    "rolling_time_delta_history.cc",
+    "rolling_time_delta_history.h",
+    "rtree.cc",
+    "rtree.h",
+    "scoped_ptr_algorithm.h",
+    "scoped_ptr_deque.h",
+    "scoped_ptr_vector.h",
+    "simple_enclosed_region.cc",
+    "simple_enclosed_region.h",
+    "switches.cc",
+    "switches.h",
+    "synced_property.h",
+    "tiling_data.cc",
+    "tiling_data.h",
+    "time_util.h",
+    "unique_notifier.cc",
+    "unique_notifier.h",
+  ]
+
+  deps = [
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//skia",
+    "//ui/gfx",
+    "//ui/gfx/geometry",
+  ]
+
+  defines = [ "CC_IMPLEMENTATION=1" ]
+
+  if (!is_debug && (is_win || is_android)) {
+    configs -= [ "//build/config/compiler:default_optimization" ]
+    configs += [ "//build/config/compiler:optimize_max" ]
+  }
+}

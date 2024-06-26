@@ -1,0 +1,799 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/ui.gni")
+import("//testing/test.gni")
+
+if (is_android) {
+  import("//build/config/android/config.gni")
+  import("//build/config/android/rules.gni")
+}
+
+# Several targets want to include this header file, and some of them are
+# child dependencies of "gfx". Therefore, we separate it out here so multiple
+# targets can all have a dependency for header checking purposes without
+# creating circular dependencies.
+source_set("gfx_export") {
+  sources = [
+    "gfx_export.h",
+  ]
+}
+
+vector_icons_cc_file = "$target_gen_dir/vector_icons.cc"
+vector_icons_h_file = "$target_gen_dir/vector_icons.h"
+
+component("gfx") {
+  sources = [
+    "android/device_display_info.cc",
+    "android/device_display_info.h",
+    "android/gfx_jni_registrar.cc",
+    "android/gfx_jni_registrar.h",
+    "android/java_bitmap.cc",
+    "android/java_bitmap.h",
+    "android/shared_device_display_info.cc",
+    "android/shared_device_display_info.h",
+    "android/view_configuration.cc",
+    "android/view_configuration.h",
+    "animation/animation.cc",
+    "animation/animation.h",
+    "animation/animation_container.cc",
+    "animation/animation_container.h",
+    "animation/animation_container_element.h",
+    "animation/animation_container_observer.h",
+    "animation/animation_delegate.h",
+    "animation/animation_mac.mm",
+    "animation/animation_win.cc",
+    "animation/linear_animation.cc",
+    "animation/linear_animation.h",
+    "animation/multi_animation.cc",
+    "animation/multi_animation.h",
+    "animation/slide_animation.cc",
+    "animation/slide_animation.h",
+    "animation/throb_animation.cc",
+    "animation/throb_animation.h",
+    "animation/tween.cc",
+    "animation/tween.h",
+    "break_list.h",
+    "buffer_format_util.cc",
+    "buffer_format_util.h",
+    "codec/jpeg_codec.cc",
+    "codec/jpeg_codec.h",
+    "codec/png_codec.cc",
+    "codec/png_codec.h",
+    "color_analysis.cc",
+    "color_analysis.h",
+    "color_palette.h",
+    "color_profile.cc",
+    "color_profile.h",
+    "color_profile_mac.mm",
+    "color_profile_win.cc",
+    "color_utils.cc",
+    "color_utils.h",
+    "display.cc",
+    "display.h",
+    "display_change_notifier.cc",
+    "display_change_notifier.h",
+    "display_finder.cc",
+    "display_finder.h",
+    "display_observer.cc",
+    "display_observer.h",
+    "favicon_size.cc",
+    "favicon_size.h",
+    "font.cc",
+    "font.h",
+    "font_fallback.h",
+    "font_fallback_linux.cc",
+    "font_fallback_mac.mm",
+    "font_fallback_win.cc",
+    "font_fallback_win.h",
+    "font_list.cc",
+    "font_list.h",
+    "font_list_impl.cc",
+    "font_list_impl.h",
+    "font_render_params.cc",
+    "font_render_params.h",
+    "font_render_params_android.cc",
+    "font_render_params_linux.cc",
+    "font_render_params_mac.cc",
+    "font_render_params_win.cc",
+    "gdi_util.cc",
+    "gdi_util.h",
+    "generic_shared_memory_id.cc",
+    "generic_shared_memory_id.h",
+    "gfx_paths.cc",
+    "gfx_paths.h",
+    "hud_font.cc",
+    "hud_font.h",
+    "icon_util.cc",
+    "icon_util.h",
+    "image/image.cc",
+    "image/image.h",
+    "image/image_family.cc",
+    "image/image_family.h",
+    "image/image_ios.mm",
+    "image/image_mac.mm",
+    "image/image_png_rep.cc",
+    "image/image_png_rep.h",
+    "image/image_skia.cc",
+    "image/image_skia.h",
+    "image/image_skia_rep.cc",
+    "image/image_skia_rep.h",
+    "image/image_skia_source.h",
+    "image/image_skia_util_ios.h",
+    "image/image_skia_util_ios.mm",
+    "image/image_skia_util_mac.h",
+    "image/image_skia_util_mac.mm",
+    "image/image_util.cc",
+    "image/image_util.h",
+    "image/image_util_ios.mm",
+    "interpolated_transform.cc",
+    "interpolated_transform.h",
+    "ios/NSString+CrStringDrawing.h",
+    "ios/NSString+CrStringDrawing.mm",
+    "ios/uikit_util.h",
+    "ios/uikit_util.mm",
+    "linux_font_delegate.cc",
+    "linux_font_delegate.h",
+    "mac/coordinate_conversion.h",
+    "mac/coordinate_conversion.mm",
+    "mac/io_surface.cc",
+    "mac/io_surface.h",
+    "mac/nswindow_frame_controls.h",
+    "mac/nswindow_frame_controls.mm",
+    "mac/scoped_cocoa_disable_screen_updates.h",
+    "native_widget_types.h",
+    "nine_image_painter.cc",
+    "nine_image_painter.h",
+    "path.cc",
+    "path.h",
+    "path_mac.h",
+    "path_mac.mm",
+    "path_win.cc",
+    "path_win.h",
+    "path_x11.cc",
+    "path_x11.h",
+    "platform_font.h",
+    "platform_font_android.cc",
+    "platform_font_ios.h",
+    "platform_font_ios.mm",
+    "platform_font_linux.cc",
+    "platform_font_linux.h",
+    "platform_font_mac.h",
+    "platform_font_mac.mm",
+    "platform_font_win.cc",
+    "platform_font_win.h",
+    "range/range.cc",
+    "range/range.h",
+    "range/range_f.cc",
+    "range/range_f.h",
+    "range/range_mac.mm",
+    "range/range_win.cc",
+    "scoped_canvas.h",
+    "scoped_cg_context_save_gstate_mac.h",
+    "scoped_ns_graphics_context_save_gstate_mac.h",
+    "scoped_ns_graphics_context_save_gstate_mac.mm",
+    "scoped_ui_graphics_push_context_ios.h",
+    "scoped_ui_graphics_push_context_ios.mm",
+    "screen.cc",
+    "screen.h",
+    "screen_android.cc",
+    "screen_aura.cc",
+    "screen_ios.mm",
+    "screen_mac.mm",
+    "screen_win.cc",
+    "screen_win.h",
+    "scrollbar_size.cc",
+    "scrollbar_size.h",
+    "selection_model.cc",
+    "selection_model.h",
+    "sequential_id_generator.cc",
+    "sequential_id_generator.h",
+    "shadow_value.cc",
+    "shadow_value.h",
+    "skbitmap_operations.cc",
+    "skbitmap_operations.h",
+    "skia_util.cc",
+    "skia_util.h",
+    "switches.cc",
+    "switches.h",
+    "sys_color_change_listener.cc",
+    "sys_color_change_listener.h",
+    "text_constants.h",
+    "text_elider.cc",
+    "text_elider.h",
+    "text_utils.cc",
+    "text_utils.h",
+    "text_utils_android.cc",
+    "text_utils_ios.mm",
+    "transform.cc",
+    "transform.h",
+    "transform_util.cc",
+    "transform_util.h",
+    "ui_gfx_exports.cc",
+    "utf16_indexing.cc",
+    "utf16_indexing.h",
+    "vsync_provider.h",
+    "win/direct_manipulation.cc",
+    "win/direct_manipulation.h",
+    "win/direct_write.cc",
+    "win/direct_write.h",
+    "win/display_info.cc",
+    "win/display_info.h",
+    "win/dpi.cc",
+    "win/dpi.h",
+    "win/hwnd_util.cc",
+    "win/hwnd_util.h",
+    "win/physical_size.cc",
+    "win/physical_size.h",
+    "win/scoped_set_map_mode.h",
+    "win/screen_win_display.cc",
+    "win/screen_win_display.h",
+    "win/singleton_hwnd.cc",
+    "win/singleton_hwnd.h",
+    "win/singleton_hwnd_observer.cc",
+    "win/singleton_hwnd_observer.h",
+    "win/window_impl.cc",
+    "win/window_impl.h",
+  ]
+  if (!is_ios) {
+    sources += [
+      "blit.cc",
+      "blit.h",
+      "canvas.cc",
+      "canvas.h",
+      "canvas_notimplemented.cc",
+      "canvas_paint_mac.h",
+      "canvas_paint_mac.mm",
+      "canvas_skia.cc",
+      "canvas_skia_paint.h",
+      "gpu_memory_buffer.cc",
+      "gpu_memory_buffer.h",
+      "image/canvas_image_source.cc",
+      "image/canvas_image_source.h",
+      "image/image_skia_operations.cc",
+      "image/image_skia_operations.h",
+      "paint_throbber.cc",
+      "paint_throbber.h",
+    ]
+  }
+
+  configs += [
+    "//build/config:precompiled_headers",
+
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    "//build/config/compiler:no_size_t_to_int_warning",
+  ]
+
+  defines = [ "GFX_IMPLEMENTATION" ]
+
+  deps = [
+    ":gfx_export",
+    "//base",
+    "//base:base_static",
+    "//base:i18n",
+    "//base/third_party/dynamic_annotations",
+    "//skia",
+    "//third_party/harfbuzz-ng",
+    "//third_party/libpng",
+    "//third_party/zlib",
+    "//ui/gfx/geometry",
+  ]
+  public_deps = [
+    "//base",
+    "//skia",
+    "//third_party/icu",
+  ]
+
+  # Text rendering conditions (complicated so separated out).
+  if (use_aura || is_mac) {
+    # Mac doesn't use RenderTextHarfBuzz by default yet.
+    sources += [
+      "harfbuzz_font_skia.cc",
+      "harfbuzz_font_skia.h",
+      "render_text_harfbuzz.cc",
+      "render_text_harfbuzz.h",
+      "render_text_mac.h",
+      "render_text_mac.mm",
+      "text_utils_skia.cc",
+    ]
+
+    if (!is_ios) {
+      sources += [
+        "render_text.cc",
+        "render_text.h",
+      ]
+    }
+  } else {
+    # We don't support RenderText on these platforms.
+  }
+
+  if (is_android && use_aura) {
+    sources -= [
+      "platform_font_android.cc",
+      "text_utils_android.cc",
+    ]
+    set_sources_assignment_filter([])
+    sources += [ "platform_font_linux.cc" ]
+    set_sources_assignment_filter(sources_assignment_filter)
+  }
+
+  # iOS.
+  if (is_ios) {
+    sources -= [
+      "codec/jpeg_codec.cc",
+      "codec/jpeg_codec.h",
+    ]
+  } else {
+    deps += [ "//third_party:jpeg" ]
+  }
+
+  # Android.
+  if (is_android) {
+    if (use_aura) {
+      sources -= [
+        "canvas_notimplemented.cc",
+        "screen_android.cc",
+      ]
+      sources += [ "font_fallback_android.cc" ]
+    } else {
+      sources -= [
+        "animation/throb_animation.cc",
+        "canvas_skia.cc",
+        "path.cc",
+        "selection_model.cc",
+      ]
+    }
+
+    if (!is_debug) {
+      configs -= [ "//build/config/compiler:default_optimization" ]
+      configs += [ "//build/config/compiler:optimize_max" ]
+    }
+
+    deps += [
+      ":gfx_jni_headers",
+      "//base:base_java",
+    ]
+    libs = [
+      "android",
+      "jnigraphics",
+    ]
+  } else if (!is_ios) {
+    sources -= [ "canvas_notimplemented.cc" ]
+  }
+
+  # Desktop only.
+  if (use_aura || (!is_ios && !is_android)) {
+    sources += [
+      "paint_vector_icon.cc",
+      "paint_vector_icon.h",
+      "vector_icon_types.h",
+      "vector_icons_public.h",
+      vector_icons_cc_file,
+      vector_icons_h_file,
+    ]
+    deps += [ ":aggregate_vector_icons" ]
+  }
+
+  # Windows.
+  if (is_win) {
+    cflags = [ "/wd4324" ]  # Structure was padded due to __declspec(align()), which is
+                            # uninteresting.
+
+    libs = [ "setupapi.lib" ]
+  } else {
+    sources -= [
+      "gdi_util.cc",
+      "gdi_util.h",
+      "icon_util.cc",
+      "icon_util.h",
+      "sys_color_change_listener.cc",
+      "sys_color_change_listener.h",
+    ]
+  }
+
+  # Linux.
+  if (is_linux) {
+    deps += [ "//build/linux:fontconfig" ]
+  }
+
+  # Chrome OS
+  if (is_chromeos) {
+    # Robust JPEG decoding for the login screen.
+    sources += [
+      "chromeos/codec/jpeg_codec_robust_slow.cc",
+      "chromeos/codec/jpeg_codec_robust_slow.h",
+    ]
+    deps += [ "//third_party/libjpeg" ]
+  }
+
+  if (is_mac) {
+    libs = [ "IOSurface.framework" ]
+  }
+
+  if (!use_aura) {
+    sources -= [ "screen_aura.cc" ]
+    if (!toolkit_views) {
+      sources -= [
+        "nine_image_painter.cc",
+        "nine_image_painter.h",
+      ]
+    }
+  }
+
+  if (use_x11) {
+    deps += [ "//ui/gfx/x" ]
+    configs += [ "//build/config/linux:x11" ]
+  } else {
+    sources -= [ "path_x11.cc" ]
+  }
+
+  if (use_ozone) {
+    sources += [ "native_pixmap_handle_ozone.h" ]
+  }
+
+  if (use_cairo) {
+    configs += [ "//build/config/linux:pangocairo" ]
+  }
+}
+
+# GYP version: ui/gfx/gfx.gyp:aggregate_vector_icons
+action("aggregate_vector_icons") {
+  script = "vector_icons/aggregate_vector_icons.py"
+
+  # TODO(estade): move all platform-specific icons into their own directories.
+  sources = [
+    "vector_icons/account_box.icon",
+    "vector_icons/account_child_invert.icon",
+    "vector_icons/apps.icon",
+    "vector_icons/autofill.icon",
+    "vector_icons/autologin.icon",
+    "vector_icons/bar_close.1x.icon",
+    "vector_icons/bar_close.icon",
+    "vector_icons/blocked_badge.icon",
+    "vector_icons/browser_tools.1x.icon",
+    "vector_icons/browser_tools.icon",
+    "vector_icons/business.icon",
+    "vector_icons/check_circle.icon",
+    "vector_icons/chrome_product.icon",
+    "vector_icons/code.icon",
+    "vector_icons/cookie.icon",
+    "vector_icons/crashed_tab.icon",
+    "vector_icons/credit_card.1x.icon",
+    "vector_icons/credit_card.icon",
+    "vector_icons/error_circle.icon",
+    "vector_icons/extension.icon",
+    "vector_icons/extension_crashed.icon",
+    "vector_icons/file_download.icon",
+    "vector_icons/file_download_incognito.1x.icon",
+    "vector_icons/file_download_incognito.icon",
+    "vector_icons/file_download_shelf.icon",
+    "vector_icons/find_next.1x.icon",
+    "vector_icons/find_next.icon",
+    "vector_icons/find_prev.1x.icon",
+    "vector_icons/find_prev.icon",
+    "vector_icons/folder.1x.icon",
+    "vector_icons/folder.icon",
+    "vector_icons/folder_managed.1x.icon",
+    "vector_icons/folder_managed.icon",
+    "vector_icons/folder_supervised.1x.icon",
+    "vector_icons/folder_supervised.icon",
+    "vector_icons/fullscreen.icon",
+    "vector_icons/globe.icon",
+    "vector_icons/help_outline.icon",
+    "vector_icons/image.icon",
+    "vector_icons/incognito.1x.icon",
+    "vector_icons/incognito.icon",
+    "vector_icons/keyword_search.1x.icon",
+    "vector_icons/keyword_search.icon",
+    "vector_icons/laptop.icon",
+    "vector_icons/location_bar_http.1x.icon",
+    "vector_icons/location_bar_http.icon",
+    "vector_icons/location_bar_https_invalid.1x.icon",
+    "vector_icons/location_bar_https_invalid.icon",
+    "vector_icons/location_bar_https_invalid_invert.1x.icon",
+    "vector_icons/location_bar_https_invalid_invert.icon",
+    "vector_icons/location_bar_https_valid.1x.icon",
+    "vector_icons/location_bar_https_valid.icon",
+    "vector_icons/location_bar_https_valid_in_chip.1x.icon",
+    "vector_icons/location_bar_https_valid_in_chip.icon",
+    "vector_icons/location_bar_https_valid_invert.1x.icon",
+    "vector_icons/location_bar_https_valid_invert.icon",
+    "vector_icons/location_bar_star.icon",
+    "vector_icons/location_bar_star_active.icon",
+    "vector_icons/location_on.icon",
+    "vector_icons/menu_check.1x.icon",
+    "vector_icons/menu_check.icon",
+    "vector_icons/menu_radio_empty.icon",
+    "vector_icons/menu_radio_selected.icon",
+    "vector_icons/midi.icon",
+    "vector_icons/mixed_content.icon",
+    "vector_icons/mode_edit.icon",
+    "vector_icons/my_location.icon",
+    "vector_icons/navigate_back.1x.icon",
+    "vector_icons/navigate_back.icon",
+    "vector_icons/navigate_forward.1x.icon",
+    "vector_icons/navigate_forward.icon",
+    "vector_icons/navigate_home.1x.icon",
+    "vector_icons/navigate_home.icon",
+    "vector_icons/navigate_reload.1x.icon",
+    "vector_icons/navigate_reload.icon",
+    "vector_icons/navigate_stop.1x.icon",
+    "vector_icons/navigate_stop.icon",
+    "vector_icons/notifications.icon",
+    "vector_icons/omnibox_calculator.1x.icon",
+    "vector_icons/omnibox_calculator.icon",
+    "vector_icons/omnibox_extension_app.1x.icon",
+    "vector_icons/omnibox_extension_app.icon",
+    "vector_icons/omnibox_http.icon",
+    "vector_icons/omnibox_keyword_search.icon",
+    "vector_icons/omnibox_search.icon",
+    "vector_icons/omnibox_star.1x.icon",
+    "vector_icons/omnibox_star.icon",
+    "vector_icons/overflow_chevron.1x.icon",
+    "vector_icons/overflow_chevron.icon",
+    "vector_icons/paintbrush.icon",
+    "vector_icons/photo_camera.icon",
+    "vector_icons/protocol_handler.icon",
+    "vector_icons/remove_box.icon",
+    "vector_icons/remove_circle.icon",
+    "vector_icons/sad_tab.icon",
+    "vector_icons/smartphone.icon",
+    "vector_icons/submenu_arrow.1x.icon",
+    "vector_icons/submenu_arrow.icon",
+    "vector_icons/supervisor_account.icon",
+    "vector_icons/tab.icon",
+    "vector_icons/tab_audio.1x.icon",
+    "vector_icons/tab_audio.icon",
+    "vector_icons/tab_audio_muting.1x.icon",
+    "vector_icons/tab_audio_muting.icon",
+    "vector_icons/tab_close_hovered_pressed.1x.icon",
+    "vector_icons/tab_close_hovered_pressed.icon",
+    "vector_icons/tab_close_normal.1x.icon",
+    "vector_icons/tab_close_normal.icon",
+    "vector_icons/tab_media_capturing.icon",
+    "vector_icons/tab_media_recording.icon",
+    "vector_icons/tablet.icon",
+    "vector_icons/translate.icon",
+    "vector_icons/upgrade_menu_item.icon",
+    "vector_icons/warning.icon",
+    "vector_icons/warning_badge.icon",
+    "vector_icons/web.icon",
+    "vector_icons/window_control_back.1x.icon",
+    "vector_icons/window_control_back.icon",
+    "vector_icons/window_control_close.1x.icon",
+    "vector_icons/window_control_close.icon",
+    "vector_icons/window_control_left_snapped.1x.icon",
+    "vector_icons/window_control_maximize.1x.icon",
+    "vector_icons/window_control_maximize.icon",
+    "vector_icons/window_control_minimize.1x.icon",
+    "vector_icons/window_control_minimize.icon",
+    "vector_icons/window_control_restore.1x.icon",
+    "vector_icons/window_control_restore.icon",
+    "vector_icons/window_control_right_snapped.1x.icon",
+    "vector_icons/window_control_right_snapped.icon",
+    "vector_icons/zoom_minus.icon",
+    "vector_icons/zoom_plus.icon",
+  ]
+
+  outputs = [
+    vector_icons_cc_file,
+    vector_icons_h_file,
+  ]
+
+  args = [
+    # TODO(brettw) bug 535386: This should not take a directory as an input,
+    # but rather a response file listing the inputs or sometimes the build will
+    # be incorrect. In this case, Ninja won't be able to do proper dependency
+    # tracking since if a file is deleted, the command line will be the same
+    # and the action will not be re-run.
+    "--working_directory=" + rebase_path("vector_icons/"),
+    "--output_cc=" + rebase_path(vector_icons_cc_file, root_build_dir),
+    "--output_h=" + rebase_path(vector_icons_h_file, root_build_dir),
+  ]
+}
+
+# Looking for gfx_geometry? It's //ui/gfx/geometry:geometry
+
+source_set("test_support") {
+  testonly = true
+  sources = [
+    "image/image_unittest_util.cc",
+    "image/image_unittest_util.h",
+    "image/image_unittest_util_ios.mm",
+    "image/image_unittest_util_mac.mm",
+    "test/display_util.h",
+    "test/fontconfig_util_linux.cc",
+    "test/fontconfig_util_linux.h",
+    "test/gfx_util.cc",
+    "test/gfx_util.h",
+    "test/test_screen.cc",
+    "test/test_screen.h",
+    "test/ui_cocoa_test_helper.h",
+    "test/ui_cocoa_test_helper.mm",
+  ]
+
+  public_deps = [
+    ":gfx",
+  ]
+
+  deps = [
+    "//base",
+    "//base/test:test_support",
+    "//skia",
+    "//testing/gtest",
+    "//ui/gfx/geometry",
+  ]
+
+  if (is_ios) {
+    # The cocoa files don't apply to iOS.
+    sources -= [
+      "test/ui_cocoa_test_helper.h",
+      "test/ui_cocoa_test_helper.mm",
+    ]
+  }
+  if (is_linux) {
+    deps += [ "//build/linux:fontconfig" ]
+  }
+}
+
+test("gfx_unittests") {
+  sources = [
+    "font_render_params_linux_unittest.cc",
+    "font_unittest.cc",
+    "image/image_family_unittest.cc",
+    "image/image_ios_unittest.mm",
+    "image/image_skia_unittest.cc",
+    "image/image_unittest.cc",
+    "ios/NSString+CrStringDrawing_unittest.mm",
+    "ios/uikit_util_unittest.mm",
+    "platform_font_linux_unittest.cc",
+    "screen_unittest.cc",
+    "test/run_all_unittests.cc",
+    "text_elider_unittest.cc",
+    "text_utils_unittest.cc",
+  ]
+
+  data = [
+    "test/data/",
+    "$root_out_dir/ui_test.pak",
+  ]
+
+  if (!is_ios) {
+    sources += [
+      "animation/animation_container_unittest.cc",
+      "animation/animation_unittest.cc",
+      "animation/multi_animation_unittest.cc",
+      "animation/slide_animation_unittest.cc",
+      "animation/tween_unittest.cc",
+      "blit_unittest.cc",
+      "break_list_unittest.cc",
+      "canvas_unittest.cc",
+      "canvas_unittest_mac.mm",
+      "codec/jpeg_codec_unittest.cc",
+      "codec/png_codec_unittest.cc",
+      "color_analysis_unittest.cc",
+      "color_profile_mac_unittest.mm",
+      "color_utils_unittest.cc",
+      "display_change_notifier_unittest.cc",
+      "display_unittest.cc",
+      "font_fallback_mac_unittest.cc",
+      "font_list_unittest.cc",
+      "geometry/box_unittest.cc",
+      "geometry/cubic_bezier_unittest.cc",
+      "geometry/insets_unittest.cc",
+      "geometry/matrix3_unittest.cc",
+      "geometry/point3_unittest.cc",
+      "geometry/point_unittest.cc",
+      "geometry/quad_unittest.cc",
+      "geometry/rect_unittest.cc",
+      "geometry/safe_integer_conversions_unittest.cc",
+      "geometry/scroll_offset_unittest.cc",
+      "geometry/size_unittest.cc",
+      "geometry/vector2d_unittest.cc",
+      "geometry/vector3d_unittest.cc",
+      "image/image_mac_unittest.mm",
+      "image/image_util_unittest.cc",
+      "mac/coordinate_conversion_unittest.mm",
+      "nine_image_painter_unittest.cc",
+      "path_mac_unittest.mm",
+      "platform_font_mac_unittest.mm",
+      "range/range_mac_unittest.mm",
+      "range/range_unittest.cc",
+      "range/range_win_unittest.cc",
+      "sequential_id_generator_unittest.cc",
+      "shadow_value_unittest.cc",
+      "skbitmap_operations_unittest.cc",
+      "skrect_conversion_unittest.cc",
+      "transform_util_unittest.cc",
+      "utf16_indexing_unittest.cc",
+    ]
+  }
+
+  if (!is_android && !is_ios) {
+    sources += [ "render_text_unittest.cc" ]
+  }
+
+  # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+  configs += [ "//build/config/compiler:no_size_t_to_int_warning" ]
+
+  deps = [
+    ":gfx",
+    ":test_support",
+    "//base",
+    "//base/test:test_support",
+    "//skia",
+    "//testing/gtest",
+    "//third_party/icu:icuuc",
+    "//third_party/libpng",
+    "//third_party/zlib",
+    "//ui/base",
+    "//ui/gfx/geometry",
+    "//ui/resources:ui_test_pak",
+  ]
+
+  data_deps = [
+    "//ui/resources:ui_test_pak",
+  ]
+
+  if (!is_mac && !is_ios) {
+    sources += [
+      "interpolated_transform_unittest.cc",
+      "transform_unittest.cc",
+    ]
+  }
+
+  if (is_android) {
+    deps += [ "//ui/android:ui_java" ]
+
+    sources -= [
+      # Do not run display_change_notifier_unittest.cc on Android because it
+      # does not compile display_observer.cc
+      "display_change_notifier_unittest.cc",
+    ]
+  }
+
+  if (use_aura) {
+    sources -= [ "screen_unittest.cc" ]
+  } else if (!is_ios) {
+    sources -= [ "nine_image_painter_unittest.cc" ]
+  }
+
+  if (is_chromeos) {
+    sources += [ "chromeos/codec/jpeg_codec_robust_slow_unittest.cc" ]
+  }
+
+  if (is_win) {
+    sources += [
+      "color_profile_win_unittest.cc",
+      "font_fallback_win_unittest.cc",
+      "icon_util_unittest.cc",
+      "icon_util_unittests.rc",
+      "path_win_unittest.cc",
+      "platform_font_win_unittest.cc",
+    ]
+
+    ldflags = [
+      "/DELAYLOAD:d2d1.dll",
+      "/DELAYLOAD:d3d10_1.dll",
+    ]
+
+    libs = [
+      "d2d1.lib",
+      "d3d10_1.lib",
+      "imm32.lib",
+      "oleacc.lib",
+    ]
+  }
+}
+
+if (is_android) {
+  generate_jni("gfx_jni_headers") {
+    sources = [
+      "../android/java/src/org/chromium/ui/gfx/BitmapHelper.java",
+      "../android/java/src/org/chromium/ui/gfx/DeviceDisplayInfo.java",
+      "../android/java/src/org/chromium/ui/gfx/ViewConfigurationHelper.java",
+    ]
+    jni_package = "gfx"
+  }
+}

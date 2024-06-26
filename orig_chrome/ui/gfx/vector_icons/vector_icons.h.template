@@ -1,0 +1,20 @@
+// Copyright (c) 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// vector_icons.h.template is used to generate vector_icons.h. Edit the former
+// rather than the latter.
+
+#ifndef UI_GFX_VECTOR_ICONS_H_
+#define UI_GFX_VECTOR_ICONS_H_
+
+namespace gfx {
+
+enum class VectorIconId {
+    TEMPLATE_PLACEHOLDER
+        VECTOR_ICON_NONE,
+};
+
+} // namespace gfx
+
+#endif // UI_GFX_VECTOR_ICONS_H_

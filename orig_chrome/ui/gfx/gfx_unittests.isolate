@@ -1,0 +1,21 @@
+# Copyright (c) 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+{
+  'conditions': [
+    ['OS=="linux" or OS=="mac" or OS=="win"', {
+      'variables': {
+        'command': [
+          '<(PRODUCT_DIR)/gfx_unittests<(EXECUTABLE_SUFFIX)',
+        ],
+        'files': [
+          'test/data/',
+          '<(PRODUCT_DIR)/ui_test.pak',
+        ],
+      },
+    }],
+  ],
+  'includes': [
+    '../../base/base.isolate',
+  ],
+}

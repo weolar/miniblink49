@@ -1,0 +1,46 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+syntax = "proto2";
+
+option optimize_for = LITE_RUNTIME;
+
+package cc.proto;
+
+message SkXfermode {
+  enum Mode {
+    Mode_Clear = 0;
+    Mode_Src = 1;
+    Mode_Dst = 2;
+    Mode_SrcOver = 3;
+    Mode_DstOver = 4;
+    Mode_SrcIn = 5;
+    Mode_DstIn = 6;
+    Mode_SrcOut = 7;
+    Mode_DstOut = 8;
+    Mode_SrcATop = 9;
+    Mode_DstATop = 10;
+    Mode_XOR = 11;
+    Mode_Plus = 12;
+    Mode_Modulate = 13;
+
+    Mode_Screen = 14;
+
+    Mode_Overlay = 15;
+    Mode_Darken = 16;
+    Mode_Lighten = 17;
+    Mode_ColorDodge = 18;
+    Mode_ColorBurn = 19;
+    Mode_HardLight = 20;
+    Mode_SoftLight = 21;
+    Mode_Difference = 22;
+    Mode_Exclusion = 23;
+    Mode_Multiply = 24;
+
+    Mode_Hue = 25;
+    Mode_Saturation = 26;
+    Mode_Color = 27;
+    Mode_Luminosity = 28;
+  }
+}

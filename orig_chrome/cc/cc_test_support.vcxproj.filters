@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\animation_test_common.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\animation_test_common.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\animation_timelines_test_common.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\animation_timelines_test_common.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\begin_frame_args_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\begin_frame_args_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\failure_output_surface.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\failure_output_surface.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_content_layer_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_content_layer_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_delegated_renderer_layer.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_delegated_renderer_layer.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_delegated_renderer_layer_impl.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_delegated_renderer_layer_impl.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_display_list_raster_source.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_display_list_raster_source.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_display_list_recording_source.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_display_list_recording_source.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_external_begin_frame_source.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_external_begin_frame_source.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\fake_impl_proxy.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_layer_tree_host.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_layer_tree_host.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_layer_tree_host_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_layer_tree_host_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_layer_tree_host_impl.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_layer_tree_host_impl.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_layer_tree_host_impl_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_layer_tree_host_impl_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_output_surface.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_output_surface.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_output_surface_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_output_surface_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_painted_scrollbar_layer.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_painted_scrollbar_layer.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_picture_layer.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_picture_layer.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_picture_layer_impl.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_picture_layer_impl.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_picture_layer_tiling_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_picture_layer_tiling_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_proxy.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_proxy.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_renderer_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_renderer_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\fake_rendering_stats_instrumentation.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\fake_resource_provider.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_scoped_ui_resource.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_scoped_ui_resource.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_scrollbar.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_scrollbar.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_tile_manager.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_tile_manager.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_tile_manager_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_tile_manager_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_ui_resource_layer_tree_host_impl.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_ui_resource_layer_tree_host_impl.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\fake_video_frame_provider.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\fake_video_frame_provider.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\geometry_test_utils.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\geometry_test_utils.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_test_common.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_test_common.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_tree_host_common_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_tree_host_common_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_tree_json_parser.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_tree_json_parser.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_tree_pixel_resource_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_tree_pixel_resource_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_tree_pixel_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_tree_pixel_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\layer_tree_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\layer_tree_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\mock_occlusion_tracker.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\ordered_simple_task_runner.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\ordered_simple_task_runner.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\ordered_texture_map.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\ordered_texture_map.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\paths.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\paths.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\pixel_comparator.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\pixel_comparator.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\pixel_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\pixel_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\pixel_test_output_surface.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\pixel_test_output_surface.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\pixel_test_software_output_device.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\pixel_test_software_output_device.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\pixel_test_utils.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\pixel_test_utils.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\render_pass_test_utils.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\render_pass_test_utils.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\scheduler_test_common.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\scheduler_test_common.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\skia_common.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\skia_common.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\solid_color_content_layer_client.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\solid_color_content_layer_client.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_context_provider.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_context_provider.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_context_support.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_context_support.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_gles2_interface.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_gles2_interface.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_gpu_memory_buffer_manager.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_gpu_memory_buffer_manager.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_image_factory.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_image_factory.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_in_process_context_provider.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_in_process_context_provider.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_occlusion_tracker.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_shared_bitmap_manager.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_shared_bitmap_manager.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_task_graph_runner.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_task_graph_runner.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_texture.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_texture.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_tile_priorities.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_tile_priorities.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\test_web_graphics_context_3d.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\test_web_graphics_context_3d.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <None Include="cc_tests.gyp"/>
+  </ItemGroup>
+</Project>

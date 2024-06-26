@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\pacing">
+      <UniqueIdentifier>{45A993B5-2062-CAFA-B666-A3F26408DE77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\pacing">
+      <UniqueIdentifier>{45A993B5-2062-CAFA-B666-A3F26408DE77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtcp">
+      <UniqueIdentifier>{B81BA33E-1C31-5882-BA03-3A63F6DAC8C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\rtp">
+      <UniqueIdentifier>{BA7FCFF7-7644-A5EC-E5D1-35A5C4F68E09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{1F653D5C-3085-E5B1-C9CA-3B1D0CF99BB9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="net\cast_transport_config.cc">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClInclude Include="net\cast_transport_config.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\cast_transport_defines.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\cast_transport_sender.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClCompile Include="net\cast_transport_sender_impl.cc">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClInclude Include="net\cast_transport_sender_impl.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClCompile Include="net\pacing\paced_sender.cc">
+      <Filter>net\pacing</Filter>
+    </ClCompile>
+    <ClInclude Include="net\pacing\paced_sender.h">
+      <Filter>net\pacing</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtcp\receiver_rtcp_event_subscriber.cc">
+      <Filter>net\rtcp</Filter>
+    </ClCompile>
+    <ClCompile Include="net\rtcp\rtcp.cc">
+      <Filter>net\rtcp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtcp\rtcp.h">
+      <Filter>net\rtcp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtcp\rtcp_builder.cc">
+      <Filter>net\rtcp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtcp\rtcp_builder.h">
+      <Filter>net\rtcp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtcp\rtcp_defines.cc">
+      <Filter>net\rtcp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtcp\rtcp_defines.h">
+      <Filter>net\rtcp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtcp\rtcp_utility.cc">
+      <Filter>net\rtcp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtcp\rtcp_utility.h">
+      <Filter>net\rtcp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtp\packet_storage.cc">
+      <Filter>net\rtp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtp\packet_storage.h">
+      <Filter>net\rtp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtp\rtp_defines.cc">
+      <Filter>net\rtp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtp\rtp_defines.h">
+      <Filter>net\rtp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtp\rtp_packetizer.cc">
+      <Filter>net\rtp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtp\rtp_packetizer.h">
+      <Filter>net\rtp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtp\rtp_parser.cc">
+      <Filter>net\rtp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtp\rtp_parser.h">
+      <Filter>net\rtp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\rtp\rtp_sender.cc">
+      <Filter>net\rtp</Filter>
+    </ClCompile>
+    <ClInclude Include="net\rtp\rtp_sender.h">
+      <Filter>net\rtp</Filter>
+    </ClInclude>
+    <ClCompile Include="net\udp_transport.cc">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClInclude Include="net\udp_transport.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <None Include="cast.gyp"/>
+  </ItemGroup>
+</Project>

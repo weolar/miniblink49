@@ -1,0 +1,45 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// vector_icons.cc.template is used to generate vector_icons.cc. Edit the former
+// rather than the latter.
+
+#include "ui/gfx/vector_icons.h"
+
+#include "base/logging.h"
+#include "ui/gfx/vector_icon_types.h"
+
+#define ICON_TEMPLATE(icon_name, ...)                \
+    case VectorIconId::icon_name: {                  \
+        static PathElement path[] = { __VA_ARGS__ }; \
+        return path;                                 \
+    }
+
+namespace gfx {
+
+const PathElement* GetPathForVectorIcon(VectorIconId id)
+{
+    switch (id) {
+        TEMPLATE_PLACEHOLDER
+
+    case VectorIconId::VECTOR_ICON_NONE:
+        NOTREACHED();
+        return nullptr;
+    }
+
+    NOTREACHED();
+    return nullptr;
+}
+
+const PathElement* GetPathForVectorIconAt1xScale(VectorIconId id)
+{
+    switch (id) {
+        TEMPLATE_PLACEHOLDER_1X
+
+    default:
+        return GetPathForVectorIcon(id);
+    }
+}
+
+} // namespace gfx

@@ -1,0 +1,68 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+{
+  'includes': [
+    # While the target 'base' doesn't depend on ../third_party/icu/icu.gyp
+    # itself, virtually all targets using it has to include icu. The only
+    # exception is the Windows sandbox (?).
+    '../third_party/icu/icu.isolate',
+    # Sanitizer-instrumented third-party libraries (if enabled).
+    '../third_party/instrumented_libraries/instrumented_libraries.isolate',
+    # MSVS runtime libraries.
+    '../build/config/win/msvs_dependencies.isolate',
+  ],
+  'conditions': [
+    ['use_custom_libcxx==1', {
+      'variables': {
+        'files': [
+          '<(PRODUCT_DIR)/lib/libc++.so',
+        ],
+      },
+    }],
+    ['OS=="mac" and asan==1', {
+      'variables': {
+        'files': [
+          '<(PRODUCT_DIR)/libclang_rt.asan_osx_dynamic.dylib',
+        ],
+      },
+    }],
+    ['OS=="win"', {
+      # Required for base/stack_trace_win.cc to symbolize correctly.
+      'variables': {
+        'files': [
+          '<(PRODUCT_DIR)/dbghelp.dll',
+        ],
+      },
+    }],
+    ['OS=="win" and asan==1 and component=="shared_library"', {
+      'variables': {
+        'files': [
+          # We only need x.y.z/lib/windows/clang_rt.asan_dynamic-i386.dll,
+          # but since the version (x.y.z) changes, just grab the whole dir.
+          '../third_party/llvm-build/Release+Asserts/lib/clang/',
+        ],
+      },
+    }],
+    ['OS=="linux" and (asan==1 or lsan==1 or msan==1 or tsan==1)', {
+      'variables': {
+        'files': [
+          # For llvm-symbolizer.
+          '../third_party/llvm-build/Release+Asserts/lib/libstdc++.so.6',
+        ],
+      },
+    }],
+    ['asan==1 or lsan==1 or msan==1 or tsan==1', {
+      'variables': {
+        'files': [
+          '../tools/valgrind/asan/',
+          '../third_party/llvm-build/Release+Asserts/bin/llvm-symbolizer<(EXECUTABLE_SUFFIX)',
+        ],
+      },
+    }],
+    # Workaround for https://code.google.com/p/swarming/issues/detail?id=211
+    ['asan==0 or lsan==0 or msan==0 or tsan==0', {
+      'variables': {},
+    }],
+  ],
+}

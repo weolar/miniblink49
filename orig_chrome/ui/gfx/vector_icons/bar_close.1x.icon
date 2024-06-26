@@ -1,0 +1,13 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// A variant of ic_close with rounded corners and optimized for 1x scale factor
+// devices.
+CANVAS_DIMENSIONS, 16,
+STROKE, 1.85f,
+MOVE_TO, 4, 4,
+R_LINE_TO, 8, 8,
+MOVE_TO, 4, 12,
+R_LINE_TO, 8, -8,
+END

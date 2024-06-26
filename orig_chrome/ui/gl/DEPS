@@ -1,0 +1,21 @@
+include_rules = [
+  "+third_party/khronos",
+  "+third_party/skia",
+  "+ui/base",
+  "+ui/events",
+  "+ui/gfx",
+  "+ui/ozone/public",
+]
+
+specific_include_rules = {
+# This is the only target that should use the osmesa.h header. Everything else
+# should use the GLES2 headers from third_party/khronos/ or use gl_bindings.h to
+# get access to desktop OpenGL.
+  "gl_surface_osmesa.cc": [
+    "+third_party/mesa/src/include/GL/osmesa.h",
+  ],
+# Allow us to include ANGLE's base platform implementation.
+  "angle_platform_impl.h": [
+    "+third_party/angle/include/platform/Platform.h",
+  ],
+}

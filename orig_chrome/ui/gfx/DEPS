@@ -1,0 +1,9 @@
+include_rules = [
+  "+base",
+  "+skia/ext",
+  "+third_party/harfbuzz-ng",
+  "+third_party/skia",
+  "+ui/ios",
+
+  "-testing/gmock",
+]

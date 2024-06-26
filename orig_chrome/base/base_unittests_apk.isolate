@@ -1,0 +1,24 @@
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+{
+  'includes': [
+    '../build/android/android.isolate',
+    'base_unittests.isolate',
+  ],
+  'variables': {
+    'command': [
+      '<(PRODUCT_DIR)/bin/run_base_unittests',
+    ],
+    'files': [
+      '../build/config/',
+      '../third_party/icu/icu.isolate',
+      '../third_party/instrumented_libraries/instrumented_libraries.isolate',
+      '<(PRODUCT_DIR)/base_unittests_apk/',
+      '<(PRODUCT_DIR)/bin/run_base_unittests',
+      '<(PRODUCT_DIR)/icudtl.dat',
+      'base.isolate',
+      'base_unittests.isolate',
+    ]
+  },
+}

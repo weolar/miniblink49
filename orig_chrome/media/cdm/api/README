@@ -1,0 +1,3 @@
+This directory contains files that define the interface between an
+Encrypted Media Extensions (EME) Content Decryption Module (CDM) and Chromium
+or other user agents. It is used to build both user agents and CDMs.

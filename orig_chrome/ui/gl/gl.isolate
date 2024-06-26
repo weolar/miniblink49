@@ -1,0 +1,21 @@
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This isolate expresses the dependency on the default behavior of
+# Chromium's OpenGL binding layer. Many targets (in particular test
+# targets) that use graphics rely on this layer either implicitly or
+# explicitly, but not all of them need a direct dependency on ANGLE,
+# especially as ANGLE is being brought up on more platforms. This
+# isolate allows these targets to continue to use Chromium's default
+# graphics code path, while others can depend directly on ANGLE on
+# non-Windows platforms.
+{
+  # If includes were supported in conditions, we'd prefer to
+  # conditionally include angle.isolate here only on Windows, rather
+  # than introducing another isolate for ANGLE on multiple
+  # platforms. https://github.com/luci/luci-py/issues/230
+  'includes': [
+    '../../third_party/angle/angle.isolate',
+  ],
+}

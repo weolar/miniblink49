@@ -1,0 +1,5 @@
+include_rules = [
+  "+third_party/WebKit/public/platform/WebFloatSize.h",
+  "+third_party/WebKit/public/platform/WebGestureCurve.h",
+  "+third_party/WebKit/public/platform/WebGestureCurveTarget.h"
+]

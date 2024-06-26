@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// The close "X" for a tab when hovered/pressed, optimized for 1x scale factor
+// devices.
+CANVAS_DIMENSIONS, 16,
+CIRCLE, 8, 8, 7.05f,
+NEW_PATH,
+PATH_COLOR_ARGB, 0xFF, 0xFF, 0xFF, 0xFF,
+STROKE, 1.415f,
+MOVE_TO, 4.75f, 4.75f,
+R_LINE_TO, 6.5f, 6.5f,
+MOVE_TO, 4.75f, 11.25f,
+R_LINE_TO, 6.5f, -6.5f,
+END
