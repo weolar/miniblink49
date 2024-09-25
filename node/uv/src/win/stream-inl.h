@@ -29,28 +29,27 @@
 #include "handle-inl.h"
 #include "req-inl.h"
 
-
 INLINE static void uv_stream_init(uv_loop_t* loop,
-                                  uv_stream_t* handle,
-                                  uv_handle_type type) {
-  uv__handle_init(loop, (uv_handle_t*) handle, type);
-  handle->write_queue_size = 0;
-  handle->activecnt = 0;
+    uv_stream_t* handle,
+    uv_handle_type type)
+{
+    uv__handle_init(loop, (uv_handle_t*)handle, type);
+    handle->write_queue_size = 0;
+    handle->activecnt = 0;
 }
 
+INLINE static void uv_connection_init(uv_stream_t* handle)
+{
+    handle->flags |= UV_HANDLE_CONNECTION;
+    handle->stream.conn.write_reqs_pending = 0;
 
-INLINE static void uv_connection_init(uv_stream_t* handle) {
-  handle->flags |= UV_HANDLE_CONNECTION;
-  handle->stream.conn.write_reqs_pending = 0;
+    uv_req_init(handle->loop, (uv_req_t*)&(handle->read_req));
+    handle->read_req.event_handle = NULL;
+    handle->read_req.wait_handle = INVALID_HANDLE_VALUE;
+    handle->read_req.type = UV_READ;
+    handle->read_req.data = handle;
 
-  uv_req_init(handle->loop, (uv_req_t*) &(handle->read_req));
-  handle->read_req.event_handle = NULL;
-  handle->read_req.wait_handle = INVALID_HANDLE_VALUE;
-  handle->read_req.type = UV_READ;
-  handle->read_req.data = handle;
-
-  handle->stream.conn.shutdown_req = NULL;
+    handle->stream.conn.shutdown_req = NULL;
 }
-
 
 #endif /* UV_WIN_STREAM_INL_H_ */

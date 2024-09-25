@@ -37,106 +37,110 @@
 // Forward declaration to break recursive dependency chain with src/env.h.
 namespace node {
 class Environment;
-}  // namespace node
+} // namespace node
 
 namespace node {
 namespace debugger {
 
-class AgentMessage {
- public:
-  AgentMessage(uint16_t* val, int length) : length_(length) {
-    if (val == nullptr) {
-      data_ = val;
-    } else {
-      data_ = new uint16_t[length];
-      memcpy(data_, val, length * sizeof(*data_));
-    }
-  }
+    class AgentMessage {
+    public:
+        AgentMessage(uint16_t* val, int length)
+            : length_(length)
+        {
+            if (val == nullptr) {
+                data_ = val;
+            } else {
+                data_ = new uint16_t[length];
+                memcpy(data_, val, length * sizeof(*data_));
+            }
+        }
 
-  ~AgentMessage() {
-    delete[] data_;
-    data_ = nullptr;
-  }
+        ~AgentMessage()
+        {
+            delete[] data_;
+            data_ = nullptr;
+        }
 
-  inline const uint16_t* data() const { return data_; }
-  inline int length() const { return length_; }
+        inline const uint16_t* data() const { return data_; }
+        inline int length() const { return length_; }
 
-  ListNode<AgentMessage> member;
+        ListNode<AgentMessage> member;
 
- private:
-  uint16_t* data_;
-  int length_;
-};
+    private:
+        uint16_t* data_;
+        int length_;
+    };
 
-class Agent {
- public:
-  explicit Agent(node::Environment* env);
-  ~Agent();
+    class Agent {
+    public:
+        explicit Agent(node::Environment* env);
+        ~Agent();
 
-  typedef void (*DispatchHandler)(node::Environment* env);
+        typedef void (*DispatchHandler)(node::Environment* env);
 
-  // Start the debugger agent thread
-  bool Start(const std::string& host, int port, bool wait);
-  // Listen for debug events
-  void Enable();
-  // Stop the debugger agent
-  void Stop();
+        // Start the debugger agent thread
+        bool Start(const std::string& host, int port, bool wait);
+        // Listen for debug events
+        void Enable();
+        // Stop the debugger agent
+        void Stop();
 
-  inline void set_dispatch_handler(DispatchHandler handler) {
-    dispatch_handler_ = handler;
-  }
+        inline void set_dispatch_handler(DispatchHandler handler)
+        {
+            dispatch_handler_ = handler;
+        }
 
-  inline node::Environment* parent_env() const { return parent_env_; }
-  inline node::Environment* child_env() const { return child_env_; }
+        inline node::Environment* parent_env() const { return parent_env_; }
+        inline node::Environment* child_env() const { return child_env_; }
 
- protected:
-  void InitAdaptor(Environment* env);
+    protected:
+        void InitAdaptor(Environment* env);
 
-  // Worker body
-  void WorkerRun();
+        // Worker body
+        void WorkerRun();
 
-  static void ThreadCb(Agent* agent);
-  static void ParentSignalCb(uv_async_t* signal);
-  static void ChildSignalCb(uv_async_t* signal);
-  static void MessageHandler(const v8::Debug::Message& message);
+        static void ThreadCb(Agent* agent);
+        static void ParentSignalCb(uv_async_t* signal);
+        static void ChildSignalCb(uv_async_t* signal);
+        static void MessageHandler(const v8::Debug::Message& message);
 
-  // V8 API
-  static Agent* Unwrap(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void NotifyListen(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void NotifyWait(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void SendCommand(const v8::FunctionCallbackInfo<v8::Value>& args);
+        // V8 API
+        static Agent* Unwrap(const v8::FunctionCallbackInfo<v8::Value>& args);
+        static void NotifyListen(const v8::FunctionCallbackInfo<v8::Value>& args);
+        static void NotifyWait(const v8::FunctionCallbackInfo<v8::Value>& args);
+        static void SendCommand(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-  void EnqueueMessage(AgentMessage* message);
+        void EnqueueMessage(AgentMessage* message);
 
-  enum State {
-    kNone,
-    kRunning
-  };
+        enum State {
+            kNone,
+            kRunning
+        };
 
-  State state_;
+        State state_;
 
-  std::string host_;
-  int port_;
-  bool wait_;
+        std::string host_;
+        int port_;
+        bool wait_;
 
-  uv_sem_t start_sem_;
-  node::Mutex message_mutex_;
-  uv_async_t child_signal_;
+        uv_sem_t start_sem_;
+        node::Mutex message_mutex_;
+        uv_async_t child_signal_;
 
-  uv_thread_t thread_;
-  node::Environment* parent_env_;
-  node::Environment* child_env_;
-  uv_loop_t child_loop_;
-  v8::Persistent<v8::Object> api_;
+        uv_thread_t thread_;
+        node::Environment* parent_env_;
+        node::Environment* child_env_;
+        uv_loop_t child_loop_;
+        v8::Persistent<v8::Object> api_;
 
-  ListHead<AgentMessage, &AgentMessage::member> messages_;
+        ListHead<AgentMessage, &AgentMessage::member> messages_;
 
-  DispatchHandler dispatch_handler_;
-};
+        DispatchHandler dispatch_handler_;
+    };
 
-}  // namespace debugger
-}  // namespace node
+} // namespace debugger
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_DEBUG_AGENT_H_
+#endif // SRC_DEBUG_AGENT_H_

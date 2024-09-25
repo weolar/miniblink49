@@ -1,18 +1,28 @@
 ﻿
+#if 1 // ENABLE_NODEJS
 #define USING_UV_SHARED 1
 
-#include "nodeblink.h"
+#include "node/nodeblink.h"
 
 #include "node/src/node.h"
 #include "node/src/env.h"
 #include "node/src/env-inl.h"
+#include "node/src/node_natives.h"
+#include "node/src/node_buffer.h"
 #include "node/uv/include/uv.h"
 
 #include "gin/v8_initializer.h"
 #include "libplatform/libplatform.h"
 
+#if V8_MAJOR_VERSION >= 7
+#include "v8_7_5/src/libplatform/default_platform_wrap.h"
+#endif
+
 #include "third_party/WebKit/Source/config.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
+
+#include "base/strings/string_util.h"
+#include "wke/wkedefine.h"
 
 #include <string.h>
 #include <Windows.h>
@@ -141,13 +151,20 @@ namespace node {
 
 } // node
 
-extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
+extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform()
+{
+#if V8_MAJOR_VERSION >= 7
+    gin::DefaultPlatformWrap* defaultPlatform = new gin::DefaultPlatformWrap();
+    v8::Platform* v8platform = defaultPlatform->GetPlatform();
+#else
     v8::Platform* v8platform = v8::platform::CreateDefaultPlatform(1);
+#endif    
     gin::V8Initializer::SetV8Platform(v8platform);
     return v8platform;
 }
 
-static void waitForEnvironmentHandleWrapQueue(node::Environment* env) {
+static void waitForEnvironmentHandleWrapQueue(node::Environment* env)
+{
     while (true) {
         uv_run(env->event_loop(), UV_RUN_NOWAIT);
 
@@ -168,12 +185,14 @@ static void waitForEnvironmentHandleWrapQueue(node::Environment* env) {
         DebugBreak();
 }
 
-static void handleCloseCb(uv_handle_t* handle) {
+static void handleCloseCb(uv_handle_t* handle)
+{
     int* closingHandleCount = (int*)handle->data;
     ++(*closingHandleCount);
 }
 
-static void closeWalkCB(uv_handle_t* handle, void* arg) {
+static void closeWalkCB(uv_handle_t* handle, void* arg)
+{
     int* closeHandleCount = (int*)arg;
 
     if (!uv_is_closing(handle)) {
@@ -183,7 +202,8 @@ static void closeWalkCB(uv_handle_t* handle, void* arg) {
     }
 }
 
-static void waitForAllHandleWrapQueue(node::Environment* env) {
+static void waitForAllHandleWrapQueue(node::Environment* env)
+{
     int closeHandleCount[2] = { 0, 0 };
     uv_walk(env->event_loop(), closeWalkCB, &closeHandleCount);
 
@@ -191,7 +211,8 @@ static void waitForAllHandleWrapQueue(node::Environment* env) {
         uv_run(env->event_loop(), UV_RUN_NOWAIT);
 }
 
-extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env) {
+extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env)
+{
     env->CleanupHandles();
     waitForEnvironmentHandleWrapQueue(env);
     //waitForAllHandleWrapQueue(env);
@@ -199,20 +220,187 @@ extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env) {
     env->Dispose();
 }
 
-extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle nodeBlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
+extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle nodeBlinkMicrotaskSuppressionEnter(v8::Isolate* isolate)
+{
     return new blink::V8RecursionScope::MicrotaskSuppression(isolate);
 }
 
-extern "C" NODE_EXTERN void nodeBlinkMicrotaskSuppressionLeave(BlinkMicrotaskSuppressionHandle handle) {
+extern "C" NODE_EXTERN void nodeBlinkMicrotaskSuppressionLeave(BlinkMicrotaskSuppressionHandle handle)
+{
     blink::V8RecursionScope::MicrotaskSuppression* suppression = (blink::V8RecursionScope::MicrotaskSuppression*)handle;
     delete suppression;
 }
 
-extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length) {
+struct MemoryHead {
+    size_t magicNum;
+    size_t size;
+};
+
+static const size_t magicNum0 = 0x99223321;
+static const size_t magicNum1 = 0x89223321;
+
+extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length)
+{
     return node::Malloc(length);
+//     MemoryHead* head = (MemoryHead*)malloc(length + sizeof(MemoryHead));
+//     head->magicNum = magicNum0;
+//     head->size = length;
+//     return head + 1;
 }
 
-extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length) {
+extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length)
+{
     node::Realloc(data, 0);
+//     MemoryHead* head = (MemoryHead*)data;
+//     --head;
+//     if (head->magicNum != magicNum0 || head->size != length)
+//         DebugBreak();
+//     head->magicNum = magicNum1;
+//     free(head);
 }
 
+extern "C" void node_module_init_register();
+
+extern "C" NODE_EXTERN void nodeModuleInitRegister()
+{
+    node_module_init_register();
+}
+
+//////////////////////////////////////////////////////////////////////////
+void testReadFile(const wchar_t* path, std::vector<char>* buffer);
+
+static uv_loop_t* s_uvLoop = nullptr;
+static v8::Platform* s_v8platform = nullptr;
+
+bool isNodejsEnable()
+{
+    return !!s_uvLoop;
+}
+
+void enableNodejs()
+{
+    if (s_uvLoop)
+        return;
+
+    nodeModuleInitRegister();
+
+    s_uvLoop = (uv_loop_t*)malloc(sizeof(uv_loop_t));
+    uv_loop_init(s_uvLoop);
+    
+    s_v8platform = (v8::Platform*)nodeCreateDefaultPlatform();
+}
+
+static void isInElectronEnv(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Isolate* isolate = info.GetIsolate();
+    info.GetReturnValue().Set(v8::Boolean::New(isolate, false).As<v8::Value>());
+}
+
+static void getPreloadScript(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+//     std::vector<char> buffer;
+//     testReadFile(L"G:\\mycode\\mb\\node\\lib\\renderinit.js", &buffer);
+//     buffer.push_back('\0');
+
+    const char* data = (const char*)node::render_init_native;
+    size_t size = sizeof(node::render_init_native);
+
+    v8::Isolate* isolate = info.GetIsolate();
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> nameString = v8::String::NewFromUtf8(isolate, data, type, size).ToLocalChecked();
+    info.GetReturnValue().Set(nameString);
+}
+
+static void bindFuncToProcessObj(v8::Isolate* isolate, node::Environment* env, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::Function> func = v8::FunctionTemplate::New(isolate, callback)->GetFunction();
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> nameString = v8::String::NewFromUtf8(isolate, name, type).ToLocalChecked();
+    env->process_object()->Set(nameString, func);
+    func->SetName(nameString);
+}
+
+void nodeWillReleaseScriptContext(NodeBindingInMbCore* nodebinding)
+{
+    node::FreeEnvironment((node::Environment*)nodebinding->env);
+    delete nodebinding;
+}
+
+// 给mb自己用的，不导出dll。可以让mb的js环境带上nodejs的api
+NodeBindingInMbCore* nodeBindNodejsOnDidCreateScriptContext(void* webView, void* frameId, void* ctx)
+{
+    v8::Local<v8::Context>* context = (v8::Local<v8::Context>*)ctx;
+
+    BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
+    NodeBindingInMbCore* binding = new NodeBindingInMbCore();
+
+    int argc = 0;
+    int argsArrayNum = 0;
+    wchar_t** argvW = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+    char** argsArray = (char**)malloc((argc + 1) * sizeof(char**));
+    memset(argsArray, 0, argc * sizeof(char**));
+
+    for (int i = 0; i < argc; ++i) {
+        std::wstring arg = argvW[i];
+        if (arg.length() > 0 && arg[0] >= L'a' && arg[0] <= L'z')
+            arg[0] += L'A' - L'a';
+
+        std::string argUtf8 = base::WideToUTF8(arg);
+        if (std::string::npos != argUtf8.find("use_res_url")) // 测试demo会有这个命令行。
+            continue;
+        
+        argsArray[argsArrayNum] = strdup(argUtf8.c_str());
+        ++argsArrayNum;
+    }
+//     argsArray[argsArrayNum] = strdup("G:\\mycode\\mb\\node\\lib\\renderinit.js");
+//     ++argsArrayNum;
+
+    v8::Isolate* isolate = (*context)->GetIsolate();
+
+    binding->env = node::CreateEnvironment(isolate, s_uvLoop, *context, argsArrayNum, argsArray, 0, nullptr);
+    node::Environment* env = (node::Environment*)binding->env;
+
+    bindFuncToProcessObj(isolate, env, "_isInElectronEnv", isInElectronEnv);
+    bindFuncToProcessObj(isolate, env, "_getPreloadScript", getPreloadScript);
+
+    node::LoadEnvironment(env);
+
+    nodeBlinkMicrotaskSuppressionLeave(handle);
+
+//     std::vector<char> buffer;
+//     readFile(L"G:\\mycode\\mb\\node\\lib\\renderinit.js", &buffer);
+//     buffer.push_back('\0');
+//     wkeRunJsByFrame((wkeWebView)webView, (wkeWebFrameHandle)frameId, buffer.data(), false);
+
+    for (int i = 0; i < argsArrayNum; ++i) {
+        if (argsArray[i])
+            free(argsArray[i]);
+    }
+    free(argsArray);
+
+    return binding;
+}
+
+void nodeRunNoWait()
+{
+    if (!s_uvLoop)
+        return;
+
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter(isolate);
+    bool more = (0 != uv_run(s_uvLoop, UV_RUN_NOWAIT));
+    nodeBlinkMicrotaskSuppressionLeave(handle);
+
+    if (s_v8platform && isolate)
+        v8::platform::PumpMessageLoop(s_v8platform, isolate);
+}
+
+char* nodeBufferGetData(void* buf, size_t* len)
+{
+    v8::Local<v8::Value>* val = (v8::Local<v8::Value>*)buf;
+    char* data = node::Buffer::Data(*val);
+    *len = node::Buffer::Length(*val);
+    return data;
+}
+
+#endif // ENABLE_NODEJS

@@ -1,3 +1,6 @@
+//Copyright Joyent, Inc. and other Node contributors.
+//The MIT License (MIT)
+
 #ifndef SRC_NODE_WRAP_H_
 #define SRC_NODE_WRAP_H_
 
@@ -17,19 +20,17 @@
 
 namespace node {
 
-#define WITH_GENERIC_UV_STREAM(env, obj, BODY, ELSE)                          \
-    do {                                                                      \
-      if (env->tcp_constructor_template().IsEmpty() == false &&               \
-          env->tcp_constructor_template()->HasInstance(obj)) {                \
-        TCPWrap* const wrap = Unwrap<TCPWrap>(obj);                           \
-        BODY                                                                  \
-      } else if (env->pipe_constructor_template().IsEmpty() == false &&       \
-                 env->pipe_constructor_template()->HasInstance(obj)) {        \
-        PipeWrap* const wrap = Unwrap<PipeWrap>(obj);                         \
-        BODY                                                                  \
-      } else {                                                                \
-        ELSE                                                                  \
-      }                                                                       \
+#define WITH_GENERIC_UV_STREAM(env, obj, BODY, ELSE)                                                                            \
+    do {                                                                                                                        \
+        if (env->tcp_constructor_template().IsEmpty() == false && env->tcp_constructor_template()->HasInstance(obj)) {          \
+            TCPWrap* const wrap = Unwrap<TCPWrap>(obj);                                                                         \
+            BODY                                                                                                                \
+        } else if (env->pipe_constructor_template().IsEmpty() == false && env->pipe_constructor_template()->HasInstance(obj)) { \
+            PipeWrap* const wrap = Unwrap<PipeWrap>(obj);                                                                       \
+            BODY                                                                                                                \
+        } else {                                                                                                                \
+            ELSE                                                                                                                \
+        }                                                                                                                       \
     } while (0)
 
 //zero
@@ -41,20 +42,22 @@ namespace node {
 //		 BODY                                                                  \
 
 inline uv_stream_t* HandleToStream(Environment* env,
-                                   v8::Local<v8::Object> obj) {
-  v8::HandleScope scope(env->isolate());
+    v8::Local<v8::Object> obj)
+{
+    v8::HandleScope scope(env->isolate());
 
-  WITH_GENERIC_UV_STREAM(env, obj, {
-    if (wrap == nullptr)
-      return nullptr;
-    return reinterpret_cast<uv_stream_t*>(wrap->UVHandle());
-  }, {});
+    WITH_GENERIC_UV_STREAM(env, obj, {
+        if (wrap == nullptr)
+            return nullptr;
+        return reinterpret_cast<uv_stream_t*>(wrap->UVHandle());
+    },
+        {});
 
-  return nullptr;
+    return nullptr;
 }
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_WRAP_H_
+#endif // SRC_NODE_WRAP_H_

@@ -11,16 +11,16 @@
 namespace node {
 
 class ConnectWrap : public ReqWrap<uv_connect_t> {
- public:
-  ConnectWrap(Environment* env,
-              v8::Local<v8::Object> req_wrap_obj,
-              AsyncWrap::ProviderType provider);
+public:
+    ConnectWrap(Environment* env,
+        v8::Local<v8::Object> req_wrap_obj,
+        AsyncWrap::ProviderType provider);
 
-  size_t self_size() const override { return sizeof(*this); }
+    size_t self_size() const override { return sizeof(*this); }
 };
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_CONNECT_WRAP_H_
+#endif // SRC_CONNECT_WRAP_H_

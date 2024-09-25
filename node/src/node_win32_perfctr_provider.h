@@ -4,9 +4,9 @@
 #if defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
 #if defined(_MSC_VER)
-# define INLINE __forceinline
+#define INLINE __forceinline
 #else
-# define INLINE inline
+#define INLINE inline
 #endif
 
 namespace node {
@@ -30,8 +30,8 @@ void NODE_COUNT_PIPE_BYTES_RECV(int bytes);
 void InitPerfCountersWin32();
 void TermPerfCountersWin32();
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_WIN32_PERFCTR_PROVIDER_H_
+#endif // SRC_NODE_WIN32_PERFCTR_PROVIDER_H_

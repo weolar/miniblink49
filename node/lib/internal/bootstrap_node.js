@@ -44,7 +44,7 @@
       setupGlobalConsole();
     }
 
-    setupAsarSupport();
+    setupAsarSupport(); // weolar
 
     const _process = NativeModule.require('internal/process');
 

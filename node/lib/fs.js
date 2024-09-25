@@ -701,7 +701,6 @@ var readSyncWarned = false;
 fs.readSync = function(fd, buffer, offset, length, position) {
   var legacy = false;
   var encoding;
-
   if (!(buffer instanceof Buffer)) {
     // legacy string interface (fd, length, position, encoding, callback)
     readSyncWarned = printDeprecation('fs.readSync\'s legacy String interface' +
@@ -1827,6 +1826,23 @@ fs.realpath = function realpath(p, options, callback) {
   }
 };
 
+function getOptions(options, defaultOptions) {
+  if (options === null || options === undefined ||
+      typeof options === 'function') {
+    return defaultOptions;
+  }
+  return options;
+}
+
+fs.realpath.native = (path, options, callback) => {
+  callback = makeCallback(callback || options);
+  options = getOptions(options, {});
+  //path = /getValidatedPath(path);
+  const req = new FSReqCallback();
+  req.oncomplete = callback;
+  return binding.realpath(path, options.encoding, req);
+};
+
 fs.mkdtemp = function(prefix, options, callback) {
   if (!prefix || typeof prefix !== 'string')
     throw new TypeError('filename prefix is required');
@@ -1867,6 +1883,42 @@ fs.mkdtempSync = function(prefix, options) {
   return binding.mkdtemp(prefix + 'XXXXXX', options.encoding);
 };
 
+fs.copyFile = function(src, dest, flags, callback) {
+  if (typeof flags === 'function') {
+    callback = flags;
+    flags = 0;
+  } else if (typeof callback !== 'function') {
+    throw new ERR_INVALID_CALLBACK();
+  }
+
+  //src = toPathIfFileURL(src);
+  //dest = toPathIfFileURL(dest);
+  //validatePath(src, 'src');
+  //validatePath(dest, 'dest');
+
+  src = pathModule._makeLong(src);
+  dest = pathModule._makeLong(dest);
+  flags = flags | 0;
+  const req = new FSReqCallback();
+  req.oncomplete = makeCallback(callback);
+  binding.copyFile(src, dest, flags, req);
+}
+
+
+fs.copyFileSync = function(src, dest, flags) {
+  //src = toPathIfFileURL(src);
+  //dest = toPathIfFileURL(dest);
+  //validatePath(src, 'src');
+  //validatePath(dest, 'dest');
+
+  const ctx = { path: src, dest };  // non-prefixed
+
+  src = pathModule._makeLong(src);
+  dest = pathModule._makeLong(dest);
+  flags = flags | 0;
+  binding.copyFile(src, dest, flags, undefined, ctx);
+  //handleErrorFromBinding(ctx);
+}
 
 var pool;
 

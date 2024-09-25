@@ -111,6 +111,6 @@ TRACEPOINT_EVENT(
 
 #include <lttng/tracepoint-event.h>
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_LTTNG_TP_H_
+#endif // SRC_NODE_LTTNG_TP_H_

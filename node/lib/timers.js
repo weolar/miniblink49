@@ -106,7 +106,7 @@ const active = exports.active = function(item) {
 
 // Internal APIs that need timeouts should use `_unrefActive()` instead of
 // `active()` so that they do not unnecessarily keep the process open.
-exports._unrefActive = function(item) {
+const _unrefActive = exports._unrefActive = function(item) {
   insert(item, true);
 };
 
@@ -459,6 +459,7 @@ function Timeout(after, callback, args) {
   this._onTimeout = callback;
   this._timerArgs = args;
   this._repeat = null;
+  this.kRefed = null;
 }
 
 
@@ -468,8 +469,18 @@ function unrefdHandle() {
     this.owner.close();
 }
 
+Timeout.prototype.refresh = function() {
+  if (this.kRefed)
+    active(this);
+  else
+    _unrefActive(this);
+  
+  return this;
+}
 
 Timeout.prototype.unref = function() {
+  this.kRefed = false;
+  
   if (this._handle) {
     this._handle.unref();
   } else if (typeof this._onTimeout === 'function') {
@@ -497,6 +508,8 @@ Timeout.prototype.unref = function() {
 };
 
 Timeout.prototype.ref = function() {
+  this[kRefed] = true;
+  
   if (this._handle)
     this._handle.ref();
   return this;

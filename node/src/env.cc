@@ -25,58 +25,60 @@ using v8::Message;
 using v8::StackFrame;
 using v8::StackTrace;
 
-void Environment::PrintSyncTrace() const {
-  if (!trace_sync_io_)
-    return;
+void Environment::PrintSyncTrace() const
+{
+    if (!trace_sync_io_)
+        return;
 
-  HandleScope handle_scope(isolate());
-  Local<v8::StackTrace> stack =
-      StackTrace::CurrentStackTrace(isolate(), 10, StackTrace::kDetailed);
+    HandleScope handle_scope(isolate());
+    Local<v8::StackTrace> stack = StackTrace::CurrentStackTrace(isolate(), 10, StackTrace::kDetailed);
 
-  fprintf(stderr, "(node:%d) WARNING: Detected use of sync API\n", getpid());
+    fprintf(stderr, "(node:%d) WARNING: Detected use of sync API\n", getpid());
 
-  for (int i = 0; i < stack->GetFrameCount() - 1; i++) {
-    Local<StackFrame> stack_frame = stack->GetFrame(i);
-    node::Utf8Value fn_name_s(isolate(), stack_frame->GetFunctionName());
-    node::Utf8Value script_name(isolate(), stack_frame->GetScriptName());
-    const int line_number = stack_frame->GetLineNumber();
-    const int column = stack_frame->GetColumn();
+    for (int i = 0; i < stack->GetFrameCount() - 1; i++) {
+        Local<StackFrame> stack_frame = stack->GetFrame(isolate(), i);
+        node::Utf8Value fn_name_s(isolate(), stack_frame->GetFunctionName());
+        node::Utf8Value script_name(isolate(), stack_frame->GetScriptName());
+        const int line_number = stack_frame->GetLineNumber();
+        const int column = stack_frame->GetColumn();
 
-    if (stack_frame->IsEval()) {
-      if (stack_frame->GetScriptId() == Message::kNoScriptIdInfo) {
-        fprintf(stderr, "    at [eval]:%i:%i\n", line_number, column);
-      } else {
-        fprintf(stderr,
-                "    at [eval] (%s:%i:%i)\n",
+        if (stack_frame->IsEval()) {
+            if (stack_frame->GetScriptId() == Message::kNoScriptIdInfo) {
+                fprintf(stderr, "    at [eval]:%i:%i\n", line_number, column);
+            } else {
+                fprintf(stderr,
+                    "    at [eval] (%s:%i:%i)\n",
+                    *script_name,
+                    line_number,
+                    column);
+            }
+            break;
+        }
+
+        if (fn_name_s.length() == 0) {
+            fprintf(stderr, "    at %s:%i:%i\n", *script_name, line_number, column);
+        } else {
+            fprintf(stderr,
+                "    at %s (%s:%i:%i)\n",
+                *fn_name_s,
                 *script_name,
                 line_number,
                 column);
-      }
-      break;
+        }
     }
-
-    if (fn_name_s.length() == 0) {
-      fprintf(stderr, "    at %s:%i:%i\n", *script_name, line_number, column);
-    } else {
-      fprintf(stderr,
-              "    at %s (%s:%i:%i)\n",
-              *fn_name_s,
-              *script_name,
-              line_number,
-              column);
-    }
-  }
-  fflush(stderr);
+    fflush(stderr);
 }
 
-void Environment::AddCleanupHook(void(*fn)(void*), void* arg) {
+void Environment::AddCleanupHook(void (*fn)(void*), void* arg)
+{
     CleanupHookCallback* cb = new CleanupHookCallback(fn, arg, cleanup_hook_counter_++);
     if (!cleanup_hooks_)
         cleanup_hooks_ = new std::vector<CleanupHookCallback*>();
     cleanup_hooks_->push_back(cb);
 }
 
-void Environment::RemoveCleanupHook(void(*fn)(void*), void* arg) {   
+void Environment::RemoveCleanupHook(void (*fn)(void*), void* arg)
+{
     for (size_t i = 0; i < cleanup_hooks_->size(); ++i) {
         CleanupHookCallback* hook = cleanup_hooks_->at(i);
         if (hook->fn_ == fn && hook->arg_ == arg) {
@@ -87,7 +89,8 @@ void Environment::RemoveCleanupHook(void(*fn)(void*), void* arg) {
     }
 }
 
-void Environment::InitEnv() {
+void Environment::InitEnv()
+{
     debugger_agent_ = new debugger::Agent(this);
 #if HAVE_INSPECTOR
     inspector_agent_ = new debugger::Agent(this);
@@ -97,7 +100,14 @@ void Environment::InitEnv() {
     destroy_ids_list_->reserve(512);
 }
 
-void Environment::CleanEnv() {
+void CleanNodeEnv(void* env)
+{
+    Environment* envPtr = (Environment*)env;
+    envPtr->CleanEnv();
+}
+
+void Environment::CleanEnv()
+{
     CleanupHandles();
 
     delete debugger_agent_;
@@ -138,32 +148,37 @@ void Environment::CleanEnv() {
     }
 }
 
-void AddLiveSet(intptr_t obj) {
+void AddLiveSet(intptr_t obj)
+{
     net::ActivatingObjCheck::inst()->add((intptr_t)obj);
 }
 
-void RemoveLiveSet(intptr_t obj) {
+void RemoveLiveSet(intptr_t obj)
+{
     net::ActivatingObjCheck::inst()->remove((intptr_t)obj);
 }
 
-bool IsLiveObj(intptr_t obj) {
+bool IsLiveObj(intptr_t obj)
+{
     return net::ActivatingObjCheck::inst()->isActivating((intptr_t)obj);
 }
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
 
-void BlinkMicrotaskSuppressionEnterFunc(Environment* self) {
+void BlinkMicrotaskSuppressionEnterFunc(Environment* self)
+{
     if (!self->blink_microtask_suppression_handle_)
         self->blink_microtask_suppression_handle_ = new std::list<BlinkMicrotaskSuppressionHandle>();
     std::list<BlinkMicrotaskSuppressionHandle>* handleList = (std::list<BlinkMicrotaskSuppressionHandle>*)self->blink_microtask_suppression_handle_;
     handleList->push_back(nodeBlinkMicrotaskSuppressionEnter(self->isolate()));
 }
 
-void BlinkMicrotaskSuppressionLeaveFunc(Environment* self) {
+void BlinkMicrotaskSuppressionLeaveFunc(Environment* self)
+{
     std::list<BlinkMicrotaskSuppressionHandle>* handleList = (std::list<BlinkMicrotaskSuppressionHandle>*)self->blink_microtask_suppression_handle_;
     BlinkMicrotaskSuppressionHandle handle = (handleList->back());
     handleList->pop_back();
-    
+
     if (0 == handleList->size()) {
         delete handleList;
         self->blink_microtask_suppression_handle_ = nullptr;
@@ -172,10 +187,11 @@ void BlinkMicrotaskSuppressionLeaveFunc(Environment* self) {
     nodeBlinkMicrotaskSuppressionLeave(handle);
 }
 
-void Environment::InitBlinkMicrotaskSuppression() {
+void Environment::InitBlinkMicrotaskSuppression()
+{
     BlinkMicrotaskSuppressionEnter = BlinkMicrotaskSuppressionEnterFunc;
     BlinkMicrotaskSuppressionLeave = BlinkMicrotaskSuppressionLeaveFunc;
 }
 #endif
 
-}  // namespace node
+} // namespace node

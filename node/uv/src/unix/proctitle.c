@@ -29,74 +29,74 @@ extern void uv__set_process_title(const char* title);
 static void* args_mem;
 
 static struct {
-  char* str;
-  size_t len;
+    char* str;
+    size_t len;
 } process_title;
 
+char** uv_setup_args(int argc, char** argv)
+{
+    char** new_argv;
+    size_t size;
+    char* s;
+    int i;
 
-char** uv_setup_args(int argc, char** argv) {
-  char** new_argv;
-  size_t size;
-  char* s;
-  int i;
+    if (argc <= 0)
+        return argv;
 
-  if (argc <= 0)
-    return argv;
+    /* Calculate how much memory we need for the argv strings. */
+    size = 0;
+    for (i = 0; i < argc; i++)
+        size += strlen(argv[i]) + 1;
 
-  /* Calculate how much memory we need for the argv strings. */
-  size = 0;
-  for (i = 0; i < argc; i++)
-    size += strlen(argv[i]) + 1;
+    process_title.str = argv[0];
+    process_title.len = argv[argc - 1] + strlen(argv[argc - 1]) - argv[0];
+    assert(process_title.len + 1 == size); /* argv memory should be adjacent. */
 
-  process_title.str = argv[0];
-  process_title.len = argv[argc - 1] + strlen(argv[argc - 1]) - argv[0];
-  assert(process_title.len + 1 == size);  /* argv memory should be adjacent. */
+    /* Add space for the argv pointers. */
+    size += (argc + 1) * sizeof(char*);
 
-  /* Add space for the argv pointers. */
-  size += (argc + 1) * sizeof(char*);
+    new_argv = uv__malloc(size);
+    if (new_argv == NULL)
+        return argv;
+    args_mem = new_argv;
 
-  new_argv = uv__malloc(size);
-  if (new_argv == NULL)
-    return argv;
-  args_mem = new_argv;
+    /* Copy over the strings and set up the pointer table. */
+    s = (char*)&new_argv[argc + 1];
+    for (i = 0; i < argc; i++) {
+        size = strlen(argv[i]) + 1;
+        memcpy(s, argv[i], size);
+        new_argv[i] = s;
+        s += size;
+    }
+    new_argv[i] = NULL;
 
-  /* Copy over the strings and set up the pointer table. */
-  s = (char*) &new_argv[argc + 1];
-  for (i = 0; i < argc; i++) {
-    size = strlen(argv[i]) + 1;
-    memcpy(s, argv[i], size);
-    new_argv[i] = s;
-    s += size;
-  }
-  new_argv[i] = NULL;
-
-  return new_argv;
+    return new_argv;
 }
 
+int uv_set_process_title(const char* title)
+{
+    if (process_title.len == 0)
+        return 0;
 
-int uv_set_process_title(const char* title) {
-  if (process_title.len == 0)
+    /* No need to terminate, byte after is always '\0'. */
+    strncpy(process_title.str, title, process_title.len);
+    uv__set_process_title(title);
+
     return 0;
-
-  /* No need to terminate, byte after is always '\0'. */
-  strncpy(process_title.str, title, process_title.len);
-  uv__set_process_title(title);
-
-  return 0;
 }
 
+int uv_get_process_title(char* buffer, size_t size)
+{
+    if (process_title.len > 0)
+        strncpy(buffer, process_title.str, size);
+    else if (size > 0)
+        buffer[0] = '\0';
 
-int uv_get_process_title(char* buffer, size_t size) {
-  if (process_title.len > 0)
-    strncpy(buffer, process_title.str, size);
-  else if (size > 0)
-    buffer[0] = '\0';
-
-  return 0;
+    return 0;
 }
 
-
-UV_DESTRUCTOR(static void free_args_mem(void)) {
-  uv__free(args_mem);  /* Keep valgrind happy. */
-  args_mem = NULL;
+UV_DESTRUCTOR(static void free_args_mem(void))
+{
+    uv__free(args_mem); /* Keep valgrind happy. */
+    args_mem = NULL;
 }

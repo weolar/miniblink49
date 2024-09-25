@@ -15,88 +15,89 @@
 namespace node {
 
 class Watchdog {
- public:
-  explicit Watchdog(v8::Isolate* isolate, uint64_t ms);
-  ~Watchdog();
+public:
+    explicit Watchdog(v8::Isolate* isolate, uint64_t ms);
+    ~Watchdog();
 
-  void Dispose();
+    void Dispose();
 
-  v8::Isolate* isolate() { return isolate_; }
-  bool HasTimedOut() { return timed_out_; }
- private:
-  void Destroy();
+    v8::Isolate* isolate() { return isolate_; }
+    bool HasTimedOut() { return timed_out_; }
 
-  static void Run(void* arg);
-  static void Async(uv_async_t* async);
-  static void Timer(uv_timer_t* timer);
+private:
+    void Destroy();
 
-  v8::Isolate* isolate_;
-  uv_thread_t thread_;
-  uv_loop_t* loop_;
-  uv_async_t async_;
-  uv_timer_t timer_;
-  bool timed_out_;
-  bool destroyed_;
+    static void Run(void* arg);
+    static void Async(uv_async_t* async);
+    static void Timer(uv_timer_t* timer);
+
+    v8::Isolate* isolate_;
+    uv_thread_t thread_;
+    uv_loop_t* loop_;
+    uv_async_t async_;
+    uv_timer_t timer_;
+    bool timed_out_;
+    bool destroyed_;
 };
 
 class SigintWatchdog {
- public:
-  explicit SigintWatchdog(v8::Isolate* isolate);
-  ~SigintWatchdog();
+public:
+    explicit SigintWatchdog(v8::Isolate* isolate);
+    ~SigintWatchdog();
 
-  void Dispose();
+    void Dispose();
 
-  v8::Isolate* isolate() { return isolate_; }
-  bool HasReceivedSignal() { return received_signal_; }
-  void HandleSigint();
+    v8::Isolate* isolate() { return isolate_; }
+    bool HasReceivedSignal() { return received_signal_; }
+    void HandleSigint();
 
- private:
-  void Destroy();
+private:
+    void Destroy();
 
-  v8::Isolate* isolate_;
-  bool received_signal_;
-  bool destroyed_;
+    v8::Isolate* isolate_;
+    bool received_signal_;
+    bool destroyed_;
 };
 
 class SigintWatchdogHelper {
- public:
-  static SigintWatchdogHelper* GetInstance() { return &instance; }
-  void Register(SigintWatchdog* watchdog);
-  void Unregister(SigintWatchdog* watchdog);
-  bool HasPendingSignal();
+public:
+    static SigintWatchdogHelper* GetInstance() { return &instance; }
+    void Register(SigintWatchdog* watchdog);
+    void Unregister(SigintWatchdog* watchdog);
+    bool HasPendingSignal();
 
-  int Start();
-  bool Stop();
+    int Start();
+    bool Stop();
 
- private:
-  SigintWatchdogHelper();
-  ~SigintWatchdogHelper();
+private:
+    SigintWatchdogHelper();
+    ~SigintWatchdogHelper();
 
-  static bool InformWatchdogsAboutSignal();
-  static SigintWatchdogHelper instance;
+    static bool InformWatchdogsAboutSignal();
+    static SigintWatchdogHelper instance;
 
-  int start_stop_count_;
+    int start_stop_count_;
 
-  Mutex mutex_;
-  Mutex list_mutex_;
-  std::vector<SigintWatchdog*> watchdogs_;
-  bool has_pending_signal_;
+    Mutex mutex_;
+    Mutex list_mutex_;
+    std::vector<SigintWatchdog*> watchdogs_;
+    bool has_pending_signal_;
 
 #ifdef __POSIX__
-  pthread_t thread_;
-  uv_sem_t sem_;
-  bool has_running_thread_;
-  bool stopping_;
+    pthread_t thread_;
+    uv_sem_t sem_;
+    bool has_running_thread_;
+    bool stopping_;
 
-  static void* RunSigintWatchdog(void* arg);
-  static void HandleSignal(int signum);
+    static void* RunSigintWatchdog(void* arg);
+    static void HandleSignal(int signum);
 #else
-  static BOOL WINAPI WinCtrlCHandlerRoutine(DWORD dwCtrlType);
+    static BOOL WINAPI WinCtrlCHandlerRoutine(DWORD dwCtrlType);
 #endif
 };
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_WATCHDOG_H_
+#endif // SRC_NODE_WATCHDOG_H_

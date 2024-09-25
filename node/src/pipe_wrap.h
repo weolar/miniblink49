@@ -1,3 +1,6 @@
+//Copyright Joyent, Inc. and other Node contributors.
+//The MIT License (MIT)
+
 #ifndef SRC_PIPE_WRAP_H_
 #define SRC_PIPE_WRAP_H_
 
@@ -10,35 +13,34 @@
 namespace node {
 
 class PipeWrap : public ConnectionWrap<PipeWrap, uv_pipe_t> {
- public:
-  static v8::Local<v8::Object> Instantiate(Environment* env, AsyncWrap* parent);
-  static void Initialize(v8::Local<v8::Object> target,
-                         v8::Local<v8::Value> unused,
-                         v8::Local<v8::Context> context);
+public:
+    static v8::Local<v8::Object> Instantiate(Environment* env, AsyncWrap* parent);
+    static void Initialize(v8::Local<v8::Object> target,
+        v8::Local<v8::Value> unused,
+        v8::Local<v8::Context> context);
 
-  size_t self_size() const override { return sizeof(*this); }
+    size_t self_size() const override { return sizeof(*this); }
 
- private:
-  PipeWrap(Environment* env,
-           v8::Local<v8::Object> object,
-           bool ipc,
-           AsyncWrap* parent);
+private:
+    PipeWrap(Environment* env,
+        v8::Local<v8::Object> object,
+        bool ipc,
+        AsyncWrap* parent);
 
-  static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Bind(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Listen(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Connect(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void Open(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void Bind(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void Listen(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void Connect(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void Open(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 #ifdef _WIN32
-  static void SetPendingInstances(
-      const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetPendingInstances(
+        const v8::FunctionCallbackInfo<v8::Value>& args);
 #endif
 };
 
+} // namespace node
 
-}  // namespace node
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
-
-#endif  // SRC_PIPE_WRAP_H_
+#endif // SRC_PIPE_WRAP_H_

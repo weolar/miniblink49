@@ -27,109 +27,110 @@
 #include <string.h>
 #include <unistd.h>
 
-int uv_loop_init(uv_loop_t* loop) {
-  int err;
+int uv_loop_init(uv_loop_t* loop)
+{
+    int err;
 
-  uv__signal_global_once_init();
+    uv__signal_global_once_init();
 
-  memset(loop, 0, sizeof(*loop));
-  heap_init((struct heap*) &loop->timer_heap);
-  QUEUE_INIT(&loop->wq);
-  QUEUE_INIT(&loop->active_reqs);
-  QUEUE_INIT(&loop->idle_handles);
-  QUEUE_INIT(&loop->async_handles);
-  QUEUE_INIT(&loop->check_handles);
-  QUEUE_INIT(&loop->prepare_handles);
-  QUEUE_INIT(&loop->handle_queue);
+    memset(loop, 0, sizeof(*loop));
+    heap_init((struct heap*)&loop->timer_heap);
+    QUEUE_INIT(&loop->wq);
+    QUEUE_INIT(&loop->active_reqs);
+    QUEUE_INIT(&loop->idle_handles);
+    QUEUE_INIT(&loop->async_handles);
+    QUEUE_INIT(&loop->check_handles);
+    QUEUE_INIT(&loop->prepare_handles);
+    QUEUE_INIT(&loop->handle_queue);
 
-  loop->nfds = 0;
-  loop->watchers = NULL;
-  loop->nwatchers = 0;
-  QUEUE_INIT(&loop->pending_queue);
-  QUEUE_INIT(&loop->watcher_queue);
+    loop->nfds = 0;
+    loop->watchers = NULL;
+    loop->nwatchers = 0;
+    QUEUE_INIT(&loop->pending_queue);
+    QUEUE_INIT(&loop->watcher_queue);
 
-  loop->closing_handles = NULL;
-  uv__update_time(loop);
-  uv__async_init(&loop->async_watcher);
-  loop->signal_pipefd[0] = -1;
-  loop->signal_pipefd[1] = -1;
-  loop->backend_fd = -1;
-  loop->emfile_fd = -1;
+    loop->closing_handles = NULL;
+    uv__update_time(loop);
+    uv__async_init(&loop->async_watcher);
+    loop->signal_pipefd[0] = -1;
+    loop->signal_pipefd[1] = -1;
+    loop->backend_fd = -1;
+    loop->emfile_fd = -1;
 
-  loop->timer_counter = 0;
-  loop->stop_flag = 0;
+    loop->timer_counter = 0;
+    loop->stop_flag = 0;
 
-  err = uv__platform_loop_init(loop);
-  if (err)
-    return err;
+    err = uv__platform_loop_init(loop);
+    if (err)
+        return err;
 
-  err = uv_signal_init(loop, &loop->child_watcher);
-  if (err)
-    goto fail_signal_init;
+    err = uv_signal_init(loop, &loop->child_watcher);
+    if (err)
+        goto fail_signal_init;
 
-  uv__handle_unref(&loop->child_watcher);
-  loop->child_watcher.flags |= UV__HANDLE_INTERNAL;
-  QUEUE_INIT(&loop->process_handles);
+    uv__handle_unref(&loop->child_watcher);
+    loop->child_watcher.flags |= UV__HANDLE_INTERNAL;
+    QUEUE_INIT(&loop->process_handles);
 
-  err = uv_rwlock_init(&loop->cloexec_lock);
-  if (err)
-    goto fail_rwlock_init;
+    err = uv_rwlock_init(&loop->cloexec_lock);
+    if (err)
+        goto fail_rwlock_init;
 
-  err = uv_mutex_init(&loop->wq_mutex);
-  if (err)
-    goto fail_mutex_init;
+    err = uv_mutex_init(&loop->wq_mutex);
+    if (err)
+        goto fail_mutex_init;
 
-  err = uv_async_init(loop, &loop->wq_async, uv__work_done);
-  if (err)
-    goto fail_async_init;
+    err = uv_async_init(loop, &loop->wq_async, uv__work_done);
+    if (err)
+        goto fail_async_init;
 
-  uv__handle_unref(&loop->wq_async);
-  loop->wq_async.flags |= UV__HANDLE_INTERNAL;
+    uv__handle_unref(&loop->wq_async);
+    loop->wq_async.flags |= UV__HANDLE_INTERNAL;
 
-  return 0;
+    return 0;
 
 fail_async_init:
-  uv_mutex_destroy(&loop->wq_mutex);
+    uv_mutex_destroy(&loop->wq_mutex);
 
 fail_mutex_init:
-  uv_rwlock_destroy(&loop->cloexec_lock);
+    uv_rwlock_destroy(&loop->cloexec_lock);
 
 fail_rwlock_init:
-  uv__signal_loop_cleanup(loop);
+    uv__signal_loop_cleanup(loop);
 
 fail_signal_init:
-  uv__platform_loop_delete(loop);
+    uv__platform_loop_delete(loop);
 
-  return err;
+    return err;
 }
 
+void uv__loop_close(uv_loop_t* loop)
+{
+    uv__signal_loop_cleanup(loop);
+    uv__platform_loop_delete(loop);
+    uv__async_stop(loop, &loop->async_watcher);
 
-void uv__loop_close(uv_loop_t* loop) {
-  uv__signal_loop_cleanup(loop);
-  uv__platform_loop_delete(loop);
-  uv__async_stop(loop, &loop->async_watcher);
+    if (loop->emfile_fd != -1) {
+        uv__close(loop->emfile_fd);
+        loop->emfile_fd = -1;
+    }
 
-  if (loop->emfile_fd != -1) {
-    uv__close(loop->emfile_fd);
-    loop->emfile_fd = -1;
-  }
+    if (loop->backend_fd != -1) {
+        uv__close(loop->backend_fd);
+        loop->backend_fd = -1;
+    }
 
-  if (loop->backend_fd != -1) {
-    uv__close(loop->backend_fd);
-    loop->backend_fd = -1;
-  }
+    uv_mutex_lock(&loop->wq_mutex);
+    assert(QUEUE_EMPTY(&loop->wq) && "thread pool work queue not empty!");
+    assert(!uv__has_active_reqs(loop));
+    uv_mutex_unlock(&loop->wq_mutex);
+    uv_mutex_destroy(&loop->wq_mutex);
 
-  uv_mutex_lock(&loop->wq_mutex);
-  assert(QUEUE_EMPTY(&loop->wq) && "thread pool work queue not empty!");
-  assert(!uv__has_active_reqs(loop));
-  uv_mutex_unlock(&loop->wq_mutex);
-  uv_mutex_destroy(&loop->wq_mutex);
-
-  /*
+    /*
    * Note that all thread pool stuff is finished at this point and
    * it is safe to just destroy rw lock
    */
-  uv_rwlock_destroy(&loop->cloexec_lock);
+    uv_rwlock_destroy(&loop->cloexec_lock);
 
 #if 0
   assert(QUEUE_EMPTY(&loop->pending_queue));
@@ -137,19 +138,19 @@ void uv__loop_close(uv_loop_t* loop) {
   assert(loop->nfds == 0);
 #endif
 
-  uv__free(loop->watchers);
-  loop->watchers = NULL;
-  loop->nwatchers = 0;
+    uv__free(loop->watchers);
+    loop->watchers = NULL;
+    loop->nwatchers = 0;
 }
 
+int uv__loop_configure(uv_loop_t* loop, uv_loop_option option, va_list ap)
+{
+    if (option != UV_LOOP_BLOCK_SIGNAL)
+        return UV_ENOSYS;
 
-int uv__loop_configure(uv_loop_t* loop, uv_loop_option option, va_list ap) {
-  if (option != UV_LOOP_BLOCK_SIGNAL)
-    return UV_ENOSYS;
+    if (va_arg(ap, int) != SIGPROF)
+        return UV_EINVAL;
 
-  if (va_arg(ap, int) != SIGPROF)
-    return UV_EINVAL;
-
-  loop->flags |= UV_LOOP_BLOCK_SIGPROF;
-  return 0;
+    loop->flags |= UV_LOOP_BLOCK_SIGPROF;
+    return 0;
 }

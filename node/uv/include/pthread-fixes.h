@@ -34,26 +34,25 @@
 
 #include <pthread.h>
 
-
 /*Android doesn't provide pthread_barrier_t for now.*/
 #ifndef PTHREAD_BARRIER_SERIAL_THREAD
 
 /* Anything except 0 will do here.*/
-#define PTHREAD_BARRIER_SERIAL_THREAD  0x12345
+#define PTHREAD_BARRIER_SERIAL_THREAD 0x12345
 
 typedef struct {
-  pthread_mutex_t  mutex;
-  pthread_cond_t   cond;
-  unsigned         count;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    unsigned count;
 } pthread_barrier_t;
 
 int pthread_barrier_init(pthread_barrier_t* barrier,
-                         const void* barrier_attr,
-                         unsigned count);
+    const void* barrier_attr,
+    unsigned count);
 
 int pthread_barrier_wait(pthread_barrier_t* barrier);
-int pthread_barrier_destroy(pthread_barrier_t *barrier);
-#endif  /* defined(PTHREAD_BARRIER_SERIAL_THREAD) */
+int pthread_barrier_destroy(pthread_barrier_t* barrier);
+#endif /* defined(PTHREAD_BARRIER_SERIAL_THREAD) */
 
 int pthread_yield(void);
 
@@ -69,4 +68,4 @@ int uv__pthread_sigmask(int how, const sigset_t* set, sigset_t* oset);
 #endif
 #define pthread_sigmask(how, set, oldset) uv__pthread_sigmask(how, set, oldset)
 
-#endif  /* GOOGLE_BREAKPAD_COMMON_ANDROID_TESTING_PTHREAD_FIXES_H */
+#endif /* GOOGLE_BREAKPAD_COMMON_ANDROID_TESTING_PTHREAD_FIXES_H */

@@ -20,11 +20,10 @@
 namespace node {
 
 typedef enum {
-#define V(code, _, __) REVERT_ ## code,
-  REVERSIONS(V)
+#define V(code, _, __) REVERT_##code,
+    REVERSIONS(V)
 #undef V
 } reversions_t;
-
 
 /* A bit field for tracking the active reverts */
 extern unsigned int reverted;
@@ -39,10 +38,10 @@ void Revert(const char* cve);
 bool IsReverted(const unsigned int cve);
 
 /* true if the CVE has been reverted **/
-bool IsReverted(const char * cve);
+bool IsReverted(const char* cve);
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_REVERT_H_
+#endif // SRC_NODE_REVERT_H_

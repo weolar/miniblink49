@@ -27,134 +27,135 @@
 #include "internal.h"
 #include "handle-inl.h"
 
+uv_handle_type uv_guess_handle(uv_file file)
+{
+    HANDLE handle;
+    //DWORD mode;
 
-uv_handle_type uv_guess_handle(uv_file file) {
-  HANDLE handle;
-  //DWORD mode;
+    if (file < 0)
+        return UV_UNKNOWN_HANDLE;
 
-  if (file < 0) {
-    return UV_UNKNOWN_HANDLE;
-  }
+    if (0 == file)
+        return UV_FILE; // 在mb的网页模式里直接运行nodejs，会node\lib\internal\process\stdio.js会直接传0，并且uv__get_osfhandle会返回0
 
-  handle = uv__get_osfhandle(file);
-  if (/*0xfffffffe == handle && */(1 == file || 2 == file))
-    return UV_FILE; // exe 非console模式，uv__get_osfhandle会失败
+    handle = uv__get_osfhandle(file);         
+    if (/*0xfffffffe == handle && */ (1 == file || 2 == file))
+        return UV_FILE; // exe 非console模式，uv__get_osfhandle会失败
 
-  // exe 非console模式，如果env不传参数，会走到stdio.js：getStdin里，然后走到这。不过暂时屏蔽掉，因为即使返回UV_FILE后续还是会打开文件失败
-//   if (0 == file)
-//     return UV_FILE; 
+    // exe 非console模式，如果env不传参数，会走到stdio.js：getStdin里，然后走到这。不过暂时屏蔽掉，因为即使返回UV_FILE后续还是会打开文件失败
+    //   if (0 == file)
+    //     return UV_FILE;
 
-  switch (GetFileType(handle)) {
+    switch (GetFileType(handle)) {
     case FILE_TYPE_CHAR:
-      //if (GetConsoleMode(handle, &mode)) {
-       // return UV_TTY;
-      //} else {
-        return UV_FILE;// 排除tty模式 zero
-      //}
+        //if (GetConsoleMode(handle, &mode)) {
+        // return UV_TTY;
+        //} else {
+        return UV_FILE; // 排除tty模式 zero
+        //}
 
     case FILE_TYPE_PIPE:
-      return UV_NAMED_PIPE;
+        return UV_NAMED_PIPE;
 
     case FILE_TYPE_DISK:
-      return UV_FILE;
+        return UV_FILE;
 
     default:
-      return UV_UNKNOWN_HANDLE;
-  }
+        return UV_UNKNOWN_HANDLE;
+    }
 }
 
-
-int uv_is_active(const uv_handle_t* handle) {
-  return (handle->flags & UV__HANDLE_ACTIVE) &&
-        !(handle->flags & UV__HANDLE_CLOSING);
+int uv_is_active(const uv_handle_t* handle)
+{
+    return (handle->flags & UV__HANDLE_ACTIVE) && !(handle->flags & UV__HANDLE_CLOSING);
 }
 
+void uv_close(uv_handle_t* handle, uv_close_cb cb)
+{
+    uv_loop_t* loop = handle->loop;
 
-void uv_close(uv_handle_t* handle, uv_close_cb cb) {
-  uv_loop_t* loop = handle->loop;
+    if (handle->flags & UV__HANDLE_CLOSING) {
+        assert(0);
+        return;
+    }
 
-  if (handle->flags & UV__HANDLE_CLOSING) {
-    assert(0);
-    return;
-  }
+    handle->close_cb = cb;
 
-  handle->close_cb = cb;
-
-  /* Handle-specific close actions */
-  switch (handle->type) {
+    /* Handle-specific close actions */
+    switch (handle->type) {
     case UV_TCP:
-      uv_tcp_close(loop, (uv_tcp_t*)handle);
-      return;
+        uv_tcp_close(loop, (uv_tcp_t*)handle);
+        return;
 
     case UV_NAMED_PIPE:
-      uv_pipe_close(loop, (uv_pipe_t*) handle);
-      return;
-//zero
-//    case UV_TTY:
-//      uv_tty_close((uv_tty_t*) handle);
-//      return;
+        uv_pipe_close(loop, (uv_pipe_t*)handle);
+        return;
+        //zero
+        //    case UV_TTY:
+        //      uv_tty_close((uv_tty_t*) handle);
+        //      return;
 
     case UV_UDP:
-      uv_udp_close(loop, (uv_udp_t*) handle);
-      return;
+        uv_udp_close(loop, (uv_udp_t*)handle);
+        return;
 
     case UV_POLL:
-      uv_poll_close(loop, (uv_poll_t*) handle);
-      return;
+        uv_poll_close(loop, (uv_poll_t*)handle);
+        return;
 
     case UV_TIMER:
-      uv_timer_stop((uv_timer_t*)handle);
-      uv__handle_closing(handle);
-      uv_want_endgame(loop, handle);
-      return;
+        uv_timer_stop((uv_timer_t*)handle);
+        uv__handle_closing(handle);
+        uv_want_endgame(loop, handle);
+        return;
 
     case UV_PREPARE:
-      uv_prepare_stop((uv_prepare_t*)handle);
-      uv__handle_closing(handle);
-      uv_want_endgame(loop, handle);
-      return;
+        uv_prepare_stop((uv_prepare_t*)handle);
+        uv__handle_closing(handle);
+        uv_want_endgame(loop, handle);
+        return;
 
     case UV_CHECK:
-      uv_check_stop((uv_check_t*)handle);
-      uv__handle_closing(handle);
-      uv_want_endgame(loop, handle);
-      return;
+        uv_check_stop((uv_check_t*)handle);
+        uv__handle_closing(handle);
+        uv_want_endgame(loop, handle);
+        return;
 
     case UV_IDLE:
-      uv_idle_stop((uv_idle_t*)handle);
-      uv__handle_closing(handle);
-      uv_want_endgame(loop, handle);
-      return;
+        uv_idle_stop((uv_idle_t*)handle);
+        uv__handle_closing(handle);
+        uv_want_endgame(loop, handle);
+        return;
 
     case UV_ASYNC:
-      uv_async_close(loop, (uv_async_t*) handle);
-      return;
+        uv_async_close(loop, (uv_async_t*)handle);
+        return;
 
     case UV_SIGNAL:
-      uv_signal_close(loop, (uv_signal_t*) handle);
-      return;
+        uv_signal_close(loop, (uv_signal_t*)handle);
+        return;
 
     case UV_PROCESS:
-      uv_process_close(loop, (uv_process_t*) handle);
-      return;
+        uv_process_close(loop, (uv_process_t*)handle);
+        return;
 
     case UV_FS_EVENT:
-      uv_fs_event_close(loop, (uv_fs_event_t*) handle);
-      return;
+        uv_fs_event_close(loop, (uv_fs_event_t*)handle);
+        return;
 
     case UV_FS_POLL:
-      uv__fs_poll_close((uv_fs_poll_t*) handle);
-      uv__handle_closing(handle);
-      uv_want_endgame(loop, handle);
-      return;
+        uv__fs_poll_close((uv_fs_poll_t*)handle);
+        uv__handle_closing(handle);
+        uv_want_endgame(loop, handle);
+        return;
 
     default:
-      /* Not supported */
-      abort();
-  }
+        /* Not supported */
+        abort();
+    }
 }
 
-
-int uv_is_closing(const uv_handle_t* handle) {
-  return !!(handle->flags & (UV__HANDLE_CLOSING | UV_HANDLE_CLOSED));
+int uv_is_closing(const uv_handle_t* handle)
+{
+    return !!(handle->flags & (UV__HANDLE_CLOSING | UV_HANDLE_CLOSED));
 }

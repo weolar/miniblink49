@@ -27,83 +27,80 @@
 #include <assert.h>
 #include <stdlib.h> /* abort */
 #include <string.h> /* strrchr */
-#include <fcntl.h>  /* O_CLOEXEC, may be */
+#include <fcntl.h> /* O_CLOEXEC, may be */
 #include <stdio.h>
 
 #if defined(__STRICT_ANSI__)
-# define inline __inline
+#define inline __inline
 #endif
 
 #if defined(__linux__)
-# include "linux-syscalls.h"
+#include "linux-syscalls.h"
 #endif /* __linux__ */
 
 #if defined(__sun)
-# include <sys/port.h>
-# include <port.h>
+#include <sys/port.h>
+#include <port.h>
 #endif /* __sun */
 
 #if defined(_AIX)
-# define reqevents events
-# define rtnevents revents
-# include <sys/poll.h>
+#define reqevents events
+#define rtnevents revents
+#include <sys/poll.h>
 #else
-# include <poll.h>
+#include <poll.h>
 #endif /* _AIX */
 
 #if defined(__APPLE__) && !TARGET_OS_IPHONE
-# include <CoreServices/CoreServices.h>
+#include <CoreServices/CoreServices.h>
 #endif
 
 #if defined(__ANDROID__)
 int uv__pthread_sigmask(int how, const sigset_t* set, sigset_t* oset);
-# ifdef pthread_sigmask
-# undef pthread_sigmask
-# endif
-# define pthread_sigmask(how, set, oldset) uv__pthread_sigmask(how, set, oldset)
+#ifdef pthread_sigmask
+#undef pthread_sigmask
+#endif
+#define pthread_sigmask(how, set, oldset) uv__pthread_sigmask(how, set, oldset)
 #endif
 
-#define ACCESS_ONCE(type, var)                                                \
-  (*(volatile type*) &(var))
+#define ACCESS_ONCE(type, var) \
+    (*(volatile type*)&(var))
 
-#define ROUND_UP(a, b)                                                        \
-  ((a) % (b) ? ((a) + (b)) - ((a) % (b)) : (a))
+#define ROUND_UP(a, b) \
+    ((a) % (b) ? ((a) + (b)) - ((a) % (b)) : (a))
 
-#define UNREACHABLE()                                                         \
-  do {                                                                        \
-    assert(0 && "unreachable code");                                          \
-    abort();                                                                  \
-  }                                                                           \
-  while (0)
+#define UNREACHABLE()                    \
+    do {                                 \
+        assert(0 && "unreachable code"); \
+        abort();                         \
+    } while (0)
 
-#define SAVE_ERRNO(block)                                                     \
-  do {                                                                        \
-    int _saved_errno = errno;                                                 \
-    do { block; } while (0);                                                  \
-    errno = _saved_errno;                                                     \
-  }                                                                           \
-  while (0)
+#define SAVE_ERRNO(block)         \
+    do {                          \
+        int _saved_errno = errno; \
+        do {                      \
+            block;                \
+        } while (0);              \
+        errno = _saved_errno;     \
+    } while (0)
 
 /* The __clang__ and __INTEL_COMPILER checks are superfluous because they
  * define __GNUC__. They are here to convey to you, dear reader, that these
  * macros are enabled when compiling with clang or icc.
  */
-#if defined(__clang__) ||                                                     \
-    defined(__GNUC__) ||                                                      \
-    defined(__INTEL_COMPILER) ||                                              \
-    defined(__SUNPRO_C)
-# define UV_DESTRUCTOR(declaration) __attribute__((destructor)) declaration
-# define UV_UNUSED(declaration)     __attribute__((unused)) declaration
+#if defined(__clang__) || defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__SUNPRO_C)
+#define UV_DESTRUCTOR(declaration) __attribute__((destructor)) declaration
+#define UV_UNUSED(declaration) __attribute__((unused)) declaration
 #else
-# define UV_DESTRUCTOR(declaration) declaration
-# define UV_UNUSED(declaration)     declaration
+#define UV_DESTRUCTOR(declaration) declaration
+#define UV_UNUSED(declaration) declaration
 #endif
 
 /* Leans on the fact that, on Linux, POLLRDHUP == EPOLLRDHUP. */
 #ifdef POLLRDHUP
-# define UV__POLLRDHUP POLLRDHUP
+#define UV__POLLRDHUP POLLRDHUP
 #else
-# define UV__POLLRDHUP 0x2000
+#define UV__POLLRDHUP 0x2000
 #endif
 
 #if !defined(O_CLOEXEC) && defined(__FreeBSD__)
@@ -111,46 +108,45 @@ int uv__pthread_sigmask(int how, const sigset_t* set, sigset_t* oset);
  * It may be that we are just missing `__POSIX_VISIBLE >= 200809`.
  * Try using fixed value const and give up, if it doesn't work
  */
-# define O_CLOEXEC 0x00100000
+#define O_CLOEXEC 0x00100000
 #endif
 
 typedef struct uv__stream_queued_fds_s uv__stream_queued_fds_t;
 
 /* handle flags */
 enum {
-  UV_CLOSING              = 0x01,   /* uv_close() called but not finished. */
-  UV_CLOSED               = 0x02,   /* close(2) finished. */
-  UV_STREAM_READING       = 0x04,   /* uv_read_start() called. */
-  UV_STREAM_SHUTTING      = 0x08,   /* uv_shutdown() called but not complete. */
-  UV_STREAM_SHUT          = 0x10,   /* Write side closed. */
-  UV_STREAM_READABLE      = 0x20,   /* The stream is readable */
-  UV_STREAM_WRITABLE      = 0x40,   /* The stream is writable */
-  UV_STREAM_BLOCKING      = 0x80,   /* Synchronous writes. */
-  UV_STREAM_READ_PARTIAL  = 0x100,  /* read(2) read less than requested. */
-  UV_STREAM_READ_EOF      = 0x200,  /* read(2) read EOF. */
-  UV_TCP_NODELAY          = 0x400,  /* Disable Nagle. */
-  UV_TCP_KEEPALIVE        = 0x800,  /* Turn on keep-alive. */
-  UV_TCP_SINGLE_ACCEPT    = 0x1000, /* Only accept() when idle. */
-  UV_HANDLE_IPV6          = 0x10000, /* Handle is bound to a IPv6 socket. */
-  UV_UDP_PROCESSING       = 0x20000  /* Handle is running the send callback queue. */
+    UV_CLOSING = 0x01, /* uv_close() called but not finished. */
+    UV_CLOSED = 0x02, /* close(2) finished. */
+    UV_STREAM_READING = 0x04, /* uv_read_start() called. */
+    UV_STREAM_SHUTTING = 0x08, /* uv_shutdown() called but not complete. */
+    UV_STREAM_SHUT = 0x10, /* Write side closed. */
+    UV_STREAM_READABLE = 0x20, /* The stream is readable */
+    UV_STREAM_WRITABLE = 0x40, /* The stream is writable */
+    UV_STREAM_BLOCKING = 0x80, /* Synchronous writes. */
+    UV_STREAM_READ_PARTIAL = 0x100, /* read(2) read less than requested. */
+    UV_STREAM_READ_EOF = 0x200, /* read(2) read EOF. */
+    UV_TCP_NODELAY = 0x400, /* Disable Nagle. */
+    UV_TCP_KEEPALIVE = 0x800, /* Turn on keep-alive. */
+    UV_TCP_SINGLE_ACCEPT = 0x1000, /* Only accept() when idle. */
+    UV_HANDLE_IPV6 = 0x10000, /* Handle is bound to a IPv6 socket. */
+    UV_UDP_PROCESSING = 0x20000 /* Handle is running the send callback queue. */
 };
 
 /* loop flags */
 enum {
-  UV_LOOP_BLOCK_SIGPROF = 1
+    UV_LOOP_BLOCK_SIGPROF = 1
 };
 
 typedef enum {
-  UV_CLOCK_PRECISE = 0,  /* Use the highest resolution clock available. */
-  UV_CLOCK_FAST = 1      /* Use the fastest clock with <= 1ms granularity. */
+    UV_CLOCK_PRECISE = 0, /* Use the highest resolution clock available. */
+    UV_CLOCK_FAST = 1 /* Use the fastest clock with <= 1ms granularity. */
 } uv_clocktype_t;
 
 struct uv__stream_queued_fds_s {
-  unsigned int size;
-  unsigned int offset;
-  int fds[1];
+    unsigned int size;
+    unsigned int offset;
+    int fds[1];
 };
-
 
 /* core */
 int uv__nonblock(int fd, int set);
@@ -159,7 +155,7 @@ int uv__close_nocheckstdio(int fd);
 int uv__cloexec(int fd, int set);
 int uv__socket(int domain, int type, int protocol);
 int uv__dup(int fd);
-ssize_t uv__recvmsg(int fd, struct msghdr *msg, int flags);
+ssize_t uv__recvmsg(int fd, struct msghdr* msg, int flags);
 void uv__make_close_pending(uv_handle_t* handle);
 int uv__getiovmax(void);
 
@@ -238,18 +234,17 @@ uv_handle_type uv__handle_type(int fd);
 FILE* uv__open_file(const char* path);
 int uv__getpwuid_r(uv_passwd_t* pwd);
 
-
 #if defined(__APPLE__)
 int uv___stream_fd(const uv_stream_t* handle);
-#define uv__stream_fd(handle) (uv___stream_fd((const uv_stream_t*) (handle)))
+#define uv__stream_fd(handle) (uv___stream_fd((const uv_stream_t*)(handle)))
 #else
 #define uv__stream_fd(handle) ((handle)->io_watcher.fd)
 #endif /* defined(__APPLE__) */
 
 #ifdef UV__O_NONBLOCK
-# define UV__F_NONBLOCK UV__O_NONBLOCK
+#define UV__F_NONBLOCK UV__O_NONBLOCK
 #else
-# define UV__F_NONBLOCK 1
+#define UV__F_NONBLOCK 1
 #endif
 
 int uv__make_socketpair(int fds[2], int flags);
@@ -282,28 +277,31 @@ static const int kFSEventStreamEventFlagItemIsSymlink = 0x00040000;
 #endif /* defined(__APPLE__) */
 
 UV_UNUSED(static void uv__req_init(uv_loop_t* loop,
-                                   uv_req_t* req,
-                                   uv_req_type type)) {
-  req->type = type;
-  uv__req_register(loop, req);
+    uv_req_t* req,
+    uv_req_type type))
+{
+    req->type = type;
+    uv__req_register(loop, req);
 }
 #define uv__req_init(loop, req, type) \
-  uv__req_init((loop), (uv_req_t*)(req), (type))
+    uv__req_init((loop), (uv_req_t*)(req), (type))
 
-UV_UNUSED(static void uv__update_time(uv_loop_t* loop)) {
-  /* Use a fast time source if available.  We only need millisecond precision.
+UV_UNUSED(static void uv__update_time(uv_loop_t* loop))
+{
+    /* Use a fast time source if available.  We only need millisecond precision.
    */
-  loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
+    loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
 }
 
-UV_UNUSED(static char* uv__basename_r(const char* path)) {
-  char* s;
+UV_UNUSED(static char* uv__basename_r(const char* path))
+{
+    char* s;
 
-  s = strrchr(path, '/');
-  if (s == NULL)
-    return (char*) path;
+    s = strrchr(path, '/');
+    if (s == NULL)
+        return (char*)path;
 
-  return s + 1;
+    return s + 1;
 }
 
 #endif /* UV_UNIX_INTERNAL_H_ */

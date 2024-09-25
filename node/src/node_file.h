@@ -10,8 +10,8 @@ namespace node {
 
 void InitFs(v8::Local<v8::Object> target);
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_NODE_FILE_H_
+#endif // SRC_NODE_FILE_H_

@@ -12,11 +12,12 @@ namespace node {
 using v8::Local;
 using v8::Object;
 
-
 ConnectWrap::ConnectWrap(Environment* env,
     Local<Object> req_wrap_obj,
-    AsyncWrap::ProviderType provider) : ReqWrap(env, req_wrap_obj, provider) {
-  Wrap(req_wrap_obj, this);
+    AsyncWrap::ProviderType provider)
+    : ReqWrap(env, req_wrap_obj, provider)
+{
+    Wrap(req_wrap_obj, this);
 }
 
-}  // namespace node
+} // namespace node

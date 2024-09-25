@@ -24,96 +24,89 @@
 
 static int uv__dlerror(uv_lib_t* lib, int errorno);
 
+int uv_dlopen(const char* filename, uv_lib_t* lib)
+{
+    WCHAR* filename_w = (WCHAR*)malloc(32768 * sizeof(WCHAR));
 
-int uv_dlopen(const char* filename, uv_lib_t* lib) {
-  WCHAR* filename_w = (WCHAR*)malloc(32768 * sizeof(WCHAR));
-
-  lib->handle = NULL;
-  lib->errmsg = NULL;
-
-  if (!MultiByteToWideChar(CP_UTF8,
-                           0,
-                           filename,
-                           -1,
-                           filename_w,
-                           /*ARRAY_SIZE(filename_w)*/32768)) {
-    return uv__dlerror(lib, GetLastError());
-  }
-
-  lib->handle = LoadLibraryExW(filename_w, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
-  free(filename_w);
-  if (lib->handle == NULL) {
-    return uv__dlerror(lib, GetLastError());
-  }
-
-  return 0;
-}
-
-
-void uv_dlclose(uv_lib_t* lib) {
-  if (lib->errmsg) {
-    LocalFree((void*)lib->errmsg);
-    lib->errmsg = NULL;
-  }
-
-  if (lib->handle) {
-    /* Ignore errors. No good way to signal them without leaking memory. */
-    FreeLibrary(lib->handle);
     lib->handle = NULL;
-  }
-}
-
-
-int uv_dlsym(uv_lib_t* lib, const char* name, void** ptr) {
-  *ptr = (void*) GetProcAddress(lib->handle, name);
-  return uv__dlerror(lib, *ptr ? 0 : GetLastError());
-}
-
-
-const char* uv_dlerror(const uv_lib_t* lib) {
-  return lib->errmsg ? lib->errmsg : "no error";
-}
-
-
-static void uv__format_fallback_error(uv_lib_t* lib, int errorno){
-  DWORD_PTR args[1] = { (DWORD_PTR) errorno };
-  LPSTR fallback_error = "error: %1!d!";
-
-  FormatMessageA(FORMAT_MESSAGE_FROM_STRING |
-                 FORMAT_MESSAGE_ARGUMENT_ARRAY |
-                 FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                 fallback_error, 0, 0,
-                 (LPSTR) &lib->errmsg,
-                 0, (va_list*) args);
-}
-
-
-
-static int uv__dlerror(uv_lib_t* lib, int errorno) {
-  DWORD res;
-
-  if (lib->errmsg) {
-    LocalFree((void*)lib->errmsg);
     lib->errmsg = NULL;
-  }
 
-  if (errorno) {
-    res = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                         FORMAT_MESSAGE_FROM_SYSTEM |
-                         FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorno,
-                         MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
-                         (LPSTR) &lib->errmsg, 0, NULL);
-    if (!res && GetLastError() == ERROR_MUI_FILE_NOT_FOUND) {
-      res = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                           FORMAT_MESSAGE_FROM_SYSTEM |
-                           FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorno,
-                           0, (LPSTR) &lib->errmsg, 0, NULL);
+    if (!MultiByteToWideChar(CP_UTF8,
+            0,
+            filename,
+            -1,
+            filename_w,
+            /*ARRAY_SIZE(filename_w)*/ 32768)) {
+        return uv__dlerror(lib, GetLastError());
     }
 
-    if (!res) {
-      uv__format_fallback_error(lib, errorno);
+    lib->handle = LoadLibraryExW(filename_w, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+    free(filename_w);
+    if (lib->handle == NULL) {
+        return uv__dlerror(lib, GetLastError());
     }
-  }
 
-  return errorno ? -1 : 0;
+    return 0;
+}
+
+void uv_dlclose(uv_lib_t* lib)
+{
+    if (lib->errmsg) {
+        LocalFree((void*)lib->errmsg);
+        lib->errmsg = NULL;
+    }
+
+    if (lib->handle) {
+        /* Ignore errors. No good way to signal them without leaking memory. */
+        FreeLibrary(lib->handle);
+        lib->handle = NULL;
+    }
+}
+
+int uv_dlsym(uv_lib_t* lib, const char* name, void** ptr)
+{
+    *ptr = (void*)GetProcAddress(lib->handle, name);
+    return uv__dlerror(lib, *ptr ? 0 : GetLastError());
+}
+
+const char* uv_dlerror(const uv_lib_t* lib)
+{
+    return lib->errmsg ? lib->errmsg : "no error";
+}
+
+static void uv__format_fallback_error(uv_lib_t* lib, int errorno)
+{
+    DWORD_PTR args[1] = { (DWORD_PTR)errorno };
+    LPSTR fallback_error = "error: %1!d!";
+
+    FormatMessageA(FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ARGUMENT_ARRAY | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+        fallback_error, 0, 0,
+        (LPSTR)&lib->errmsg,
+        0, (va_list*)args);
+}
+
+static int uv__dlerror(uv_lib_t* lib, int errorno)
+{
+    DWORD res;
+
+    if (lib->errmsg) {
+        LocalFree((void*)lib->errmsg);
+        lib->errmsg = NULL;
+    }
+
+    if (errorno) {
+        res = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorno,
+            MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+            (LPSTR)&lib->errmsg, 0, NULL);
+        if (!res && GetLastError() == ERROR_MUI_FILE_NOT_FOUND) {
+            res = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorno,
+                0, (LPSTR)&lib->errmsg, 0, NULL);
+        }
+
+        if (!res) {
+            uv__format_fallback_error(lib, errorno);
+        }
+    }
+
+    return errorno ? -1 : 0;
 }

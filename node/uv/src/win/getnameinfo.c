@@ -28,79 +28,78 @@
 
 #ifndef GetNameInfo
 int WSAAPI GetNameInfoW(
-  const SOCKADDR *pSockaddr,
-  socklen_t SockaddrLength,
-  PWCHAR pNodeBuffer,
-  DWORD NodeBufferSize,
-  PWCHAR pServiceBuffer,
-  DWORD ServiceBufferSize,
-  INT Flags
-);
+    const SOCKADDR* pSockaddr,
+    socklen_t SockaddrLength,
+    PWCHAR pNodeBuffer,
+    DWORD NodeBufferSize,
+    PWCHAR pServiceBuffer,
+    DWORD ServiceBufferSize,
+    INT Flags);
 #endif
 
-static void uv__getnameinfo_work(struct uv__work* w) {
-  uv_getnameinfo_t* req;
-  WCHAR host[NI_MAXHOST];
-  WCHAR service[NI_MAXSERV];
-  int ret = 0;
+static void uv__getnameinfo_work(struct uv__work* w)
+{
+    uv_getnameinfo_t* req;
+    WCHAR host[NI_MAXHOST];
+    WCHAR service[NI_MAXSERV];
+    int ret = 0;
 
-  req = container_of(w, uv_getnameinfo_t, work_req);
-  if (GetNameInfoW((struct sockaddr*)&req->storage,
-                   sizeof(req->storage),
-                   host,
-                   ARRAY_SIZE(host),
-                   service,
-                   ARRAY_SIZE(service),
-                   req->flags)) {
-    ret = WSAGetLastError();
-  }
-  req->retcode = uv__getaddrinfo_translate_error(ret);
+    req = container_of(w, uv_getnameinfo_t, work_req);
+    if (GetNameInfoW((struct sockaddr*)&req->storage,
+            sizeof(req->storage),
+            host,
+            ARRAY_SIZE(host),
+            service,
+            ARRAY_SIZE(service),
+            req->flags)) {
+        ret = WSAGetLastError();
+    }
+    req->retcode = uv__getaddrinfo_translate_error(ret);
 
-  /* convert results to UTF-8 */
-  WideCharToMultiByte(CP_UTF8,
-                      0,
-                      host,
-                      -1,
-                      req->host,
-                      sizeof(req->host),
-                      NULL,
-                      NULL);
+    /* convert results to UTF-8 */
+    WideCharToMultiByte(CP_UTF8,
+        0,
+        host,
+        -1,
+        req->host,
+        sizeof(req->host),
+        NULL,
+        NULL);
 
-  WideCharToMultiByte(CP_UTF8,
-                      0,
-                      service,
-                      -1,
-                      req->service,
-                      sizeof(req->service),
-                      NULL,
-                      NULL);
+    WideCharToMultiByte(CP_UTF8,
+        0,
+        service,
+        -1,
+        req->service,
+        sizeof(req->service),
+        NULL,
+        NULL);
 }
-
 
 /*
 * Called from uv_run when complete.
 */
-static void uv__getnameinfo_done(struct uv__work* w, int status) {
-  uv_getnameinfo_t* req;
-  char* host;
-  char* service;
+static void uv__getnameinfo_done(struct uv__work* w, int status)
+{
+    uv_getnameinfo_t* req;
+    char* host;
+    char* service;
 
-  req = container_of(w, uv_getnameinfo_t, work_req);
-  uv__req_unregister(req->loop, req);
-  host = service = NULL;
+    req = container_of(w, uv_getnameinfo_t, work_req);
+    uv__req_unregister(req->loop, req);
+    host = service = NULL;
 
-  if (status == UV_ECANCELED) {
-    assert(req->retcode == 0);
-    req->retcode = UV_EAI_CANCELED;
-  } else if (req->retcode == 0) {
-    host = req->host;
-    service = req->service;
-  }
+    if (status == UV_ECANCELED) {
+        assert(req->retcode == 0);
+        req->retcode = UV_EAI_CANCELED;
+    } else if (req->retcode == 0) {
+        host = req->host;
+        service = req->service;
+    }
 
-  if (req->getnameinfo_cb)
-    req->getnameinfo_cb(req, req->retcode, host, service);
+    if (req->getnameinfo_cb)
+        req->getnameinfo_cb(req, req->retcode, host, service);
 }
-
 
 /*
 * Entry point for getnameinfo
@@ -108,43 +107,44 @@ static void uv__getnameinfo_done(struct uv__work* w, int status) {
 * return error code if validation fails
 */
 int uv_getnameinfo(uv_loop_t* loop,
-                   uv_getnameinfo_t* req,
-                   uv_getnameinfo_cb getnameinfo_cb,
-                   const struct sockaddr* addr,
-                   int flags) {
-  if (req == NULL || addr == NULL)
-    return UV_EINVAL;
+    uv_getnameinfo_t* req,
+    uv_getnameinfo_cb getnameinfo_cb,
+    const struct sockaddr* addr,
+    int flags)
+{
+    if (req == NULL || addr == NULL)
+        return UV_EINVAL;
 
-  if (addr->sa_family == AF_INET) {
-    memcpy(&req->storage,
-           addr,
-           sizeof(struct sockaddr_in));
-  } else if (addr->sa_family == AF_INET6) {
-    memcpy(&req->storage,
-           addr,
-           sizeof(struct sockaddr_in6));
-  } else {
-    return UV_EINVAL;
-  }
+    if (addr->sa_family == AF_INET) {
+        memcpy(&req->storage,
+            addr,
+            sizeof(struct sockaddr_in));
+    } else if (addr->sa_family == AF_INET6) {
+        memcpy(&req->storage,
+            addr,
+            sizeof(struct sockaddr_in6));
+    } else {
+        return UV_EINVAL;
+    }
 
-  uv_req_init(loop, (uv_req_t*)req);
-  uv__req_register(loop, req);
+    uv_req_init(loop, (uv_req_t*)req);
+    uv__req_register(loop, req);
 
-  req->getnameinfo_cb = getnameinfo_cb;
-  req->flags = flags;
-  req->type = UV_GETNAMEINFO;
-  req->loop = loop;
-  req->retcode = 0;
+    req->getnameinfo_cb = getnameinfo_cb;
+    req->flags = flags;
+    req->type = UV_GETNAMEINFO;
+    req->loop = loop;
+    req->retcode = 0;
 
-  if (getnameinfo_cb) {
-    uv__work_submit(loop,
-                    &req->work_req,
-                    uv__getnameinfo_work,
-                    uv__getnameinfo_done);
-    return 0;
-  } else {
-    uv__getnameinfo_work(&req->work_req);
-    uv__getnameinfo_done(&req->work_req, 0);
-    return req->retcode;
-  }
+    if (getnameinfo_cb) {
+        uv__work_submit(loop,
+            &req->work_req,
+            uv__getnameinfo_work,
+            uv__getnameinfo_done);
+        return 0;
+    } else {
+        uv__getnameinfo_work(&req->work_req);
+        uv__getnameinfo_done(&req->work_req, 0);
+        return req->retcode;
+    }
 }

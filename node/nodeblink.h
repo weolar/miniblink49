@@ -1,6 +1,8 @@
 ﻿#ifndef _NODEBLINK_H_
 #define _NODEBLINK_H_
 
+#if 1 // ENABLE_NODEJS
+
 #define NODE_ARCH "ia32"
 #define NODE_PLATFORM "win32"
 #define NODE_WANT_INTERNALS 1
@@ -53,4 +55,15 @@ extern "C" NODE_EXTERN void nodeBlinkMicrotaskSuppressionLeave(BlinkMicrotaskSup
 extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length);
 extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length);
 
+extern "C" NODE_EXTERN void nodeModuleInitRegister();
+extern "C" NODE_EXTERN char* nodeBufferGetData(void* buf, size_t* len);
+
+struct NodeBindingInMbCore {
+    void* env; // node::Environment* m_env
+};
+NodeBindingInMbCore* nodeBindNodejsOnDidCreateScriptContext(void* webView, void* frameId, void* ctx);
+void nodeWillReleaseScriptContext(NodeBindingInMbCore* nodebinding);
+bool isNodejsEnable();
+
+#endif // ENABLE_NODEJS
 #endif //_NODEBLINK_H_

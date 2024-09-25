@@ -15,32 +15,35 @@ namespace node {
 
 template <typename T>
 ReqWrap<T>::ReqWrap(Environment* env,
-                    v8::Local<v8::Object> object,
-                    AsyncWrap::ProviderType provider)
-    : AsyncWrap(env, object, provider) {
-  if (env->in_domain())
-    object->Set(env->domain_string(), env->domain_array()->Get(0));
+    v8::Local<v8::Object> object,
+    AsyncWrap::ProviderType provider)
+    : AsyncWrap(env, object, provider)
+{
+    if (env->in_domain())
+        object->Set(env->domain_string(), env->domain_array()->Get(0));
 
-  // FIXME(bnoordhuis) The fact that a reinterpret_cast is needed is
-  // arguably a good indicator that there should be more than one queue.
-  env->req_wrap_queue()->PushBack(reinterpret_cast<ReqWrap<uv_req_t>*>(this));
+    // FIXME(bnoordhuis) The fact that a reinterpret_cast is needed is
+    // arguably a good indicator that there should be more than one queue.
+    env->req_wrap_queue()->PushBack(reinterpret_cast<ReqWrap<uv_req_t>*>(this));
 }
 
 template <typename T>
-ReqWrap<T>::~ReqWrap() {
-  CHECK_EQ(req_.data, this);  // Assert that someone has called Dispatched().
-  CHECK_EQ(false, persistent().IsEmpty());
-  ClearWrap(object());
-  persistent().Reset();
+ReqWrap<T>::~ReqWrap()
+{
+    NODE_CHECK_EQ(req_.data, this); // NODE_ASSERT that someone has called Dispatched().
+    NODE_CHECK_EQ(false, persistent().IsEmpty());
+    ClearWrap(object());
+    persistent().Reset();
 }
 
 template <typename T>
-void ReqWrap<T>::Dispatched() {
-  req_.data = this;
+void ReqWrap<T>::Dispatched()
+{
+    req_.data = this;
 }
 
-}  // namespace node
+} // namespace node
 
-#endif  // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
+#endif // defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-#endif  // SRC_REQ_WRAP_INL_H_
+#endif // SRC_REQ_WRAP_INL_H_

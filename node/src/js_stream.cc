@@ -20,221 +20,220 @@ using v8::Local;
 using v8::Object;
 using v8::Value;
 
-
 JSStream::JSStream(Environment* env, Local<Object> obj, AsyncWrap* parent)
-    : AsyncWrap(env, obj, AsyncWrap::PROVIDER_JSSTREAM, parent),
-      StreamBase(env) {
-  node::Wrap(obj, this);
-  MakeWeak<JSStream>(this);
+    : AsyncWrap(env, obj, AsyncWrap::PROVIDER_JSSTREAM, parent)
+    , StreamBase(env)
+{
+    node::Wrap(obj, this);
+    MakeWeak<JSStream>(this);
 }
 
-
-JSStream::~JSStream() {
+JSStream::~JSStream()
+{
 }
 
-
-void* JSStream::Cast() {
-  return static_cast<void*>(this);
+void* JSStream::Cast()
+{
+    return static_cast<void*>(this);
 }
 
-
-AsyncWrap* JSStream::GetAsyncWrap() {
-  return static_cast<AsyncWrap*>(this);
+AsyncWrap* JSStream::GetAsyncWrap()
+{
+    return static_cast<AsyncWrap*>(this);
 }
 
-
-bool JSStream::IsAlive() {
-  v8::Local<v8::Value> fn = object()->Get(env()->isalive_string());
-  if (!fn->IsFunction())
-    return false;
-  return MakeCallback(fn.As<v8::Function>(), 0, nullptr)->IsTrue();
+bool JSStream::IsAlive()
+{
+    v8::Local<v8::Value> fn = object()->Get(env()->isalive_string());
+    if (!fn->IsFunction())
+        return false;
+    return MakeCallback(fn.As<v8::Function>(), 0, nullptr)->IsTrue();
 }
 
-
-bool JSStream::IsClosing() {
-  return MakeCallback(env()->isclosing_string(), 0, nullptr)->IsTrue();
+bool JSStream::IsClosing()
+{
+    return MakeCallback(env()->isclosing_string(), 0, nullptr)->IsTrue();
 }
 
-
-int JSStream::ReadStart() {
-  return MakeCallback(env()->onreadstart_string(), 0, nullptr)->Int32Value();
+int JSStream::ReadStart()
+{
+    return MakeCallback(env()->onreadstart_string(), 0, nullptr)->Int32Value();
 }
 
-
-int JSStream::ReadStop() {
-  return MakeCallback(env()->onreadstop_string(), 0, nullptr)->Int32Value();
+int JSStream::ReadStop()
+{
+    return MakeCallback(env()->onreadstop_string(), 0, nullptr)->Int32Value();
 }
 
+int JSStream::DoShutdown(ShutdownWrap* req_wrap)
+{
+    HandleScope scope(env()->isolate());
 
-int JSStream::DoShutdown(ShutdownWrap* req_wrap) {
-  HandleScope scope(env()->isolate());
+    Local<Value> argv[] = {
+        req_wrap->object()
+    };
 
-  Local<Value> argv[] = {
-    req_wrap->object()
-  };
+    req_wrap->Dispatched();
+    Local<Value> res = MakeCallback(env()->onshutdown_string(), arraysize(argv), argv);
 
-  req_wrap->Dispatched();
-  Local<Value> res =
-      MakeCallback(env()->onshutdown_string(), arraysize(argv), argv);
-
-  return res->Int32Value();
+    return res->Int32Value();
 }
-
 
 int JSStream::DoWrite(WriteWrap* w,
-                      uv_buf_t* bufs,
-                      size_t count,
-                      uv_stream_t* send_handle) {
-  CHECK_EQ(send_handle, nullptr);
+    uv_buf_t* bufs,
+    size_t count,
+    uv_stream_t* send_handle)
+{
+    NODE_CHECK_EQ(send_handle, nullptr);
 
-  HandleScope scope(env()->isolate());
+    HandleScope scope(env()->isolate());
 
-  Local<Array> bufs_arr = Array::New(env()->isolate(), count);
-  Local<Object> buf;
-  for (size_t i = 0; i < count; i++) {
-    buf = Buffer::Copy(env(), bufs[i].base, bufs[i].len).ToLocalChecked();
-    bufs_arr->Set(i, buf);
-  }
+    Local<Array> bufs_arr = Array::New(env()->isolate(), count);
+    Local<Object> buf;
+    for (size_t i = 0; i < count; i++) {
+        buf = Buffer::Copy(env(), bufs[i].base, bufs[i].len).ToLocalChecked();
+        bufs_arr->Set(i, buf);
+    }
 
-  Local<Value> argv[] = {
-    w->object(),
-    bufs_arr
-  };
+    Local<Value> argv[] = {
+        w->object(),
+        bufs_arr
+    };
 
-  w->Dispatched();
-  Local<Value> res =
-      MakeCallback(env()->onwrite_string(), arraysize(argv), argv);
+    w->Dispatched();
+    Local<Value> res = MakeCallback(env()->onwrite_string(), arraysize(argv), argv);
 
-  return res->Int32Value();
+    return res->Int32Value();
 }
 
+void JSStream::New(const FunctionCallbackInfo<Value>& args)
+{
+    // This constructor should not be exposed to public javascript.
+    // Therefore we NODE_ASSERT that we are not trying to call this as a
+    // normal function.
+    NODE_CHECK(args.IsConstructCall());
+    Environment* env = Environment::GetCurrent(args);
+    JSStream* wrap = NULL;
 
-void JSStream::New(const FunctionCallbackInfo<Value>& args) {
-  // This constructor should not be exposed to public javascript.
-  // Therefore we assert that we are not trying to call this as a
-  // normal function.
-  CHECK(args.IsConstructCall());
-  Environment* env = Environment::GetCurrent(args);
-  JSStream* wrap = NULL;
-
-  if (args.Length() == 0) {
-    wrap = new JSStream(env, args.This(), nullptr);
-  } else if (args[0]->IsExternal()) {
-    void* ptr = args[0].As<External>()->Value();
-    wrap = new JSStream(env, args.This(), static_cast<AsyncWrap*>(ptr));
-  } else {
-    UNREACHABLE();
-  }
-  CHECK(wrap);
+    if (args.Length() == 0) {
+        wrap = new JSStream(env, args.This(), nullptr);
+    } else if (args[0]->IsExternal()) {
+        void* ptr = args[0].As<External>()->Value();
+        wrap = new JSStream(env, args.This(), static_cast<AsyncWrap*>(ptr));
+    } else {
+        UNREACHABLE();
+    }
+    NODE_CHECK(wrap);
 }
 
-
-static void FreeCallback(char* data, void* hint) {
-  // Intentional no-op
+static void FreeCallback(char* data, void* hint)
+{
+    // Intentional no-op
 }
 
+void JSStream::DoAlloc(const FunctionCallbackInfo<Value>& args)
+{
+    JSStream* wrap;
+    ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
 
-void JSStream::DoAlloc(const FunctionCallbackInfo<Value>& args) {
-  JSStream* wrap;
-  ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
-
-  uv_buf_t buf;
-  wrap->OnAlloc(args[0]->Int32Value(), &buf);
-  Local<Object> vbuf = Buffer::New(
-      wrap->env(),
-      buf.base,
-      buf.len,
-      FreeCallback,
-      nullptr).ToLocalChecked();
-  return args.GetReturnValue().Set(vbuf);
+    uv_buf_t buf;
+    wrap->OnAlloc(args[0]->Int32Value(), &buf);
+    Local<Object> vbuf = Buffer::New(
+        wrap->env(),
+        buf.base,
+        buf.len,
+        FreeCallback,
+        nullptr)
+                             .ToLocalChecked();
+    return args.GetReturnValue().Set(vbuf);
 }
 
+void JSStream::DoRead(const FunctionCallbackInfo<Value>& args)
+{
+    JSStream* wrap;
+    ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
 
-void JSStream::DoRead(const FunctionCallbackInfo<Value>& args) {
-  JSStream* wrap;
-  ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
-
-  CHECK(Buffer::HasInstance(args[1]));
-  uv_buf_t buf = uv_buf_init(Buffer::Data(args[1]), Buffer::Length(args[1]));
-  wrap->OnRead(args[0]->Int32Value(), &buf);
+    NODE_CHECK(Buffer::HasInstance(args[1]));
+    uv_buf_t buf = uv_buf_init(Buffer::Data(args[1]), Buffer::Length(args[1]));
+    wrap->OnRead(args[0]->Int32Value(), &buf);
 }
 
+void JSStream::DoAfterWrite(const FunctionCallbackInfo<Value>& args)
+{
+    JSStream* wrap;
+    NODE_CHECK(args[0]->IsObject());
+    WriteWrap* w;
+    ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
+    ASSIGN_OR_RETURN_UNWRAP(&w, args[0].As<Object>());
 
-void JSStream::DoAfterWrite(const FunctionCallbackInfo<Value>& args) {
-  JSStream* wrap;
-  CHECK(args[0]->IsObject());
-  WriteWrap* w;
-  ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
-  ASSIGN_OR_RETURN_UNWRAP(&w, args[0].As<Object>());
-
-  wrap->OnAfterWrite(w);
+    wrap->OnAfterWrite(w);
 }
-
 
 template <class Wrap>
-void JSStream::Finish(const FunctionCallbackInfo<Value>& args) {
-  Wrap* w;
-  CHECK(args[0]->IsObject());
-  ASSIGN_OR_RETURN_UNWRAP(&w, args[0].As<Object>());
+void JSStream::Finish(const FunctionCallbackInfo<Value>& args)
+{
+    Wrap* w;
+    NODE_CHECK(args[0]->IsObject());
+    ASSIGN_OR_RETURN_UNWRAP(&w, args[0].As<Object>());
 
-  w->Done(args[1]->Int32Value());
+    w->Done(args[1]->Int32Value());
 }
 
+void JSStream::ReadBuffer(const FunctionCallbackInfo<Value>& args)
+{
+    JSStream* wrap;
+    ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
 
-void JSStream::ReadBuffer(const FunctionCallbackInfo<Value>& args) {
-  JSStream* wrap;
-  ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
+    NODE_CHECK(Buffer::HasInstance(args[0]));
+    char* data = Buffer::Data(args[0]);
+    int len = Buffer::Length(args[0]);
 
-  CHECK(Buffer::HasInstance(args[0]));
-  char* data = Buffer::Data(args[0]);
-  int len = Buffer::Length(args[0]);
+    do {
+        uv_buf_t buf;
+        ssize_t avail = len;
+        wrap->OnAlloc(len, &buf);
+        if (static_cast<ssize_t>(buf.len) < avail)
+            avail = buf.len;
 
-  do {
-    uv_buf_t buf;
-    ssize_t avail = len;
-    wrap->OnAlloc(len, &buf);
-    if (static_cast<ssize_t>(buf.len) < avail)
-      avail = buf.len;
-
-    memcpy(buf.base, data, avail);
-    data += avail;
-    len -= avail;
-    wrap->OnRead(avail, &buf);
-  } while (len != 0);
+        memcpy(buf.base, data, avail);
+        data += avail;
+        len -= avail;
+        wrap->OnRead(avail, &buf);
+    } while (len != 0);
 }
 
+void JSStream::EmitEOF(const FunctionCallbackInfo<Value>& args)
+{
+    JSStream* wrap;
+    ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
 
-void JSStream::EmitEOF(const FunctionCallbackInfo<Value>& args) {
-  JSStream* wrap;
-  ASSIGN_OR_RETURN_UNWRAP(&wrap, args.Holder());
-
-  wrap->OnRead(UV_EOF, nullptr);
+    wrap->OnRead(UV_EOF, nullptr);
 }
-
 
 void JSStream::Initialize(Local<Object> target,
-                          Local<Value> unused,
-                          Local<Context> context) {
-  Environment* env = Environment::GetCurrent(context);
+    Local<Value> unused,
+    Local<Context> context)
+{
+    Environment* env = Environment::GetCurrent(context);
 
-  Local<FunctionTemplate> t = env->NewFunctionTemplate(New);
-  t->SetClassName(FIXED_ONE_BYTE_STRING(env->isolate(), "JSStream"));
-  t->InstanceTemplate()->SetInternalFieldCount(1);
+    Local<FunctionTemplate> t = env->NewFunctionTemplate(New);
+    t->SetClassName(FIXED_ONE_BYTE_STRING(env->isolate(), "JSStream"));
+    t->InstanceTemplate()->SetInternalFieldCount(1);
 
-  env->SetProtoMethod(t, "doAlloc", DoAlloc);
-  env->SetProtoMethod(t, "doRead", DoRead);
-  env->SetProtoMethod(t, "doAfterWrite", DoAfterWrite);
-  env->SetProtoMethod(t, "finishWrite", Finish<WriteWrap>);
-  env->SetProtoMethod(t, "finishShutdown", Finish<ShutdownWrap>);
-  env->SetProtoMethod(t, "readBuffer", ReadBuffer);
-  env->SetProtoMethod(t, "emitEOF", EmitEOF);
+    env->SetProtoMethod(t, "doAlloc", DoAlloc);
+    env->SetProtoMethod(t, "doRead", DoRead);
+    env->SetProtoMethod(t, "doAfterWrite", DoAfterWrite);
+    env->SetProtoMethod(t, "finishWrite", Finish<WriteWrap>);
+    env->SetProtoMethod(t, "finishShutdown", Finish<ShutdownWrap>);
+    env->SetProtoMethod(t, "readBuffer", ReadBuffer);
+    env->SetProtoMethod(t, "emitEOF", EmitEOF);
 
-  StreamBase::AddMethods<JSStream>(env, t, StreamBase::kFlagHasWritev);
-  target->Set(FIXED_ONE_BYTE_STRING(env->isolate(), "JSStream"),
-              t->GetFunction());
-  env->set_jsstream_constructor_template(t);
+    StreamBase::AddMethods<JSStream>(env, t, StreamBase::kFlagHasWritev);
+    target->Set(FIXED_ONE_BYTE_STRING(env->isolate(), "JSStream"),
+        t->GetFunction());
+    env->set_jsstream_constructor_template(t);
 }
 
-}  // namespace node
+} // namespace node
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN(js_stream, node::JSStream::Initialize)

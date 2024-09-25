@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <pthread.h>
 #include <semaphore.h> /* sem_t */
 
-#define PTHREAD_BARRIER_SERIAL_THREAD  0x12345
+#define PTHREAD_BARRIER_SERIAL_THREAD 0x12345
 
 /*
  * To maintain ABI compatibility with
@@ -28,37 +28,31 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * to target platform
  */
 #if defined(__ANDROID__)
-# define UV_BARRIER_STRUCT_PADDING \
-  sizeof(pthread_mutex_t) + \
-  sizeof(pthread_cond_t) + \
-  sizeof(unsigned int) - \
-  sizeof(void *)
+#define UV_BARRIER_STRUCT_PADDING \
+    sizeof(pthread_mutex_t) + sizeof(pthread_cond_t) + sizeof(unsigned int) - sizeof(void*)
 #elif defined(__APPLE__)
-# define UV_BARRIER_STRUCT_PADDING \
-  sizeof(pthread_mutex_t) + \
-  2 * sizeof(sem_t) + \
-  2 * sizeof(unsigned int) - \
-  sizeof(void *)
+#define UV_BARRIER_STRUCT_PADDING \
+    sizeof(pthread_mutex_t) + 2 * sizeof(sem_t) + 2 * sizeof(unsigned int) - sizeof(void*)
 #endif
 
 typedef struct {
-  pthread_mutex_t  mutex;
-  pthread_cond_t   cond;
-  unsigned         threshold;
-  unsigned         in;
-  unsigned         out;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    unsigned threshold;
+    unsigned in;
+    unsigned out;
 } _uv_barrier;
 
 typedef struct {
-  _uv_barrier* b;
-  char _pad[UV_BARRIER_STRUCT_PADDING];
+    _uv_barrier* b;
+    char _pad[UV_BARRIER_STRUCT_PADDING];
 } pthread_barrier_t;
 
 int pthread_barrier_init(pthread_barrier_t* barrier,
-                         const void* barrier_attr,
-                         unsigned count);
+    const void* barrier_attr,
+    unsigned count);
 
 int pthread_barrier_wait(pthread_barrier_t* barrier);
-int pthread_barrier_destroy(pthread_barrier_t *barrier);
+int pthread_barrier_destroy(pthread_barrier_t* barrier);
 
 #endif /* _UV_PTHREAD_BARRIER_ */
