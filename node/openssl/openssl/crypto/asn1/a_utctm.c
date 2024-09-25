@@ -1,4 +1,3 @@
-/* crypto/asn1/a_utctm.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,62 +52,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <time.h>
-#include "cryptlib.h"
-#include "o_time.h"
 #include <openssl/asn1.h>
+
+#include <string.h>
+#include <time.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+
 #include "asn1_locl.h"
 
-#if 0
-int i2d_ASN1_UTCTIME(ASN1_UTCTIME *a, unsigned char **pp)
-{
-# ifndef CHARSET_EBCDIC
-    return (i2d_ASN1_bytes((ASN1_STRING *)a, pp,
-                           V_ASN1_UTCTIME, V_ASN1_UNIVERSAL));
-# else
-    /* KLUDGE! We convert to ascii before writing DER */
-    int len;
-    char tmp[24];
-    ASN1_STRING x = *(ASN1_STRING *)a;
-
-    len = x.length;
-    ebcdic2ascii(tmp, x.data, (len >= sizeof tmp) ? sizeof tmp : len);
-    x.data = tmp;
-    return i2d_ASN1_bytes(&x, pp, V_ASN1_UTCTIME, V_ASN1_UNIVERSAL);
-# endif
-}
-
-ASN1_UTCTIME *d2i_ASN1_UTCTIME(ASN1_UTCTIME **a, unsigned char **pp,
-                               long length)
-{
-    ASN1_UTCTIME *ret = NULL;
-
-    ret = (ASN1_UTCTIME *)d2i_ASN1_bytes((ASN1_STRING **)a, pp, length,
-                                         V_ASN1_UTCTIME, V_ASN1_UNIVERSAL);
-    if (ret == NULL) {
-        ASN1err(ASN1_F_D2I_ASN1_UTCTIME, ERR_R_NESTED_ASN1_ERROR);
-        return (NULL);
-    }
-# ifdef CHARSET_EBCDIC
-    ascii2ebcdic(ret->data, ret->data, ret->length);
-# endif
-    if (!ASN1_UTCTIME_check(ret)) {
-        ASN1err(ASN1_F_D2I_ASN1_UTCTIME, ASN1_R_INVALID_TIME_FORMAT);
-        goto err;
-    }
-
-    return (ret);
- err:
-    if ((ret != NULL) && ((a == NULL) || (*a != ret)))
-        M_ASN1_UTCTIME_free(ret);
-    return (NULL);
-}
-
-#endif
 
 int asn1_utctime_to_tm(struct tm *tm, const ASN1_UTCTIME *d)
 {
@@ -172,7 +127,7 @@ int asn1_utctime_to_tm(struct tm *tm, const ASN1_UTCTIME *d)
     if (a[o] == 'Z')
         o++;
     else if ((a[o] == '+') || (a[o] == '-')) {
-        int offsign = a[o] == '-' ? -1 : 1, offset = 0;
+        int offsign = a[o] == '-' ? 1 : -1, offset = 0;
         o++;
         if (o + 4 > l)
             goto err;
@@ -263,7 +218,7 @@ ASN1_UTCTIME *ASN1_UTCTIME_adj(ASN1_UTCTIME *s, time_t t,
     if ((p == NULL) || ((size_t)s->length < len)) {
         p = OPENSSL_malloc(len);
         if (p == NULL) {
-            ASN1err(ASN1_F_ASN1_UTCTIME_ADJ, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             goto err;
         }
         if (s->data != NULL)
@@ -276,9 +231,6 @@ ASN1_UTCTIME *ASN1_UTCTIME_adj(ASN1_UTCTIME *s, time_t t,
                  ts->tm_sec);
     s->length = strlen(p);
     s->type = V_ASN1_UTCTIME;
-#ifdef CHARSET_EBCDIC_not
-    ebcdic2ascii(s->data, s->data, s->length);
-#endif
     return (s);
  err:
     if (free_s && s)
@@ -317,7 +269,7 @@ time_t ASN1_UTCTIME_get(const ASN1_UTCTIME *s)
     struct tm tm;
     int offset;
 
-    memset(&tm, '\0', sizeof tm);
+    OPENSSL_memset(&tm, '\0', sizeof tm);
 
 # define g2(p) (((p)[0]-'0')*10+(p)[1]-'0')
     tm.tm_year = g2(s->data);
@@ -337,16 +289,15 @@ time_t ASN1_UTCTIME_get(const ASN1_UTCTIME *s)
     }
 # undef g2
 
-    /*
-     * FIXME: mktime assumes the current timezone
-     * instead of UTC, and unless we rewrite OpenSSL
-     * in Lisp we cannot locally change the timezone
-     * without possibly interfering with other parts
-     * of the program. timegm, which uses UTC, is
-     * non-standard.
-     * Also time_t is inappropriate for general
-     * UTC times because it may a 32 bit type.
-     */
-    return mktime(&tm) - offset * 60;
+    return mktime(&tm) - offset * 60; /* FIXME: mktime assumes the current
+                                       * timezone instead of UTC, and unless
+                                       * we rewrite OpenSSL in Lisp we cannot
+                                       * locally change the timezone without
+                                       * possibly interfering with other
+                                       * parts of the program. timegm, which
+                                       * uses UTC, is non-standard. Also
+                                       * time_t is inappropriate for general
+                                       * UTC times because it may a 32 bit
+                                       * type. */
 }
 #endif

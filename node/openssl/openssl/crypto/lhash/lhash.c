@@ -1,4 +1,3 @@
-/* crypto/lhash/lhash.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,408 +52,297 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-/*-
- * Code for dynamic hash table routines
- * Author - Eric Young v 2.0
- *
- * 2.2 eay - added #include "crypto.h" so the memory leak checking code is
- *           present. eay 18-Jun-98
- *
- * 2.1 eay - Added an 'error in last operation' flag. eay 6-May-98
- *
- * 2.0 eay - Fixed a bug that occurred when using lh_delete
- *           from inside lh_doall().  As entries were deleted,
- *           the 'table' was 'contract()ed', making some entries
- *           jump from the end of the table to the start, there by
- *           skipping the lh_doall() processing. eay - 4/12/95
- *
- * 1.9 eay - Fixed a memory leak in lh_free, the LHASH_NODEs
- *           were not being free()ed. 21/11/95
- *
- * 1.8 eay - Put the stats routines into a separate file, lh_stats.c
- *           19/09/95
- *
- * 1.7 eay - Removed the fputs() for realloc failures - the code
- *           should silently tolerate them.  I have also fixed things
- *           lint complained about 04/05/95
- *
- * 1.6 eay - Fixed an invalid pointers in contract/expand 27/07/92
- *
- * 1.5 eay - Fixed a misuse of realloc in expand 02/03/1992
- *
- * 1.4 eay - Fixed lh_doall so the function can call lh_delete 28/05/91
- *
- * 1.3 eay - Fixed a few lint problems 19/3/1991
- *
- * 1.2 eay - Fixed lh_doall problem 13/3/1991
- *
- * 1.1 eay - Added lh_doall
- *
- * 1.0 eay - First version
- */
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <openssl/crypto.h>
 #include <openssl/lhash.h>
 
-const char lh_version[] = "lhash" OPENSSL_VERSION_PTEXT;
+#include <assert.h>
+#include <limits.h>
+#include <string.h>
 
-#undef MIN_NODES
-#define MIN_NODES       16
-#define UP_LOAD         (2*LH_LOAD_MULT) /* load times 256 (default 2) */
-#define DOWN_LOAD       (LH_LOAD_MULT) /* load times 256 (default 1) */
+#include <openssl/mem.h>
 
-static void expand(_LHASH *lh);
-static void contract(_LHASH *lh);
-static LHASH_NODE **getrn(_LHASH *lh, const void *data, unsigned long *rhash);
+#include "../internal.h"
 
-_LHASH *lh_new(LHASH_HASH_FN_TYPE h, LHASH_COMP_FN_TYPE c)
-{
-    _LHASH *ret;
-    int i;
 
-    if ((ret = OPENSSL_malloc(sizeof(_LHASH))) == NULL)
-        goto err0;
-    if ((ret->b = OPENSSL_malloc(sizeof(LHASH_NODE *) * MIN_NODES)) == NULL)
-        goto err1;
-    for (i = 0; i < MIN_NODES; i++)
-        ret->b[i] = NULL;
-    ret->comp = ((c == NULL) ? (LHASH_COMP_FN_TYPE)strcmp : c);
-    ret->hash = ((h == NULL) ? (LHASH_HASH_FN_TYPE)lh_strhash : h);
-    ret->num_nodes = MIN_NODES / 2;
-    ret->num_alloc_nodes = MIN_NODES;
-    ret->p = 0;
-    ret->pmax = MIN_NODES / 2;
-    ret->up_load = UP_LOAD;
-    ret->down_load = DOWN_LOAD;
-    ret->num_items = 0;
+// kMinNumBuckets is the minimum size of the buckets array in an |_LHASH|.
+static const size_t kMinNumBuckets = 16;
 
-    ret->num_expands = 0;
-    ret->num_expand_reallocs = 0;
-    ret->num_contracts = 0;
-    ret->num_contract_reallocs = 0;
-    ret->num_hash_calls = 0;
-    ret->num_comp_calls = 0;
-    ret->num_insert = 0;
-    ret->num_replace = 0;
-    ret->num_delete = 0;
-    ret->num_no_delete = 0;
-    ret->num_retrieve = 0;
-    ret->num_retrieve_miss = 0;
-    ret->num_hash_comps = 0;
+// kMaxAverageChainLength contains the maximum, average chain length. When the
+// average chain length exceeds this value, the hash table will be resized.
+static const size_t kMaxAverageChainLength = 2;
+static const size_t kMinAverageChainLength = 1;
 
-    ret->error = 0;
-    return (ret);
- err1:
+struct lhash_st {
+  // num_items contains the total number of items in the hash table.
+  size_t num_items;
+  // buckets is an array of |num_buckets| pointers. Each points to the head of
+  // a chain of LHASH_ITEM objects that have the same hash value, mod
+  // |num_buckets|.
+  LHASH_ITEM **buckets;
+  // num_buckets contains the length of |buckets|. This value is always >=
+  // kMinNumBuckets.
+  size_t num_buckets;
+  // callback_depth contains the current depth of |lh_doall| or |lh_doall_arg|
+  // calls. If non-zero then this suppresses resizing of the |buckets| array,
+  // which would otherwise disrupt the iteration.
+  unsigned callback_depth;
+
+  lhash_cmp_func comp;
+  lhash_hash_func hash;
+};
+
+_LHASH *lh_new(lhash_hash_func hash, lhash_cmp_func comp) {
+  _LHASH *ret = OPENSSL_malloc(sizeof(_LHASH));
+  if (ret == NULL) {
+    return NULL;
+  }
+  OPENSSL_memset(ret, 0, sizeof(_LHASH));
+
+  ret->num_buckets = kMinNumBuckets;
+  ret->buckets = OPENSSL_malloc(sizeof(LHASH_ITEM *) * ret->num_buckets);
+  if (ret->buckets == NULL) {
     OPENSSL_free(ret);
- err0:
-    return (NULL);
+    return NULL;
+  }
+  OPENSSL_memset(ret->buckets, 0, sizeof(LHASH_ITEM *) * ret->num_buckets);
+
+  ret->comp = comp;
+  ret->hash = hash;
+  return ret;
 }
 
-void lh_free(_LHASH *lh)
-{
-    unsigned int i;
-    LHASH_NODE *n, *nn;
+void lh_free(_LHASH *lh) {
+  if (lh == NULL) {
+    return;
+  }
 
-    if (lh == NULL)
-        return;
-
-    for (i = 0; i < lh->num_nodes; i++) {
-        n = lh->b[i];
-        while (n != NULL) {
-            nn = n->next;
-            OPENSSL_free(n);
-            n = nn;
-        }
+  for (size_t i = 0; i < lh->num_buckets; i++) {
+    LHASH_ITEM *next;
+    for (LHASH_ITEM *n = lh->buckets[i]; n != NULL; n = next) {
+      next = n->next;
+      OPENSSL_free(n);
     }
-    OPENSSL_free(lh->b);
-    OPENSSL_free(lh);
+  }
+
+  OPENSSL_free(lh->buckets);
+  OPENSSL_free(lh);
 }
 
-void *lh_insert(_LHASH *lh, void *data)
-{
-    unsigned long hash;
-    LHASH_NODE *nn, **rn;
-    void *ret;
+size_t lh_num_items(const _LHASH *lh) { return lh->num_items; }
 
-    lh->error = 0;
-    if (lh->up_load <= (lh->num_items * LH_LOAD_MULT / lh->num_nodes))
-        expand(lh);
+// get_next_ptr_and_hash returns a pointer to the pointer that points to the
+// item equal to |data|. In other words, it searches for an item equal to |data|
+// and, if it's at the start of a chain, then it returns a pointer to an
+// element of |lh->buckets|, otherwise it returns a pointer to the |next|
+// element of the previous item in the chain. If an element equal to |data| is
+// not found, it returns a pointer that points to a NULL pointer. If |out_hash|
+// is not NULL, then it also puts the hash value of |data| in |*out_hash|.
+static LHASH_ITEM **get_next_ptr_and_hash(const _LHASH *lh, uint32_t *out_hash,
+                                          const void *data,
+                                          lhash_hash_func_helper call_hash_func,
+                                          lhash_cmp_func_helper call_cmp_func) {
+  const uint32_t hash = call_hash_func(lh->hash, data);
+  if (out_hash != NULL) {
+    *out_hash = hash;
+  }
 
-    rn = getrn(lh, data, &hash);
-
-    if (*rn == NULL) {
-        if ((nn = (LHASH_NODE *)OPENSSL_malloc(sizeof(LHASH_NODE))) == NULL) {
-            lh->error++;
-            return (NULL);
-        }
-        nn->data = data;
-        nn->next = NULL;
-#ifndef OPENSSL_NO_HASH_COMP
-        nn->hash = hash;
-#endif
-        *rn = nn;
-        ret = NULL;
-        lh->num_insert++;
-        lh->num_items++;
-    } else {                    /* replace same key */
-
-        ret = (*rn)->data;
-        (*rn)->data = data;
-        lh->num_replace++;
+  LHASH_ITEM **ret = &lh->buckets[hash % lh->num_buckets];
+  for (LHASH_ITEM *cur = *ret; cur != NULL; cur = *ret) {
+    if (call_cmp_func(lh->comp, cur->data, data) == 0) {
+      break;
     }
-    return (ret);
+    ret = &cur->next;
+  }
+
+  return ret;
 }
 
-void *lh_delete(_LHASH *lh, const void *data)
-{
-    unsigned long hash;
-    LHASH_NODE *nn, **rn;
-    void *ret;
-
-    lh->error = 0;
-    rn = getrn(lh, data, &hash);
-
-    if (*rn == NULL) {
-        lh->num_no_delete++;
-        return (NULL);
-    } else {
-        nn = *rn;
-        *rn = nn->next;
-        ret = nn->data;
-        OPENSSL_free(nn);
-        lh->num_delete++;
+// get_next_ptr_by_key behaves like |get_next_ptr_and_hash| but takes a key
+// which may be a different type from the values stored in |lh|.
+static LHASH_ITEM **get_next_ptr_by_key(const _LHASH *lh, const void *key,
+                                        uint32_t key_hash,
+                                        int (*cmp_key)(const void *key,
+                                                       const void *value)) {
+  LHASH_ITEM **ret = &lh->buckets[key_hash % lh->num_buckets];
+  for (LHASH_ITEM *cur = *ret; cur != NULL; cur = *ret) {
+    if (cmp_key(key, cur->data) == 0) {
+      break;
     }
+    ret = &cur->next;
+  }
 
-    lh->num_items--;
-    if ((lh->num_nodes > MIN_NODES) &&
-        (lh->down_load >= (lh->num_items * LH_LOAD_MULT / lh->num_nodes)))
-        contract(lh);
-
-    return (ret);
+  return ret;
 }
 
-void *lh_retrieve(_LHASH *lh, const void *data)
-{
-    unsigned long hash;
-    LHASH_NODE **rn;
-    void *ret;
+void *lh_retrieve(const _LHASH *lh, const void *data,
+                  lhash_hash_func_helper call_hash_func,
+                  lhash_cmp_func_helper call_cmp_func) {
+  LHASH_ITEM **next_ptr =
+      get_next_ptr_and_hash(lh, NULL, data, call_hash_func, call_cmp_func);
+  return *next_ptr == NULL ? NULL : (*next_ptr)->data;
+}
 
-    lh->error = 0;
-    rn = getrn(lh, data, &hash);
+void *lh_retrieve_key(const _LHASH *lh, const void *key, uint32_t key_hash,
+                      int (*cmp_key)(const void *key, const void *value)) {
+  LHASH_ITEM **next_ptr = get_next_ptr_by_key(lh, key, key_hash, cmp_key);
+  return *next_ptr == NULL ? NULL : (*next_ptr)->data;
+}
 
-    if (*rn == NULL) {
-        lh->num_retrieve_miss++;
-        return (NULL);
-    } else {
-        ret = (*rn)->data;
-        lh->num_retrieve++;
+// lh_rebucket allocates a new array of |new_num_buckets| pointers and
+// redistributes the existing items into it before making it |lh->buckets| and
+// freeing the old array.
+static void lh_rebucket(_LHASH *lh, const size_t new_num_buckets) {
+  LHASH_ITEM **new_buckets, *cur, *next;
+  size_t i, alloc_size;
+
+  alloc_size = sizeof(LHASH_ITEM *) * new_num_buckets;
+  if (alloc_size / sizeof(LHASH_ITEM*) != new_num_buckets) {
+    return;
+  }
+
+  new_buckets = OPENSSL_malloc(alloc_size);
+  if (new_buckets == NULL) {
+    return;
+  }
+  OPENSSL_memset(new_buckets, 0, alloc_size);
+
+  for (i = 0; i < lh->num_buckets; i++) {
+    for (cur = lh->buckets[i]; cur != NULL; cur = next) {
+      const size_t new_bucket = cur->hash % new_num_buckets;
+      next = cur->next;
+      cur->next = new_buckets[new_bucket];
+      new_buckets[new_bucket] = cur;
     }
-    return (ret);
+  }
+
+  OPENSSL_free(lh->buckets);
+
+  lh->num_buckets = new_num_buckets;
+  lh->buckets = new_buckets;
 }
 
-static void doall_util_fn(_LHASH *lh, int use_arg, LHASH_DOALL_FN_TYPE func,
-                          LHASH_DOALL_ARG_FN_TYPE func_arg, void *arg)
-{
-    int i;
-    LHASH_NODE *a, *n;
+// lh_maybe_resize resizes the |buckets| array if needed.
+static void lh_maybe_resize(_LHASH *lh) {
+  size_t avg_chain_length;
 
-    if (lh == NULL)
-        return;
+  if (lh->callback_depth > 0) {
+    // Don't resize the hash if we are currently iterating over it.
+    return;
+  }
 
-    /*
-     * reverse the order so we search from 'top to bottom' We were having
-     * memory leaks otherwise
-     */
-    for (i = lh->num_nodes - 1; i >= 0; i--) {
-        a = lh->b[i];
-        while (a != NULL) {
-            /*
-             * 28/05/91 - eay - n added so items can be deleted via lh_doall
-             */
-            /*
-             * 22/05/08 - ben - eh? since a is not passed, this should not be
-             * needed
-             */
-            n = a->next;
-            if (use_arg)
-                func_arg(a->data, arg);
-            else
-                func(a->data);
-            a = n;
-        }
+  assert(lh->num_buckets >= kMinNumBuckets);
+  avg_chain_length = lh->num_items / lh->num_buckets;
+
+  if (avg_chain_length > kMaxAverageChainLength) {
+    const size_t new_num_buckets = lh->num_buckets * 2;
+
+    if (new_num_buckets > lh->num_buckets) {
+      lh_rebucket(lh, new_num_buckets);
     }
-}
+  } else if (avg_chain_length < kMinAverageChainLength &&
+             lh->num_buckets > kMinNumBuckets) {
+    size_t new_num_buckets = lh->num_buckets / 2;
 
-void lh_doall(_LHASH *lh, LHASH_DOALL_FN_TYPE func)
-{
-    doall_util_fn(lh, 0, func, (LHASH_DOALL_ARG_FN_TYPE)0, NULL);
-}
-
-void lh_doall_arg(_LHASH *lh, LHASH_DOALL_ARG_FN_TYPE func, void *arg)
-{
-    doall_util_fn(lh, 1, (LHASH_DOALL_FN_TYPE)0, func, arg);
-}
-
-static void expand(_LHASH *lh)
-{
-    LHASH_NODE **n, **n1, **n2, *np;
-    unsigned int p, i, j;
-    unsigned long hash, nni;
-
-    lh->num_nodes++;
-    lh->num_expands++;
-    p = (int)lh->p++;
-    n1 = &(lh->b[p]);
-    n2 = &(lh->b[p + (int)lh->pmax]);
-    *n2 = NULL;                 /* 27/07/92 - eay - undefined pointer bug */
-    nni = lh->num_alloc_nodes;
-
-    for (np = *n1; np != NULL;) {
-#ifndef OPENSSL_NO_HASH_COMP
-        hash = np->hash;
-#else
-        hash = lh->hash(np->data);
-        lh->num_hash_calls++;
-#endif
-        if ((hash % nni) != p) { /* move it */
-            *n1 = (*n1)->next;
-            np->next = *n2;
-            *n2 = np;
-        } else
-            n1 = &((*n1)->next);
-        np = *n1;
+    if (new_num_buckets < kMinNumBuckets) {
+      new_num_buckets = kMinNumBuckets;
     }
 
-    if ((lh->p) >= lh->pmax) {
-        j = (int)lh->num_alloc_nodes * 2;
-        n = (LHASH_NODE **)OPENSSL_realloc(lh->b,
-                                           (int)(sizeof(LHASH_NODE *) * j));
-        if (n == NULL) {
-/*                      fputs("realloc error in lhash",stderr); */
-            lh->error++;
-            lh->p = 0;
-            return;
-        }
-        /* else */
-        for (i = (int)lh->num_alloc_nodes; i < j; i++) /* 26/02/92 eay */
-            n[i] = NULL;        /* 02/03/92 eay */
-        lh->pmax = lh->num_alloc_nodes;
-        lh->num_alloc_nodes = j;
-        lh->num_expand_reallocs++;
-        lh->p = 0;
-        lh->b = n;
-    }
+    lh_rebucket(lh, new_num_buckets);
+  }
 }
 
-static void contract(_LHASH *lh)
-{
-    LHASH_NODE **n, *n1, *np;
+int lh_insert(_LHASH *lh, void **old_data, void *data,
+              lhash_hash_func_helper call_hash_func,
+              lhash_cmp_func_helper call_cmp_func) {
+  uint32_t hash;
+  LHASH_ITEM **next_ptr, *item;
 
-    np = lh->b[lh->p + lh->pmax - 1];
-    lh->b[lh->p + lh->pmax - 1] = NULL; /* 24/07-92 - eay - weird but :-( */
-    if (lh->p == 0) {
-        n = (LHASH_NODE **)OPENSSL_realloc(lh->b,
-                                           (unsigned int)(sizeof(LHASH_NODE *)
-                                                          * lh->pmax));
-        if (n == NULL) {
-/*                      fputs("realloc error in lhash",stderr); */
-            lh->error++;
-            return;
-        }
-        lh->num_contract_reallocs++;
-        lh->num_alloc_nodes /= 2;
-        lh->pmax /= 2;
-        lh->p = lh->pmax - 1;
-        lh->b = n;
-    } else
-        lh->p--;
+  *old_data = NULL;
+  next_ptr =
+      get_next_ptr_and_hash(lh, &hash, data, call_hash_func, call_cmp_func);
 
-    lh->num_nodes--;
-    lh->num_contracts++;
 
-    n1 = lh->b[(int)lh->p];
-    if (n1 == NULL)
-        lh->b[(int)lh->p] = np;
-    else {
-        while (n1->next != NULL)
-            n1 = n1->next;
-        n1->next = np;
-    }
+  if (*next_ptr != NULL) {
+    // An element equal to |data| already exists in the hash table. It will be
+    // replaced.
+    *old_data = (*next_ptr)->data;
+    (*next_ptr)->data = data;
+    return 1;
+  }
+
+  // An element equal to |data| doesn't exist in the hash table yet.
+  item = OPENSSL_malloc(sizeof(LHASH_ITEM));
+  if (item == NULL) {
+    return 0;
+  }
+
+  item->data = data;
+  item->hash = hash;
+  item->next = NULL;
+  *next_ptr = item;
+  lh->num_items++;
+  lh_maybe_resize(lh);
+
+  return 1;
 }
 
-static LHASH_NODE **getrn(_LHASH *lh, const void *data, unsigned long *rhash)
-{
-    LHASH_NODE **ret, *n1;
-    unsigned long hash, nn;
-    LHASH_COMP_FN_TYPE cf;
+void *lh_delete(_LHASH *lh, const void *data,
+                lhash_hash_func_helper call_hash_func,
+                lhash_cmp_func_helper call_cmp_func) {
+  LHASH_ITEM **next_ptr, *item, *ret;
 
-    hash = (*(lh->hash)) (data);
-    lh->num_hash_calls++;
-    *rhash = hash;
+  next_ptr =
+      get_next_ptr_and_hash(lh, NULL, data, call_hash_func, call_cmp_func);
 
-    nn = hash % lh->pmax;
-    if (nn < lh->p)
-        nn = hash % lh->num_alloc_nodes;
+  if (*next_ptr == NULL) {
+    // No such element.
+    return NULL;
+  }
 
-    cf = lh->comp;
-    ret = &(lh->b[(int)nn]);
-    for (n1 = *ret; n1 != NULL; n1 = n1->next) {
-        if (!n1)
-            continue;
-#ifndef OPENSSL_NO_HASH_COMP
-        lh->num_hash_comps++;
-        if (n1->hash != hash) {
-            ret = &(n1->next);
-            continue;
-        }
-#endif
-        lh->num_comp_calls++;
-        if (cf(n1->data, data) == 0)
-            break;
-        ret = &(n1->next);
-    }
-    return (ret);
+  item = *next_ptr;
+  *next_ptr = item->next;
+  ret = item->data;
+  OPENSSL_free(item);
+
+  lh->num_items--;
+  lh_maybe_resize(lh);
+
+  return ret;
 }
 
-/*
- * The following hash seems to work very well on normal text strings no
- * collisions on /usr/dict/words and it distributes on %2^n quite well, not
- * as good as MD5, but still good.
- */
-unsigned long lh_strhash(const char *c)
-{
-    unsigned long ret = 0;
-    long n;
-    unsigned long v;
-    int r;
+void lh_doall_arg(_LHASH *lh, void (*func)(void *, void *), void *arg) {
+  if (lh == NULL) {
+    return;
+  }
 
-    if ((c == NULL) || (*c == '\0'))
-        return (ret);
-/*-
-    unsigned char b[16];
-    MD5(c,strlen(c),b);
-    return(b[0]|(b[1]<<8)|(b[2]<<16)|(b[3]<<24));
-*/
+  if (lh->callback_depth < UINT_MAX) {
+    // |callback_depth| is a saturating counter.
+    lh->callback_depth++;
+  }
 
-    n = 0x100;
-    while (*c) {
-        v = n | (*c);
-        n += 0x100;
-        r = (int)((v >> 2) ^ v) & 0x0f;
-        ret = (ret << r) | (ret >> (32 - r));
-        ret &= 0xFFFFFFFFL;
-        ret ^= v * v;
-        c++;
+  for (size_t i = 0; i < lh->num_buckets; i++) {
+    LHASH_ITEM *next;
+    for (LHASH_ITEM *cur = lh->buckets[i]; cur != NULL; cur = next) {
+      next = cur->next;
+      func(cur->data, arg);
     }
-    return ((ret >> 16) ^ ret);
+  }
+
+  if (lh->callback_depth < UINT_MAX) {
+    lh->callback_depth--;
+  }
+
+  // The callback may have added or removed elements and the non-zero value of
+  // |callback_depth| will have suppressed any resizing. Thus any needed
+  // resizing is done here.
+  lh_maybe_resize(lh);
 }
 
-unsigned long lh_num_items(const _LHASH *lh)
-{
-    return lh ? lh->num_items : 0;
+uint32_t lh_strhash(const char *c) {
+  if (c == NULL) {
+    return 0;
+  }
+
+  return OPENSSL_hash32(c, strlen(c));
 }

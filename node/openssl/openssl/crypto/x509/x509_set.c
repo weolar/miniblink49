@@ -1,4 +1,3 @@
-/* crypto/x509/x509_set.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,14 +52,12 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
+#include <openssl/cipher.h>
 #include <openssl/evp.h>
+#include <openssl/obj.h>
 #include <openssl/x509.h>
 
 int X509_set_version(X509 *x, long version)
@@ -127,6 +124,11 @@ int X509_set_notBefore(X509 *x, const ASN1_TIME *tm)
     return (in != NULL);
 }
 
+const ASN1_TIME *X509_get0_notBefore(const X509 *x)
+{
+    return x->cert_info->validity->notBefore;
+}
+
 int X509_set_notAfter(X509 *x, const ASN1_TIME *tm)
 {
     ASN1_TIME *in;
@@ -144,9 +146,24 @@ int X509_set_notAfter(X509 *x, const ASN1_TIME *tm)
     return (in != NULL);
 }
 
+const ASN1_TIME *X509_get0_notAfter(const X509 *x)
+{
+    return x->cert_info->validity->notAfter;
+}
+
 int X509_set_pubkey(X509 *x, EVP_PKEY *pkey)
 {
     if ((x == NULL) || (x->cert_info == NULL))
         return (0);
     return (X509_PUBKEY_set(&(x->cert_info->key), pkey));
+}
+
+STACK_OF(X509_EXTENSION) *X509_get0_extensions(const X509 *x)
+{
+    return x->cert_info->extensions;
+}
+
+const X509_ALGOR *X509_get0_tbs_sigalg(const X509 *x)
+{
+    return x->cert_info->signature;
 }

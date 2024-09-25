@@ -1,4 +1,3 @@
-/* x509_trs.c */
 /*
  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
  * 1999.
@@ -53,15 +52,15 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
-#include <stdio.h>
-#include "cryptlib.h"
+#include <openssl/buf.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
-static int tr_cmp(const X509_TRUST *const *a, const X509_TRUST *const *b);
+static int tr_cmp(const X509_TRUST **a, const X509_TRUST **b);
 static void trtable_free(X509_TRUST *p);
 
 static int trust_1oidany(X509_TRUST *trust, X509 *x, int flags);
@@ -78,29 +77,28 @@ static int (*default_trust) (int id, X509 *x, int flags) = obj_trust;
  */
 
 static X509_TRUST trstandard[] = {
-    {X509_TRUST_COMPAT, 0, trust_compat, "compatible", 0, NULL},
-    {X509_TRUST_SSL_CLIENT, 0, trust_1oidany, "SSL Client", NID_client_auth,
-     NULL},
-    {X509_TRUST_SSL_SERVER, 0, trust_1oidany, "SSL Server", NID_server_auth,
-     NULL},
-    {X509_TRUST_EMAIL, 0, trust_1oidany, "S/MIME email", NID_email_protect,
-     NULL},
-    {X509_TRUST_OBJECT_SIGN, 0, trust_1oidany, "Object Signer", NID_code_sign,
-     NULL},
-    {X509_TRUST_OCSP_SIGN, 0, trust_1oid, "OCSP responder", NID_OCSP_sign,
-     NULL},
-    {X509_TRUST_OCSP_REQUEST, 0, trust_1oid, "OCSP request", NID_ad_OCSP,
-     NULL},
-    {X509_TRUST_TSA, 0, trust_1oidany, "TSA server", NID_time_stamp, NULL}
+    {X509_TRUST_COMPAT, 0, trust_compat, (char *)"compatible", 0, NULL},
+    {X509_TRUST_SSL_CLIENT, 0, trust_1oidany, (char *)"SSL Client",
+     NID_client_auth, NULL},
+    {X509_TRUST_SSL_SERVER, 0, trust_1oidany, (char *)"SSL Server",
+     NID_server_auth, NULL},
+    {X509_TRUST_EMAIL, 0, trust_1oidany, (char *)"S/MIME email",
+     NID_email_protect, NULL},
+    {X509_TRUST_OBJECT_SIGN, 0, trust_1oidany, (char *)"Object Signer",
+     NID_code_sign, NULL},
+    {X509_TRUST_OCSP_SIGN, 0, trust_1oid, (char *)"OCSP responder",
+     NID_OCSP_sign, NULL},
+    {X509_TRUST_OCSP_REQUEST, 0, trust_1oid, (char *)"OCSP request",
+     NID_ad_OCSP, NULL},
+    {X509_TRUST_TSA, 0, trust_1oidany, (char *)"TSA server", NID_time_stamp,
+     NULL}
 };
 
 #define X509_TRUST_COUNT        (sizeof(trstandard)/sizeof(X509_TRUST))
 
-IMPLEMENT_STACK_OF(X509_TRUST)
-
 static STACK_OF(X509_TRUST) *trtable = NULL;
 
-static int tr_cmp(const X509_TRUST *const *a, const X509_TRUST *const *b)
+static int tr_cmp(const X509_TRUST **a, const X509_TRUST **b)
 {
     return (*a)->trust - (*b)->trust;
 }
@@ -153,22 +151,24 @@ X509_TRUST *X509_TRUST_get0(int idx)
 int X509_TRUST_get_by_id(int id)
 {
     X509_TRUST tmp;
-    int idx;
+    size_t idx;
+
     if ((id >= X509_TRUST_MIN) && (id <= X509_TRUST_MAX))
         return id - X509_TRUST_MIN;
     tmp.trust = id;
     if (!trtable)
         return -1;
-    idx = sk_X509_TRUST_find(trtable, &tmp);
-    if (idx == -1)
+    sk_X509_TRUST_sort(trtable);
+    if (!sk_X509_TRUST_find(trtable, &idx, &tmp)) {
         return -1;
+    }
     return idx + X509_TRUST_COUNT;
 }
 
 int X509_TRUST_set(int *t, int trust)
 {
     if (X509_TRUST_get_by_id(trust) == -1) {
-        X509err(X509_F_X509_TRUST_SET, X509_R_INVALID_TRUST);
+        OPENSSL_PUT_ERROR(X509, X509_R_INVALID_TRUST);
         return 0;
     }
     *t = trust;
@@ -180,6 +180,8 @@ int X509_TRUST_add(int id, int flags, int (*ck) (X509_TRUST *, X509 *, int),
 {
     int idx;
     X509_TRUST *trtmp;
+    char *name_dup;
+
     /*
      * This is set according to what we change: application can't set it
      */
@@ -191,21 +193,26 @@ int X509_TRUST_add(int id, int flags, int (*ck) (X509_TRUST *, X509 *, int),
     /* Need a new entry */
     if (idx == -1) {
         if (!(trtmp = OPENSSL_malloc(sizeof(X509_TRUST)))) {
-            X509err(X509_F_X509_TRUST_ADD, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
             return 0;
         }
         trtmp->flags = X509_TRUST_DYNAMIC;
     } else
         trtmp = X509_TRUST_get0(idx);
 
+    /* Duplicate the supplied name. */
+    name_dup = BUF_strdup(name);
+    if (name_dup == NULL) {
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+        if (idx == -1)
+            OPENSSL_free(trtmp);
+        return 0;
+    }
+
     /* OPENSSL_free existing name if dynamic */
     if (trtmp->flags & X509_TRUST_DYNAMIC_NAME)
         OPENSSL_free(trtmp->name);
-    /* dup supplied name */
-    if (!(trtmp->name = BUF_strdup(name))) {
-        X509err(X509_F_X509_TRUST_ADD, ERR_R_MALLOC_FAILURE);
-        return 0;
-    }
+    trtmp->name = name_dup;
     /* Keep the dynamic flag of existing entry */
     trtmp->flags &= X509_TRUST_DYNAMIC;
     /* Set all other flags */
@@ -219,11 +226,13 @@ int X509_TRUST_add(int id, int flags, int (*ck) (X509_TRUST *, X509 *, int),
     /* If its a new entry manage the dynamic table */
     if (idx == -1) {
         if (!trtable && !(trtable = sk_X509_TRUST_new(tr_cmp))) {
-            X509err(X509_F_X509_TRUST_ADD, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+            trtable_free(trtmp);
             return 0;
         }
         if (!sk_X509_TRUST_push(trtable, trtmp)) {
-            X509err(X509_F_X509_TRUST_ADD, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+            trtable_free(trtmp);
             return 0;
         }
     }
@@ -295,7 +304,7 @@ static int trust_compat(X509_TRUST *trust, X509 *x, int flags)
 static int obj_trust(int id, X509 *x, int flags)
 {
     ASN1_OBJECT *obj;
-    int i;
+    size_t i;
     X509_CERT_AUX *ax;
     ax = x->aux;
     if (!ax)

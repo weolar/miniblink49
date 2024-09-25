@@ -1,4 +1,3 @@
-/* crypto/dsa/dsa.h */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -54,279 +53,388 @@
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
  * [including the GNU Public Licence.]
- */
-
-/*
+ *
  * The DSS routines are based on patches supplied by
- * Steven Schoch <schoch@sheba.arc.nasa.gov>.  He basically did the
- * work and I have just tweaked them a little to fit into my
- * stylistic vision for SSLeay :-) */
+ * Steven Schoch <schoch@sheba.arc.nasa.gov>. */
 
-#ifndef HEADER_DSA_H
-# define HEADER_DSA_H
+#ifndef OPENSSL_HEADER_DSA_H
+#define OPENSSL_HEADER_DSA_H
 
-# include <openssl/e_os2.h>
+#include <openssl/base.h>
 
-# ifdef OPENSSL_NO_DSA
-#  error DSA is disabled.
-# endif
+#include <openssl/engine.h>
+#include <openssl/ex_data.h>
+#include <openssl/thread.h>
 
-# ifndef OPENSSL_NO_BIO
-#  include <openssl/bio.h>
-# endif
-# include <openssl/crypto.h>
-# include <openssl/ossl_typ.h>
-
-# ifndef OPENSSL_NO_DEPRECATED
-#  include <openssl/bn.h>
-#  ifndef OPENSSL_NO_DH
-#   include <openssl/dh.h>
-#  endif
-# endif
-
-# ifndef OPENSSL_DSA_MAX_MODULUS_BITS
-#  define OPENSSL_DSA_MAX_MODULUS_BITS   10000
-# endif
-
-# define DSA_FLAG_CACHE_MONT_P   0x01
-/*
- * new with 0.9.7h; the built-in DSA implementation now uses constant time
- * modular exponentiation for secret exponents by default. This flag causes
- * the faster variable sliding window method to be used for all exponents.
- */
-# define DSA_FLAG_NO_EXP_CONSTTIME       0x02
-
-/*
- * If this flag is set the DSA method is FIPS compliant and can be used in
- * FIPS mode. This is set in the validated module method. If an application
- * sets this flag in its own methods it is its reposibility to ensure the
- * result is compliant.
- */
-
-# define DSA_FLAG_FIPS_METHOD                    0x0400
-
-/*
- * If this flag is set the operations normally disabled in FIPS mode are
- * permitted it is then the applications responsibility to ensure that the
- * usage is compliant.
- */
-
-# define DSA_FLAG_NON_FIPS_ALLOW                 0x0400
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-/* Already defined in ossl_typ.h */
-/* typedef struct dsa_st DSA; */
-/* typedef struct dsa_method DSA_METHOD; */
 
-typedef struct DSA_SIG_st {
-    BIGNUM *r;
-    BIGNUM *s;
-} DSA_SIG;
+// DSA contains functions for signing and verifying with the Digital Signature
+// Algorithm.
+//
+// This module is deprecated and retained for legacy reasons only. It is not
+// considered a priority for performance or hardening work. Do not use it in
+// new code. Use Ed25519, ECDSA with P-256, or RSA instead.
 
-struct dsa_method {
-    const char *name;
-    DSA_SIG *(*dsa_do_sign) (const unsigned char *dgst, int dlen, DSA *dsa);
-    int (*dsa_sign_setup) (DSA *dsa, BN_CTX *ctx_in, BIGNUM **kinvp,
-                           BIGNUM **rp);
-    int (*dsa_do_verify) (const unsigned char *dgst, int dgst_len,
-                          DSA_SIG *sig, DSA *dsa);
-    int (*dsa_mod_exp) (DSA *dsa, BIGNUM *rr, BIGNUM *a1, BIGNUM *p1,
-                        BIGNUM *a2, BIGNUM *p2, BIGNUM *m, BN_CTX *ctx,
-                        BN_MONT_CTX *in_mont);
-    /* Can be null */
-    int (*bn_mod_exp) (DSA *dsa, BIGNUM *r, BIGNUM *a, const BIGNUM *p,
-                       const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx);
-    int (*init) (DSA *dsa);
-    int (*finish) (DSA *dsa);
-    int flags;
-    char *app_data;
-    /* If this is non-NULL, it is used to generate DSA parameters */
-    int (*dsa_paramgen) (DSA *dsa, int bits,
-                         const unsigned char *seed, int seed_len,
-                         int *counter_ret, unsigned long *h_ret,
-                         BN_GENCB *cb);
-    /* If this is non-NULL, it is used to generate DSA keys */
-    int (*dsa_keygen) (DSA *dsa);
+
+// Allocation and destruction.
+
+// DSA_new returns a new, empty DSA object or NULL on error.
+OPENSSL_EXPORT DSA *DSA_new(void);
+
+// DSA_free decrements the reference count of |dsa| and frees it if the
+// reference count drops to zero.
+OPENSSL_EXPORT void DSA_free(DSA *dsa);
+
+// DSA_up_ref increments the reference count of |dsa| and returns one.
+OPENSSL_EXPORT int DSA_up_ref(DSA *dsa);
+
+
+// Properties.
+
+// DSA_get0_key sets |*out_pub_key| and |*out_priv_key|, if non-NULL, to |dsa|'s
+// public and private key, respectively. If |dsa| is a public key, the private
+// key will be set to NULL.
+OPENSSL_EXPORT void DSA_get0_key(const DSA *dsa, const BIGNUM **out_pub_key,
+                                 const BIGNUM **out_priv_key);
+
+// DSA_get0_pqg sets |*out_p|, |*out_q|, and |*out_g|, if non-NULL, to |dsa|'s
+// p, q, and g parameters, respectively.
+OPENSSL_EXPORT void DSA_get0_pqg(const DSA *dsa, const BIGNUM **out_p,
+                                 const BIGNUM **out_q, const BIGNUM **out_g);
+
+// DSA_set0_key sets |dsa|'s public and private key to |pub_key| and |priv_key|,
+// respectively, if non-NULL. On success, it takes ownership of each argument
+// and returns one. Otherwise, it returns zero.
+//
+// |priv_key| may be NULL, but |pub_key| must either be non-NULL or already
+// configured on |dsa|.
+OPENSSL_EXPORT int DSA_set0_key(DSA *dsa, BIGNUM *pub_key, BIGNUM *priv_key);
+
+// DSA_set0_pqg sets |dsa|'s parameters to |p|, |q|, and |g|, if non-NULL, and
+// takes ownership of them. On success, it takes ownership of each argument and
+// returns one. Otherwise, it returns zero.
+//
+// Each argument must either be non-NULL or already configured on |dsa|.
+OPENSSL_EXPORT int DSA_set0_pqg(DSA *dsa, BIGNUM *p, BIGNUM *q, BIGNUM *g);
+
+
+// Parameter generation.
+
+// DSA_generate_parameters_ex generates a set of DSA parameters by following
+// the procedure given in FIPS 186-4, appendix A.
+// (http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf)
+//
+// The larger prime will have a length of |bits| (e.g. 2048). The |seed| value
+// allows others to generate and verify the same parameters and should be
+// random input which is kept for reference. If |out_counter| or |out_h| are
+// not NULL then the counter and h value used in the generation are written to
+// them.
+//
+// The |cb| argument is passed to |BN_generate_prime_ex| and is thus called
+// during the generation process in order to indicate progress. See the
+// comments for that function for details. In addition to the calls made by
+// |BN_generate_prime_ex|, |DSA_generate_parameters_ex| will call it with
+// |event| equal to 2 and 3 at different stages of the process.
+//
+// It returns one on success and zero otherwise.
+OPENSSL_EXPORT int DSA_generate_parameters_ex(DSA *dsa, unsigned bits,
+                                              const uint8_t *seed,
+                                              size_t seed_len, int *out_counter,
+                                              unsigned long *out_h,
+                                              BN_GENCB *cb);
+
+// DSAparams_dup returns a freshly allocated |DSA| that contains a copy of the
+// parameters from |dsa|. It returns NULL on error.
+OPENSSL_EXPORT DSA *DSAparams_dup(const DSA *dsa);
+
+
+// Key generation.
+
+// DSA_generate_key generates a public/private key pair in |dsa|, which must
+// already have parameters setup. It returns one on success and zero on
+// error.
+OPENSSL_EXPORT int DSA_generate_key(DSA *dsa);
+
+
+// Signatures.
+
+// DSA_SIG_st (aka |DSA_SIG|) contains a DSA signature as a pair of integers.
+struct DSA_SIG_st {
+  BIGNUM *r, *s;
 };
+
+// DSA_SIG_new returns a freshly allocated, DIG_SIG structure or NULL on error.
+// Both |r| and |s| in the signature will be NULL.
+OPENSSL_EXPORT DSA_SIG *DSA_SIG_new(void);
+
+// DSA_SIG_free frees the contents of |sig| and then frees |sig| itself.
+OPENSSL_EXPORT void DSA_SIG_free(DSA_SIG *sig);
+
+// DSA_do_sign returns a signature of the hash in |digest| by the key in |dsa|
+// and returns an allocated, DSA_SIG structure, or NULL on error.
+OPENSSL_EXPORT DSA_SIG *DSA_do_sign(const uint8_t *digest, size_t digest_len,
+                                    const DSA *dsa);
+
+// DSA_do_verify verifies that |sig| is a valid signature, by the public key in
+// |dsa|, of the hash in |digest|. It returns one if so, zero if invalid and -1
+// on error.
+//
+// WARNING: do not use. This function returns -1 for error, 0 for invalid and 1
+// for valid. However, this is dangerously different to the usual OpenSSL
+// convention and could be a disaster if a user did |if (DSA_do_verify(...))|.
+// Because of this, |DSA_check_signature| is a safer version of this.
+//
+// TODO(fork): deprecate.
+OPENSSL_EXPORT int DSA_do_verify(const uint8_t *digest, size_t digest_len,
+                                 DSA_SIG *sig, const DSA *dsa);
+
+// DSA_do_check_signature sets |*out_valid| to zero. Then it verifies that |sig|
+// is a valid signature, by the public key in |dsa| of the hash in |digest|
+// and, if so, it sets |*out_valid| to one.
+//
+// It returns one if it was able to verify the signature as valid or invalid,
+// and zero on error.
+OPENSSL_EXPORT int DSA_do_check_signature(int *out_valid, const uint8_t *digest,
+                                          size_t digest_len, DSA_SIG *sig,
+                                          const DSA *dsa);
+
+
+// ASN.1 signatures.
+//
+// These functions also perform DSA signature operations, but deal with ASN.1
+// encoded signatures as opposed to raw |BIGNUM|s. If you don't know what
+// encoding a DSA signature is in, it's probably ASN.1.
+
+// DSA_sign signs |digest| with the key in |dsa| and writes the resulting
+// signature, in ASN.1 form, to |out_sig| and the length of the signature to
+// |*out_siglen|. There must be, at least, |DSA_size(dsa)| bytes of space in
+// |out_sig|. It returns one on success and zero otherwise.
+//
+// (The |type| argument is ignored.)
+OPENSSL_EXPORT int DSA_sign(int type, const uint8_t *digest, size_t digest_len,
+                            uint8_t *out_sig, unsigned int *out_siglen,
+                            const DSA *dsa);
+
+// DSA_verify verifies that |sig| is a valid, ASN.1 signature, by the public
+// key in |dsa|, of the hash in |digest|. It returns one if so, zero if invalid
+// and -1 on error.
+//
+// (The |type| argument is ignored.)
+//
+// WARNING: do not use. This function returns -1 for error, 0 for invalid and 1
+// for valid. However, this is dangerously different to the usual OpenSSL
+// convention and could be a disaster if a user did |if (DSA_do_verify(...))|.
+// Because of this, |DSA_check_signature| is a safer version of this.
+//
+// TODO(fork): deprecate.
+OPENSSL_EXPORT int DSA_verify(int type, const uint8_t *digest,
+                              size_t digest_len, const uint8_t *sig,
+                              size_t sig_len, const DSA *dsa);
+
+// DSA_check_signature sets |*out_valid| to zero. Then it verifies that |sig|
+// is a valid, ASN.1 signature, by the public key in |dsa|, of the hash in
+// |digest|. If so, it sets |*out_valid| to one.
+//
+// It returns one if it was able to verify the signature as valid or invalid,
+// and zero on error.
+OPENSSL_EXPORT int DSA_check_signature(int *out_valid, const uint8_t *digest,
+                                       size_t digest_len, const uint8_t *sig,
+                                       size_t sig_len, const DSA *dsa);
+
+// DSA_size returns the size, in bytes, of an ASN.1 encoded, DSA signature
+// generated by |dsa|. Parameters must already have been setup in |dsa|.
+OPENSSL_EXPORT int DSA_size(const DSA *dsa);
+
+
+// ASN.1 encoding.
+
+// DSA_SIG_parse parses a DER-encoded DSA-Sig-Value structure from |cbs| and
+// advances |cbs|. It returns a newly-allocated |DSA_SIG| or NULL on error.
+OPENSSL_EXPORT DSA_SIG *DSA_SIG_parse(CBS *cbs);
+
+// DSA_SIG_marshal marshals |sig| as a DER-encoded DSA-Sig-Value and appends the
+// result to |cbb|. It returns one on success and zero on error.
+OPENSSL_EXPORT int DSA_SIG_marshal(CBB *cbb, const DSA_SIG *sig);
+
+// DSA_parse_public_key parses a DER-encoded DSA public key from |cbs| and
+// advances |cbs|. It returns a newly-allocated |DSA| or NULL on error.
+OPENSSL_EXPORT DSA *DSA_parse_public_key(CBS *cbs);
+
+// DSA_marshal_public_key marshals |dsa| as a DER-encoded DSA public key and
+// appends the result to |cbb|. It returns one on success and zero on
+// failure.
+OPENSSL_EXPORT int DSA_marshal_public_key(CBB *cbb, const DSA *dsa);
+
+// DSA_parse_private_key parses a DER-encoded DSA private key from |cbs| and
+// advances |cbs|. It returns a newly-allocated |DSA| or NULL on error.
+OPENSSL_EXPORT DSA *DSA_parse_private_key(CBS *cbs);
+
+// DSA_marshal_private_key marshals |dsa| as a DER-encoded DSA private key and
+// appends the result to |cbb|. It returns one on success and zero on
+// failure.
+OPENSSL_EXPORT int DSA_marshal_private_key(CBB *cbb, const DSA *dsa);
+
+// DSA_parse_parameters parses a DER-encoded Dss-Parms structure (RFC 3279)
+// from |cbs| and advances |cbs|. It returns a newly-allocated |DSA| or NULL on
+// error.
+OPENSSL_EXPORT DSA *DSA_parse_parameters(CBS *cbs);
+
+// DSA_marshal_parameters marshals |dsa| as a DER-encoded Dss-Parms structure
+// (RFC 3447) and appends the result to |cbb|. It returns one on success and
+// zero on failure.
+OPENSSL_EXPORT int DSA_marshal_parameters(CBB *cbb, const DSA *dsa);
+
+
+// Conversion.
+
+// DSA_dup_DH returns a |DH| constructed from the parameters of |dsa|. This is
+// sometimes needed when Diffie-Hellman parameters are stored in the form of
+// DSA parameters. It returns an allocated |DH| on success or NULL on error.
+OPENSSL_EXPORT DH *DSA_dup_DH(const DSA *dsa);
+
+
+// ex_data functions.
+//
+// See |ex_data.h| for details.
+
+OPENSSL_EXPORT int DSA_get_ex_new_index(long argl, void *argp,
+                                        CRYPTO_EX_unused *unused,
+                                        CRYPTO_EX_dup *dup_unused,
+                                        CRYPTO_EX_free *free_func);
+OPENSSL_EXPORT int DSA_set_ex_data(DSA *dsa, int idx, void *arg);
+OPENSSL_EXPORT void *DSA_get_ex_data(const DSA *dsa, int idx);
+
+
+// Deprecated functions.
+
+// d2i_DSA_SIG parses an ASN.1, DER-encoded, DSA signature from |len| bytes at
+// |*inp|. If |out_sig| is not NULL then, on exit, a pointer to the result is
+// in |*out_sig|. Note that, even if |*out_sig| is already non-NULL on entry, it
+// will not be written to. Rather, a fresh |DSA_SIG| is allocated and the
+// previous one is freed. On successful exit, |*inp| is advanced past the DER
+// structure. It returns the result or NULL on error.
+//
+// Use |DSA_SIG_parse| instead.
+OPENSSL_EXPORT DSA_SIG *d2i_DSA_SIG(DSA_SIG **out_sig, const uint8_t **inp,
+                                    long len);
+
+// i2d_DSA_SIG marshals |in| to an ASN.1, DER structure. If |outp| is not NULL
+// then the result is written to |*outp| and |*outp| is advanced just past the
+// output. It returns the number of bytes in the result, whether written or not,
+// or a negative value on error.
+//
+// Use |DSA_SIG_marshal| instead.
+OPENSSL_EXPORT int i2d_DSA_SIG(const DSA_SIG *in, uint8_t **outp);
+
+// d2i_DSAPublicKey parses an ASN.1, DER-encoded, DSA public key from |len|
+// bytes at |*inp|. If |out| is not NULL then, on exit, a pointer to the result
+// is in |*out|. Note that, even if |*ou| is already non-NULL on entry, it will
+// not be written to. Rather, a fresh |DSA| is allocated and the previous one is
+// freed. On successful exit, |*inp| is advanced past the DER structure. It
+// returns the result or NULL on error.
+//
+// Use |DSA_parse_public_key| instead.
+OPENSSL_EXPORT DSA *d2i_DSAPublicKey(DSA **out, const uint8_t **inp, long len);
+
+// i2d_DSAPublicKey marshals a public key from |in| to an ASN.1, DER structure.
+// If |outp| is not NULL then the result is written to |*outp| and |*outp| is
+// advanced just past the output. It returns the number of bytes in the result,
+// whether written or not, or a negative value on error.
+//
+// Use |DSA_marshal_public_key| instead.
+OPENSSL_EXPORT int i2d_DSAPublicKey(const DSA *in, uint8_t **outp);
+
+// d2i_DSAPrivateKey parses an ASN.1, DER-encoded, DSA private key from |len|
+// bytes at |*inp|. If |out| is not NULL then, on exit, a pointer to the result
+// is in |*out|. Note that, even if |*out| is already non-NULL on entry, it will
+// not be written to. Rather, a fresh |DSA| is allocated and the previous one is
+// freed. On successful exit, |*inp| is advanced past the DER structure. It
+// returns the result or NULL on error.
+//
+// Use |DSA_parse_private_key| instead.
+OPENSSL_EXPORT DSA *d2i_DSAPrivateKey(DSA **out, const uint8_t **inp, long len);
+
+// i2d_DSAPrivateKey marshals a private key from |in| to an ASN.1, DER
+// structure. If |outp| is not NULL then the result is written to |*outp| and
+// |*outp| is advanced just past the output. It returns the number of bytes in
+// the result, whether written or not, or a negative value on error.
+//
+// Use |DSA_marshal_private_key| instead.
+OPENSSL_EXPORT int i2d_DSAPrivateKey(const DSA *in, uint8_t **outp);
+
+// d2i_DSAparams parses ASN.1, DER-encoded, DSA parameters from |len| bytes at
+// |*inp|. If |out| is not NULL then, on exit, a pointer to the result is in
+// |*out|. Note that, even if |*out| is already non-NULL on entry, it will not
+// be written to. Rather, a fresh |DSA| is allocated and the previous one is
+// freed. On successful exit, |*inp| is advanced past the DER structure. It
+// returns the result or NULL on error.
+//
+// Use |DSA_parse_parameters| instead.
+OPENSSL_EXPORT DSA *d2i_DSAparams(DSA **out, const uint8_t **inp, long len);
+
+// i2d_DSAparams marshals DSA parameters from |in| to an ASN.1, DER structure.
+// If |outp| is not NULL then the result is written to |*outp| and |*outp| is
+// advanced just past the output. It returns the number of bytes in the result,
+// whether written or not, or a negative value on error.
+//
+// Use |DSA_marshal_parameters| instead.
+OPENSSL_EXPORT int i2d_DSAparams(const DSA *in, uint8_t **outp);
+
+// DSA_generate_parameters is a deprecated version of
+// |DSA_generate_parameters_ex| that creates and returns a |DSA*|. Don't use
+// it.
+OPENSSL_EXPORT DSA *DSA_generate_parameters(int bits, unsigned char *seed,
+                                            int seed_len, int *counter_ret,
+                                            unsigned long *h_ret,
+                                            void (*callback)(int, int, void *),
+                                            void *cb_arg);
+
 
 struct dsa_st {
-    /*
-     * This first variable is used to pick up errors where a DSA is passed
-     * instead of of a EVP_PKEY
-     */
-    int pad;
-    long version;
-    int write_params;
-    BIGNUM *p;
-    BIGNUM *q;                  /* == 20 */
-    BIGNUM *g;
-    BIGNUM *pub_key;            /* y public key */
-    BIGNUM *priv_key;           /* x private key */
-    BIGNUM *kinv;               /* Signing pre-calc */
-    BIGNUM *r;                  /* Signing pre-calc */
-    int flags;
-    /* Normally used to cache montgomery values */
-    BN_MONT_CTX *method_mont_p;
-    int references;
-    CRYPTO_EX_DATA ex_data;
-    const DSA_METHOD *meth;
-    /* functional reference if 'meth' is ENGINE-provided */
-    ENGINE *engine;
+  long version;
+  BIGNUM *p;
+  BIGNUM *q;  // == 20
+  BIGNUM *g;
+
+  BIGNUM *pub_key;   // y public key
+  BIGNUM *priv_key;  // x private key
+
+  int flags;
+  // Normally used to cache montgomery values
+  CRYPTO_MUTEX method_mont_lock;
+  BN_MONT_CTX *method_mont_p;
+  BN_MONT_CTX *method_mont_q;
+  CRYPTO_refcount_t references;
+  CRYPTO_EX_DATA ex_data;
 };
 
-# define d2i_DSAparams_fp(fp,x) (DSA *)ASN1_d2i_fp((char *(*)())DSA_new, \
-                (char *(*)())d2i_DSAparams,(fp),(unsigned char **)(x))
-# define i2d_DSAparams_fp(fp,x) ASN1_i2d_fp(i2d_DSAparams,(fp), \
-                (unsigned char *)(x))
-# define d2i_DSAparams_bio(bp,x) ASN1_d2i_bio_of(DSA,DSA_new,d2i_DSAparams,bp,x)
-# define i2d_DSAparams_bio(bp,x) ASN1_i2d_bio_of_const(DSA,i2d_DSAparams,bp,x)
 
-DSA *DSAparams_dup(DSA *x);
-DSA_SIG *DSA_SIG_new(void);
-void DSA_SIG_free(DSA_SIG *a);
-int i2d_DSA_SIG(const DSA_SIG *a, unsigned char **pp);
-DSA_SIG *d2i_DSA_SIG(DSA_SIG **v, const unsigned char **pp, long length);
+#if defined(__cplusplus)
+}  // extern C
 
-DSA_SIG *DSA_do_sign(const unsigned char *dgst, int dlen, DSA *dsa);
-int DSA_do_verify(const unsigned char *dgst, int dgst_len,
-                  DSA_SIG *sig, DSA *dsa);
+extern "C++" {
 
-const DSA_METHOD *DSA_OpenSSL(void);
+BSSL_NAMESPACE_BEGIN
 
-void DSA_set_default_method(const DSA_METHOD *);
-const DSA_METHOD *DSA_get_default_method(void);
-int DSA_set_method(DSA *dsa, const DSA_METHOD *);
+BORINGSSL_MAKE_DELETER(DSA, DSA_free)
+BORINGSSL_MAKE_UP_REF(DSA, DSA_up_ref)
+BORINGSSL_MAKE_DELETER(DSA_SIG, DSA_SIG_free)
 
-DSA *DSA_new(void);
-DSA *DSA_new_method(ENGINE *engine);
-void DSA_free(DSA *r);
-/* "up" the DSA object's reference count */
-int DSA_up_ref(DSA *r);
-int DSA_size(const DSA *);
-        /* next 4 return -1 on error */
-int DSA_sign_setup(DSA *dsa, BN_CTX *ctx_in, BIGNUM **kinvp, BIGNUM **rp);
-int DSA_sign(int type, const unsigned char *dgst, int dlen,
-             unsigned char *sig, unsigned int *siglen, DSA *dsa);
-int DSA_verify(int type, const unsigned char *dgst, int dgst_len,
-               const unsigned char *sigbuf, int siglen, DSA *dsa);
-int DSA_get_ex_new_index(long argl, void *argp, CRYPTO_EX_new *new_func,
-                         CRYPTO_EX_dup *dup_func, CRYPTO_EX_free *free_func);
-int DSA_set_ex_data(DSA *d, int idx, void *arg);
-void *DSA_get_ex_data(DSA *d, int idx);
+BSSL_NAMESPACE_END
 
-DSA *d2i_DSAPublicKey(DSA **a, const unsigned char **pp, long length);
-DSA *d2i_DSAPrivateKey(DSA **a, const unsigned char **pp, long length);
-DSA *d2i_DSAparams(DSA **a, const unsigned char **pp, long length);
+}  // extern C++
 
-/* Deprecated version */
-# ifndef OPENSSL_NO_DEPRECATED
-DSA *DSA_generate_parameters(int bits,
-                             unsigned char *seed, int seed_len,
-                             int *counter_ret, unsigned long *h_ret, void
-                              (*callback) (int, int, void *), void *cb_arg);
-# endif                         /* !defined(OPENSSL_NO_DEPRECATED) */
-
-/* New version */
-int DSA_generate_parameters_ex(DSA *dsa, int bits,
-                               const unsigned char *seed, int seed_len,
-                               int *counter_ret, unsigned long *h_ret,
-                               BN_GENCB *cb);
-
-int DSA_generate_key(DSA *a);
-int i2d_DSAPublicKey(const DSA *a, unsigned char **pp);
-int i2d_DSAPrivateKey(const DSA *a, unsigned char **pp);
-int i2d_DSAparams(const DSA *a, unsigned char **pp);
-
-# ifndef OPENSSL_NO_BIO
-int DSAparams_print(BIO *bp, const DSA *x);
-int DSA_print(BIO *bp, const DSA *x, int off);
-# endif
-# ifndef OPENSSL_NO_FP_API
-int DSAparams_print_fp(FILE *fp, const DSA *x);
-int DSA_print_fp(FILE *bp, const DSA *x, int off);
-# endif
-
-# define DSS_prime_checks 50
-/*
- * Primality test according to FIPS PUB 186[-1], Appendix 2.1: 50 rounds of
- * Rabin-Miller
- */
-# define DSA_is_prime(n, callback, cb_arg) \
-        BN_is_prime(n, DSS_prime_checks, callback, NULL, cb_arg)
-
-# ifndef OPENSSL_NO_DH
-/*
- * Convert DSA structure (key or just parameters) into DH structure (be
- * careful to avoid small subgroup attacks when using this!)
- */
-DH *DSA_dup_DH(const DSA *r);
-# endif
-
-# define EVP_PKEY_CTX_set_dsa_paramgen_bits(ctx, nbits) \
-        EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DSA, EVP_PKEY_OP_PARAMGEN, \
-                                EVP_PKEY_CTRL_DSA_PARAMGEN_BITS, nbits, NULL)
-
-# define EVP_PKEY_CTRL_DSA_PARAMGEN_BITS         (EVP_PKEY_ALG_CTRL + 1)
-# define EVP_PKEY_CTRL_DSA_PARAMGEN_Q_BITS       (EVP_PKEY_ALG_CTRL + 2)
-# define EVP_PKEY_CTRL_DSA_PARAMGEN_MD           (EVP_PKEY_ALG_CTRL + 3)
-
-/* BEGIN ERROR CODES */
-/*
- * The following lines are auto generated by the script mkerr.pl. Any changes
- * made after this point may be overwritten when the script is next run.
- */
-void ERR_load_DSA_strings(void);
-
-/* Error codes for the DSA functions. */
-
-/* Function codes. */
-# define DSA_F_D2I_DSA_SIG                                110
-# define DSA_F_DO_DSA_PRINT                               104
-# define DSA_F_DSAPARAMS_PRINT                            100
-# define DSA_F_DSAPARAMS_PRINT_FP                         101
-# define DSA_F_DSA_BUILTIN_PARAMGEN2                      126
-# define DSA_F_DSA_DO_SIGN                                112
-# define DSA_F_DSA_DO_VERIFY                              113
-# define DSA_F_DSA_GENERATE_KEY                           124
-# define DSA_F_DSA_GENERATE_PARAMETERS_EX                 123
-# define DSA_F_DSA_NEW_METHOD                             103
-# define DSA_F_DSA_PARAM_DECODE                           119
-# define DSA_F_DSA_PRINT_FP                               105
-# define DSA_F_DSA_PRIV_DECODE                            115
-# define DSA_F_DSA_PRIV_ENCODE                            116
-# define DSA_F_DSA_PUB_DECODE                             117
-# define DSA_F_DSA_PUB_ENCODE                             118
-# define DSA_F_DSA_SIGN                                   106
-# define DSA_F_DSA_SIGN_SETUP                             107
-# define DSA_F_DSA_SIG_NEW                                109
-# define DSA_F_DSA_SIG_PRINT                              125
-# define DSA_F_DSA_VERIFY                                 108
-# define DSA_F_I2D_DSA_SIG                                111
-# define DSA_F_OLD_DSA_PRIV_DECODE                        122
-# define DSA_F_PKEY_DSA_CTRL                              120
-# define DSA_F_PKEY_DSA_KEYGEN                            121
-# define DSA_F_SIG_CB                                     114
-
-/* Reason codes. */
-# define DSA_R_BAD_Q_VALUE                                102
-# define DSA_R_BN_DECODE_ERROR                            108
-# define DSA_R_BN_ERROR                                   109
-# define DSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE                100
-# define DSA_R_DECODE_ERROR                               104
-# define DSA_R_INVALID_DIGEST_TYPE                        106
-# define DSA_R_INVALID_PARAMETERS                         112
-# define DSA_R_MISSING_PARAMETERS                         101
-# define DSA_R_MODULUS_TOO_LARGE                          103
-# define DSA_R_NEED_NEW_SETUP_VALUES                      110
-# define DSA_R_NON_FIPS_DSA_METHOD                        111
-# define DSA_R_NO_PARAMETERS_SET                          107
-# define DSA_R_PARAMETER_ENCODING_ERROR                   105
-# define DSA_R_Q_NOT_PRIME                                113
-
-#ifdef  __cplusplus
-}
 #endif
-#endif
+
+#define DSA_R_BAD_Q_VALUE 100
+#define DSA_R_MISSING_PARAMETERS 101
+#define DSA_R_MODULUS_TOO_LARGE 102
+#define DSA_R_NEED_NEW_SETUP_VALUES 103
+#define DSA_R_BAD_VERSION 104
+#define DSA_R_DECODE_ERROR 105
+#define DSA_R_ENCODE_ERROR 106
+
+#endif  // OPENSSL_HEADER_DSA_H

@@ -1,72 +1,73 @@
-/* a_strnid.c */
-/*
- * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
- * 1999.
- */
-/* ====================================================================
- * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ *
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ *
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
+ * 1. Redistributions of source code must retain the copyright
  *    notice, this list of conditions and the following disclaimer.
- *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
  *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
  *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    licensing@OpenSSL.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <ctype.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
+
+#include <stdlib.h>             /* For bsearch */
+#include <string.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
+#include <openssl/stack.h>
+
+DEFINE_STACK_OF(ASN1_STRING_TABLE)
 
 static STACK_OF(ASN1_STRING_TABLE) *stable = NULL;
 static void st_free(ASN1_STRING_TABLE *tbl);
-static int sk_table_cmp(const ASN1_STRING_TABLE *const *a,
-                        const ASN1_STRING_TABLE *const *b);
 
 /*
  * This is the global mask for the mbstring functions: this is use to mask
@@ -86,14 +87,12 @@ unsigned long ASN1_STRING_get_default_mask(void)
     return global_mask;
 }
 
-/*-
+/*
  * This function sets the default to various "flavours" of configuration.
- * based on an ASCII string. Currently this is:
- * MASK:XXXX : a numerical mask value.
- * nobmp : Don't use BMPStrings (just Printable, T61).
- * pkix : PKIX recommendation in RFC2459.
- * utf8only : only use UTF8Strings (RFC2459 recommendation for 2004).
- * default:   the default value, Printable, T61, BMP.
+ * based on an ASCII string. Currently this is: MASK:XXXX : a numerical mask
+ * value. nobmp : Don't use BMPStrings (just Printable, T61). pkix : PKIX
+ * recommendation in RFC2459. utf8only : only use UTF8Strings (RFC2459
+ * recommendation for 2004). default: the default value, Printable, T61, BMP.
  */
 
 int ASN1_STRING_set_default_mask_asc(const char *p)
@@ -195,36 +194,38 @@ static const ASN1_STRING_TABLE tbl_standard[] = {
     {NID_ms_csp_name, -1, -1, B_ASN1_BMPSTRING, STABLE_NO_MASK}
 };
 
-static int sk_table_cmp(const ASN1_STRING_TABLE *const *a,
-                        const ASN1_STRING_TABLE *const *b)
+static int sk_table_cmp(const ASN1_STRING_TABLE **a,
+                        const ASN1_STRING_TABLE **b)
 {
     return (*a)->nid - (*b)->nid;
 }
 
-DECLARE_OBJ_BSEARCH_CMP_FN(ASN1_STRING_TABLE, ASN1_STRING_TABLE, table);
-
-static int table_cmp(const ASN1_STRING_TABLE *a, const ASN1_STRING_TABLE *b)
+static int __cdecl table_cmp(const void *in_a, const void *in_b)
 {
+    const ASN1_STRING_TABLE *a = in_a;
+    const ASN1_STRING_TABLE *b = in_b;
     return a->nid - b->nid;
 }
 
-IMPLEMENT_OBJ_BSEARCH_CMP_FN(ASN1_STRING_TABLE, ASN1_STRING_TABLE, table);
-
 ASN1_STRING_TABLE *ASN1_STRING_TABLE_get(int nid)
 {
-    int idx;
+    int found;
+    size_t idx;
     ASN1_STRING_TABLE *ttmp;
     ASN1_STRING_TABLE fnd;
     fnd.nid = nid;
-    ttmp = OBJ_bsearch_table(&fnd, tbl_standard,
-                             sizeof(tbl_standard) /
-                             sizeof(ASN1_STRING_TABLE));
+
+    ttmp =
+        bsearch(&fnd, tbl_standard,
+                sizeof(tbl_standard) / sizeof(ASN1_STRING_TABLE),
+                sizeof(ASN1_STRING_TABLE), table_cmp);
     if (ttmp)
         return ttmp;
     if (!stable)
         return NULL;
-    idx = sk_ASN1_STRING_TABLE_find(stable, &fnd);
-    if (idx < 0)
+    sk_ASN1_STRING_TABLE_sort(stable);
+    found = sk_ASN1_STRING_TABLE_find(stable, &idx, &fnd);
+    if (!found)
         return NULL;
     return sk_ASN1_STRING_TABLE_value(stable, idx);
 }
@@ -239,17 +240,18 @@ int ASN1_STRING_TABLE_add(int nid,
     if (!stable)
         stable = sk_ASN1_STRING_TABLE_new(sk_table_cmp);
     if (!stable) {
-        ASN1err(ASN1_F_ASN1_STRING_TABLE_ADD, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
         return 0;
     }
     if (!(tmp = ASN1_STRING_TABLE_get(nid))) {
         tmp = OPENSSL_malloc(sizeof(ASN1_STRING_TABLE));
         if (!tmp) {
-            ASN1err(ASN1_F_ASN1_STRING_TABLE_ADD, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             return 0;
         }
         tmp->flags = flags | STABLE_FLAGS_MALLOC;
         tmp->nid = nid;
+        tmp->minsize = tmp->maxsize = -1;
         new_nid = 1;
     } else
         tmp->flags = (tmp->flags & STABLE_FLAGS_MALLOC) | flags;
@@ -279,12 +281,9 @@ static void st_free(ASN1_STRING_TABLE *tbl)
         OPENSSL_free(tbl);
 }
 
-
-IMPLEMENT_STACK_OF(ASN1_STRING_TABLE)
-
 #ifdef STRING_TABLE_TEST
 
-main()
+int main(void)
 {
     ASN1_STRING_TABLE *tmp;
     int i, last_nid = -1;
@@ -308,6 +307,7 @@ main()
         printf("Index %d, NID %d, Name=%s\n", i, tmp->nid,
                OBJ_nid2ln(tmp->nid));
 
+    return 0;
 }
 
 #endif

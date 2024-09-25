@@ -1,4 +1,3 @@
-/* crypto/x509/x509rset.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,14 +52,11 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
 #include <openssl/evp.h>
+#include <openssl/obj.h>
 #include <openssl/x509.h>
 
 int X509_REQ_set_version(X509_REQ *x, long version)

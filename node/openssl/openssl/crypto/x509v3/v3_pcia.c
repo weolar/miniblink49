@@ -1,4 +1,4 @@
-/* v3_pcia.c */
+/* v3_pcia.c -*- mode:C; c-file-style: "eay" -*- */
 /*
  * Contributed to the OpenSSL Project 2004 by Richard Levitte
  * (richard@levitte.org)
@@ -38,6 +38,7 @@
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/x509v3.h>
+
 
 ASN1_SEQUENCE(PROXY_POLICY) =
         {

@@ -1,5 +1,4 @@
-/* crypto/rc4/rc4.h */
-/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
  * This package is an SSL implementation written
@@ -53,36 +52,45 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#ifndef HEADER_RC4_H
-# define HEADER_RC4_H
+#ifndef OPENSSL_HEADER_RC4_H
+#define OPENSSL_HEADER_RC4_H
 
-# include <openssl/opensslconf.h>/* OPENSSL_NO_RC4, RC4_INT */
-# ifdef OPENSSL_NO_RC4
-#  error RC4 is disabled.
-# endif
+#include <openssl/base.h>
 
-# include <stddef.h>
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-typedef struct rc4_key_st {
-    RC4_INT x, y;
-    RC4_INT data[256];
-} RC4_KEY;
 
-const char *RC4_options(void);
-void RC4_set_key(RC4_KEY *key, int len, const unsigned char *data);
-void private_RC4_set_key(RC4_KEY *key, int len, const unsigned char *data);
-void RC4(RC4_KEY *key, size_t len, const unsigned char *indata,
-         unsigned char *outdata);
+// RC4.
 
-#ifdef  __cplusplus
-}
+
+struct rc4_key_st {
+  uint32_t x, y;
+  uint32_t data[256];
+} /* RC4_KEY */;
+
+// RC4_set_key performs an RC4 key schedule and initialises |rc4key| with |len|
+// bytes of key material from |key|.
+OPENSSL_EXPORT void RC4_set_key(RC4_KEY *rc4key, unsigned len,
+                                const uint8_t *key);
+
+// RC4 encrypts (or decrypts, it's the same with RC4) |len| bytes from |in| to
+// |out|.
+OPENSSL_EXPORT void RC4(RC4_KEY *key, size_t len, const uint8_t *in,
+                        uint8_t *out);
+
+
+// Deprecated functions.
+
+// RC4_options returns the string "rc4(ptr,int)".
+OPENSSL_EXPORT const char *RC4_options(void);
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_RC4_H

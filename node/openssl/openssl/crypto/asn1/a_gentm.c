@@ -1,4 +1,3 @@
-/* crypto/asn1/a_gentm.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,70 +52,17 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-/*
- * GENERALIZEDTIME implementation, written by Steve Henson. Based on UTCTIME
- */
-
-#include <stdio.h>
-#include <time.h>
-#include "cryptlib.h"
-#include "o_time.h"
 #include <openssl/asn1.h>
+
+#include <string.h>
+#include <time.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+
 #include "asn1_locl.h"
-
-#if 0
-
-int i2d_ASN1_GENERALIZEDTIME(ASN1_GENERALIZEDTIME *a, unsigned char **pp)
-{
-# ifdef CHARSET_EBCDIC
-    /* KLUDGE! We convert to ascii before writing DER */
-    int len;
-    char tmp[24];
-    ASN1_STRING tmpstr = *(ASN1_STRING *)a;
-
-    len = tmpstr.length;
-    ebcdic2ascii(tmp, tmpstr.data, (len >= sizeof tmp) ? sizeof tmp : len);
-    tmpstr.data = tmp;
-
-    a = (ASN1_GENERALIZEDTIME *)&tmpstr;
-# endif
-    return (i2d_ASN1_bytes((ASN1_STRING *)a, pp,
-                           V_ASN1_GENERALIZEDTIME, V_ASN1_UNIVERSAL));
-}
-
-ASN1_GENERALIZEDTIME *d2i_ASN1_GENERALIZEDTIME(ASN1_GENERALIZEDTIME **a,
-                                               unsigned char **pp,
-                                               long length)
-{
-    ASN1_GENERALIZEDTIME *ret = NULL;
-
-    ret =
-        (ASN1_GENERALIZEDTIME *)d2i_ASN1_bytes((ASN1_STRING **)a, pp, length,
-                                               V_ASN1_GENERALIZEDTIME,
-                                               V_ASN1_UNIVERSAL);
-    if (ret == NULL) {
-        ASN1err(ASN1_F_D2I_ASN1_GENERALIZEDTIME, ERR_R_NESTED_ASN1_ERROR);
-        return (NULL);
-    }
-# ifdef CHARSET_EBCDIC
-    ascii2ebcdic(ret->data, ret->data, ret->length);
-# endif
-    if (!ASN1_GENERALIZEDTIME_check(ret)) {
-        ASN1err(ASN1_F_D2I_ASN1_GENERALIZEDTIME, ASN1_R_INVALID_TIME_FORMAT);
-        goto err;
-    }
-
-    return (ret);
- err:
-    if ((ret != NULL) && ((a == NULL) || (*a != ret)))
-        M_ASN1_GENERALIZEDTIME_free(ret);
-    return (NULL);
-}
-
-#endif
 
 int asn1_generalizedtime_to_tm(struct tm *tm, const ASN1_GENERALIZEDTIME *d)
 {
@@ -202,7 +148,7 @@ int asn1_generalizedtime_to_tm(struct tm *tm, const ASN1_GENERALIZEDTIME *d)
     if (a[o] == 'Z')
         o++;
     else if ((a[o] == '+') || (a[o] == '-')) {
-        int offsign = a[o] == '-' ? -1 : 1, offset = 0;
+        int offsign = a[o] == '-' ? 1 : -1, offset = 0;
         o++;
         if (o + 4 > l)
             goto err;
@@ -273,40 +219,43 @@ ASN1_GENERALIZEDTIME *ASN1_GENERALIZEDTIME_adj(ASN1_GENERALIZEDTIME *s,
     struct tm *ts;
     struct tm data;
     size_t len = 20;
+    ASN1_GENERALIZEDTIME *tmps = NULL;
 
     if (s == NULL)
-        s = M_ASN1_GENERALIZEDTIME_new();
-    if (s == NULL)
-        return (NULL);
+        tmps = ASN1_GENERALIZEDTIME_new();
+    else
+        tmps = s;
+    if (tmps == NULL)
+        return NULL;
 
     ts = OPENSSL_gmtime(&t, &data);
     if (ts == NULL)
-        return (NULL);
+        goto err;
 
     if (offset_day || offset_sec) {
         if (!OPENSSL_gmtime_adj(ts, offset_day, offset_sec))
-            return NULL;
+            goto err;
     }
 
-    p = (char *)s->data;
-    if ((p == NULL) || ((size_t)s->length < len)) {
+    p = (char *)tmps->data;
+    if ((p == NULL) || ((size_t)tmps->length < len)) {
         p = OPENSSL_malloc(len);
         if (p == NULL) {
-            ASN1err(ASN1_F_ASN1_GENERALIZEDTIME_ADJ, ERR_R_MALLOC_FAILURE);
-            return (NULL);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
+            goto err;
         }
-        if (s->data != NULL)
-            OPENSSL_free(s->data);
-        s->data = (unsigned char *)p;
+        OPENSSL_free(tmps->data);
+        tmps->data = (unsigned char *)p;
     }
 
     BIO_snprintf(p, len, "%04d%02d%02d%02d%02d%02dZ", ts->tm_year + 1900,
                  ts->tm_mon + 1, ts->tm_mday, ts->tm_hour, ts->tm_min,
                  ts->tm_sec);
-    s->length = strlen(p);
-    s->type = V_ASN1_GENERALIZEDTIME;
-#ifdef CHARSET_EBCDIC_not
-    ebcdic2ascii(s->data, s->data, s->length);
-#endif
-    return (s);
+    tmps->length = strlen(p);
+    tmps->type = V_ASN1_GENERALIZEDTIME;
+    return tmps;
+ err:
+    if (s == NULL)
+        ASN1_GENERALIZEDTIME_free(tmps);
+    return NULL;
 }

@@ -53,14 +53,15 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
+
 /* X509 v3 extension utilities */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
+#include <openssl/bio.h>
 #include <openssl/conf.h>
+#include <openssl/mem.h>
 #include <openssl/x509v3.h>
 
 /* Extension printing routines */
@@ -73,7 +74,7 @@ static int unknown_ext_print(BIO *out, X509_EXTENSION *ext,
 void X509V3_EXT_val_prn(BIO *out, STACK_OF(CONF_VALUE) *val, int indent,
                         int ml)
 {
-    int i;
+    size_t i;
     CONF_VALUE *nval;
     if (!val)
         return;
@@ -92,22 +93,8 @@ void X509V3_EXT_val_prn(BIO *out, STACK_OF(CONF_VALUE) *val, int indent,
             BIO_puts(out, nval->value);
         else if (!nval->value)
             BIO_puts(out, nval->name);
-#ifndef CHARSET_EBCDIC
         else
             BIO_printf(out, "%s:%s", nval->name, nval->value);
-#else
-        else {
-            int len;
-            char *tmp;
-            len = strlen(nval->value) + 1;
-            tmp = OPENSSL_malloc(len);
-            if (tmp) {
-                ascii2ebcdic(tmp, nval->value, len);
-                BIO_printf(out, "%s:%s", nval->name, tmp);
-                OPENSSL_free(tmp);
-            }
-        }
-#endif
         if (ml)
             BIO_puts(out, "\n");
     }
@@ -143,21 +130,7 @@ int X509V3_EXT_print(BIO *out, X509_EXTENSION *ext, unsigned long flag,
             ok = 0;
             goto err;
         }
-#ifndef CHARSET_EBCDIC
         BIO_printf(out, "%*s%s", indent, "", value);
-#else
-        {
-            int len;
-            char *tmp;
-            len = strlen(value) + 1;
-            tmp = OPENSSL_malloc(len);
-            if (tmp) {
-                ascii2ebcdic(tmp, value, len);
-                BIO_printf(out, "%*s%s", indent, "", tmp);
-                OPENSSL_free(tmp);
-            }
-        }
-#endif
     } else if (method->i2v) {
         if (!(nval = method->i2v(method, ext_str, NULL))) {
             ok = 0;
@@ -182,11 +155,12 @@ int X509V3_EXT_print(BIO *out, X509_EXTENSION *ext, unsigned long flag,
     return ok;
 }
 
-int X509V3_extensions_print(BIO *bp, char *title,
+int X509V3_extensions_print(BIO *bp, const char *title,
                             STACK_OF(X509_EXTENSION) *exts,
                             unsigned long flag, int indent)
 {
-    int i, j;
+    size_t i;
+    int j;
 
     if (sk_X509_EXTENSION_num(exts) <= 0)
         return 1;
@@ -233,12 +207,8 @@ static int unknown_ext_print(BIO *out, X509_EXTENSION *ext,
         return 1;
 
     case X509V3_EXT_PARSE_UNKNOWN:
-        return ASN1_parse_dump(out,
-                               ext->value->data, ext->value->length, indent,
-                               -1);
     case X509V3_EXT_DUMP_UNKNOWN:
-        return BIO_dump_indent(out, (char *)ext->value->data,
-                               ext->value->length, indent);
+        return BIO_hexdump(out, ext->value->data, ext->value->length, indent);
 
     default:
         return 1;

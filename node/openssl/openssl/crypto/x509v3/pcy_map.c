@@ -57,7 +57,7 @@
  *
  */
 
-#include "cryptlib.h"
+#include <openssl/obj.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
@@ -73,7 +73,7 @@ int policy_cache_set_mapping(X509 *x, POLICY_MAPPINGS *maps)
     POLICY_MAPPING *map;
     X509_POLICY_DATA *data;
     X509_POLICY_CACHE *cache = x->policy_cache;
-    int i;
+    size_t i;
     int ret = 0;
     if (sk_POLICY_MAPPING_num(maps) == 0) {
         ret = -1;

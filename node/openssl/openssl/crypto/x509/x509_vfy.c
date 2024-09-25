@@ -1,4 +1,3 @@
-/* crypto/x509/x509_vfy.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,23 +52,27 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 #include <time.h>
-#include <errno.h>
 
-#include "cryptlib.h"
-#include <openssl/crypto.h>
-#include <openssl/lhash.h>
-#include <openssl/buffer.h>
-#include <openssl/evp.h>
 #include <openssl/asn1.h>
+#include <openssl/buf.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
+#include <openssl/thread.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-#include <openssl/objects.h>
+
 #include "vpm_int.h"
+#include "../internal.h"
+
+static CRYPTO_EX_DATA_CLASS g_ex_data_class =
+    CRYPTO_EX_DATA_CLASS_INIT_WITH_APP_DATA;
 
 /* CRL score values */
 
@@ -137,19 +140,12 @@ static int check_crl_chain(X509_STORE_CTX *ctx,
                            STACK_OF(X509) *crl_path);
 
 static int internal_verify(X509_STORE_CTX *ctx);
-const char X509_version[] = "X.509" OPENSSL_VERSION_PTEXT;
 
 static int null_callback(int ok, X509_STORE_CTX *e)
 {
     return ok;
 }
 
-#if 0
-static int x509_subject_cmp(X509 **a, X509 **b)
-{
-    return X509_subject_name_cmp(*a, *b);
-}
-#endif
 /* Return 1 is a certificate is self signed */
 static int cert_self_signed(X509 *x)
 {
@@ -166,7 +162,7 @@ static X509 *lookup_cert_match(X509_STORE_CTX *ctx, X509 *x)
 {
     STACK_OF(X509) *certs;
     X509 *xtmp = NULL;
-    int i;
+    size_t i;
     /* Lookup all certs with matching subject name */
     certs = ctx->lookup_certs(ctx, X509_get_subject_name(x));
     if (certs == NULL)
@@ -178,7 +174,7 @@ static X509 *lookup_cert_match(X509_STORE_CTX *ctx, X509 *x)
             break;
     }
     if (i < sk_X509_num(certs))
-        CRYPTO_add(&xtmp->references, 1, CRYPTO_LOCK_X509);
+        X509_up_ref(xtmp);
     else
         xtmp = NULL;
     sk_X509_pop_free(certs, X509_free);
@@ -191,14 +187,12 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
     int bad_chain = 0;
     X509_VERIFY_PARAM *param = ctx->param;
     int depth, i, ok = 0;
-    int num, j, retry;
+    int num, j, retry, trust;
     int (*cb) (int xok, X509_STORE_CTX *xctx);
     STACK_OF(X509) *sktmp = NULL;
-    int trust = X509_TRUST_UNTRUSTED;
-    int err;
-
     if (ctx->cert == NULL) {
-        X509err(X509_F_X509_VERIFY_CERT, X509_R_NO_CERT_SET_FOR_US_TO_VERIFY);
+        OPENSSL_PUT_ERROR(X509, X509_R_NO_CERT_SET_FOR_US_TO_VERIFY);
+        ctx->error = X509_V_ERR_INVALID_CALL;
         return -1;
     }
     if (ctx->chain != NULL) {
@@ -206,7 +200,8 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
          * This X509_STORE_CTX has already been used to verify a cert. We
          * cannot do another one.
          */
-        X509err(X509_F_X509_VERIFY_CERT, ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED);
+        OPENSSL_PUT_ERROR(X509, ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED);
+        ctx->error = X509_V_ERR_INVALID_CALL;
         return -1;
     }
 
@@ -216,21 +211,44 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
      * first we make sure the chain we are going to build is present and that
      * the first entry is in place
      */
-    if (((ctx->chain = sk_X509_new_null()) == NULL) ||
-        (!sk_X509_push(ctx->chain, ctx->cert))) {
-        X509err(X509_F_X509_VERIFY_CERT, ERR_R_MALLOC_FAILURE);
-        ok = -1;
-        goto err;
+    ctx->chain = sk_X509_new_null();
+    if (ctx->chain == NULL || !sk_X509_push(ctx->chain, ctx->cert)) {
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+        ctx->error = X509_V_ERR_OUT_OF_MEM;
+        goto end;
     }
-    CRYPTO_add(&ctx->cert->references, 1, CRYPTO_LOCK_X509);
+    X509_up_ref(ctx->cert);
     ctx->last_untrusted = 1;
 
-    /* We use a temporary STACK so we can chop and hack at it */
+    /* We use a temporary STACK so we can chop and hack at it.
+     * sktmp = ctx->untrusted ++ ctx->ctx->additional_untrusted */
     if (ctx->untrusted != NULL
         && (sktmp = sk_X509_dup(ctx->untrusted)) == NULL) {
-        X509err(X509_F_X509_VERIFY_CERT, ERR_R_MALLOC_FAILURE);
-        ok = -1;
-        goto err;
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+        ctx->error = X509_V_ERR_OUT_OF_MEM;
+        goto end;
+    }
+
+    if (ctx->ctx->additional_untrusted != NULL) {
+        if (sktmp == NULL) {
+            sktmp = sk_X509_new_null();
+            if (sktmp == NULL) {
+                OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+                ctx->error = X509_V_ERR_OUT_OF_MEM;
+                goto end;
+            }
+        }
+
+        for (size_t k = 0; k < sk_X509_num(ctx->ctx->additional_untrusted);
+             k++) {
+            if (!sk_X509_push(sktmp,
+                              sk_X509_value(ctx->ctx->additional_untrusted,
+                              k))) {
+                OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+                ctx->error = X509_V_ERR_OUT_OF_MEM;
+                goto end;
+            }
+        }
     }
 
     num = sk_X509_num(ctx->chain);
@@ -253,8 +271,10 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
          */
         if (ctx->param->flags & X509_V_FLAG_TRUSTED_FIRST) {
             ok = ctx->get_issuer(&xtmp, ctx, x);
-            if (ok < 0)
-                goto err;
+            if (ok < 0) {
+                ctx->error = X509_V_ERR_STORE_LOOKUP;
+                goto end;
+            }
             /*
              * If successful for now free up cert so it will be picked up
              * again later.
@@ -266,15 +286,16 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
         }
 
         /* If we were passed a cert chain, use it first */
-        if (ctx->untrusted != NULL) {
+        if (sktmp != NULL) {
             xtmp = find_issuer(ctx, sktmp, x);
             if (xtmp != NULL) {
                 if (!sk_X509_push(ctx->chain, xtmp)) {
-                    X509err(X509_F_X509_VERIFY_CERT, ERR_R_MALLOC_FAILURE);
-                    ok = -1;
-                    goto err;
+                    OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+                    ctx->error = X509_V_ERR_OUT_OF_MEM;
+                    ok = 0;
+                    goto end;
                 }
-                CRYPTO_add(&xtmp->references, 1, CRYPTO_LOCK_X509);
+                X509_up_ref(xtmp);
                 (void)sk_X509_delete_ptr(sktmp, xtmp);
                 ctx->last_untrusted++;
                 x = xtmp;
@@ -320,7 +341,7 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
                     bad_chain = 1;
                     ok = cb(0, ctx);
                     if (!ok)
-                        goto err;
+                        goto end;
                 } else {
                     /*
                      * We have a match: replace certificate with store
@@ -352,27 +373,31 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
                 break;
             ok = ctx->get_issuer(&xtmp, ctx, x);
 
-            if (ok < 0)
-                goto err;
+            if (ok < 0) {
+                ctx->error = X509_V_ERR_STORE_LOOKUP;
+                goto end;
+            }
             if (ok == 0)
                 break;
             x = xtmp;
             if (!sk_X509_push(ctx->chain, x)) {
                 X509_free(xtmp);
-                X509err(X509_F_X509_VERIFY_CERT, ERR_R_MALLOC_FAILURE);
-                ok = -1;
-                goto err;
+                OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+                ctx->error = X509_V_ERR_OUT_OF_MEM;
+                ok = 0;
+                goto end;
             }
             num++;
         }
 
         /* we now have our chain, lets check it... */
-        if ((trust = check_trust(ctx)) == X509_TRUST_REJECTED) {
-            /* Callback already issued */
-            ok = 0;
-            goto err;
-        }
+        trust = check_trust(ctx);
 
+        /* If explicitly rejected error */
+        if (trust == X509_TRUST_REJECTED) {
+            ok = 0;
+            goto end;
+        }
         /*
          * If it's not explicitly trusted then check if there is an alternative
          * chain that could be used. We only do this if we haven't already
@@ -387,7 +412,7 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
                 xtmp2 = sk_X509_value(ctx->chain, j - 1);
                 ok = ctx->get_issuer(&xtmp, ctx, xtmp2);
                 if (ok < 0)
-                    goto err;
+                    goto end;
                 /* Check if we found an alternate chain */
                 if (ok > 0) {
                     /*
@@ -438,29 +463,19 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
         bad_chain = 1;
         ok = cb(0, ctx);
         if (!ok)
-            goto err;
+            goto end;
     }
 
     /* We have the chain complete: now we need to check its purpose */
     ok = check_chain_extensions(ctx);
 
     if (!ok)
-        goto err;
-
-    /* Check name constraints */
-
-    ok = check_name_constraints(ctx);
-
-    if (!ok)
-        goto err;
+        goto end;
 
     ok = check_id(ctx);
 
     if (!ok)
-        goto err;
-
-    /* We may as well copy down any DSA parameters that are required */
-    X509_get_pubkey_parameters(NULL, ctx->chain);
+        goto end;
 
     /*
      * Check revocation status: we do this after copying parameters because
@@ -469,16 +484,16 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
 
     ok = ctx->check_revocation(ctx);
     if (!ok)
-        goto err;
+        goto end;
 
-    err = X509_chain_check_suiteb(&ctx->error_depth, NULL, ctx->chain,
-                                  ctx->param->flags);
+    int err = X509_chain_check_suiteb(&ctx->error_depth, NULL, ctx->chain,
+                                      ctx->param->flags);
     if (err != X509_V_OK) {
         ctx->error = err;
         ctx->current_cert = sk_X509_value(ctx->chain, ctx->error_depth);
         ok = cb(0, ctx);
         if (!ok)
-            goto err;
+            goto end;
     }
 
     /* At this point, we have a chain and need to verify it */
@@ -487,34 +502,27 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
     else
         ok = internal_verify(ctx);
     if (!ok)
-        goto err;
+        goto end;
 
-#ifndef OPENSSL_NO_RFC3779
-    /* RFC 3779 path validation, now that CRL check has been done */
-    ok = v3_asid_validate_path(ctx);
+    /* Check name constraints */
+
+    ok = check_name_constraints(ctx);
     if (!ok)
-        goto err;
-    ok = v3_addr_validate_path(ctx);
-    if (!ok)
-        goto err;
-#endif
+        goto end;
 
     /* If we get this far evaluate policies */
     if (!bad_chain && (ctx->param->flags & X509_V_FLAG_POLICY_CHECK))
         ok = ctx->check_policy(ctx);
-    if (!ok)
-        goto err;
-    if (0) {
- err:
-        /* Ensure we return an error */
-        if (ok > 0)
-            ok = 0;
-        X509_get_pubkey_parameters(NULL, ctx->chain);
-    }
+
+ end:
     if (sktmp != NULL)
         sk_X509_free(sktmp);
     if (chain_ss != NULL)
         X509_free(chain_ss);
+
+    /* Safety net, error returns must set ctx->error */
+    if (ok <= 0 && ctx->error == X509_V_OK)
+        ctx->error = X509_V_ERR_UNSPECIFIED;
     return ok;
 }
 
@@ -524,7 +532,7 @@ int X509_verify_cert(X509_STORE_CTX *ctx)
 
 static X509 *find_issuer(X509_STORE_CTX *ctx, STACK_OF(X509) *sk, X509 *x)
 {
-    int i;
+    size_t i;
     X509 *issuer;
     for (i = 0; i < sk_X509_num(sk); i++) {
         issuer = sk_X509_value(sk, i);
@@ -558,7 +566,7 @@ static int get_issuer_sk(X509 **issuer, X509_STORE_CTX *ctx, X509 *x)
 {
     *issuer = find_issuer(ctx, ctx->other_ctx, x);
     if (*issuer) {
-        CRYPTO_add(&(*issuer)->references, 1, CRYPTO_LOCK_X509);
+        X509_up_ref(*issuer);
         return 1;
     } else
         return 0;
@@ -571,10 +579,7 @@ static int get_issuer_sk(X509 **issuer, X509_STORE_CTX *ctx, X509 *x)
 
 static int check_chain_extensions(X509_STORE_CTX *ctx)
 {
-#ifdef OPENSSL_NO_CHAIN_VERIFY
-    return 1;
-#else
-    int i, ok = 0, must_be_ca, plen = 0;
+    int i, ok = 0, plen = 0;
     X509 *x;
     int (*cb) (int xok, X509_STORE_CTX *xctx);
     int proxy_path_length = 0;
@@ -582,16 +587,13 @@ static int check_chain_extensions(X509_STORE_CTX *ctx)
     int allow_proxy_certs;
     cb = ctx->verify_cb;
 
-    /*-
-     *  must_be_ca can have 1 of 3 values:
-     * -1: we accept both CA and non-CA certificates, to allow direct
-     *     use of self-signed certificates (which are marked as CA).
-     * 0:  we only accept non-CA certificates.  This is currently not
-     *     used, but the possibility is present for future extensions.
-     * 1:  we only accept CA certificates.  This is currently used for
-     *     all certificates in the chain except the leaf certificate.
-     */
-    must_be_ca = -1;
+    enum {
+        // ca_or_leaf allows either type of certificate so that direct use of
+        // self-signed certificates works.
+        ca_or_leaf,
+        must_be_ca,
+        must_not_be_ca,
+    } ca_requirement;
 
     /* CRL path validation */
     if (ctx->parent) {
@@ -600,14 +602,10 @@ static int check_chain_extensions(X509_STORE_CTX *ctx)
     } else {
         allow_proxy_certs =
             ! !(ctx->param->flags & X509_V_FLAG_ALLOW_PROXY_CERTS);
-        /*
-         * A hack to keep people who don't want to modify their software
-         * happy
-         */
-        if (getenv("OPENSSL_ALLOW_PROXY_CERTS"))
-            allow_proxy_certs = 1;
         purpose = ctx->param->purpose;
     }
+
+    ca_requirement = ca_or_leaf;
 
     /* Check all untrusted certificates */
     for (i = 0; i < ctx->last_untrusted; i++) {
@@ -630,33 +628,30 @@ static int check_chain_extensions(X509_STORE_CTX *ctx)
             if (!ok)
                 goto end;
         }
-        ret = X509_check_ca(x);
-        switch (must_be_ca) {
-        case -1:
-            if ((ctx->param->flags & X509_V_FLAG_X509_STRICT)
-                && (ret != 1) && (ret != 0)) {
-                ret = 0;
-                ctx->error = X509_V_ERR_INVALID_CA;
-            } else
-                ret = 1;
+
+        switch (ca_requirement) {
+        case ca_or_leaf:
+            ret = 1;
             break;
-        case 0:
-            if (ret != 0) {
+        case must_not_be_ca:
+            if (X509_check_ca(x)) {
                 ret = 0;
                 ctx->error = X509_V_ERR_INVALID_NON_CA;
             } else
                 ret = 1;
             break;
-        default:
-            if ((ret == 0)
-                || ((ctx->param->flags & X509_V_FLAG_X509_STRICT)
-                    && (ret != 1))) {
+        case must_be_ca:
+            if (!X509_check_ca(x)) {
                 ret = 0;
                 ctx->error = X509_V_ERR_INVALID_CA;
             } else
                 ret = 1;
             break;
+        default:
+            // impossible.
+            ret = 0;
         }
+
         if (ret == 0) {
             ctx->error_depth = i;
             ctx->current_cert = x;
@@ -665,10 +660,9 @@ static int check_chain_extensions(X509_STORE_CTX *ctx)
                 goto end;
         }
         if (ctx->param->purpose > 0) {
-            ret = X509_check_purpose(x, purpose, must_be_ca > 0);
-            if ((ret == 0)
-                || ((ctx->param->flags & X509_V_FLAG_X509_STRICT)
-                    && (ret != 1))) {
+            ret = X509_check_purpose(x, purpose, ca_requirement == must_be_ca);
+            if (ret != 1) {
+                ret = 0;
                 ctx->error = X509_V_ERR_INVALID_PURPOSE;
                 ctx->error_depth = i;
                 ctx->current_cert = x;
@@ -706,14 +700,14 @@ static int check_chain_extensions(X509_STORE_CTX *ctx)
                     goto end;
             }
             proxy_path_length++;
-            must_be_ca = 0;
-        } else
-            must_be_ca = 1;
+            ca_requirement = must_not_be_ca;
+        } else {
+            ca_requirement = must_be_ca;
+        }
     }
     ok = 1;
  end:
     return ok;
-#endif
 }
 
 static int check_name_constraints(X509_STORE_CTX *ctx)
@@ -736,12 +730,19 @@ static int check_name_constraints(X509_STORE_CTX *ctx)
             NAME_CONSTRAINTS *nc = sk_X509_value(ctx->chain, j)->nc;
             if (nc) {
                 rv = NAME_CONSTRAINTS_check(x, nc);
-                if (rv != X509_V_OK) {
+                switch (rv) {
+                case X509_V_OK:
+                    continue;
+                case X509_V_ERR_OUT_OF_MEM:
+                    ctx->error = rv;
+                    return 0;
+                default:
                     ctx->error = rv;
                     ctx->error_depth = i;
                     ctx->current_cert = x;
                     if (!ctx->verify_cb(0, ctx))
                         return 0;
+                    break;
                 }
             }
         }
@@ -759,8 +760,8 @@ static int check_id_error(X509_STORE_CTX *ctx, int errcode)
 
 static int check_hosts(X509 *x, X509_VERIFY_PARAM_ID *id)
 {
-    int i;
-    int n = sk_OPENSSL_STRING_num(id->hosts);
+    size_t i;
+    size_t n = sk_OPENSSL_STRING_num(id->hosts);
     char *name;
 
     if (id->peername != NULL) {
@@ -769,7 +770,8 @@ static int check_hosts(X509 *x, X509_VERIFY_PARAM_ID *id)
     }
     for (i = 0; i < n; ++i) {
         name = sk_OPENSSL_STRING_value(id->hosts, i);
-        if (X509_check_host(x, name, 0, id->hostflags, &id->peername) > 0)
+        if (X509_check_host(x, name, strlen(name), id->hostflags,
+                            &id->peername) > 0)
             return 1;
     }
     return n == 0;
@@ -780,6 +782,10 @@ static int check_id(X509_STORE_CTX *ctx)
     X509_VERIFY_PARAM *vpm = ctx->param;
     X509_VERIFY_PARAM_ID *id = vpm->id;
     X509 *x = ctx->cert;
+    if (id->poison) {
+        if (!check_id_error(ctx, X509_V_ERR_INVALID_CALL))
+            return 0;
+    }
     if (id->hosts && check_hosts(x, id) <= 0) {
         if (!check_id_error(ctx, X509_V_ERR_HOSTNAME_MISMATCH))
             return 0;
@@ -797,7 +803,8 @@ static int check_id(X509_STORE_CTX *ctx)
 
 static int check_trust(X509_STORE_CTX *ctx)
 {
-    int i, ok;
+    size_t i;
+    int ok;
     X509 *x = NULL;
     int (*cb) (int xok, X509_STORE_CTX *xctx);
     cb = ctx->verify_cb;
@@ -827,7 +834,7 @@ static int check_trust(X509_STORE_CTX *ctx)
      */
     if (ctx->param->flags & X509_V_FLAG_PARTIAL_CHAIN) {
         X509 *mx;
-        if (ctx->last_untrusted < sk_X509_num(ctx->chain))
+        if (ctx->last_untrusted < (int)sk_X509_num(ctx->chain))
             return X509_TRUST_TRUSTED;
         x = sk_X509_value(ctx->chain, 0);
         mx = lookup_cert_match(ctx, x);
@@ -872,7 +879,7 @@ static int check_cert(X509_STORE_CTX *ctx)
 {
     X509_CRL *crl = NULL, *dcrl = NULL;
     X509 *x;
-    int ok, cnum;
+    int ok = 0, cnum;
     unsigned int last_reasons;
     cnum = ctx->error_depth;
     x = sk_X509_value(ctx->chain, cnum);
@@ -1000,7 +1007,8 @@ static int get_crl_sk(X509_STORE_CTX *ctx, X509_CRL **pcrl, X509_CRL **pdcrl,
                       X509 **pissuer, int *pscore, unsigned int *preasons,
                       STACK_OF(X509_CRL) *crls)
 {
-    int i, crl_score, best_score = *pscore;
+    int crl_score, best_score = *pscore;
+    size_t i;
     unsigned int reasons, best_reasons = 0;
     X509 *x = ctx->current_cert;
     X509_CRL *crl, *best_crl = NULL;
@@ -1010,13 +1018,25 @@ static int get_crl_sk(X509_STORE_CTX *ctx, X509_CRL **pcrl, X509_CRL **pdcrl,
         crl = sk_X509_CRL_value(crls, i);
         reasons = *preasons;
         crl_score = get_crl_score(ctx, &crl_issuer, &reasons, crl, x);
-
-        if (crl_score > best_score) {
-            best_crl = crl;
-            best_crl_issuer = crl_issuer;
-            best_score = crl_score;
-            best_reasons = reasons;
+        if (crl_score < best_score || crl_score == 0)
+            continue;
+        /* If current CRL is equivalent use it if it is newer */
+        if (crl_score == best_score && best_crl != NULL) {
+            int day, sec;
+            if (ASN1_TIME_diff(&day, &sec, X509_CRL_get_lastUpdate(best_crl),
+                               X509_CRL_get_lastUpdate(crl)) == 0)
+                continue;
+            /*
+             * ASN1_TIME_diff never returns inconsistent signs for |day|
+             * and |sec|.
+             */
+            if (day <= 0 && sec <= 0)
+                continue;
         }
+        best_crl = crl;
+        best_crl_issuer = crl_issuer;
+        best_score = crl_score;
+        best_reasons = reasons;
     }
 
     if (best_crl) {
@@ -1026,7 +1046,7 @@ static int get_crl_sk(X509_STORE_CTX *ctx, X509_CRL **pcrl, X509_CRL **pdcrl,
         *pissuer = best_crl_issuer;
         *pscore = best_score;
         *preasons = best_reasons;
-        CRYPTO_add(&best_crl->references, 1, CRYPTO_LOCK_X509_CRL);
+        X509_CRL_up_ref(best_crl);
         if (*pdcrl) {
             X509_CRL_free(*pdcrl);
             *pdcrl = NULL;
@@ -1116,7 +1136,7 @@ static void get_delta_sk(X509_STORE_CTX *ctx, X509_CRL **dcrl, int *pscore,
                          X509_CRL *base, STACK_OF(X509_CRL) *crls)
 {
     X509_CRL *delta;
-    int i;
+    size_t i;
     if (!(ctx->param->flags & X509_V_FLAG_USE_DELTAS))
         return;
     if (!((ctx->current_cert->ex_flags | base->flags) & EXFLAG_FRESHEST))
@@ -1126,7 +1146,7 @@ static void get_delta_sk(X509_STORE_CTX *ctx, X509_CRL **dcrl, int *pscore,
         if (check_delta_base(delta, base)) {
             if (check_crl_time(ctx, delta, 0))
                 *pscore |= CRL_SCORE_TIME_DELTA;
-            CRYPTO_add(&delta->references, 1, CRYPTO_LOCK_X509_CRL);
+            X509_CRL_up_ref(delta);
             *dcrl = delta;
             return;
         }
@@ -1210,9 +1230,9 @@ static void crl_akid_check(X509_STORE_CTX *ctx, X509_CRL *crl,
     X509 *crl_issuer = NULL;
     X509_NAME *cnm = X509_CRL_get_issuer(crl);
     int cidx = ctx->error_depth;
-    int i;
+    size_t i;
 
-    if (cidx != sk_X509_num(ctx->chain) - 1)
+    if ((size_t)cidx != sk_X509_num(ctx->chain) - 1)
         cidx++;
 
     crl_issuer = sk_X509_value(ctx->chain, cidx);
@@ -1225,7 +1245,7 @@ static void crl_akid_check(X509_STORE_CTX *ctx, X509_CRL *crl,
         }
     }
 
-    for (cidx++; cidx < sk_X509_num(ctx->chain); cidx++) {
+    for (cidx++; cidx < (int)sk_X509_num(ctx->chain); cidx++) {
         crl_issuer = sk_X509_value(ctx->chain, cidx);
         if (X509_NAME_cmp(X509_get_subject_name(crl_issuer), cnm))
             continue;
@@ -1247,6 +1267,17 @@ static void crl_akid_check(X509_STORE_CTX *ctx, X509_CRL *crl,
      */
     for (i = 0; i < sk_X509_num(ctx->untrusted); i++) {
         crl_issuer = sk_X509_value(ctx->untrusted, i);
+        if (X509_NAME_cmp(X509_get_subject_name(crl_issuer), cnm))
+            continue;
+        if (X509_check_akid(crl_issuer, crl->akid) == X509_V_OK) {
+            *pissuer = crl_issuer;
+            *pcrl_score |= CRL_SCORE_AKID;
+            return;
+        }
+    }
+
+    for (i = 0; i < sk_X509_num(ctx->ctx->additional_untrusted); i++) {
+        crl_issuer = sk_X509_value(ctx->ctx->additional_untrusted, i);
         if (X509_NAME_cmp(X509_get_subject_name(crl_issuer), cnm))
             continue;
         if (X509_check_akid(crl_issuer, crl->akid) == X509_V_OK) {
@@ -1316,12 +1347,11 @@ static int check_crl_chain(X509_STORE_CTX *ctx,
     return 0;
 }
 
-/*-
- * Check for match between two dist point names: three separate cases.
- * 1. Both are relative names and compare X509_NAME types.
- * 2. One full, one relative. Compare X509_NAME to GENERAL_NAMES.
- * 3. Both are full names and compare two GENERAL_NAMES.
- * 4. One is NULL: automatic match.
+/*
+ * Check for match between two dist point names: three separate cases. 1.
+ * Both are relative names and compare X509_NAME types. 2. One full, one
+ * relative. Compare X509_NAME to GENERAL_NAMES. 3. Both are full names and
+ * compare two GENERAL_NAMES. 4. One is NULL: automatic match.
  */
 
 static int idp_check_dp(DIST_POINT_NAME *a, DIST_POINT_NAME *b)
@@ -1329,7 +1359,7 @@ static int idp_check_dp(DIST_POINT_NAME *a, DIST_POINT_NAME *b)
     X509_NAME *nm = NULL;
     GENERAL_NAMES *gens = NULL;
     GENERAL_NAME *gena, *genb;
-    int i, j;
+    size_t i, j;
     if (!a || !b)
         return 1;
     if (a->type == 1) {
@@ -1384,7 +1414,7 @@ static int idp_check_dp(DIST_POINT_NAME *a, DIST_POINT_NAME *b)
 
 static int crldp_check_crlissuer(DIST_POINT *dp, X509_CRL *crl, int crl_score)
 {
-    int i;
+    size_t i;
     X509_NAME *nm = X509_CRL_get_issuer(crl);
     /* If no CRLissuer return is successful iff don't need a match */
     if (!dp->CRLissuer)
@@ -1404,7 +1434,7 @@ static int crldp_check_crlissuer(DIST_POINT *dp, X509_CRL *crl, int crl_score)
 static int crl_crldp_check(X509 *x, X509_CRL *crl, int crl_score,
                            unsigned int *preasons)
 {
-    int i;
+    size_t i;
     if (crl->idp_flags & IDP_ONLYATTR)
         return 0;
     if (x->ex_flags & EXFLAG_CA) {
@@ -1629,7 +1659,8 @@ static int check_policy(X509_STORE_CTX *ctx)
     ret = X509_policy_check(&ctx->tree, &ctx->explicit_policy, ctx->chain,
                             ctx->param->policies, ctx->param->flags);
     if (ret == 0) {
-        X509err(X509_F_CHECK_POLICY, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
+        ctx->error = X509_V_ERR_OUT_OF_MEM;
         return 0;
     }
     /* Invalid or inconsistent extensions */
@@ -1638,7 +1669,7 @@ static int check_policy(X509_STORE_CTX *ctx)
          * Locate certificates with bad extensions and notify callback.
          */
         X509 *x;
-        int i;
+        size_t i;
         for (i = 1; i < sk_X509_num(ctx->chain); i++) {
             x = sk_X509_value(ctx->chain, i);
             if (!(x->ex_flags & EXFLAG_INVALID_POLICY))
@@ -1658,7 +1689,12 @@ static int check_policy(X509_STORE_CTX *ctx)
 
     if (ctx->param->flags & X509_V_FLAG_NOTIFY_POLICY) {
         ctx->current_cert = NULL;
-        ctx->error = X509_V_OK;
+        /*
+         * Verification errors need to be "sticky", a callback may have allowed
+         * an SSL handshake to continue despite an error, and we must then
+         * remain in an error state.  Therefore, we MUST NOT clear earlier
+         * verification errors by setting the error to X509_V_OK.
+         */
         if (!ctx->verify_cb(2, ctx))
             return 0;
     }
@@ -1751,9 +1787,7 @@ static int internal_verify(X509_STORE_CTX *ctx)
          * explicitly asked for. It doesn't add any security and just wastes
          * time.
          */
-        if (!xs->valid
-            && (xs != xi
-                || (ctx->param->flags & X509_V_FLAG_CHECK_SS_SIGNATURE))) {
+        if (xs != xi || (ctx->param->flags & X509_V_FLAG_CHECK_SS_SIGNATURE)) {
             if ((pkey = X509_get_pubkey(xi)) == NULL) {
                 ctx->error = X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY;
                 ctx->current_cert = xi;
@@ -1772,8 +1806,6 @@ static int internal_verify(X509_STORE_CTX *ctx)
             EVP_PKEY_free(pkey);
             pkey = NULL;
         }
-
-        xs->valid = 1;
 
  check_cert:
         ok = check_cert_time(ctx, xs);
@@ -1805,119 +1837,67 @@ int X509_cmp_current_time(const ASN1_TIME *ctm)
 
 int X509_cmp_time(const ASN1_TIME *ctm, time_t *cmp_time)
 {
-    char *str;
-    ASN1_TIME atm;
-    long offset;
-    char buff1[24], buff2[24], *p;
-    int i, j, remaining;
+    static const size_t utctime_length = sizeof("YYMMDDHHMMSSZ") - 1;
+    static const size_t generalizedtime_length = sizeof("YYYYMMDDHHMMSSZ") - 1;
+    ASN1_TIME *asn1_cmp_time = NULL;
+    int i, day, sec, ret = 0;
 
-    p = buff1;
-    remaining = ctm->length;
-    str = (char *)ctm->data;
     /*
-     * Note that the following (historical) code allows much more slack in the
-     * time format than RFC5280. In RFC5280, the representation is fixed:
+     * Note that ASN.1 allows much more slack in the time format than RFC5280.
+     * In RFC5280, the representation is fixed:
      * UTCTime: YYMMDDHHMMSSZ
      * GeneralizedTime: YYYYMMDDHHMMSSZ
+     *
+     * We do NOT currently enforce the following RFC 5280 requirement:
+     * "CAs conforming to this profile MUST always encode certificate
+     *  validity dates through the year 2049 as UTCTime; certificate validity
+     *  dates in 2050 or later MUST be encoded as GeneralizedTime."
      */
-    if (ctm->type == V_ASN1_UTCTIME) {
-        /* YYMMDDHHMM[SS]Z or YYMMDDHHMM[SS](+-)hhmm */
-        int min_length = sizeof("YYMMDDHHMMZ") - 1;
-        int max_length = sizeof("YYMMDDHHMMSS+hhmm") - 1;
-        if (remaining < min_length || remaining > max_length)
+    switch (ctm->type) {
+    case V_ASN1_UTCTIME:
+        if (ctm->length != (int)(utctime_length))
             return 0;
-        memcpy(p, str, 10);
-        p += 10;
-        str += 10;
-        remaining -= 10;
-    } else {
-        /* YYYYMMDDHHMM[SS[.fff]]Z or YYYYMMDDHHMM[SS[.f[f[f]]]](+-)hhmm */
-        int min_length = sizeof("YYYYMMDDHHMMZ") - 1;
-        int max_length = sizeof("YYYYMMDDHHMMSS.fff+hhmm") - 1;
-        if (remaining < min_length || remaining > max_length)
+        break;
+    case V_ASN1_GENERALIZEDTIME:
+        if (ctm->length != (int)(generalizedtime_length))
             return 0;
-        memcpy(p, str, 12);
-        p += 12;
-        str += 12;
-        remaining -= 12;
-    }
-
-    if ((*str == 'Z') || (*str == '-') || (*str == '+')) {
-        *(p++) = '0';
-        *(p++) = '0';
-    } else {
-        /* SS (seconds) */
-        if (remaining < 2)
-            return 0;
-        *(p++) = *(str++);
-        *(p++) = *(str++);
-        remaining -= 2;
-        /*
-         * Skip any (up to three) fractional seconds...
-         * TODO(emilia): in RFC5280, fractional seconds are forbidden.
-         * Can we just kill them altogether?
-         */
-        if (remaining && *str == '.') {
-            str++;
-            remaining--;
-            for (i = 0; i < 3 && remaining; i++, str++, remaining--) {
-                if (*str < '0' || *str > '9')
-                    break;
-            }
-        }
-
-    }
-    *(p++) = 'Z';
-    *(p++) = '\0';
-
-    /* We now need either a terminating 'Z' or an offset. */
-    if (!remaining)
+        break;
+    default:
         return 0;
-    if (*str == 'Z') {
-        if (remaining != 1)
-            return 0;
-        offset = 0;
-    } else {
-        /* (+-)HHMM */
-        if ((*str != '+') && (*str != '-'))
-            return 0;
-        /* Historical behaviour: the (+-)hhmm offset is forbidden in RFC5280. */
-        if (remaining != 5)
-            return 0;
-        if (str[1] < '0' || str[1] > '9' || str[2] < '0' || str[2] > '9' ||
-            str[3] < '0' || str[3] > '9' || str[4] < '0' || str[4] > '9')
-            return 0;
-        offset = ((str[1] - '0') * 10 + (str[2] - '0')) * 60;
-        offset += (str[3] - '0') * 10 + (str[4] - '0');
-        if (*str == '-')
-            offset = -offset;
     }
-    atm.type = ctm->type;
-    atm.flags = 0;
-    atm.length = sizeof(buff2);
-    atm.data = (unsigned char *)buff2;
 
-    if (X509_time_adj(&atm, offset * 60, cmp_time) == NULL)
+    /**
+     * Verify the format: the ASN.1 functions we use below allow a more
+     * flexible format than what's mandated by RFC 5280.
+     * Digit and date ranges will be verified in the conversion methods.
+     */
+    for (i = 0; i < ctm->length - 1; i++) {
+        if (!isdigit(ctm->data[i]))
+            return 0;
+    }
+    if (ctm->data[ctm->length - 1] != 'Z')
         return 0;
 
-    if (ctm->type == V_ASN1_UTCTIME) {
-        i = (buff1[0] - '0') * 10 + (buff1[1] - '0');
-        if (i < 50)
-            i += 100;           /* cf. RFC 2459 */
-        j = (buff2[0] - '0') * 10 + (buff2[1] - '0');
-        if (j < 50)
-            j += 100;
+    /*
+     * There is ASN1_UTCTIME_cmp_time_t but no
+     * ASN1_GENERALIZEDTIME_cmp_time_t or ASN1_TIME_cmp_time_t,
+     * so we go through ASN.1
+     */
+    asn1_cmp_time = X509_time_adj(NULL, 0, cmp_time);
+    if (asn1_cmp_time == NULL)
+        goto err;
+    if (!ASN1_TIME_diff(&day, &sec, ctm, asn1_cmp_time))
+        goto err;
 
-        if (i < j)
-            return -1;
-        if (i > j)
-            return 1;
-    }
-    i = strcmp(buff1, buff2);
-    if (i == 0)                 /* wait a second then return younger :-) */
-        return -1;
-    else
-        return i;
+    /*
+     * X509_cmp_time comparison is <=.
+     * The return value 0 is reserved for errors.
+     */
+    ret = (day >= 0 && sec >= 0) ? -1 : 1;
+
+ err:
+    ASN1_TIME_free(asn1_cmp_time);
+    return ret;
 }
 
 ASN1_TIME *X509_gmtime_adj(ASN1_TIME *s, long adj)
@@ -1933,7 +1913,7 @@ ASN1_TIME *X509_time_adj(ASN1_TIME *s, long offset_sec, time_t *in_tm)
 ASN1_TIME *X509_time_adj_ex(ASN1_TIME *s,
                             int offset_day, long offset_sec, time_t *in_tm)
 {
-    time_t t;
+    time_t t = 0;
 
     if (in_tm)
         t = *in_tm;
@@ -1949,47 +1929,6 @@ ASN1_TIME *X509_time_adj_ex(ASN1_TIME *s,
     return ASN1_TIME_adj(s, t, offset_day, offset_sec);
 }
 
-int X509_get_pubkey_parameters(EVP_PKEY *pkey, STACK_OF(X509) *chain)
-{
-    EVP_PKEY *ktmp = NULL, *ktmp2;
-    int i, j;
-
-    if ((pkey != NULL) && !EVP_PKEY_missing_parameters(pkey))
-        return 1;
-
-    for (i = 0; i < sk_X509_num(chain); i++) {
-        ktmp = X509_get_pubkey(sk_X509_value(chain, i));
-        if (ktmp == NULL) {
-            X509err(X509_F_X509_GET_PUBKEY_PARAMETERS,
-                    X509_R_UNABLE_TO_GET_CERTS_PUBLIC_KEY);
-            return 0;
-        }
-        if (!EVP_PKEY_missing_parameters(ktmp))
-            break;
-        else {
-            EVP_PKEY_free(ktmp);
-            ktmp = NULL;
-        }
-    }
-    if (ktmp == NULL) {
-        X509err(X509_F_X509_GET_PUBKEY_PARAMETERS,
-                X509_R_UNABLE_TO_FIND_PARAMETERS_IN_CHAIN);
-        return 0;
-    }
-
-    /* first, populate the other certs */
-    for (j = i - 1; j >= 0; j--) {
-        ktmp2 = X509_get_pubkey(sk_X509_value(chain, j));
-        EVP_PKEY_copy_parameters(ktmp2, ktmp);
-        EVP_PKEY_free(ktmp2);
-    }
-
-    if (pkey != NULL)
-        EVP_PKEY_copy_parameters(pkey, ktmp);
-    EVP_PKEY_free(ktmp);
-    return 1;
-}
-
 /* Make a delta CRL as the diff between two full CRLs */
 
 X509_CRL *X509_CRL_diff(X509_CRL *base, X509_CRL *newer,
@@ -1997,40 +1936,41 @@ X509_CRL *X509_CRL_diff(X509_CRL *base, X509_CRL *newer,
 {
     X509_CRL *crl = NULL;
     int i;
+    size_t j;
     STACK_OF(X509_REVOKED) *revs = NULL;
     /* CRLs can't be delta already */
     if (base->base_crl_number || newer->base_crl_number) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_CRL_ALREADY_DELTA);
+        OPENSSL_PUT_ERROR(X509, X509_R_CRL_ALREADY_DELTA);
         return NULL;
     }
     /* Base and new CRL must have a CRL number */
     if (!base->crl_number || !newer->crl_number) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_NO_CRL_NUMBER);
+        OPENSSL_PUT_ERROR(X509, X509_R_NO_CRL_NUMBER);
         return NULL;
     }
     /* Issuer names must match */
     if (X509_NAME_cmp(X509_CRL_get_issuer(base), X509_CRL_get_issuer(newer))) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_ISSUER_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_ISSUER_MISMATCH);
         return NULL;
     }
     /* AKID and IDP must match */
     if (!crl_extension_match(base, newer, NID_authority_key_identifier)) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_AKID_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_AKID_MISMATCH);
         return NULL;
     }
     if (!crl_extension_match(base, newer, NID_issuing_distribution_point)) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_IDP_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_IDP_MISMATCH);
         return NULL;
     }
     /* Newer CRL number must exceed full CRL number */
     if (ASN1_INTEGER_cmp(newer->crl_number, base->crl_number) <= 0) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_NEWER_CRL_NOT_NEWER);
+        OPENSSL_PUT_ERROR(X509, X509_R_NEWER_CRL_NOT_NEWER);
         return NULL;
     }
     /* CRLs must verify */
     if (skey && (X509_CRL_verify(base, skey) <= 0 ||
                  X509_CRL_verify(newer, skey) <= 0)) {
-        X509err(X509_F_X509_CRL_DIFF, X509_R_CRL_VERIFY_FAILURE);
+        OPENSSL_PUT_ERROR(X509, X509_R_CRL_VERIFY_FAILURE);
         return NULL;
     }
     /* Create new CRL */
@@ -2067,9 +2007,9 @@ X509_CRL *X509_CRL_diff(X509_CRL *base, X509_CRL *newer,
 
     revs = X509_CRL_get_REVOKED(newer);
 
-    for (i = 0; i < sk_X509_REVOKED_num(revs); i++) {
+    for (j = 0; j < sk_X509_REVOKED_num(revs); j++) {
         X509_REVOKED *rvn, *rvtmp;
-        rvn = sk_X509_REVOKED_value(revs, i);
+        rvn = sk_X509_REVOKED_value(revs, j);
         /*
          * Add only if not also in base. TODO: need something cleverer here
          * for some more complex CRLs covering multiple CAs.
@@ -2092,23 +2032,27 @@ X509_CRL *X509_CRL_diff(X509_CRL *base, X509_CRL *newer,
     return crl;
 
  memerr:
-    X509err(X509_F_X509_CRL_DIFF, ERR_R_MALLOC_FAILURE);
+    OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
     if (crl)
         X509_CRL_free(crl);
     return NULL;
 }
 
 int X509_STORE_CTX_get_ex_new_index(long argl, void *argp,
-                                    CRYPTO_EX_new *new_func,
-                                    CRYPTO_EX_dup *dup_func,
+                                    CRYPTO_EX_unused * unused,
+                                    CRYPTO_EX_dup *dup_unused,
                                     CRYPTO_EX_free *free_func)
 {
     /*
      * This function is (usually) called only once, by
      * SSL_get_ex_data_X509_STORE_CTX_idx (ssl/ssl_cert.c).
      */
-    return CRYPTO_get_ex_new_index(CRYPTO_EX_INDEX_X509_STORE_CTX, argl, argp,
-                                   new_func, dup_func, free_func);
+    int index;
+    if (!CRYPTO_get_ex_new_index(&g_ex_data_class, &index, argl, argp,
+                                 free_func)) {
+        return -1;
+    }
+    return index;
 }
 
 int X509_STORE_CTX_set_ex_data(X509_STORE_CTX *ctx, int idx, void *data)
@@ -2178,6 +2122,11 @@ void X509_STORE_CTX_set_chain(X509_STORE_CTX *ctx, STACK_OF(X509) *sk)
     ctx->untrusted = sk;
 }
 
+STACK_OF(X509) *X509_STORE_CTX_get0_untrusted(X509_STORE_CTX *ctx)
+{
+    return ctx->untrusted;
+}
+
 void X509_STORE_CTX_set0_crls(X509_STORE_CTX *ctx, STACK_OF(X509_CRL) *sk)
 {
     ctx->crls = sk;
@@ -2216,16 +2165,14 @@ int X509_STORE_CTX_purpose_inherit(X509_STORE_CTX *ctx, int def_purpose,
         X509_PURPOSE *ptmp;
         idx = X509_PURPOSE_get_by_id(purpose);
         if (idx == -1) {
-            X509err(X509_F_X509_STORE_CTX_PURPOSE_INHERIT,
-                    X509_R_UNKNOWN_PURPOSE_ID);
+            OPENSSL_PUT_ERROR(X509, X509_R_UNKNOWN_PURPOSE_ID);
             return 0;
         }
         ptmp = X509_PURPOSE_get0(idx);
         if (ptmp->trust == X509_TRUST_DEFAULT) {
             idx = X509_PURPOSE_get_by_id(def_purpose);
             if (idx == -1) {
-                X509err(X509_F_X509_STORE_CTX_PURPOSE_INHERIT,
-                        X509_R_UNKNOWN_PURPOSE_ID);
+                OPENSSL_PUT_ERROR(X509, X509_R_UNKNOWN_PURPOSE_ID);
                 return 0;
             }
             ptmp = X509_PURPOSE_get0(idx);
@@ -2237,8 +2184,7 @@ int X509_STORE_CTX_purpose_inherit(X509_STORE_CTX *ctx, int def_purpose,
     if (trust) {
         idx = X509_TRUST_get_by_id(trust);
         if (idx == -1) {
-            X509err(X509_F_X509_STORE_CTX_PURPOSE_INHERIT,
-                    X509_R_UNKNOWN_TRUST_ID);
+            OPENSSL_PUT_ERROR(X509, X509_R_UNKNOWN_TRUST_ID);
             return 0;
         }
     }
@@ -2255,17 +2201,23 @@ X509_STORE_CTX *X509_STORE_CTX_new(void)
     X509_STORE_CTX *ctx;
     ctx = (X509_STORE_CTX *)OPENSSL_malloc(sizeof(X509_STORE_CTX));
     if (!ctx) {
-        X509err(X509_F_X509_STORE_CTX_NEW, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
         return NULL;
     }
-    memset(ctx, 0, sizeof(X509_STORE_CTX));
+    X509_STORE_CTX_zero(ctx);
     return ctx;
+}
+
+void X509_STORE_CTX_zero(X509_STORE_CTX *ctx)
+{
+    OPENSSL_memset(ctx, 0, sizeof(X509_STORE_CTX));
 }
 
 void X509_STORE_CTX_free(X509_STORE_CTX *ctx)
 {
-    if (!ctx)
+    if (ctx == NULL) {
         return;
+    }
     X509_STORE_CTX_cleanup(ctx);
     OPENSSL_free(ctx);
 }
@@ -2274,37 +2226,22 @@ int X509_STORE_CTX_init(X509_STORE_CTX *ctx, X509_STORE *store, X509 *x509,
                         STACK_OF(X509) *chain)
 {
     int ret = 1;
+
+    X509_STORE_CTX_zero(ctx);
     ctx->ctx = store;
-    ctx->current_method = 0;
     ctx->cert = x509;
     ctx->untrusted = chain;
-    ctx->crls = NULL;
-    ctx->last_untrusted = 0;
-    ctx->other_ctx = NULL;
-    ctx->valid = 0;
-    ctx->chain = NULL;
-    ctx->error = 0;
-    ctx->explicit_policy = 0;
-    ctx->error_depth = 0;
-    ctx->current_cert = NULL;
-    ctx->current_issuer = NULL;
-    ctx->current_crl = NULL;
-    ctx->current_crl_score = 0;
-    ctx->current_reasons = 0;
-    ctx->tree = NULL;
-    ctx->parent = NULL;
-    /* Zero ex_data to make sure we're cleanup-safe */
-    memset(&ctx->ex_data, 0, sizeof(ctx->ex_data));
+
+    CRYPTO_new_ex_data(&ctx->ex_data);
 
     ctx->param = X509_VERIFY_PARAM_new();
-    if (!ctx->param) {
-        X509err(X509_F_X509_STORE_CTX_INIT, ERR_R_MALLOC_FAILURE);
-        return 0;
-    }
+    if (!ctx->param)
+        goto err;
 
     /*
      * Inherit callbacks and flags from X509_STORE if not set use defaults.
      */
+
     if (store)
         ret = X509_VERIFY_PARAM_inherit(ctx->param, store->param);
     else
@@ -2312,7 +2249,6 @@ int X509_STORE_CTX_init(X509_STORE_CTX *ctx, X509_STORE *store, X509 *x509,
 
     if (store) {
         ctx->verify_cb = store->verify_cb;
-        /* Seems to always be 0 in OpenSSL, else must be idempotent */
         ctx->cleanup = store->cleanup;
     } else
         ctx->cleanup = 0;
@@ -2321,10 +2257,8 @@ int X509_STORE_CTX_init(X509_STORE_CTX *ctx, X509_STORE *store, X509 *x509,
         ret = X509_VERIFY_PARAM_inherit(ctx->param,
                                         X509_VERIFY_PARAM_lookup("default"));
 
-    if (ret == 0) {
-        X509err(X509_F_X509_STORE_CTX_INIT, ERR_R_MALLOC_FAILURE);
+    if (ret == 0)
         goto err;
-    }
 
     if (store && store->check_issued)
         ctx->check_issued = store->check_issued;
@@ -2378,17 +2312,16 @@ int X509_STORE_CTX_init(X509_STORE_CTX *ctx, X509_STORE *store, X509 *x509,
 
     ctx->check_policy = check_policy;
 
-    if (CRYPTO_new_ex_data(CRYPTO_EX_INDEX_X509_STORE_CTX, ctx,
-                           &ctx->ex_data))
-        return 1;
-    X509err(X509_F_X509_STORE_CTX_INIT, ERR_R_MALLOC_FAILURE);
+    return 1;
 
  err:
-    /*
-     * On error clean up allocated storage, if the store context was not
-     * allocated with X509_STORE_CTX_new() this is our last chance to do so.
-     */
-    X509_STORE_CTX_cleanup(ctx);
+    CRYPTO_free_ex_data(&g_ex_data_class, ctx, &ctx->ex_data);
+    if (ctx->param != NULL) {
+        X509_VERIFY_PARAM_free(ctx->param);
+    }
+
+    OPENSSL_memset(ctx, 0, sizeof(X509_STORE_CTX));
+    OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
     return 0;
 }
 
@@ -2405,13 +2338,8 @@ void X509_STORE_CTX_trusted_stack(X509_STORE_CTX *ctx, STACK_OF(X509) *sk)
 
 void X509_STORE_CTX_cleanup(X509_STORE_CTX *ctx)
 {
-    /*
-     * We need to be idempotent because, unfortunately, free() also calls
-     * cleanup(), so the natural call sequence new(), init(), cleanup(), free()
-     * calls cleanup() for the same object twice!  Thus we must zero the
-     * pointers below after they're freed!
-     */
-    /* Seems to always be 0 in OpenSSL, do this at most once. */
+    /* We need to be idempotent because, unfortunately, |X509_STORE_CTX_free|
+     * also calls this function. */
     if (ctx->cleanup != NULL) {
         ctx->cleanup(ctx);
         ctx->cleanup = NULL;
@@ -2429,8 +2357,8 @@ void X509_STORE_CTX_cleanup(X509_STORE_CTX *ctx)
         sk_X509_pop_free(ctx->chain, X509_free);
         ctx->chain = NULL;
     }
-    CRYPTO_free_ex_data(CRYPTO_EX_INDEX_X509_STORE_CTX, ctx, &(ctx->ex_data));
-    memset(&ctx->ex_data, 0, sizeof(CRYPTO_EX_DATA));
+    CRYPTO_free_ex_data(&g_ex_data_class, ctx, &(ctx->ex_data));
+    OPENSSL_memset(&ctx->ex_data, 0, sizeof(CRYPTO_EX_DATA));
 }
 
 void X509_STORE_CTX_set_depth(X509_STORE_CTX *ctx, int depth)
@@ -2447,6 +2375,11 @@ void X509_STORE_CTX_set_time(X509_STORE_CTX *ctx, unsigned long flags,
                              time_t t)
 {
     X509_VERIFY_PARAM_set_time(ctx->param, t);
+}
+
+X509 *X509_STORE_CTX_get0_cert(X509_STORE_CTX *ctx)
+{
+    return ctx->cert;
 }
 
 void X509_STORE_CTX_set_verify_cb(X509_STORE_CTX *ctx,
@@ -2486,12 +2419,6 @@ void X509_STORE_CTX_set0_param(X509_STORE_CTX *ctx, X509_VERIFY_PARAM *param)
     ctx->param = param;
 }
 
-IMPLEMENT_STACK_OF(X509)
-
 IMPLEMENT_ASN1_SET_OF(X509)
-
-IMPLEMENT_STACK_OF(X509_NAME)
-
-IMPLEMENT_STACK_OF(X509_ATTRIBUTE)
 
 IMPLEMENT_ASN1_SET_OF(X509_ATTRIBUTE)

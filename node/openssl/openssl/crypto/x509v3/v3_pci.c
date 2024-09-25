@@ -1,4 +1,4 @@
-/* v3_pci.c */
+/* v3_pci.c -*- mode:C; c-file-style: "eay" -*- */
 /*
  * Contributed to the OpenSSL Project 2004 by Richard Levitte
  * (richard@levitte.org)
@@ -35,10 +35,17 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include "cryptlib.h"
+#include <string.h>
+
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
+
+#include "../internal.h"
+#include "internal.h"
+
 
 static int i2r_pci(X509V3_EXT_METHOD *method, PROXY_CERT_INFO_EXTENSION *ext,
                    BIO *out, int indent);
@@ -81,27 +88,25 @@ static int process_pci_value(CONF_VALUE *val,
 
     if (strcmp(val->name, "language") == 0) {
         if (*language) {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                      X509V3_R_POLICY_LANGUAGE_ALREADY_DEFINED);
+            OPENSSL_PUT_ERROR(X509V3,
+                              X509V3_R_POLICY_LANGUAGE_ALREADY_DEFINED);
             X509V3_conf_err(val);
             return 0;
         }
         if (!(*language = OBJ_txt2obj(val->value, 0))) {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                      X509V3_R_INVALID_OBJECT_IDENTIFIER);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_OBJECT_IDENTIFIER);
             X509V3_conf_err(val);
             return 0;
         }
     } else if (strcmp(val->name, "pathlen") == 0) {
         if (*pathlen) {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                      X509V3_R_POLICY_PATH_LENGTH_ALREADY_DEFINED);
+            OPENSSL_PUT_ERROR(X509V3,
+                              X509V3_R_POLICY_PATH_LENGTH_ALREADY_DEFINED);
             X509V3_conf_err(val);
             return 0;
         }
         if (!X509V3_get_value_int(val, pathlen)) {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                      X509V3_R_POLICY_PATH_LENGTH);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_POLICY_PATH_LENGTH);
             X509V3_conf_err(val);
             return 0;
         }
@@ -111,7 +116,7 @@ static int process_pci_value(CONF_VALUE *val,
         if (!*policy) {
             *policy = ASN1_OCTET_STRING_new();
             if (!*policy) {
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_MALLOC_FAILURE);
+                OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
                 X509V3_conf_err(val);
                 return 0;
             }
@@ -119,11 +124,10 @@ static int process_pci_value(CONF_VALUE *val,
         }
         if (strncmp(val->value, "hex:", 4) == 0) {
             unsigned char *tmp_data2 =
-                string_to_hex(val->value + 4, &val_len);
+                x509v3_hex_to_bytes(val->value + 4, &val_len);
 
             if (!tmp_data2) {
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                          X509V3_R_ILLEGAL_HEX_DIGIT);
+                OPENSSL_PUT_ERROR(X509V3, X509V3_R_ILLEGAL_HEX_DIGIT);
                 X509V3_conf_err(val);
                 goto err;
             }
@@ -132,7 +136,7 @@ static int process_pci_value(CONF_VALUE *val,
                                        (*policy)->length + val_len + 1);
             if (tmp_data) {
                 (*policy)->data = tmp_data;
-                memcpy(&(*policy)->data[(*policy)->length],
+                OPENSSL_memcpy(&(*policy)->data[(*policy)->length],
                        tmp_data2, val_len);
                 (*policy)->length += val_len;
                 (*policy)->data[(*policy)->length] = '\0';
@@ -144,50 +148,18 @@ static int process_pci_value(CONF_VALUE *val,
                  */
                 (*policy)->data = NULL;
                 (*policy)->length = 0;
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_MALLOC_FAILURE);
+                OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
                 X509V3_conf_err(val);
                 goto err;
             }
             OPENSSL_free(tmp_data2);
-        } else if (strncmp(val->value, "file:", 5) == 0) {
-            unsigned char buf[2048];
-            int n;
-            BIO *b = BIO_new_file(val->value + 5, "r");
-            if (!b) {
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_BIO_LIB);
-                X509V3_conf_err(val);
-                goto err;
-            }
-            while ((n = BIO_read(b, buf, sizeof(buf))) > 0
-                   || (n == 0 && BIO_should_retry(b))) {
-                if (!n)
-                    continue;
-
-                tmp_data = OPENSSL_realloc((*policy)->data,
-                                           (*policy)->length + n + 1);
-
-                if (!tmp_data)
-                    break;
-
-                (*policy)->data = tmp_data;
-                memcpy(&(*policy)->data[(*policy)->length], buf, n);
-                (*policy)->length += n;
-                (*policy)->data[(*policy)->length] = '\0';
-            }
-            BIO_free_all(b);
-
-            if (n < 0) {
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_BIO_LIB);
-                X509V3_conf_err(val);
-                goto err;
-            }
         } else if (strncmp(val->value, "text:", 5) == 0) {
             val_len = strlen(val->value + 5);
             tmp_data = OPENSSL_realloc((*policy)->data,
                                        (*policy)->length + val_len + 1);
             if (tmp_data) {
                 (*policy)->data = tmp_data;
-                memcpy(&(*policy)->data[(*policy)->length],
+                OPENSSL_memcpy(&(*policy)->data[(*policy)->length],
                        val->value + 5, val_len);
                 (*policy)->length += val_len;
                 (*policy)->data[(*policy)->length] = '\0';
@@ -198,18 +170,17 @@ static int process_pci_value(CONF_VALUE *val,
                  */
                 (*policy)->data = NULL;
                 (*policy)->length = 0;
-                X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_MALLOC_FAILURE);
+                OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
                 X509V3_conf_err(val);
                 goto err;
             }
         } else {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE,
-                      X509V3_R_INCORRECT_POLICY_SYNTAX_TAG);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INCORRECT_POLICY_SYNTAX_TAG);
             X509V3_conf_err(val);
             goto err;
         }
         if (!tmp_data) {
-            X509V3err(X509V3_F_PROCESS_PCI_VALUE, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
             X509V3_conf_err(val);
             goto err;
         }
@@ -231,14 +202,14 @@ static PROXY_CERT_INFO_EXTENSION *r2i_pci(X509V3_EXT_METHOD *method,
     ASN1_OBJECT *language = NULL;
     ASN1_INTEGER *pathlen = NULL;
     ASN1_OCTET_STRING *policy = NULL;
-    int i, j;
+    size_t i, j;
+    int nid;
 
     vals = X509V3_parse_list(value);
     for (i = 0; i < sk_CONF_VALUE_num(vals); i++) {
         CONF_VALUE *cnf = sk_CONF_VALUE_value(vals, i);
         if (!cnf->name || (*cnf->name != '@' && !cnf->value)) {
-            X509V3err(X509V3_F_R2I_PCI,
-                      X509V3_R_INVALID_PROXY_POLICY_SETTING);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_PROXY_POLICY_SETTING);
             X509V3_conf_err(cnf);
             goto err;
         }
@@ -248,7 +219,7 @@ static PROXY_CERT_INFO_EXTENSION *r2i_pci(X509V3_EXT_METHOD *method,
 
             sect = X509V3_get_section(ctx, cnf->name + 1);
             if (!sect) {
-                X509V3err(X509V3_F_R2I_PCI, X509V3_R_INVALID_SECTION);
+                OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_SECTION);
                 X509V3_conf_err(cnf);
                 goto err;
             }
@@ -270,20 +241,20 @@ static PROXY_CERT_INFO_EXTENSION *r2i_pci(X509V3_EXT_METHOD *method,
 
     /* Language is mandatory */
     if (!language) {
-        X509V3err(X509V3_F_R2I_PCI,
-                  X509V3_R_NO_PROXY_CERT_POLICY_LANGUAGE_DEFINED);
+        OPENSSL_PUT_ERROR(X509V3,
+                          X509V3_R_NO_PROXY_CERT_POLICY_LANGUAGE_DEFINED);
         goto err;
     }
-    i = OBJ_obj2nid(language);
-    if ((i == NID_Independent || i == NID_id_ppl_inheritAll) && policy) {
-        X509V3err(X509V3_F_R2I_PCI,
-                  X509V3_R_POLICY_WHEN_PROXY_LANGUAGE_REQUIRES_NO_POLICY);
+    nid = OBJ_obj2nid(language);
+    if ((nid == NID_Independent || nid == NID_id_ppl_inheritAll) && policy) {
+        OPENSSL_PUT_ERROR(X509V3,
+                          X509V3_R_POLICY_WHEN_PROXY_LANGUAGE_REQUIRES_NO_POLICY);
         goto err;
     }
 
     pci = PROXY_CERT_INFO_EXTENSION_new();
     if (!pci) {
-        X509V3err(X509V3_F_R2I_PCI, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         goto err;
     }
 

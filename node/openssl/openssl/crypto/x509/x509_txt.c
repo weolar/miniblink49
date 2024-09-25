@@ -1,4 +1,3 @@
-/* crypto/x509/x509_txt.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,20 +52,10 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <time.h>
-#include <errno.h>
-
-#include "cryptlib.h"
-#include <openssl/lhash.h>
-#include <openssl/buffer.h>
-#include <openssl/evp.h>
-#include <openssl/asn1.h>
+#include <openssl/mem.h>
 #include <openssl/x509.h>
-#include <openssl/objects.h>
 
 const char *X509_verify_cert_error_string(long n)
 {
@@ -203,6 +192,11 @@ const char *X509_verify_cert_error_string(long n)
         return ("Email address mismatch");
     case X509_V_ERR_IP_ADDRESS_MISMATCH:
         return ("IP address mismatch");
+
+    case X509_V_ERR_INVALID_CALL:
+        return ("Invalid certificate verification context");
+    case X509_V_ERR_STORE_LOOKUP:
+        return ("Issuer certificate lookup error");
 
     default:
         BIO_snprintf(buf, sizeof buf, "error number %ld", n);

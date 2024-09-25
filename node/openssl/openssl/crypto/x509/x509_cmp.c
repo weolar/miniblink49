@@ -53,16 +53,22 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <ctype.h>
-#include "cryptlib.h"
+#include <string.h>
+
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
+#include <openssl/buf.h>
+#include <openssl/digest.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
+#include <openssl/stack.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+
+#include "../internal.h"
+
 
 int X509_issuer_and_serial_cmp(const X509 *a, const X509 *b)
 {
@@ -77,7 +83,6 @@ int X509_issuer_and_serial_cmp(const X509 *a, const X509 *b)
     return (X509_NAME_cmp(ai->issuer, bi->issuer));
 }
 
-#ifndef OPENSSL_NO_MD5
 unsigned long X509_issuer_and_serial_hash(X509 *a)
 {
     unsigned long ret = 0;
@@ -105,7 +110,6 @@ unsigned long X509_issuer_and_serial_hash(X509 *a)
     EVP_MD_CTX_cleanup(&ctx);
     return (ret);
 }
-#endif
 
 int X509_issuer_name_cmp(const X509 *a, const X509 *b)
 {
@@ -122,12 +126,10 @@ int X509_CRL_cmp(const X509_CRL *a, const X509_CRL *b)
     return (X509_NAME_cmp(a->crl->issuer, b->crl->issuer));
 }
 
-#ifndef OPENSSL_NO_SHA
 int X509_CRL_match(const X509_CRL *a, const X509_CRL *b)
 {
-    return memcmp(a->sha1_hash, b->sha1_hash, 20);
+    return OPENSSL_memcmp(a->sha1_hash, b->sha1_hash, 20);
 }
-#endif
 
 X509_NAME *X509_get_issuer_name(X509 *a)
 {
@@ -139,12 +141,10 @@ unsigned long X509_issuer_name_hash(X509 *x)
     return (X509_NAME_hash(x->cert_info->issuer));
 }
 
-#ifndef OPENSSL_NO_MD5
 unsigned long X509_issuer_name_hash_old(X509 *x)
 {
     return (X509_NAME_hash_old(x->cert_info->issuer));
 }
-#endif
 
 X509_NAME *X509_get_subject_name(X509 *a)
 {
@@ -161,14 +161,11 @@ unsigned long X509_subject_name_hash(X509 *x)
     return (X509_NAME_hash(x->cert_info->subject));
 }
 
-#ifndef OPENSSL_NO_MD5
 unsigned long X509_subject_name_hash_old(X509 *x)
 {
     return (X509_NAME_hash_old(x->cert_info->subject));
 }
-#endif
 
-#ifndef OPENSSL_NO_SHA
 /*
  * Compare two certificates: they must be identical for this to work. NB:
  * Although "cmp" operations are generally prototyped to take "const"
@@ -184,7 +181,7 @@ int X509_cmp(const X509 *a, const X509 *b)
     X509_check_purpose((X509 *)a, -1, 0);
     X509_check_purpose((X509 *)b, -1, 0);
 
-    rv = memcmp(a->sha1_hash, b->sha1_hash, SHA_DIGEST_LENGTH);
+    rv = OPENSSL_memcmp(a->sha1_hash, b->sha1_hash, SHA_DIGEST_LENGTH);
     if (rv)
         return rv;
     /* Check for match against stored encoding too */
@@ -192,12 +189,11 @@ int X509_cmp(const X509 *a, const X509 *b)
         rv = (int)(a->cert_info->enc.len - b->cert_info->enc.len);
         if (rv)
             return rv;
-        return memcmp(a->cert_info->enc.enc, b->cert_info->enc.enc,
-                      a->cert_info->enc.len);
+        return OPENSSL_memcmp(a->cert_info->enc.enc, b->cert_info->enc.enc,
+                              a->cert_info->enc.len);
     }
     return rv;
 }
-#endif
 
 int X509_NAME_cmp(const X509_NAME *a, const X509_NAME *b)
 {
@@ -222,7 +218,7 @@ int X509_NAME_cmp(const X509_NAME *a, const X509_NAME *b)
     if (ret)
         return ret;
 
-    return memcmp(a->canon_enc, b->canon_enc, a->canon_enclen);
+    return OPENSSL_memcmp(a->canon_enc, b->canon_enc, a->canon_enclen);
 
 }
 
@@ -243,7 +239,6 @@ unsigned long X509_NAME_hash(X509_NAME *x)
     return (ret);
 }
 
-#ifndef OPENSSL_NO_MD5
 /*
  * I now DER encode the name and hash it.  Since I cache the DER encoding,
  * this is reasonably efficient.
@@ -258,7 +253,7 @@ unsigned long X509_NAME_hash_old(X509_NAME *x)
     /* Make sure X509_NAME structure contains valid cached encoding */
     i2d_X509_NAME(x, NULL);
     EVP_MD_CTX_init(&md_ctx);
-    EVP_MD_CTX_set_flags(&md_ctx, EVP_MD_CTX_FLAG_NON_FIPS_ALLOW);
+    /* EVP_MD_CTX_set_flags(&md_ctx, EVP_MD_CTX_FLAG_NON_FIPS_ALLOW); */
     if (EVP_DigestInit_ex(&md_ctx, EVP_md5(), NULL)
         && EVP_DigestUpdate(&md_ctx, x->bytes->data, x->bytes->length)
         && EVP_DigestFinal_ex(&md_ctx, md, NULL))
@@ -269,13 +264,12 @@ unsigned long X509_NAME_hash_old(X509_NAME *x)
 
     return (ret);
 }
-#endif
 
 /* Search a stack of X509 for a match */
 X509 *X509_find_by_issuer_and_serial(STACK_OF(X509) *sk, X509_NAME *name,
                                      ASN1_INTEGER *serial)
 {
-    int i;
+    size_t i;
     X509_CINF cinf;
     X509 x, *x509 = NULL;
 
@@ -297,7 +291,7 @@ X509 *X509_find_by_issuer_and_serial(STACK_OF(X509) *sk, X509_NAME *name,
 X509 *X509_find_by_subject(STACK_OF(X509) *sk, X509_NAME *name)
 {
     X509 *x509;
-    int i;
+    size_t i;
 
     for (i = 0; i < sk_X509_num(sk); i++) {
         x509 = sk_X509_value(sk, i);
@@ -321,7 +315,7 @@ ASN1_BIT_STRING *X509_get0_pubkey_bitstr(const X509 *x)
     return x->cert_info->key->public_key;
 }
 
-int X509_check_private_key(X509 *x, EVP_PKEY *k)
+int X509_check_private_key(X509 *x, const EVP_PKEY *k)
 {
     EVP_PKEY *xk;
     int ret;
@@ -337,13 +331,13 @@ int X509_check_private_key(X509 *x, EVP_PKEY *k)
     case 1:
         break;
     case 0:
-        X509err(X509_F_X509_CHECK_PRIVATE_KEY, X509_R_KEY_VALUES_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_KEY_VALUES_MISMATCH);
         break;
     case -1:
-        X509err(X509_F_X509_CHECK_PRIVATE_KEY, X509_R_KEY_TYPE_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_KEY_TYPE_MISMATCH);
         break;
     case -2:
-        X509err(X509_F_X509_CHECK_PRIVATE_KEY, X509_R_UNKNOWN_KEY_TYPE);
+        OPENSSL_PUT_ERROR(X509, X509_R_UNKNOWN_KEY_TYPE);
     }
     if (xk)
         EVP_PKEY_free(xk);
@@ -357,8 +351,6 @@ int X509_check_private_key(X509 *x, EVP_PKEY *k)
  * of its signature (or 0 if no signature). The pflags is a pointer to a
  * flags field which must contain the suite B verification flags.
  */
-
-#ifndef OPENSSL_NO_EC
 
 static int check_suite_b(EVP_PKEY *pkey, int sign_nid, unsigned long *pflags)
 {
@@ -394,7 +386,8 @@ static int check_suite_b(EVP_PKEY *pkey, int sign_nid, unsigned long *pflags)
 int X509_chain_check_suiteb(int *perror_depth, X509 *x, STACK_OF(X509) *chain,
                             unsigned long flags)
 {
-    int rv, i, sign_nid;
+    int rv, sign_nid;
+    size_t i;
     EVP_PKEY *pk = NULL;
     unsigned long tflags;
     if (!(flags & X509_V_FLAG_SUITEB_128_LOS))
@@ -467,19 +460,6 @@ int X509_CRL_check_suiteb(X509_CRL *crl, EVP_PKEY *pk, unsigned long flags)
     return check_suite_b(pk, sign_nid, &flags);
 }
 
-#else
-int X509_chain_check_suiteb(int *perror_depth, X509 *x, STACK_OF(X509) *chain,
-                            unsigned long flags)
-{
-    return 0;
-}
-
-int X509_CRL_check_suiteb(X509_CRL *crl, EVP_PKEY *pk, unsigned long flags)
-{
-    return 0;
-}
-
-#endif
 /*
  * Not strictly speaking an "up_ref" as a STACK doesn't have a reference
  * count but it has the same effect by duping the STACK and upping the ref of
@@ -488,11 +468,10 @@ int X509_CRL_check_suiteb(X509_CRL *crl, EVP_PKEY *pk, unsigned long flags)
 STACK_OF(X509) *X509_chain_up_ref(STACK_OF(X509) *chain)
 {
     STACK_OF(X509) *ret;
-    int i;
+    size_t i;
     ret = sk_X509_dup(chain);
     for (i = 0; i < sk_X509_num(ret); i++) {
-        X509 *x = sk_X509_value(ret, i);
-        CRYPTO_add(&x->references, 1, CRYPTO_LOCK_X509);
+        X509_up_ref(sk_X509_value(ret, i));
     }
     return ret;
 }

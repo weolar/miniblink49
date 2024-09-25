@@ -53,15 +53,20 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+#include <string.h>
+
 #include <openssl/asn1t.h>
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
+
+#include "../internal.h"
+
 
 static void *v2i_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method,
                                   X509V3_CTX *ctx,
@@ -70,7 +75,7 @@ static int i2r_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method, void *a,
                                 BIO *bp, int ind);
 static int do_i2r_name_constraints(const X509V3_EXT_METHOD *method,
                                    STACK_OF(GENERAL_SUBTREE) *trees, BIO *bp,
-                                   int ind, char *name);
+                                   int ind, const char *name);
 static int print_nc_ipadd(BIO *bp, ASN1_OCTET_STRING *ip);
 
 static int nc_match(GENERAL_NAME *gen, NAME_CONSTRAINTS *nc);
@@ -110,7 +115,7 @@ IMPLEMENT_ASN1_ALLOC_FUNCTIONS(NAME_CONSTRAINTS)
 static void *v2i_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method,
                                   X509V3_CTX *ctx, STACK_OF(CONF_VALUE) *nval)
 {
-    int i;
+    size_t i;
     CONF_VALUE tval, *val;
     STACK_OF(GENERAL_SUBTREE) **ptree = NULL;
     NAME_CONSTRAINTS *ncons = NULL;
@@ -127,13 +132,11 @@ static void *v2i_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method,
             ptree = &ncons->excludedSubtrees;
             tval.name = val->name + 9;
         } else {
-            X509V3err(X509V3_F_V2I_NAME_CONSTRAINTS, X509V3_R_INVALID_SYNTAX);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_SYNTAX);
             goto err;
         }
         tval.value = val->value;
         sub = GENERAL_SUBTREE_new();
-        if (sub == NULL)
-            goto memerr;
         if (!v2i_GENERAL_NAME_ex(sub->base, method, ctx, &tval, 1))
             goto err;
         if (!*ptree)
@@ -146,7 +149,7 @@ static void *v2i_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method,
     return ncons;
 
  memerr:
-    X509V3err(X509V3_F_V2I_NAME_CONSTRAINTS, ERR_R_MALLOC_FAILURE);
+    OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
  err:
     if (ncons)
         NAME_CONSTRAINTS_free(ncons);
@@ -169,10 +172,10 @@ static int i2r_NAME_CONSTRAINTS(const X509V3_EXT_METHOD *method, void *a,
 
 static int do_i2r_name_constraints(const X509V3_EXT_METHOD *method,
                                    STACK_OF(GENERAL_SUBTREE) *trees,
-                                   BIO *bp, int ind, char *name)
+                                   BIO *bp, int ind, const char *name)
 {
     GENERAL_SUBTREE *tree;
-    int i;
+    size_t i;
     if (sk_GENERAL_SUBTREE_num(trees) > 0)
         BIO_printf(bp, "%*s%s:\n", ind, "", name);
     for (i = 0; i < sk_GENERAL_SUBTREE_num(trees); i++) {
@@ -214,21 +217,39 @@ static int print_nc_ipadd(BIO *bp, ASN1_OCTET_STRING *ip)
 /*-
  * Check a certificate conforms to a specified set of constraints.
  * Return values:
- *  X509_V_OK: All constraints obeyed.
- *  X509_V_ERR_PERMITTED_VIOLATION: Permitted subtree violation.
- *  X509_V_ERR_EXCLUDED_VIOLATION: Excluded subtree violation.
- *  X509_V_ERR_SUBTREE_MINMAX: Min or max values present and matching type.
- *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE:  Unsupported constraint type.
- *  X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX: bad unsupported constraint syntax.
- *  X509_V_ERR_UNSUPPORTED_NAME_SYNTAX: bad or unsupported syntax of name
+ *   X509_V_OK: All constraints obeyed.
+ *   X509_V_ERR_PERMITTED_VIOLATION: Permitted subtree violation.
+ *   X509_V_ERR_EXCLUDED_VIOLATION: Excluded subtree violation.
+ *   X509_V_ERR_SUBTREE_MINMAX: Min or max values present and matching type.
+ *   X509_V_ERR_UNSPECIFIED: Unspecified error.
+ *   X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE: Unsupported constraint type.
+ *   X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX: Bad or unsupported constraint
+ *     syntax.
+ *   X509_V_ERR_UNSUPPORTED_NAME_SYNTAX: Bad or unsupported syntax of name.
  */
 
 int NAME_CONSTRAINTS_check(X509 *x, NAME_CONSTRAINTS *nc)
 {
     int r, i;
+    size_t j;
     X509_NAME *nm;
 
     nm = X509_get_subject_name(x);
+
+    /* Guard against certificates with an excessive number of names or
+     * constraints causing a computationally expensive name constraints
+     * check. */
+    size_t name_count =
+        X509_NAME_entry_count(nm) + sk_GENERAL_NAME_num(x->altname);
+    size_t constraint_count = sk_GENERAL_SUBTREE_num(nc->permittedSubtrees) +
+                              sk_GENERAL_SUBTREE_num(nc->excludedSubtrees);
+    size_t check_count = constraint_count * name_count;
+    if (name_count < (size_t)X509_NAME_entry_count(nm) ||
+        constraint_count < sk_GENERAL_SUBTREE_num(nc->permittedSubtrees) ||
+        (constraint_count && check_count / constraint_count != name_count) ||
+        check_count > 1 << 20) {
+      return X509_V_ERR_UNSPECIFIED;
+    }
 
     if (X509_NAME_entry_count(nm) > 0) {
         GENERAL_NAME gntmp;
@@ -262,8 +283,8 @@ int NAME_CONSTRAINTS_check(X509 *x, NAME_CONSTRAINTS *nc)
 
     }
 
-    for (i = 0; i < sk_GENERAL_NAME_num(x->altname); i++) {
-        GENERAL_NAME *gen = sk_GENERAL_NAME_value(x->altname, i);
+    for (j = 0; j < sk_GENERAL_NAME_num(x->altname); j++) {
+        GENERAL_NAME *gen = sk_GENERAL_NAME_value(x->altname, j);
         r = nc_match(gen, nc);
         if (r != X509_V_OK)
             return r;
@@ -276,7 +297,8 @@ int NAME_CONSTRAINTS_check(X509 *x, NAME_CONSTRAINTS *nc)
 static int nc_match(GENERAL_NAME *gen, NAME_CONSTRAINTS *nc)
 {
     GENERAL_SUBTREE *sub;
-    int i, r, match = 0;
+    int r, match = 0;
+    size_t i;
 
     /*
      * Permitted subtrees: if any subtrees exist of matching the type at
@@ -362,7 +384,7 @@ static int nc_dn(X509_NAME *nm, X509_NAME *base)
         return X509_V_ERR_OUT_OF_MEM;
     if (base->canon_enclen > nm->canon_enclen)
         return X509_V_ERR_PERMITTED_VIOLATION;
-    if (memcmp(base->canon_enc, nm->canon_enc, base->canon_enclen))
+    if (OPENSSL_memcmp(base->canon_enc, nm->canon_enc, base->canon_enclen))
         return X509_V_ERR_PERMITTED_VIOLATION;
     return X509_V_OK;
 }
@@ -384,7 +406,7 @@ static int nc_dns(ASN1_IA5STRING *dns, ASN1_IA5STRING *base)
             return X509_V_ERR_PERMITTED_VIOLATION;
     }
 
-    if (strcasecmp(baseptr, dnsptr))
+    if (OPENSSL_strcasecmp(baseptr, dnsptr))
         return X509_V_ERR_PERMITTED_VIOLATION;
 
     return X509_V_OK;
@@ -404,7 +426,7 @@ static int nc_email(ASN1_IA5STRING *eml, ASN1_IA5STRING *base)
     if (!baseat && (*baseptr == '.')) {
         if (eml->length > base->length) {
             emlptr += eml->length - base->length;
-            if (!strcasecmp(baseptr, emlptr))
+            if (!OPENSSL_strcasecmp(baseptr, emlptr))
                 return X509_V_OK;
         }
         return X509_V_ERR_PERMITTED_VIOLATION;
@@ -425,7 +447,7 @@ static int nc_email(ASN1_IA5STRING *eml, ASN1_IA5STRING *base)
     }
     emlptr = emlat + 1;
     /* Just have hostname left to match: case insensitive */
-    if (strcasecmp(baseptr, emlptr))
+    if (OPENSSL_strcasecmp(baseptr, emlptr))
         return X509_V_ERR_PERMITTED_VIOLATION;
 
     return X509_V_OK;
@@ -464,14 +486,14 @@ static int nc_uri(ASN1_IA5STRING *uri, ASN1_IA5STRING *base)
     if (*baseptr == '.') {
         if (hostlen > base->length) {
             p = hostptr + hostlen - base->length;
-            if (!strncasecmp(p, baseptr, base->length))
+            if (!OPENSSL_strncasecmp(p, baseptr, base->length))
                 return X509_V_OK;
         }
         return X509_V_ERR_PERMITTED_VIOLATION;
     }
 
     if ((base->length != (int)hostlen)
-        || strncasecmp(hostptr, baseptr, hostlen))
+        || OPENSSL_strncasecmp(hostptr, baseptr, hostlen))
         return X509_V_ERR_PERMITTED_VIOLATION;
 
     return X509_V_OK;

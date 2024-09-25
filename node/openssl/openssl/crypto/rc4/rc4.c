@@ -1,4 +1,3 @@
-/* crypto/rc4/rc4.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,127 +52,47 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <openssl/rc4.h>
-#include <openssl/evp.h>
 
-char *usage[] = {
-    "usage: rc4 args\n",
-    "\n",
-    " -in arg         - input file - default stdin\n",
-    " -out arg        - output file - default stdout\n",
-    " -key key        - password\n",
-    NULL
-};
 
-int main(int argc, char *argv[])
-{
-    FILE *in = NULL, *out = NULL;
-    char *infile = NULL, *outfile = NULL, *keystr = NULL;
-    RC4_KEY key;
-    char buf[BUFSIZ];
-    int badops = 0, i;
-    char **pp;
-    unsigned char md[MD5_DIGEST_LENGTH];
+void RC4(RC4_KEY *key, size_t len, const uint8_t *in, uint8_t *out) {
+  uint32_t x = key->x;
+  uint32_t y = key->y;
+  uint32_t *d = key->data;
 
-    argc--;
-    argv++;
-    while (argc >= 1) {
-        if (strcmp(*argv, "-in") == 0) {
-            if (--argc < 1)
-                goto bad;
-            infile = *(++argv);
-        } else if (strcmp(*argv, "-out") == 0) {
-            if (--argc < 1)
-                goto bad;
-            outfile = *(++argv);
-        } else if (strcmp(*argv, "-key") == 0) {
-            if (--argc < 1)
-                goto bad;
-            keystr = *(++argv);
-        } else {
-            fprintf(stderr, "unknown option %s\n", *argv);
-            badops = 1;
-            break;
-        }
-        argc--;
-        argv++;
+  for (size_t i = 0; i < len; i++) {
+    x = (x + 1) & 0xff;
+    uint32_t tx = d[x];
+    y = (tx + y) & 0xff;
+    uint32_t ty = d[y];
+    d[x] = ty;
+    d[y] = tx;
+    out[i] = d[(tx + ty) & 0xff] ^ in[i];
+  }
+
+  key->x = x;
+  key->y = y;
+}
+
+void RC4_set_key(RC4_KEY *rc4key, unsigned len, const uint8_t *key) {
+  uint32_t *d = &rc4key->data[0];
+  rc4key->x = 0;
+  rc4key->y = 0;
+
+  for (unsigned i = 0; i < 256; i++) {
+    d[i] = i;
+  }
+
+  unsigned id1 = 0, id2 = 0;
+  for (unsigned i = 0; i < 256; i++) {
+    uint32_t tmp = d[i];
+    id2 = (key[id1] + tmp + id2) & 0xff;
+    if (++id1 == len) {
+      id1 = 0;
     }
-
-    if (badops) {
- bad:
-        for (pp = usage; (*pp != NULL); pp++)
-            fprintf(stderr, "%s", *pp);
-        exit(1);
-    }
-
-    if (infile == NULL)
-        in = stdin;
-    else {
-        in = fopen(infile, "r");
-        if (in == NULL) {
-            perror("open");
-            exit(1);
-        }
-
-    }
-    if (outfile == NULL)
-        out = stdout;
-    else {
-        out = fopen(outfile, "w");
-        if (out == NULL) {
-            perror("open");
-            exit(1);
-        }
-    }
-
-#ifdef OPENSSL_SYS_MSDOS
-    /* This should set the file to binary mode. */
-    {
-# include <fcntl.h>
-        setmode(fileno(in), O_BINARY);
-        setmode(fileno(out), O_BINARY);
-    }
-#endif
-
-    if (keystr == NULL) {       /* get key */
-        i = EVP_read_pw_string(buf, BUFSIZ, "Enter RC4 password:", 0);
-        if (i != 0) {
-            OPENSSL_cleanse(buf, BUFSIZ);
-            fprintf(stderr, "bad password read\n");
-            exit(1);
-        }
-        keystr = buf;
-    }
-
-    EVP_Digest((unsigned char *)keystr, strlen(keystr), md, NULL, EVP_md5(),
-               NULL);
-    OPENSSL_cleanse(keystr, strlen(keystr));
-    RC4_set_key(&key, MD5_DIGEST_LENGTH, md);
-
-    for (;;) {
-        i = fread(buf, 1, BUFSIZ, in);
-        if (i == 0)
-            break;
-        if (i < 0) {
-            perror("read");
-            exit(1);
-        }
-        RC4(&key, (unsigned int)i, (unsigned char *)buf,
-            (unsigned char *)buf);
-        i = fwrite(buf, (unsigned int)i, 1, out);
-        if (i != 1) {
-            perror("write");
-            exit(1);
-        }
-    }
-    fclose(out);
-    fclose(in);
-    exit(0);
-    return (1);
+    d[i] = d[id2];
+    d[id2] = tmp;
+  }
 }

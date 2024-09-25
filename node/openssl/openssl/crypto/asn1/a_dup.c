@@ -1,4 +1,3 @@
-/* crypto/asn1/a_dup.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,40 +52,12 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
 
-#ifndef NO_OLD_ASN1
-
-void *ASN1_dup(i2d_of_void *i2d, d2i_of_void *d2i, void *x)
-{
-    unsigned char *b, *p;
-    const unsigned char *p2;
-    int i;
-    char *ret;
-
-    if (x == NULL)
-        return (NULL);
-
-    i = i2d(x, NULL);
-    b = OPENSSL_malloc(i + 10);
-    if (b == NULL) {
-        ASN1err(ASN1_F_ASN1_DUP, ERR_R_MALLOC_FAILURE);
-        return (NULL);
-    }
-    p = b;
-    i = i2d(x, &p);
-    p2 = b;
-    ret = d2i(NULL, &p2, i);
-    OPENSSL_free(b);
-    return (ret);
-}
-
-#endif
+#include <openssl/err.h>
+#include <openssl/mem.h>
 
 /*
  * ASN1_ITEM version of dup: this follows the model above except we don't
@@ -94,7 +65,6 @@ void *ASN1_dup(i2d_of_void *i2d, d2i_of_void *d2i, void *x)
  * directly dup the underlying structure instead of doing and encode and
  * decode.
  */
-
 void *ASN1_item_dup(const ASN1_ITEM *it, void *x)
 {
     unsigned char *b = NULL;
@@ -107,7 +77,7 @@ void *ASN1_item_dup(const ASN1_ITEM *it, void *x)
 
     i = ASN1_item_i2d(x, &b, it);
     if (b == NULL) {
-        ASN1err(ASN1_F_ASN1_ITEM_DUP, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
         return (NULL);
     }
     p = b;

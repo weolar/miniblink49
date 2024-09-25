@@ -1,33 +1,3 @@
-/* crypto/ex_data.c */
-
-/*
- * Overhaul notes;
- *
- * This code is now *mostly* thread-safe. It is now easier to understand in what
- * ways it is safe and in what ways it is not, which is an improvement. Firstly,
- * all per-class stacks and index-counters for ex_data are stored in the same
- * global LHASH table (keyed by class). This hash table uses locking for all
- * access with the exception of CRYPTO_cleanup_all_ex_data(), which must only be
- * called when no other threads can possibly race against it (even if it was
- * locked, the race would mean it's possible the hash table might have been
- * recreated after the cleanup). As classes can only be added to the hash table,
- * and within each class, the stack of methods can only be incremented, the
- * locking mechanics are simpler than they would otherwise be. For example, the
- * new/dup/free ex_data functions will lock the hash table, copy the method
- * pointers it needs from the relevant class, then unlock the hash table before
- * actually applying those method pointers to the task of the new/dup/free
- * operations. As they can't be removed from the method-stack, only
- * supplemented, there's no race conditions associated with using them outside
- * the lock. The get/set_ex_data functions are not locked because they do not
- * involve this global state at all - they operate directly with a previously
- * obtained per-class method index and a particular "ex_data" variable. These
- * variables are usually instantiated per-context (eg. each RSA structure has
- * one) so locking on read/write access to that variable can be locked locally
- * if required (eg. using the "RSA" lock to synchronise access to a
- * per-RSA-structure ex_data variable if required).
- * [Geoff]
- */
-
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -134,513 +104,158 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
-#include "cryptlib.h"
-#include <openssl/lhash.h>
+#include <openssl/ex_data.h>
 
-/* What an "implementation of ex_data functionality" looks like */
-struct st_CRYPTO_EX_DATA_IMPL {
-        /*********************/
-    /* GLOBAL OPERATIONS */
-    /* Return a new class index */
-    int (*cb_new_class) (void);
-    /* Cleanup all state used by the implementation */
-    void (*cb_cleanup) (void);
-        /************************/
-    /* PER-CLASS OPERATIONS */
-    /* Get a new method index within a class */
-    int (*cb_get_new_index) (int class_index, long argl, void *argp,
-                             CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
-                             CRYPTO_EX_free *free_func);
-    /* Initialise a new CRYPTO_EX_DATA of a given class */
-    int (*cb_new_ex_data) (int class_index, void *obj, CRYPTO_EX_DATA *ad);
-    /* Duplicate a CRYPTO_EX_DATA of a given class onto a copy */
-    int (*cb_dup_ex_data) (int class_index, CRYPTO_EX_DATA *to,
-                           CRYPTO_EX_DATA *from);
-    /* Cleanup a CRYPTO_EX_DATA of a given class */
-    void (*cb_free_ex_data) (int class_index, void *obj, CRYPTO_EX_DATA *ad);
+#include <assert.h>
+#include <string.h>
+
+#include <openssl/crypto.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/stack.h>
+#include <openssl/thread.h>
+
+#include "internal.h"
+
+
+DEFINE_STACK_OF(CRYPTO_EX_DATA_FUNCS)
+
+struct crypto_ex_data_func_st {
+  long argl;   // Arbitary long
+  void *argp;  // Arbitary void pointer
+  CRYPTO_EX_free *free_func;
 };
 
-/* The implementation we use at run-time */
-static const CRYPTO_EX_DATA_IMPL *impl = NULL;
+int CRYPTO_get_ex_new_index(CRYPTO_EX_DATA_CLASS *ex_data_class, int *out_index,
+                            long argl, void *argp, CRYPTO_EX_free *free_func) {
+  CRYPTO_EX_DATA_FUNCS *funcs;
+  int ret = 0;
 
-/*
- * To call "impl" functions, use this macro rather than referring to 'impl'
- * directly, eg. EX_IMPL(get_new_index)(...);
- */
-#define EX_IMPL(a) impl->cb_##a
+  funcs = OPENSSL_malloc(sizeof(CRYPTO_EX_DATA_FUNCS));
+  if (funcs == NULL) {
+    OPENSSL_PUT_ERROR(CRYPTO, ERR_R_MALLOC_FAILURE);
+    return 0;
+  }
 
-/* Predeclare the "default" ex_data implementation */
-static int int_new_class(void);
-static void int_cleanup(void);
-static int int_get_new_index(int class_index, long argl, void *argp,
-                             CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
-                             CRYPTO_EX_free *free_func);
-static int int_new_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad);
-static int int_dup_ex_data(int class_index, CRYPTO_EX_DATA *to,
-                           CRYPTO_EX_DATA *from);
-static void int_free_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad);
-static CRYPTO_EX_DATA_IMPL impl_default = {
-    int_new_class,
-    int_cleanup,
-    int_get_new_index,
-    int_new_ex_data,
-    int_dup_ex_data,
-    int_free_ex_data
-};
+  funcs->argl = argl;
+  funcs->argp = argp;
+  funcs->free_func = free_func;
 
-/*
- * Internal function that checks whether "impl" is set and if not, sets it to
- * the default.
- */
-static void impl_check(void)
-{
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    if (!impl)
-        impl = &impl_default;
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-}
+  CRYPTO_STATIC_MUTEX_lock_write(&ex_data_class->lock);
 
-/*
- * A macro wrapper for impl_check that first uses a non-locked test before
- * invoking the function (which checks again inside a lock).
- */
-#define IMPL_CHECK if(!impl) impl_check();
+  if (ex_data_class->meth == NULL) {
+    ex_data_class->meth = sk_CRYPTO_EX_DATA_FUNCS_new_null();
+  }
 
-/* API functions to get/set the "ex_data" implementation */
-const CRYPTO_EX_DATA_IMPL *CRYPTO_get_ex_data_implementation(void)
-{
-    IMPL_CHECK return impl;
-}
-
-int CRYPTO_set_ex_data_implementation(const CRYPTO_EX_DATA_IMPL *i)
-{
-    int toret = 0;
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    if (!impl) {
-        impl = i;
-        toret = 1;
-    }
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-    return toret;
-}
-
-/****************************************************************************/
-/*
- * Interal (default) implementation of "ex_data" support. API functions are
- * further down.
- */
-
-/*
- * The type that represents what each "class" used to implement locally. A
- * STACK of CRYPTO_EX_DATA_FUNCS plus a index-counter. The 'class_index' is
- * the global value representing the class that is used to distinguish these
- * items.
- */
-typedef struct st_ex_class_item {
-    int class_index;
-    STACK_OF(CRYPTO_EX_DATA_FUNCS) *meth;
-    int meth_num;
-} EX_CLASS_ITEM;
-
-/* When assigning new class indexes, this is our counter */
-static int ex_class = CRYPTO_EX_INDEX_USER;
-
-/* The global hash table of EX_CLASS_ITEM items */
-DECLARE_LHASH_OF(EX_CLASS_ITEM);
-static LHASH_OF(EX_CLASS_ITEM) *ex_data = NULL;
-
-/* The callbacks required in the "ex_data" hash table */
-static unsigned long ex_class_item_hash(const EX_CLASS_ITEM *a)
-{
-    return a->class_index;
-}
-
-static IMPLEMENT_LHASH_HASH_FN(ex_class_item, EX_CLASS_ITEM)
-
-static int ex_class_item_cmp(const EX_CLASS_ITEM *a, const EX_CLASS_ITEM *b)
-{
-    return a->class_index - b->class_index;
-}
-
-static IMPLEMENT_LHASH_COMP_FN(ex_class_item, EX_CLASS_ITEM)
-
-/*
- * Internal functions used by the "impl_default" implementation to access the
- * state
- */
-static int ex_data_check(void)
-{
-    int toret = 1;
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    if (!ex_data && (ex_data = lh_EX_CLASS_ITEM_new()) == NULL)
-        toret = 0;
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-    return toret;
-}
-
-/*
- * This macros helps reduce the locking from repeated checks because the
- * ex_data_check() function checks ex_data again inside a lock.
- */
-#define EX_DATA_CHECK(iffail) if(!ex_data && !ex_data_check()) {iffail}
-
-/* This "inner" callback is used by the callback function that follows it */
-static void def_cleanup_util_cb(CRYPTO_EX_DATA_FUNCS *funcs)
-{
+  if (ex_data_class->meth == NULL ||
+      !sk_CRYPTO_EX_DATA_FUNCS_push(ex_data_class->meth, funcs)) {
+    OPENSSL_PUT_ERROR(CRYPTO, ERR_R_MALLOC_FAILURE);
     OPENSSL_free(funcs);
+    goto err;
+  }
+
+  *out_index = sk_CRYPTO_EX_DATA_FUNCS_num(ex_data_class->meth) - 1 +
+               ex_data_class->num_reserved;
+  ret = 1;
+
+err:
+  CRYPTO_STATIC_MUTEX_unlock_write(&ex_data_class->lock);
+  return ret;
 }
 
-/*
- * This callback is used in lh_doall to destroy all EX_CLASS_ITEM values from
- * "ex_data" prior to the ex_data hash table being itself destroyed. Doesn't
- * do any locking.
- */
-static void def_cleanup_cb(void *a_void)
-{
-    EX_CLASS_ITEM *item = (EX_CLASS_ITEM *)a_void;
-    sk_CRYPTO_EX_DATA_FUNCS_pop_free(item->meth, def_cleanup_util_cb);
-    OPENSSL_free(item);
-}
+int CRYPTO_set_ex_data(CRYPTO_EX_DATA *ad, int index, void *val) {
+  int n, i;
 
-/*
- * Return the EX_CLASS_ITEM from the "ex_data" hash table that corresponds to
- * a given class. Handles locking.
- */
-static EX_CLASS_ITEM *def_get_class(int class_index)
-{
-    EX_CLASS_ITEM d, *p, *gen;
-    EX_DATA_CHECK(return NULL;)
-        d.class_index = class_index;
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    p = lh_EX_CLASS_ITEM_retrieve(ex_data, &d);
-    if (!p) {
-        gen = OPENSSL_malloc(sizeof(EX_CLASS_ITEM));
-        if (gen) {
-            gen->class_index = class_index;
-            gen->meth_num = 0;
-            gen->meth = sk_CRYPTO_EX_DATA_FUNCS_new_null();
-            if (!gen->meth)
-                OPENSSL_free(gen);
-            else {
-                /*
-                 * Because we're inside the ex_data lock, the return value
-                 * from the insert will be NULL
-                 */
-                (void)lh_EX_CLASS_ITEM_insert(ex_data, gen);
-                p = gen;
-            }
-        }
-    }
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-    if (!p)
-        CRYPTOerr(CRYPTO_F_DEF_GET_CLASS, ERR_R_MALLOC_FAILURE);
-    return p;
-}
-
-/*
- * Add a new method to the given EX_CLASS_ITEM and return the corresponding
- * index (or -1 for error). Handles locking.
- */
-static int def_add_index(EX_CLASS_ITEM *item, long argl, void *argp,
-                         CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
-                         CRYPTO_EX_free *free_func)
-{
-    int toret = -1;
-    CRYPTO_EX_DATA_FUNCS *a =
-        (CRYPTO_EX_DATA_FUNCS *)OPENSSL_malloc(sizeof(CRYPTO_EX_DATA_FUNCS));
-    if (!a) {
-        CRYPTOerr(CRYPTO_F_DEF_ADD_INDEX, ERR_R_MALLOC_FAILURE);
-        return -1;
-    }
-    a->argl = argl;
-    a->argp = argp;
-    a->new_func = new_func;
-    a->dup_func = dup_func;
-    a->free_func = free_func;
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    while (sk_CRYPTO_EX_DATA_FUNCS_num(item->meth) <= item->meth_num) {
-        if (!sk_CRYPTO_EX_DATA_FUNCS_push(item->meth, NULL)) {
-            CRYPTOerr(CRYPTO_F_DEF_ADD_INDEX, ERR_R_MALLOC_FAILURE);
-            OPENSSL_free(a);
-            goto err;
-        }
-    }
-    toret = item->meth_num++;
-    (void)sk_CRYPTO_EX_DATA_FUNCS_set(item->meth, toret, a);
- err:
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-    return toret;
-}
-
-/**************************************************************/
-/* The functions in the default CRYPTO_EX_DATA_IMPL structure */
-
-static int int_new_class(void)
-{
-    int toret;
-    CRYPTO_w_lock(CRYPTO_LOCK_EX_DATA);
-    toret = ex_class++;
-    CRYPTO_w_unlock(CRYPTO_LOCK_EX_DATA);
-    return toret;
-}
-
-static void int_cleanup(void)
-{
-    EX_DATA_CHECK(return;)
-        lh_EX_CLASS_ITEM_doall(ex_data, def_cleanup_cb);
-    lh_EX_CLASS_ITEM_free(ex_data);
-    ex_data = NULL;
-    impl = NULL;
-}
-
-static int int_get_new_index(int class_index, long argl, void *argp,
-                             CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
-                             CRYPTO_EX_free *free_func)
-{
-    EX_CLASS_ITEM *item = def_get_class(class_index);
-    if (!item)
-        return -1;
-    return def_add_index(item, argl, argp, new_func, dup_func, free_func);
-}
-
-/*
- * Thread-safe by copying a class's array of "CRYPTO_EX_DATA_FUNCS" entries
- * in the lock, then using them outside the lock. NB: Thread-safety only
- * applies to the global "ex_data" state (ie. class definitions), not
- * thread-safe on 'ad' itself.
- */
-static int int_new_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad)
-{
-    int mx, i;
-    void *ptr;
-    CRYPTO_EX_DATA_FUNCS **storage = NULL;
-    EX_CLASS_ITEM *item = def_get_class(class_index);
-    if (!item)
-        /* error is already set */
-        return 0;
-    ad->sk = NULL;
-    CRYPTO_r_lock(CRYPTO_LOCK_EX_DATA);
-    mx = sk_CRYPTO_EX_DATA_FUNCS_num(item->meth);
-    if (mx > 0) {
-        storage = OPENSSL_malloc(mx * sizeof(CRYPTO_EX_DATA_FUNCS *));
-        if (!storage)
-            goto skip;
-        for (i = 0; i < mx; i++)
-            storage[i] = sk_CRYPTO_EX_DATA_FUNCS_value(item->meth, i);
-    }
- skip:
-    CRYPTO_r_unlock(CRYPTO_LOCK_EX_DATA);
-    if ((mx > 0) && !storage) {
-        CRYPTOerr(CRYPTO_F_INT_NEW_EX_DATA, ERR_R_MALLOC_FAILURE);
-        return 0;
-    }
-    for (i = 0; i < mx; i++) {
-        if (storage[i] && storage[i]->new_func) {
-            ptr = CRYPTO_get_ex_data(ad, i);
-            storage[i]->new_func(obj, ptr, ad, i,
-                                 storage[i]->argl, storage[i]->argp);
-        }
-    }
-    if (storage)
-        OPENSSL_free(storage);
-    return 1;
-}
-
-/* Same thread-safety notes as for "int_new_ex_data" */
-static int int_dup_ex_data(int class_index, CRYPTO_EX_DATA *to,
-                           CRYPTO_EX_DATA *from)
-{
-    int mx, j, i;
-    char *ptr;
-    CRYPTO_EX_DATA_FUNCS **storage = NULL;
-    EX_CLASS_ITEM *item;
-    if (!from->sk)
-        /* 'to' should be "blank" which *is* just like 'from' */
-        return 1;
-    if ((item = def_get_class(class_index)) == NULL)
-        return 0;
-    CRYPTO_r_lock(CRYPTO_LOCK_EX_DATA);
-    mx = sk_CRYPTO_EX_DATA_FUNCS_num(item->meth);
-    j = sk_void_num(from->sk);
-    if (j < mx)
-        mx = j;
-    if (mx > 0) {
-        storage = OPENSSL_malloc(mx * sizeof(CRYPTO_EX_DATA_FUNCS *));
-        if (!storage)
-            goto skip;
-        for (i = 0; i < mx; i++)
-            storage[i] = sk_CRYPTO_EX_DATA_FUNCS_value(item->meth, i);
-    }
- skip:
-    CRYPTO_r_unlock(CRYPTO_LOCK_EX_DATA);
-    if ((mx > 0) && !storage) {
-        CRYPTOerr(CRYPTO_F_INT_DUP_EX_DATA, ERR_R_MALLOC_FAILURE);
-        return 0;
-    }
-    for (i = 0; i < mx; i++) {
-        ptr = CRYPTO_get_ex_data(from, i);
-        if (storage[i] && storage[i]->dup_func)
-            storage[i]->dup_func(to, from, &ptr, i,
-                                 storage[i]->argl, storage[i]->argp);
-        CRYPTO_set_ex_data(to, i, ptr);
-    }
-    if (storage)
-        OPENSSL_free(storage);
-    return 1;
-}
-
-/* Same thread-safety notes as for "int_new_ex_data" */
-static void int_free_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad)
-{
-    int mx, i;
-    EX_CLASS_ITEM *item;
-    void *ptr;
-    CRYPTO_EX_DATA_FUNCS **storage = NULL;
-    if (ex_data == NULL)
-        return;
-    if ((item = def_get_class(class_index)) == NULL)
-        return;
-    CRYPTO_r_lock(CRYPTO_LOCK_EX_DATA);
-    mx = sk_CRYPTO_EX_DATA_FUNCS_num(item->meth);
-    if (mx > 0) {
-        storage = OPENSSL_malloc(mx * sizeof(CRYPTO_EX_DATA_FUNCS *));
-        if (!storage)
-            goto skip;
-        for (i = 0; i < mx; i++)
-            storage[i] = sk_CRYPTO_EX_DATA_FUNCS_value(item->meth, i);
-    }
- skip:
-    CRYPTO_r_unlock(CRYPTO_LOCK_EX_DATA);
-    if ((mx > 0) && !storage) {
-        CRYPTOerr(CRYPTO_F_INT_FREE_EX_DATA, ERR_R_MALLOC_FAILURE);
-        return;
-    }
-    for (i = 0; i < mx; i++) {
-        if (storage[i] && storage[i]->free_func) {
-            ptr = CRYPTO_get_ex_data(ad, i);
-            storage[i]->free_func(obj, ptr, ad, i,
-                                  storage[i]->argl, storage[i]->argp);
-        }
-    }
-    if (storage)
-        OPENSSL_free(storage);
-    if (ad->sk) {
-        sk_void_free(ad->sk);
-        ad->sk = NULL;
-    }
-}
-
-/********************************************************************/
-/*
- * API functions that defer all "state" operations to the "ex_data"
- * implementation we have set.
- */
-
-/*
- * Obtain an index for a new class (not the same as getting a new index
- * within an existing class - this is actually getting a new *class*)
- */
-int CRYPTO_ex_data_new_class(void)
-{
-    IMPL_CHECK return EX_IMPL(new_class) ();
-}
-
-/*
- * Release all "ex_data" state to prevent memory leaks. This can't be made
- * thread-safe without overhauling a lot of stuff, and shouldn't really be
- * called under potential race-conditions anyway (it's for program shutdown
- * after all).
- */
-void CRYPTO_cleanup_all_ex_data(void)
-{
-    IMPL_CHECK EX_IMPL(cleanup) ();
-}
-
-/* Inside an existing class, get/register a new index. */
-int CRYPTO_get_ex_new_index(int class_index, long argl, void *argp,
-                            CRYPTO_EX_new *new_func, CRYPTO_EX_dup *dup_func,
-                            CRYPTO_EX_free *free_func)
-{
-    int ret = -1;
-
-    IMPL_CHECK
-        ret = EX_IMPL(get_new_index) (class_index,
-                                      argl, argp, new_func, dup_func,
-                                      free_func);
-    return ret;
-}
-
-/*
- * Initialise a new CRYPTO_EX_DATA for use in a particular class - including
- * calling new() callbacks for each index in the class used by this variable
- */
-int CRYPTO_new_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad)
-{
-    IMPL_CHECK return EX_IMPL(new_ex_data) (class_index, obj, ad);
-}
-
-/*
- * Duplicate a CRYPTO_EX_DATA variable - including calling dup() callbacks
- * for each index in the class used by this variable
- */
-int CRYPTO_dup_ex_data(int class_index, CRYPTO_EX_DATA *to,
-                       CRYPTO_EX_DATA *from)
-{
-    IMPL_CHECK return EX_IMPL(dup_ex_data) (class_index, to, from);
-}
-
-/*
- * Cleanup a CRYPTO_EX_DATA variable - including calling free() callbacks for
- * each index in the class used by this variable
- */
-void CRYPTO_free_ex_data(int class_index, void *obj, CRYPTO_EX_DATA *ad)
-{
-    IMPL_CHECK EX_IMPL(free_ex_data) (class_index, obj, ad);
-}
-
-/*
- * For a given CRYPTO_EX_DATA variable, set the value corresponding to a
- * particular index in the class used by this variable
- */
-int CRYPTO_set_ex_data(CRYPTO_EX_DATA *ad, int idx, void *val)
-{
-    int i;
-
+  if (ad->sk == NULL) {
+    ad->sk = sk_void_new_null();
     if (ad->sk == NULL) {
-        if ((ad->sk = sk_void_new_null()) == NULL) {
-            CRYPTOerr(CRYPTO_F_CRYPTO_SET_EX_DATA, ERR_R_MALLOC_FAILURE);
-            return (0);
-        }
+      OPENSSL_PUT_ERROR(CRYPTO, ERR_R_MALLOC_FAILURE);
+      return 0;
     }
-    i = sk_void_num(ad->sk);
+  }
 
-    while (i <= idx) {
-        if (!sk_void_push(ad->sk, NULL)) {
-            CRYPTOerr(CRYPTO_F_CRYPTO_SET_EX_DATA, ERR_R_MALLOC_FAILURE);
-            return (0);
-        }
-        i++;
+  n = sk_void_num(ad->sk);
+
+  // Add NULL values until the stack is long enough.
+  for (i = n; i <= index; i++) {
+    if (!sk_void_push(ad->sk, NULL)) {
+      OPENSSL_PUT_ERROR(CRYPTO, ERR_R_MALLOC_FAILURE);
+      return 0;
     }
-    sk_void_set(ad->sk, idx, val);
-    return (1);
+  }
+
+  sk_void_set(ad->sk, index, val);
+  return 1;
 }
 
-/*
- * For a given CRYPTO_EX_DATA_ variable, get the value corresponding to a
- * particular index in the class used by this variable
- */
-void *CRYPTO_get_ex_data(const CRYPTO_EX_DATA *ad, int idx)
-{
-    if (ad->sk == NULL)
-        return (0);
-    else if (idx >= sk_void_num(ad->sk))
-        return (0);
-    else
-        return (sk_void_value(ad->sk, idx));
+void *CRYPTO_get_ex_data(const CRYPTO_EX_DATA *ad, int idx) {
+  if (ad->sk == NULL || idx < 0 || (size_t)idx >= sk_void_num(ad->sk)) {
+    return NULL;
+  }
+  return sk_void_value(ad->sk, idx);
 }
 
-IMPLEMENT_STACK_OF(CRYPTO_EX_DATA_FUNCS)
+// get_func_pointers takes a copy of the CRYPTO_EX_DATA_FUNCS pointers, if any,
+// for the given class. If there are some pointers, it sets |*out| to point to
+// a fresh stack of them. Otherwise it sets |*out| to NULL. It returns one on
+// success or zero on error.
+static int get_func_pointers(STACK_OF(CRYPTO_EX_DATA_FUNCS) **out,
+                             CRYPTO_EX_DATA_CLASS *ex_data_class) {
+  size_t n;
+
+  *out = NULL;
+
+  // CRYPTO_EX_DATA_FUNCS structures are static once set, so we can take a
+  // shallow copy of the list under lock and then use the structures without
+  // the lock held.
+  CRYPTO_STATIC_MUTEX_lock_read(&ex_data_class->lock);
+  n = sk_CRYPTO_EX_DATA_FUNCS_num(ex_data_class->meth);
+  if (n > 0) {
+    *out = sk_CRYPTO_EX_DATA_FUNCS_dup(ex_data_class->meth);
+  }
+  CRYPTO_STATIC_MUTEX_unlock_read(&ex_data_class->lock);
+
+  if (n > 0 && *out == NULL) {
+    OPENSSL_PUT_ERROR(CRYPTO, ERR_R_MALLOC_FAILURE);
+    return 0;
+  }
+
+  return 1;
+}
+
+void CRYPTO_new_ex_data(CRYPTO_EX_DATA *ad) {
+  ad->sk = NULL;
+}
+
+void CRYPTO_free_ex_data(CRYPTO_EX_DATA_CLASS *ex_data_class, void *obj,
+                         CRYPTO_EX_DATA *ad) {
+  if (ad->sk == NULL) {
+    // Nothing to do.
+    return;
+  }
+
+  STACK_OF(CRYPTO_EX_DATA_FUNCS) *func_pointers;
+  if (!get_func_pointers(&func_pointers, ex_data_class)) {
+    // TODO(davidben): This leaks memory on malloc error.
+    return;
+  }
+
+  for (size_t i = 0; i < sk_CRYPTO_EX_DATA_FUNCS_num(func_pointers); i++) {
+    CRYPTO_EX_DATA_FUNCS *func_pointer =
+        sk_CRYPTO_EX_DATA_FUNCS_value(func_pointers, i);
+    if (func_pointer->free_func) {
+      void *ptr = CRYPTO_get_ex_data(ad, i + ex_data_class->num_reserved);
+      func_pointer->free_func(obj, ptr, ad, i + ex_data_class->num_reserved,
+                              func_pointer->argl, func_pointer->argp);
+    }
+  }
+
+  sk_CRYPTO_EX_DATA_FUNCS_free(func_pointers);
+
+  sk_void_free(ad->sk);
+  ad->sk = NULL;
+}
+
+void CRYPTO_cleanup_all_ex_data(void) {}

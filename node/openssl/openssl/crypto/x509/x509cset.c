@@ -1,4 +1,3 @@
-/* crypto/x509/x509cset.c */
 /*
  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
  * 2001.
@@ -53,16 +52,14 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
 #include <openssl/evp.h>
+#include <openssl/obj.h>
 #include <openssl/x509.h>
+
+#include "../internal.h"
 
 int X509_CRL_set_version(X509_CRL *x, long version)
 {
@@ -118,7 +115,7 @@ int X509_CRL_set_nextUpdate(X509_CRL *x, const ASN1_TIME *tm)
 
 int X509_CRL_sort(X509_CRL *c)
 {
-    int i;
+    size_t i;
     X509_REVOKED *r;
     /*
      * sort the data so it will be written in serial number order
@@ -130,6 +127,41 @@ int X509_CRL_sort(X509_CRL *c)
     }
     c->crl->enc.modified = 1;
     return 1;
+}
+
+int X509_CRL_up_ref(X509_CRL *crl)
+{
+    CRYPTO_refcount_inc(&crl->references);
+    return 1;
+}
+
+const ASN1_TIME *X509_CRL_get0_lastUpdate(const X509_CRL *crl)
+{
+    return crl->crl->lastUpdate;
+}
+
+const ASN1_TIME *X509_CRL_get0_nextUpdate(const X509_CRL *crl)
+{
+    return crl->crl->nextUpdate;
+}
+
+void X509_CRL_get0_signature(const X509_CRL *crl, const ASN1_BIT_STRING **psig,
+                             const X509_ALGOR **palg)
+{
+    if (psig != NULL)
+        *psig = crl->signature;
+    if (palg != NULL)
+        *palg = crl->sig_alg;
+}
+
+int X509_CRL_get_signature_nid(const X509_CRL *crl)
+{
+    return OBJ_obj2nid(crl->sig_alg->algorithm);
+}
+
+const ASN1_TIME *X509_REVOKED_get0_revocationDate(const X509_REVOKED *x)
+{
+    return x->revocationDate;
 }
 
 int X509_REVOKED_set_revocationDate(X509_REVOKED *x, ASN1_TIME *tm)
@@ -149,6 +181,11 @@ int X509_REVOKED_set_revocationDate(X509_REVOKED *x, ASN1_TIME *tm)
     return (in != NULL);
 }
 
+const ASN1_INTEGER *X509_REVOKED_get0_serialNumber(const X509_REVOKED *x)
+{
+    return x->serialNumber;
+}
+
 int X509_REVOKED_set_serialNumber(X509_REVOKED *x, ASN1_INTEGER *serial)
 {
     ASN1_INTEGER *in;
@@ -164,4 +201,10 @@ int X509_REVOKED_set_serialNumber(X509_REVOKED *x, ASN1_INTEGER *serial)
         }
     }
     return (in != NULL);
+}
+
+int i2d_re_X509_CRL_tbs(X509_CRL *crl, unsigned char **pp)
+{
+    crl->crl->enc.modified = 1;
+    return i2d_X509_CRL_INFO(crl->crl, pp);
 }

@@ -1,4 +1,3 @@
-/* crypto/asn1/a_bitstr.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,12 +52,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
+
+#include <limits.h>
+#include <string.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+
+#include "../internal.h"
+
 
 int ASN1_BIT_STRING_set(ASN1_BIT_STRING *x, unsigned char *d, int len)
 {
@@ -114,7 +119,7 @@ int i2c_ASN1_BIT_STRING(ASN1_BIT_STRING *a, unsigned char **pp)
 
     *(p++) = (unsigned char)bits;
     d = a->data;
-    memcpy(p, d, len);
+    OPENSSL_memcpy(p, d, len);
     p += len;
     if (len > 0)
         p[-1] &= (0xff << bits);
@@ -128,11 +133,16 @@ ASN1_BIT_STRING *c2i_ASN1_BIT_STRING(ASN1_BIT_STRING **a,
     ASN1_BIT_STRING *ret = NULL;
     const unsigned char *p;
     unsigned char *s;
-    int i;
+    int padding;
 
     if (len < 1) {
-        i = ASN1_R_STRING_TOO_SHORT;
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_STRING_TOO_SHORT);
         goto err;
+    }
+
+    if (len > INT_MAX) {
+      OPENSSL_PUT_ERROR(ASN1, ASN1_R_STRING_TOO_LONG);
+      goto err;
     }
 
     if ((a == NULL) || ((*a) == NULL)) {
@@ -142,26 +152,27 @@ ASN1_BIT_STRING *c2i_ASN1_BIT_STRING(ASN1_BIT_STRING **a,
         ret = (*a);
 
     p = *pp;
-    i = *(p++);
-    if (i > 7) {
-        i = ASN1_R_INVALID_BIT_STRING_BITS_LEFT;
+    padding = *(p++);
+    if (padding > 7) {
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_INVALID_BIT_STRING_BITS_LEFT);
         goto err;
     }
+
     /*
      * We do this to preserve the settings.  If we modify the settings, via
      * the _set_bit function, we will recalculate on output
      */
     ret->flags &= ~(ASN1_STRING_FLAG_BITS_LEFT | 0x07); /* clear */
-    ret->flags |= (ASN1_STRING_FLAG_BITS_LEFT | i); /* set */
+    ret->flags |= (ASN1_STRING_FLAG_BITS_LEFT | padding); /* set */
 
     if (len-- > 1) {            /* using one because of the bits left byte */
         s = (unsigned char *)OPENSSL_malloc((int)len);
         if (s == NULL) {
-            i = ERR_R_MALLOC_FAILURE;
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             goto err;
         }
-        memcpy(s, p, (int)len);
-        s[len - 1] &= (0xff << i);
+        OPENSSL_memcpy(s, p, (int)len);
+        s[len - 1] &= (0xff << padding);
         p += len;
     } else
         s = NULL;
@@ -176,7 +187,6 @@ ASN1_BIT_STRING *c2i_ASN1_BIT_STRING(ASN1_BIT_STRING **a,
     *pp = p;
     return (ret);
  err:
-    ASN1err(ASN1_F_C2I_ASN1_BIT_STRING, i);
     if ((ret != NULL) && ((a == NULL) || (*a != ret)))
         M_ASN1_BIT_STRING_free(ret);
     return (NULL);
@@ -207,14 +217,13 @@ int ASN1_BIT_STRING_set_bit(ASN1_BIT_STRING *a, int n, int value)
         if (a->data == NULL)
             c = (unsigned char *)OPENSSL_malloc(w + 1);
         else
-            c = (unsigned char *)OPENSSL_realloc_clean(a->data,
-                                                       a->length, w + 1);
+            c = (unsigned char *)OPENSSL_realloc(a->data, w + 1);
         if (c == NULL) {
-            ASN1err(ASN1_F_ASN1_BIT_STRING_SET_BIT, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             return 0;
         }
         if (w + 1 - a->length > 0)
-            memset(c + a->length, 0, w + 1 - a->length);
+            OPENSSL_memset(c + a->length, 0, w + 1 - a->length);
         a->data = c;
         a->length = w + 1;
     }

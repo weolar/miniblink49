@@ -1,4 +1,3 @@
-/* crypto/asn1/a_int.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,13 +52,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/bn.h>
+
+#include <string.h>
+#include <limits.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+
+#include "../internal.h"
+
 
 ASN1_INTEGER *ASN1_INTEGER_dup(const ASN1_INTEGER *x)
 {
@@ -86,7 +90,7 @@ int ASN1_INTEGER_cmp(const ASN1_INTEGER *x, const ASN1_INTEGER *y)
         return ret;
 }
 
-/*-
+/*
  * This converts an ASN1 INTEGER into its content encoding.
  * The internal representation is an ASN1_STRING whose data is a big endian
  * representation of the value, ignoring the sign. The sign is determined by
@@ -157,7 +161,7 @@ int i2c_ASN1_INTEGER(ASN1_INTEGER *a, unsigned char **pp)
     if (a->length == 0)
         *(p++) = 0;
     else if (!neg)
-        memcpy(p, a->data, (unsigned int)a->length);
+        OPENSSL_memcpy(p, a->data, (unsigned int)a->length);
     else {
         /* Begin at the end of the encoding */
         n = a->data + a->length - 1;
@@ -190,6 +194,16 @@ ASN1_INTEGER *c2i_ASN1_INTEGER(ASN1_INTEGER **a, const unsigned char **pp,
     const unsigned char *p, *pend;
     unsigned char *to, *s;
     int i;
+
+    /*
+     * This function can handle lengths up to INT_MAX - 1, but the rest of the
+     * legacy ASN.1 code mixes integer types, so avoid exposing it to
+     * ASN1_INTEGERS with larger lengths.
+     */
+    if (len < 0 || len > INT_MAX / 2) {
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_TOO_LONG);
+        return NULL;
+    }
 
     if ((a == NULL) || ((*a) == NULL)) {
         if ((ret = M_ASN1_INTEGER_new()) == NULL)
@@ -254,7 +268,7 @@ ASN1_INTEGER *c2i_ASN1_INTEGER(ASN1_INTEGER **a, const unsigned char **pp,
             p++;
             len--;
         }
-        memcpy(s, p, (int)len);
+        OPENSSL_memcpy(s, p, (int)len);
     }
 
     if (ret->data != NULL)
@@ -266,76 +280,7 @@ ASN1_INTEGER *c2i_ASN1_INTEGER(ASN1_INTEGER **a, const unsigned char **pp,
     *pp = pend;
     return (ret);
  err:
-    ASN1err(ASN1_F_C2I_ASN1_INTEGER, i);
-    if ((ret != NULL) && ((a == NULL) || (*a != ret)))
-        M_ASN1_INTEGER_free(ret);
-    return (NULL);
-}
-
-/*
- * This is a version of d2i_ASN1_INTEGER that ignores the sign bit of ASN1
- * integers: some broken software can encode a positive INTEGER with its MSB
- * set as negative (it doesn't add a padding zero).
- */
-
-ASN1_INTEGER *d2i_ASN1_UINTEGER(ASN1_INTEGER **a, const unsigned char **pp,
-                                long length)
-{
-    ASN1_INTEGER *ret = NULL;
-    const unsigned char *p;
-    unsigned char *s;
-    long len;
-    int inf, tag, xclass;
-    int i;
-
-    if ((a == NULL) || ((*a) == NULL)) {
-        if ((ret = M_ASN1_INTEGER_new()) == NULL)
-            return (NULL);
-        ret->type = V_ASN1_INTEGER;
-    } else
-        ret = (*a);
-
-    p = *pp;
-    inf = ASN1_get_object(&p, &len, &tag, &xclass, length);
-    if (inf & 0x80) {
-        i = ASN1_R_BAD_OBJECT_HEADER;
-        goto err;
-    }
-
-    if (tag != V_ASN1_INTEGER) {
-        i = ASN1_R_EXPECTING_AN_INTEGER;
-        goto err;
-    }
-
-    /*
-     * We must OPENSSL_malloc stuff, even for 0 bytes otherwise it signifies
-     * a missing NULL parameter.
-     */
-    s = (unsigned char *)OPENSSL_malloc((int)len + 1);
-    if (s == NULL) {
-        i = ERR_R_MALLOC_FAILURE;
-        goto err;
-    }
-    ret->type = V_ASN1_INTEGER;
-    if (len) {
-        if ((*p == 0) && (len != 1)) {
-            p++;
-            len--;
-        }
-        memcpy(s, p, (int)len);
-        p += len;
-    }
-
-    if (ret->data != NULL)
-        OPENSSL_free(ret->data);
-    ret->data = s;
-    ret->length = (int)len;
-    if (a != NULL)
-        (*a) = ret;
-    *pp = p;
-    return (ret);
- err:
-    ASN1err(ASN1_F_D2I_ASN1_UINTEGER, i);
+    OPENSSL_PUT_ERROR(ASN1, i);
     if ((ret != NULL) && ((a == NULL) || (*a != ret)))
         M_ASN1_INTEGER_free(ret);
     return (NULL);
@@ -343,46 +288,50 @@ ASN1_INTEGER *d2i_ASN1_UINTEGER(ASN1_INTEGER **a, const unsigned char **pp,
 
 int ASN1_INTEGER_set(ASN1_INTEGER *a, long v)
 {
-    int j, k;
-    unsigned int i;
-    unsigned char buf[sizeof(long) + 1];
-    long d;
-
-    a->type = V_ASN1_INTEGER;
-    if (a->length < (int)(sizeof(long) + 1)) {
-        if (a->data != NULL)
-            OPENSSL_free(a->data);
-        if ((a->data =
-             (unsigned char *)OPENSSL_malloc(sizeof(long) + 1)) != NULL)
-            memset((char *)a->data, 0, sizeof(long) + 1);
-    }
-    if (a->data == NULL) {
-        ASN1err(ASN1_F_ASN1_INTEGER_SET, ERR_R_MALLOC_FAILURE);
-        return (0);
-    }
-    d = v;
-    if (d < 0) {
-        d = -d;
-        a->type = V_ASN1_NEG_INTEGER;
+    if (v >= 0) {
+        return ASN1_INTEGER_set_uint64(a, (uint64_t) v);
     }
 
-    for (i = 0; i < sizeof(long); i++) {
-        if (d == 0)
+    if (!ASN1_INTEGER_set_uint64(a, 0 - (uint64_t) v)) {
+        return 0;
+    }
+
+    a->type = V_ASN1_NEG_INTEGER;
+    return 1;
+}
+
+int ASN1_INTEGER_set_uint64(ASN1_INTEGER *out, uint64_t v)
+{
+    uint8_t *const newdata = OPENSSL_malloc(sizeof(uint64_t));
+    if (newdata == NULL) {
+        OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
+        return 0;
+    }
+
+    OPENSSL_free(out->data);
+    out->data = newdata;
+    v = CRYPTO_bswap8(v);
+    memcpy(out->data, &v, sizeof(v));
+
+    out->type = V_ASN1_INTEGER;
+
+    size_t leading_zeros;
+    for (leading_zeros = 0; leading_zeros < sizeof(uint64_t) - 1;
+         leading_zeros++) {
+        if (out->data[leading_zeros] != 0) {
             break;
-        buf[i] = (int)d & 0xff;
-        d >>= 8;
+        }
     }
-    j = 0;
-    for (k = i - 1; k >= 0; k--)
-        a->data[j++] = buf[k];
-    a->length = j;
-    return (1);
+
+    out->length = sizeof(uint64_t) - leading_zeros;
+    OPENSSL_memmove(out->data, out->data + leading_zeros, out->length);
+
+    return 1;
 }
 
 long ASN1_INTEGER_get(const ASN1_INTEGER *a)
 {
     int neg = 0, i;
-    long r = 0;
 
     if (a == NULL)
         return (0L);
@@ -392,20 +341,31 @@ long ASN1_INTEGER_get(const ASN1_INTEGER *a)
     else if (i != V_ASN1_INTEGER)
         return -1;
 
-    if (a->length > (int)sizeof(long)) {
+    OPENSSL_STATIC_ASSERT(sizeof(uint64_t) >= sizeof(long),
+                          "long larger than uint64_t");
+
+    if (a->length > (int)sizeof(uint64_t)) {
         /* hmm... a bit ugly, return all ones */
         return -1;
     }
-    if (a->data == NULL)
-        return 0;
 
-    for (i = 0; i < a->length; i++) {
-        r <<= 8;
-        r |= (unsigned char)a->data[i];
+    uint64_t r64 = 0;
+    if (a->data != NULL) {
+      for (i = 0; i < a->length; i++) {
+          r64 <<= 8;
+          r64 |= (unsigned char)a->data[i];
+      }
+
+      if (r64 > LONG_MAX) {
+          return -1;
+      }
     }
+
+    long r = (long) r64;
     if (neg)
         r = -r;
-    return (r);
+
+    return r;
 }
 
 ASN1_INTEGER *BN_to_ASN1_INTEGER(const BIGNUM *bn, ASN1_INTEGER *ai)
@@ -418,7 +378,7 @@ ASN1_INTEGER *BN_to_ASN1_INTEGER(const BIGNUM *bn, ASN1_INTEGER *ai)
     else
         ret = ai;
     if (ret == NULL) {
-        ASN1err(ASN1_F_BN_TO_ASN1_INTEGER, ERR_R_NESTED_ASN1_ERROR);
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_NESTED_ASN1_ERROR);
         goto err;
     }
     if (BN_is_negative(bn) && !BN_is_zero(bn))
@@ -430,7 +390,7 @@ ASN1_INTEGER *BN_to_ASN1_INTEGER(const BIGNUM *bn, ASN1_INTEGER *ai)
     if (ret->length < len + 4) {
         unsigned char *new_data = OPENSSL_realloc(ret->data, len + 4);
         if (!new_data) {
-            ASN1err(ASN1_F_BN_TO_ASN1_INTEGER, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             goto err;
         }
         ret->data = new_data;
@@ -453,12 +413,8 @@ BIGNUM *ASN1_INTEGER_to_BN(const ASN1_INTEGER *ai, BIGNUM *bn)
     BIGNUM *ret;
 
     if ((ret = BN_bin2bn(ai->data, ai->length, bn)) == NULL)
-        ASN1err(ASN1_F_ASN1_INTEGER_TO_BN, ASN1_R_BN_LIB);
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_BN_LIB);
     else if (ai->type == V_ASN1_NEG_INTEGER)
         BN_set_negative(ret, 1);
     return (ret);
 }
-
-IMPLEMENT_STACK_OF(ASN1_INTEGER)
-
-IMPLEMENT_ASN1_SET_OF(ASN1_INTEGER)

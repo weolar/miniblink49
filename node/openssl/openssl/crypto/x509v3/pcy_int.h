@@ -59,7 +59,7 @@
 
 typedef struct X509_POLICY_DATA_st X509_POLICY_DATA;
 
-DECLARE_STACK_OF(X509_POLICY_DATA)
+DEFINE_STACK_OF(X509_POLICY_DATA)
 
 /* Internal structures */
 
@@ -180,8 +180,8 @@ struct X509_POLICY_TREE_st {
 
 /* Useful macros */
 
-#define node_data_critical(data) (data->flags & POLICY_DATA_FLAG_CRITICAL)
-#define node_critical(node) node_data_critical(node->data)
+#define node_data_critical(data) ((data)->flags & POLICY_DATA_FLAG_CRITICAL)
+#define node_critical(node) node_data_critical((node)->data)
 
 /* Internal functions */
 
@@ -207,7 +207,7 @@ X509_POLICY_NODE *tree_find_sk(STACK_OF(X509_POLICY_NODE) *sk,
                                const ASN1_OBJECT *id);
 
 X509_POLICY_NODE *level_add_node(X509_POLICY_LEVEL *level,
-                                 const X509_POLICY_DATA *data,
+                                 X509_POLICY_DATA *data,
                                  X509_POLICY_NODE *parent,
                                  X509_POLICY_TREE *tree);
 void policy_node_free(X509_POLICY_NODE *node);

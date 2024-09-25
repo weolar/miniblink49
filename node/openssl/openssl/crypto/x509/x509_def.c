@@ -53,13 +53,24 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/crypto.h>
 #include <openssl/x509.h>
+
+/* TODO(fork): cleanup */
+
+#if defined(OPENSSL_FUCHSIA)
+#define OPENSSLDIR "/config/ssl"
+#else
+#define OPENSSLDIR "/etc/ssl"
+#endif
+
+#define X509_CERT_AREA          OPENSSLDIR
+#define X509_CERT_DIR           OPENSSLDIR "/certs"
+#define X509_CERT_FILE          OPENSSLDIR "/cert.pem"
+#define X509_PRIVATE_DIR        OPENSSLDIR "/private"
+#define X509_CERT_DIR_EVP        "SSL_CERT_DIR"
+#define X509_CERT_FILE_EVP       "SSL_CERT_FILE"
 
 const char *X509_get_default_private_dir(void)
 {

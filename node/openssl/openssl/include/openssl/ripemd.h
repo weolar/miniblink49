@@ -1,4 +1,3 @@
-/* crypto/ripemd/ripemd.h */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,53 +52,57 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#ifndef HEADER_RIPEMD_H
-# define HEADER_RIPEMD_H
+#ifndef OPENSSL_HEADER_RIPEMD_H
+#define OPENSSL_HEADER_RIPEMD_H
 
-# include <openssl/e_os2.h>
-# include <stddef.h>
+#include <openssl/base.h>
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-# ifdef OPENSSL_NO_RIPEMD
-#  error RIPEMD is disabled.
-# endif
-
-# if defined(__LP32__)
-#  define RIPEMD160_LONG unsigned long
-# elif defined(OPENSSL_SYS_CRAY) || defined(__ILP64__)
-#  define RIPEMD160_LONG unsigned long
-#  define RIPEMD160_LONG_LOG2 3
-# else
-#  define RIPEMD160_LONG unsigned int
-# endif
 
 # define RIPEMD160_CBLOCK        64
 # define RIPEMD160_LBLOCK        (RIPEMD160_CBLOCK/4)
 # define RIPEMD160_DIGEST_LENGTH 20
 
-typedef struct RIPEMD160state_st {
-    RIPEMD160_LONG A, B, C, D, E;
-    RIPEMD160_LONG Nl, Nh;
-    RIPEMD160_LONG data[RIPEMD160_LBLOCK];
-    unsigned int num;
-} RIPEMD160_CTX;
+struct RIPEMD160state_st {
+  uint32_t h[5];
+  uint32_t Nl, Nh;
+  uint8_t data[RIPEMD160_CBLOCK];
+  unsigned num;
+};
 
-# ifdef OPENSSL_FIPS
-int private_RIPEMD160_Init(RIPEMD160_CTX *c);
-# endif
-int RIPEMD160_Init(RIPEMD160_CTX *c);
-int RIPEMD160_Update(RIPEMD160_CTX *c, const void *data, size_t len);
-int RIPEMD160_Final(unsigned char *md, RIPEMD160_CTX *c);
-unsigned char *RIPEMD160(const unsigned char *d, size_t n, unsigned char *md);
-void RIPEMD160_Transform(RIPEMD160_CTX *c, const unsigned char *b);
-#ifdef  __cplusplus
-}
+// RIPEMD160_Init initialises |ctx| and returns one.
+OPENSSL_EXPORT int RIPEMD160_Init(RIPEMD160_CTX *ctx);
+
+// RIPEMD160_Update adds |len| bytes from |data| to |ctx| and returns one.
+OPENSSL_EXPORT int RIPEMD160_Update(RIPEMD160_CTX *ctx, const void *data,
+                                   size_t len);
+
+// RIPEMD160_Final adds the final padding to |ctx| and writes the resulting
+// digest to |out|, which must have at least |RIPEMD160_DIGEST_LENGTH| bytes of
+// space. It returns one.
+OPENSSL_EXPORT int RIPEMD160_Final(uint8_t out[RIPEMD160_DIGEST_LENGTH],
+                                   RIPEMD160_CTX *ctx);
+
+// RIPEMD160 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |RIPEMD160_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *RIPEMD160(const uint8_t *data, size_t len,
+                                  uint8_t out[RIPEMD160_DIGEST_LENGTH]);
+
+// RIPEMD160_Transform is a low-level function that performs a single,
+// RIPEMD160 block transformation using the state from |ctx| and 64 bytes from
+// |block|.
+OPENSSL_EXPORT void RIPEMD160_Transform(RIPEMD160_CTX *ctx,
+                                        const uint8_t block[RIPEMD160_CBLOCK]);
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_RIPEMD_H

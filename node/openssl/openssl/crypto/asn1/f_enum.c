@@ -1,4 +1,3 @@
-/* crypto/asn1/f_enum.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,13 +52,11 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/buffer.h>
 #include <openssl/asn1.h>
+
+#include <openssl/bio.h>
 
 /* Based on a_int.c: equivalent ENUMERATED functions */
 
@@ -93,111 +90,4 @@ int i2a_ASN1_ENUMERATED(BIO *bp, ASN1_ENUMERATED *a)
     return (n);
  err:
     return (-1);
-}
-
-int a2i_ASN1_ENUMERATED(BIO *bp, ASN1_ENUMERATED *bs, char *buf, int size)
-{
-    int ret = 0;
-    int i, j, k, m, n, again, bufsize;
-    unsigned char *s = NULL, *sp;
-    unsigned char *bufp;
-    int num = 0, slen = 0, first = 1;
-
-    bs->type = V_ASN1_ENUMERATED;
-
-    bufsize = BIO_gets(bp, buf, size);
-    for (;;) {
-        if (bufsize < 1)
-            goto err_sl;
-        i = bufsize;
-        if (buf[i - 1] == '\n')
-            buf[--i] = '\0';
-        if (i == 0)
-            goto err_sl;
-        if (buf[i - 1] == '\r')
-            buf[--i] = '\0';
-        if (i == 0)
-            goto err_sl;
-        again = (buf[i - 1] == '\\');
-
-        for (j = 0; j < i; j++) {
-            if (!(((buf[j] >= '0') && (buf[j] <= '9')) ||
-                  ((buf[j] >= 'a') && (buf[j] <= 'f')) ||
-                  ((buf[j] >= 'A') && (buf[j] <= 'F')))) {
-                i = j;
-                break;
-            }
-        }
-        buf[i] = '\0';
-        /*
-         * We have now cleared all the crap off the end of the line
-         */
-        if (i < 2)
-            goto err_sl;
-
-        bufp = (unsigned char *)buf;
-        if (first) {
-            first = 0;
-            if ((bufp[0] == '0') && (buf[1] == '0')) {
-                bufp += 2;
-                i -= 2;
-            }
-        }
-        k = 0;
-        i -= again;
-        if (i % 2 != 0) {
-            ASN1err(ASN1_F_A2I_ASN1_ENUMERATED, ASN1_R_ODD_NUMBER_OF_CHARS);
-            goto err;
-        }
-        i /= 2;
-        if (num + i > slen) {
-            if (s == NULL)
-                sp = (unsigned char *)OPENSSL_malloc((unsigned int)num +
-                                                     i * 2);
-            else
-                sp = (unsigned char *)OPENSSL_realloc(s,
-                                                      (unsigned int)num +
-                                                      i * 2);
-            if (sp == NULL) {
-                ASN1err(ASN1_F_A2I_ASN1_ENUMERATED, ERR_R_MALLOC_FAILURE);
-                if (s != NULL)
-                    OPENSSL_free(s);
-                goto err;
-            }
-            s = sp;
-            slen = num + i * 2;
-        }
-        for (j = 0; j < i; j++, k += 2) {
-            for (n = 0; n < 2; n++) {
-                m = bufp[k + n];
-                if ((m >= '0') && (m <= '9'))
-                    m -= '0';
-                else if ((m >= 'a') && (m <= 'f'))
-                    m = m - 'a' + 10;
-                else if ((m >= 'A') && (m <= 'F'))
-                    m = m - 'A' + 10;
-                else {
-                    ASN1err(ASN1_F_A2I_ASN1_ENUMERATED,
-                            ASN1_R_NON_HEX_CHARACTERS);
-                    goto err;
-                }
-                s[num + j] <<= 4;
-                s[num + j] |= m;
-            }
-        }
-        num += i;
-        if (again)
-            bufsize = BIO_gets(bp, buf, size);
-        else
-            break;
-    }
-    bs->length = num;
-    bs->data = s;
-    ret = 1;
- err:
-    if (0) {
- err_sl:
-        ASN1err(ASN1_F_A2I_ASN1_ENUMERATED, ASN1_R_SHORT_LINE);
-    }
-    return (ret);
 }

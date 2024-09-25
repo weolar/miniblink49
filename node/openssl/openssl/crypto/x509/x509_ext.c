@@ -53,15 +53,12 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include <openssl/stack.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
 #include <openssl/evp.h>
+#include <openssl/obj.h>
+#include <openssl/stack.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
@@ -205,7 +202,5 @@ int X509_REVOKED_add1_ext_i2d(X509_REVOKED *x, int nid, void *value, int crit,
 {
     return X509V3_add1_i2d(&x->extensions, nid, value, crit, flags);
 }
-
-IMPLEMENT_STACK_OF(X509_EXTENSION)
 
 IMPLEMENT_ASN1_SET_OF(X509_EXTENSION)

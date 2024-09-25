@@ -53,18 +53,17 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <openssl/asn1.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
 #include "pcy_int.h"
 
-static int node_cmp(const X509_POLICY_NODE *const *a,
-                    const X509_POLICY_NODE *const *b)
+static int node_cmp(const X509_POLICY_NODE **a, const X509_POLICY_NODE **b)
 {
     return OBJ_cmp((*a)->data->valid_policy, (*b)->data->valid_policy);
 }
@@ -79,13 +78,13 @@ X509_POLICY_NODE *tree_find_sk(STACK_OF(X509_POLICY_NODE) *nodes,
 {
     X509_POLICY_DATA n;
     X509_POLICY_NODE l;
-    int idx;
+    size_t idx;
 
     n.valid_policy = (ASN1_OBJECT *)id;
     l.data = &n;
 
-    idx = sk_X509_POLICY_NODE_find(nodes, &l);
-    if (idx == -1)
+    sk_X509_POLICY_NODE_sort(nodes);
+    if (!sk_X509_POLICY_NODE_find(nodes, &idx, &l))
         return NULL;
 
     return sk_X509_POLICY_NODE_value(nodes, idx);
@@ -97,7 +96,7 @@ X509_POLICY_NODE *level_find_node(const X509_POLICY_LEVEL *level,
                                   const ASN1_OBJECT *id)
 {
     X509_POLICY_NODE *node;
-    int i;
+    size_t i;
     for (i = 0; i < sk_X509_POLICY_NODE_num(level->nodes); i++) {
         node = sk_X509_POLICY_NODE_value(level->nodes, i);
         if (node->parent == parent) {
@@ -109,7 +108,7 @@ X509_POLICY_NODE *level_find_node(const X509_POLICY_LEVEL *level,
 }
 
 X509_POLICY_NODE *level_add_node(X509_POLICY_LEVEL *level,
-                                 const X509_POLICY_DATA *data,
+                                 X509_POLICY_DATA *data,
                                  X509_POLICY_NODE *parent,
                                  X509_POLICY_TREE *tree)
 {
@@ -169,7 +168,7 @@ void policy_node_free(X509_POLICY_NODE *node)
 int policy_node_match(const X509_POLICY_LEVEL *lvl,
                       const X509_POLICY_NODE *node, const ASN1_OBJECT *oid)
 {
-    int i;
+    size_t i;
     ASN1_OBJECT *policy_oid;
     const X509_POLICY_DATA *x = node->data;
 

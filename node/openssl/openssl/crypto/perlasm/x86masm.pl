@@ -1,4 +1,11 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2007-2016 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the OpenSSL license (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 package x86masm;
 
@@ -78,7 +85,6 @@ sub ::DWC	{ "@_"; }
 
 sub ::file
 { my $tmp=<<___;
-TITLE	$_[0].asm
 IF \@Version LT 800
 ECHO MASM version 8.00 or later is strongly recommended.
 ENDIF
@@ -196,5 +202,13 @@ sub ::safeseh
     push(@out,".SAFESEH	".&::LABEL($nm,$nmdecor.$nm)."\n");
     push(@out,"ENDIF\n");
 }
+
+sub ::preprocessor_ifndef
+{ my($define)=@_;
+    push(@out,"%ifndef ${define}\n");
+}
+
+sub ::preprocessor_endif
+{ push(@out,"%endif\n");    }
 
 1;

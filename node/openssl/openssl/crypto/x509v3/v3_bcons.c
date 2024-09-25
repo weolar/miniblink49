@@ -53,15 +53,16 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+#include <string.h>
+
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
 static STACK_OF(CONF_VALUE) *i2v_BASIC_CONSTRAINTS(X509V3_EXT_METHOD *method,
@@ -106,9 +107,9 @@ static BASIC_CONSTRAINTS *v2i_BASIC_CONSTRAINTS(X509V3_EXT_METHOD *method,
 {
     BASIC_CONSTRAINTS *bcons = NULL;
     CONF_VALUE *val;
-    int i;
+    size_t i;
     if (!(bcons = BASIC_CONSTRAINTS_new())) {
-        X509V3err(X509V3_F_V2I_BASIC_CONSTRAINTS, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         return NULL;
     }
     for (i = 0; i < sk_CONF_VALUE_num(values); i++) {
@@ -120,7 +121,7 @@ static BASIC_CONSTRAINTS *v2i_BASIC_CONSTRAINTS(X509V3_EXT_METHOD *method,
             if (!X509V3_get_value_int(val, &bcons->pathlen))
                 goto err;
         } else {
-            X509V3err(X509V3_F_V2I_BASIC_CONSTRAINTS, X509V3_R_INVALID_NAME);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_NAME);
             X509V3_conf_err(val);
             goto err;
         }

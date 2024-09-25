@@ -53,15 +53,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/lhash.h>
-#include <openssl/objects.h>
+#include <string.h>
+
+#include <openssl/buf.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509.h>
-#include <openssl/buffer.h>
+
+#include "../internal.h"
+
 
 /*
  * Limit to ensure we don't overflow: much greater than
@@ -73,7 +76,7 @@
 char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
 {
     X509_NAME_ENTRY *ne;
-    int i;
+    size_t i;
     int n, lold, l, l1, l2, num, j, type;
     const char *s;
     char *p;
@@ -82,9 +85,6 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
     static const char hex[17] = "0123456789ABCDEF";
     int gs_doit[4];
     char tmp_buf[80];
-#ifdef CHARSET_EBCDIC
-    char ebcdic_buf[1024];
-#endif
 
     if (buf == NULL) {
         if ((b = BUF_MEM_new()) == NULL)
@@ -93,7 +93,7 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
             goto err;
         b->data[0] = '\0';
         len = 200;
-    } else if (len == 0) {
+    } else if (len <= 0) {
         return NULL;
     }
     if (a == NULL) {
@@ -101,8 +101,7 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
             buf = b->data;
             OPENSSL_free(b);
         }
-        strncpy(buf, "NO X509_NAME", len);
-        buf[len - 1] = '\0';
+        BUF_strlcpy(buf, "NO X509_NAME", len);
         return buf;
     }
 
@@ -112,7 +111,7 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
         ne = sk_X509_NAME_ENTRY_value(a->entries, i);
         n = OBJ_obj2nid(ne->object);
         if ((n == NID_undef) || ((s = OBJ_nid2sn(n)) == NULL)) {
-            openssl_i2t_ASN1_OBJECT(tmp_buf, sizeof(tmp_buf), ne->object);
+            i2t_ASN1_OBJECT(tmp_buf, sizeof(tmp_buf), ne->object);
             s = tmp_buf;
         }
         l1 = strlen(s);
@@ -120,22 +119,10 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
         type = ne->value->type;
         num = ne->value->length;
         if (num > NAME_ONELINE_MAX) {
-            X509err(X509_F_X509_NAME_ONELINE, X509_R_NAME_TOO_LONG);
+            OPENSSL_PUT_ERROR(X509, X509_R_NAME_TOO_LONG);
             goto end;
         }
         q = ne->value->data;
-#ifdef CHARSET_EBCDIC
-        if (type == V_ASN1_GENERALSTRING ||
-            type == V_ASN1_VISIBLESTRING ||
-            type == V_ASN1_PRINTABLESTRING ||
-            type == V_ASN1_TELETEXSTRING ||
-            type == V_ASN1_VISIBLESTRING || type == V_ASN1_IA5STRING) {
-            if (num > (int)sizeof(ebcdic_buf))
-                num = sizeof(ebcdic_buf);
-            ascii2ebcdic(ebcdic_buf, q, num);
-            q = ebcdic_buf;
-        }
-#endif
 
         if ((type == V_ASN1_GENERALSTRING) && ((num % 4) == 0)) {
             gs_doit[0] = gs_doit[1] = gs_doit[2] = gs_doit[3] = 0;
@@ -156,20 +143,14 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
             if (!gs_doit[j & 3])
                 continue;
             l2++;
-#ifndef CHARSET_EBCDIC
             if ((q[j] < ' ') || (q[j] > '~'))
                 l2 += 3;
-#else
-            if ((os_toascii[q[j]] < os_toascii[' ']) ||
-                (os_toascii[q[j]] > os_toascii['~']))
-                l2 += 3;
-#endif
         }
 
         lold = l;
         l += 1 + l1 + 1 + l2;
         if (l > NAME_ONELINE_MAX) {
-            X509err(X509_F_X509_NAME_ONELINE, X509_R_NAME_TOO_LONG);
+            OPENSSL_PUT_ERROR(X509, X509_R_NAME_TOO_LONG);
             goto end;
         }
         if (b != NULL) {
@@ -181,18 +162,15 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
         } else
             p = &(buf[lold]);
         *(p++) = '/';
-        memcpy(p, s, (unsigned int)l1);
+        OPENSSL_memcpy(p, s, (unsigned int)l1);
         p += l1;
         *(p++) = '=';
 
-#ifndef CHARSET_EBCDIC          /* q was assigned above already. */
         q = ne->value->data;
-#endif
 
         for (j = 0; j < num; j++) {
             if (!gs_doit[j & 3])
                 continue;
-#ifndef CHARSET_EBCDIC
             n = q[j];
             if ((n < ' ') || (n > '~')) {
                 *(p++) = '\\';
@@ -201,16 +179,6 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
                 *(p++) = hex[n & 0x0f];
             } else
                 *(p++) = n;
-#else
-            n = os_toascii[q[j]];
-            if ((n < os_toascii[' ']) || (n > os_toascii['~'])) {
-                *(p++) = '\\';
-                *(p++) = 'x';
-                *(p++) = hex[(n >> 4) & 0x0f];
-                *(p++) = hex[n & 0x0f];
-            } else
-                *(p++) = q[j];
-#endif
         }
         *p = '\0';
     }
@@ -223,7 +191,7 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
         *p = '\0';
     return (p);
  err:
-    X509err(X509_F_X509_NAME_ONELINE, ERR_R_MALLOC_FAILURE);
+    OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
  end:
     BUF_MEM_free(b);
     return (NULL);

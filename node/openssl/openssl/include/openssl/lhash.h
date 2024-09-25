@@ -1,4 +1,3 @@
-/* crypto/lhash/lhash.h */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,188 +52,231 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-/*
- * Header for dynamic hash table routines Author - Eric Young
- */
+#ifndef OPENSSL_HEADER_LHASH_H
+#define OPENSSL_HEADER_LHASH_H
 
-#ifndef HEADER_LHASH_H
-# define HEADER_LHASH_H
+#include <openssl/base.h>
+#include <openssl/type_check.h>
 
-# include <openssl/e_os2.h>
-# ifndef OPENSSL_NO_FP_API
-#  include <stdio.h>
-# endif
-
-# ifndef OPENSSL_NO_BIO
-#  include <openssl/bio.h>
-# endif
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-typedef struct lhash_node_st {
-    void *data;
-    struct lhash_node_st *next;
-# ifndef OPENSSL_NO_HASH_COMP
-    unsigned long hash;
-# endif
-} LHASH_NODE;
 
-typedef int (*LHASH_COMP_FN_TYPE) (const void *, const void *);
-typedef unsigned long (*LHASH_HASH_FN_TYPE) (const void *);
-typedef void (*LHASH_DOALL_FN_TYPE) (void *);
-typedef void (*LHASH_DOALL_ARG_FN_TYPE) (void *, void *);
+// lhash is a traditional, chaining hash table that automatically expands and
+// contracts as needed. One should not use the lh_* functions directly, rather
+// use the type-safe macro wrappers:
+//
+// A hash table of a specific type of object has type |LHASH_OF(type)|. This
+// can be defined (once) with |DEFINE_LHASH_OF(type)| and declared where needed
+// with |DECLARE_LHASH_OF(type)|. For example:
+//
+//   struct foo {
+//     int bar;
+//   };
+//
+//   DEFINE_LHASH_OF(struct foo)
+//
+// Although note that the hash table will contain /pointers/ to |foo|.
+//
+// A macro will be defined for each of the lh_* functions below. For
+// LHASH_OF(foo), the macros would be lh_foo_new, lh_foo_num_items etc.
 
-/*
- * Macros for declaring and implementing type-safe wrappers for LHASH
- * callbacks. This way, callbacks can be provided to LHASH structures without
- * function pointer casting and the macro-defined callbacks provide
- * per-variable casting before deferring to the underlying type-specific
- * callbacks. NB: It is possible to place a "static" in front of both the
- * DECLARE and IMPLEMENT macros if the functions are strictly internal.
- */
 
-/* First: "hash" functions */
-# define DECLARE_LHASH_HASH_FN(name, o_type) \
-        unsigned long name##_LHASH_HASH(const void *);
-# define IMPLEMENT_LHASH_HASH_FN(name, o_type) \
-        unsigned long name##_LHASH_HASH(const void *arg) { \
-                const o_type *a = arg; \
-                return name##_hash(a); }
-# define LHASH_HASH_FN(name) name##_LHASH_HASH
+#define LHASH_OF(type) struct lhash_st_##type
 
-/* Second: "compare" functions */
-# define DECLARE_LHASH_COMP_FN(name, o_type) \
-        int name##_LHASH_COMP(const void *, const void *);
-# define IMPLEMENT_LHASH_COMP_FN(name, o_type) \
-        int name##_LHASH_COMP(const void *arg1, const void *arg2) { \
-                const o_type *a = arg1;             \
-                const o_type *b = arg2; \
-                return name##_cmp(a,b); }
-# define LHASH_COMP_FN(name) name##_LHASH_COMP
+#define DECLARE_LHASH_OF(type) LHASH_OF(type);
 
-/* Third: "doall" functions */
-# define DECLARE_LHASH_DOALL_FN(name, o_type) \
-        void name##_LHASH_DOALL(void *);
-# define IMPLEMENT_LHASH_DOALL_FN(name, o_type) \
-        void name##_LHASH_DOALL(void *arg) { \
-                o_type *a = arg; \
-                name##_doall(a); }
-# define LHASH_DOALL_FN(name) name##_LHASH_DOALL
 
-/* Fourth: "doall_arg" functions */
-# define DECLARE_LHASH_DOALL_ARG_FN(name, o_type, a_type) \
-        void name##_LHASH_DOALL_ARG(void *, void *);
-# define IMPLEMENT_LHASH_DOALL_ARG_FN(name, o_type, a_type) \
-        void name##_LHASH_DOALL_ARG(void *arg1, void *arg2) { \
-                o_type *a = arg1; \
-                a_type *b = arg2; \
-                name##_doall_arg(a, b); }
-# define LHASH_DOALL_ARG_FN(name) name##_LHASH_DOALL_ARG
+// lhash_item_st is an element of a hash chain. It points to the opaque data
+// for this element and to the next item in the chain. The linked-list is NULL
+// terminated.
+typedef struct lhash_item_st {
+  void *data;
+  struct lhash_item_st *next;
+  // hash contains the cached, hash value of |data|.
+  uint32_t hash;
+} LHASH_ITEM;
 
-typedef struct lhash_st {
-    LHASH_NODE **b;
-    LHASH_COMP_FN_TYPE comp;
-    LHASH_HASH_FN_TYPE hash;
-    unsigned int num_nodes;
-    unsigned int num_alloc_nodes;
-    unsigned int p;
-    unsigned int pmax;
-    unsigned long up_load;      /* load times 256 */
-    unsigned long down_load;    /* load times 256 */
-    unsigned long num_items;
-    unsigned long num_expands;
-    unsigned long num_expand_reallocs;
-    unsigned long num_contracts;
-    unsigned long num_contract_reallocs;
-    unsigned long num_hash_calls;
-    unsigned long num_comp_calls;
-    unsigned long num_insert;
-    unsigned long num_replace;
-    unsigned long num_delete;
-    unsigned long num_no_delete;
-    unsigned long num_retrieve;
-    unsigned long num_retrieve_miss;
-    unsigned long num_hash_comps;
-    int error;
-} _LHASH;                       /* Do not use _LHASH directly, use LHASH_OF
-                                 * and friends */
+// lhash_cmp_func is a comparison function that returns a value equal, or not
+// equal, to zero depending on whether |*a| is equal, or not equal to |*b|,
+// respectively. Note the difference between this and |stack_cmp_func| in that
+// this takes pointers to the objects directly.
+//
+// This function's actual type signature is int (*)(const T*, const T*). The
+// low-level |lh_*| functions will be passed a type-specific wrapper to call it
+// correctly.
+typedef int (*lhash_cmp_func)(const void *a, const void *b);
+typedef int (*lhash_cmp_func_helper)(lhash_cmp_func func, const void *a,
+                                     const void *b);
 
-# define LH_LOAD_MULT    256
+// lhash_hash_func is a function that maps an object to a uniformly distributed
+// uint32_t.
+//
+// This function's actual type signature is uint32_t (*)(const T*). The
+// low-level |lh_*| functions will be passed a type-specific wrapper to call it
+// correctly.
+typedef uint32_t (*lhash_hash_func)(const void *a);
+typedef uint32_t (*lhash_hash_func_helper)(lhash_hash_func func, const void *a);
 
-/*
- * Indicates a malloc() error in the last call, this is only bad in
- * lh_insert().
- */
-# define lh_error(lh)    ((lh)->error)
+typedef struct lhash_st _LHASH;
 
-_LHASH *lh_new(LHASH_HASH_FN_TYPE h, LHASH_COMP_FN_TYPE c);
-void lh_free(_LHASH *lh);
-void *lh_insert(_LHASH *lh, void *data);
-void *lh_delete(_LHASH *lh, const void *data);
-void *lh_retrieve(_LHASH *lh, const void *data);
-void lh_doall(_LHASH *lh, LHASH_DOALL_FN_TYPE func);
-void lh_doall_arg(_LHASH *lh, LHASH_DOALL_ARG_FN_TYPE func, void *arg);
-unsigned long lh_strhash(const char *c);
-unsigned long lh_num_items(const _LHASH *lh);
+// lh_new returns a new, empty hash table or NULL on error.
+OPENSSL_EXPORT _LHASH *lh_new(lhash_hash_func hash, lhash_cmp_func comp);
 
-# ifndef OPENSSL_NO_FP_API
-void lh_stats(const _LHASH *lh, FILE *out);
-void lh_node_stats(const _LHASH *lh, FILE *out);
-void lh_node_usage_stats(const _LHASH *lh, FILE *out);
-# endif
+// lh_free frees the hash table itself but none of the elements. See
+// |lh_doall|.
+OPENSSL_EXPORT void lh_free(_LHASH *lh);
 
-# ifndef OPENSSL_NO_BIO
-void lh_stats_bio(const _LHASH *lh, BIO *out);
-void lh_node_stats_bio(const _LHASH *lh, BIO *out);
-void lh_node_usage_stats_bio(const _LHASH *lh, BIO *out);
-# endif
+// lh_num_items returns the number of items in |lh|.
+OPENSSL_EXPORT size_t lh_num_items(const _LHASH *lh);
 
-/* Type checking... */
+// lh_retrieve finds an element equal to |data| in the hash table and returns
+// it. If no such element exists, it returns NULL.
+OPENSSL_EXPORT void *lh_retrieve(const _LHASH *lh, const void *data,
+                                 lhash_hash_func_helper call_hash_func,
+                                 lhash_cmp_func_helper call_cmp_func);
 
-# define LHASH_OF(type) struct lhash_st_##type
+// lh_retrieve_key finds an element matching |key|, given the specified hash and
+// comparison function. This differs from |lh_retrieve| in that the key may be a
+// different type than the values stored in |lh|. |key_hash| and |cmp_key| must
+// be compatible with the functions passed into |lh_new|.
+OPENSSL_EXPORT void *lh_retrieve_key(const _LHASH *lh, const void *key,
+                                     uint32_t key_hash,
+                                     int (*cmp_key)(const void *key,
+                                                    const void *value));
 
-# define DECLARE_LHASH_OF(type) LHASH_OF(type) { int dummy; }
+// lh_insert inserts |data| into the hash table. If an existing element is
+// equal to |data| (with respect to the comparison function) then |*old_data|
+// will be set to that value and it will be replaced. Otherwise, or in the
+// event of an error, |*old_data| will be set to NULL. It returns one on
+// success or zero in the case of an allocation error.
+OPENSSL_EXPORT int lh_insert(_LHASH *lh, void **old_data, void *data,
+                             lhash_hash_func_helper call_hash_func,
+                             lhash_cmp_func_helper call_cmp_func);
 
-# define CHECKED_LHASH_OF(type,lh) \
-  ((_LHASH *)CHECKED_PTR_OF(LHASH_OF(type),lh))
+// lh_delete removes an element equal to |data| from the hash table and returns
+// it. If no such element is found, it returns NULL.
+OPENSSL_EXPORT void *lh_delete(_LHASH *lh, const void *data,
+                               lhash_hash_func_helper call_hash_func,
+                               lhash_cmp_func_helper call_cmp_func);
 
-/* Define wrapper functions. */
-# define LHM_lh_new(type, name) \
-  ((LHASH_OF(type) *)lh_new(LHASH_HASH_FN(name), LHASH_COMP_FN(name)))
-# define LHM_lh_error(type, lh) \
-  lh_error(CHECKED_LHASH_OF(type,lh))
-# define LHM_lh_insert(type, lh, inst) \
-  ((type *)lh_insert(CHECKED_LHASH_OF(type, lh), \
-                     CHECKED_PTR_OF(type, inst)))
-# define LHM_lh_retrieve(type, lh, inst) \
-  ((type *)lh_retrieve(CHECKED_LHASH_OF(type, lh), \
-                       CHECKED_PTR_OF(type, inst)))
-# define LHM_lh_delete(type, lh, inst) \
-  ((type *)lh_delete(CHECKED_LHASH_OF(type, lh),                        \
-                     CHECKED_PTR_OF(type, inst)))
-# define LHM_lh_doall(type, lh,fn) lh_doall(CHECKED_LHASH_OF(type, lh), fn)
-# define LHM_lh_doall_arg(type, lh, fn, arg_type, arg) \
-  lh_doall_arg(CHECKED_LHASH_OF(type, lh), fn, CHECKED_PTR_OF(arg_type, arg))
-# define LHM_lh_num_items(type, lh) lh_num_items(CHECKED_LHASH_OF(type, lh))
-# define LHM_lh_down_load(type, lh) (CHECKED_LHASH_OF(type, lh)->down_load)
-# define LHM_lh_node_stats_bio(type, lh, out) \
-  lh_node_stats_bio(CHECKED_LHASH_OF(type, lh), out)
-# define LHM_lh_node_usage_stats_bio(type, lh, out) \
-  lh_node_usage_stats_bio(CHECKED_LHASH_OF(type, lh), out)
-# define LHM_lh_stats_bio(type, lh, out) \
-  lh_stats_bio(CHECKED_LHASH_OF(type, lh), out)
-# define LHM_lh_free(type, lh) lh_free(CHECKED_LHASH_OF(type, lh))
+// lh_doall_arg calls |func| on each element of the hash table and also passes
+// |arg| as the second argument.
+// TODO(fork): rename this
+OPENSSL_EXPORT void lh_doall_arg(_LHASH *lh, void (*func)(void *, void *),
+                                 void *arg);
 
-DECLARE_LHASH_OF(OPENSSL_STRING);
-DECLARE_LHASH_OF(OPENSSL_CSTRING);
+// lh_strhash is the default hash function which processes NUL-terminated
+// strings.
+OPENSSL_EXPORT uint32_t lh_strhash(const char *c);
 
-#ifdef  __cplusplus
-}
+#define DEFINE_LHASH_OF(type)                                                  \
+  DECLARE_LHASH_OF(type)                                                       \
+                                                                               \
+  typedef int (*lhash_##type##_cmp_func)(const type *, const type *);          \
+  typedef uint32_t (*lhash_##type##_hash_func)(const type *);                  \
+                                                                               \
+  OPENSSL_INLINE int lh_##type##_call_cmp_func(lhash_cmp_func func,            \
+                                               const void *a, const void *b) { \
+    return ((lhash_##type##_cmp_func)func)((const type *)a, (const type *)b);  \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE uint32_t lh_##type##_call_hash_func(lhash_hash_func func,     \
+                                                     const void *a) {          \
+    return ((lhash_##type##_hash_func)func)((const type *)a);                  \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE LHASH_OF(type) *                                              \
+      lh_##type##_new(lhash_##type##_hash_func hash,                           \
+                      lhash_##type##_cmp_func comp) {                          \
+    return (LHASH_OF(type) *)lh_new((lhash_hash_func)hash,                     \
+                                    (lhash_cmp_func)comp);                     \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE void lh_##type##_free(LHASH_OF(type) *lh) {                   \
+    lh_free((_LHASH *)lh);                                                     \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE size_t lh_##type##_num_items(const LHASH_OF(type) *lh) {      \
+    return lh_num_items((const _LHASH *)lh);                                   \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE type *lh_##type##_retrieve(const LHASH_OF(type) *lh,          \
+                                            const type *data) {                \
+    return (type *)lh_retrieve((const _LHASH *)lh, data,                       \
+                               lh_##type##_call_hash_func,                     \
+                               lh_##type##_call_cmp_func);                     \
+  }                                                                            \
+                                                                               \
+  typedef struct {                                                             \
+    int (*cmp_key)(const void *key, const type *value);                        \
+    const void *key;                                                           \
+  } LHASH_CMP_KEY_##type;                                                      \
+                                                                               \
+  OPENSSL_INLINE int lh_##type##_call_cmp_key(const void *key,                 \
+                                              const void *value) {             \
+    const LHASH_CMP_KEY_##type *cb = (const LHASH_CMP_KEY_##type *)key;        \
+    return cb->cmp_key(cb->key, (const type *)value);                          \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE type *lh_##type##_retrieve_key(                               \
+      const LHASH_OF(type) *lh, const void *key, uint32_t key_hash,            \
+      int (*cmp_key)(const void *key, const type *value)) {                    \
+    LHASH_CMP_KEY_##type cb = {cmp_key, key};                                  \
+    return (type *)lh_retrieve_key((const _LHASH *)lh, &cb, key_hash,          \
+                                   lh_##type##_call_cmp_key);                  \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE int lh_##type##_insert(LHASH_OF(type) *lh, type **old_data,   \
+                                        type *data) {                          \
+    void *old_data_void = NULL;                                                \
+    int ret =                                                                  \
+        lh_insert((_LHASH *)lh, &old_data_void, data,                          \
+                  lh_##type##_call_hash_func, lh_##type##_call_cmp_func);      \
+    *old_data = (type *)old_data_void;                                         \
+    return ret;                                                                \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE type *lh_##type##_delete(LHASH_OF(type) *lh,                  \
+                                          const type *data) {                  \
+    return (type *)lh_delete((_LHASH *)lh, data, lh_##type##_call_hash_func,   \
+                             lh_##type##_call_cmp_func);                       \
+  }                                                                            \
+                                                                               \
+  typedef struct {                                                             \
+    void (*doall)(type *);                                                     \
+    void (*doall_arg)(type *, void *);                                         \
+    void *arg;                                                                 \
+  } LHASH_DOALL_##type;                                                        \
+                                                                               \
+  OPENSSL_INLINE void lh_##type##_call_doall(void *value, void *arg) {         \
+    const LHASH_DOALL_##type *cb = (const LHASH_DOALL_##type *)arg;            \
+    cb->doall((type *)value);                                                  \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE void lh_##type##_call_doall_arg(void *value, void *arg) {     \
+    const LHASH_DOALL_##type *cb = (const LHASH_DOALL_##type *)arg;            \
+    cb->doall_arg((type *)value, cb->arg);                                     \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE void lh_##type##_doall(LHASH_OF(type) *lh,                    \
+                                        void (*func)(type *)) {                \
+    LHASH_DOALL_##type cb = {func, NULL, NULL};                                \
+    lh_doall_arg((_LHASH *)lh, lh_##type##_call_doall, &cb);                   \
+  }                                                                            \
+                                                                               \
+  OPENSSL_INLINE void lh_##type##_doall_arg(                                   \
+      LHASH_OF(type) *lh, void (*func)(type *, void *), void *arg) {           \
+    LHASH_DOALL_##type cb = {NULL, func, arg};                                 \
+    lh_doall_arg((_LHASH *)lh, lh_##type##_call_doall_arg, &cb);               \
+  }
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_LHASH_H

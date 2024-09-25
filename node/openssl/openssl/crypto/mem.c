@@ -1,4 +1,3 @@
-/* crypto/mem.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,414 +52,218 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
+#include <openssl/mem.h>
+
+#include <assert.h>
+#include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <openssl/crypto.h>
-#include "cryptlib.h"
 
-static int allow_customize = 1; /* we provide flexible functions for */
-static int allow_customize_debug = 1; /* exchanging memory-related functions
-                                       * at run-time, but this must be done
-                                       * before any blocks are actually
-                                       * allocated; or we'll run into huge
-                                       * problems when malloc/free pairs
-                                       * don't match etc. */
+#if defined(OPENSSL_WINDOWS)
+OPENSSL_MSVC_PRAGMA(warning(push, 3))
+#include <windows.h>
+OPENSSL_MSVC_PRAGMA(warning(pop))
+#endif
 
-/*
- * the following pointers may be changed as long as 'allow_customize' is set
- */
+#include "internal.h"
 
-static void *(*malloc_func) (size_t) = malloc;
-static void *default_malloc_ex(size_t num, const char *file, int line)
-{
-    return malloc_func(num);
-}
 
-static void *(*malloc_ex_func) (size_t, const char *file, int line)
-    = default_malloc_ex;
+#define OPENSSL_MALLOC_PREFIX 8
 
-static void *(*realloc_func) (void *, size_t) = realloc;
-static void *default_realloc_ex(void *str, size_t num,
-                                const char *file, int line)
-{
-    return realloc_func(str, num);
-}
-
-static void *(*realloc_ex_func) (void *, size_t, const char *file, int line)
-    = default_realloc_ex;
-
-static void (*free_func) (void *) = free;
-
-static void *(*malloc_locked_func) (size_t) = malloc;
-static void *default_malloc_locked_ex(size_t num, const char *file, int line)
-{
-    return malloc_locked_func(num);
-}
-
-static void *(*malloc_locked_ex_func) (size_t, const char *file, int line)
-    = default_malloc_locked_ex;
-
-static void (*free_locked_func) (void *) = free;
-
-/* may be changed as long as 'allow_customize_debug' is set */
-/* XXX use correct function pointer types */
-#ifdef CRYPTO_MDEBUG
-/* use default functions from mem_dbg.c */
-static void (*malloc_debug_func) (void *, int, const char *, int, int)
-    = CRYPTO_dbg_malloc;
-static void (*realloc_debug_func) (void *, void *, int, const char *, int,
-                                   int)
-    = CRYPTO_dbg_realloc;
-static void (*free_debug_func) (void *, int) = CRYPTO_dbg_free;
-static void (*set_debug_options_func) (long) = CRYPTO_dbg_set_options;
-static long (*get_debug_options_func) (void) = CRYPTO_dbg_get_options;
+#if defined(OPENSSL_ASAN)
+void __asan_poison_memory_region(const volatile void *addr, size_t size);
+void __asan_unpoison_memory_region(const volatile void *addr, size_t size);
 #else
-/*
- * applications can use CRYPTO_malloc_debug_init() to select above case at
- * run-time
- */
-static void (*malloc_debug_func) (void *, int, const char *, int, int) = NULL;
-static void (*realloc_debug_func) (void *, void *, int, const char *, int,
-                                   int)
-    = NULL;
-static void (*free_debug_func) (void *, int) = NULL;
-static void (*set_debug_options_func) (long) = NULL;
-static long (*get_debug_options_func) (void) = NULL;
+static void __asan_poison_memory_region(const void *addr, size_t size) {}
+static void __asan_unpoison_memory_region(const void *addr, size_t size) {}
 #endif
 
-int CRYPTO_set_mem_functions(void *(*m) (size_t), void *(*r) (void *, size_t),
-                             void (*f) (void *))
-{
-    /* Dummy call just to ensure OPENSSL_init() gets linked in */
-    OPENSSL_init();
-    if (!allow_customize)
-        return 0;
-    if ((m == 0) || (r == 0) || (f == 0))
-        return 0;
-    malloc_func = m;
-    malloc_ex_func = default_malloc_ex;
-    realloc_func = r;
-    realloc_ex_func = default_realloc_ex;
-    free_func = f;
-    malloc_locked_func = m;
-    malloc_locked_ex_func = default_malloc_locked_ex;
-    free_locked_func = f;
-    return 1;
+#if defined(__GNUC__) || defined(__clang__)
+// sdallocx is a sized |free| function. By passing the size (which we happen to
+// always know in BoringSSL), the malloc implementation can save work. We cannot
+// depend on |sdallocx| being available so we declare a wrapper that falls back
+// to |free| as a weak symbol.
+//
+// This will always be safe, but will only be overridden if the malloc
+// implementation is statically linked with BoringSSL. So, if |sdallocx| is
+// provided in, say, libc.so, we still won't use it because that's dynamically
+// linked. This isn't an ideal result, but its helps in some cases.
+void sdallocx(void *ptr, size_t size, int flags);
+
+__attribute((weak, noinline))
+#else
+static
+#endif
+void sdallocx(void *ptr, size_t size, int flags) {
+  free(ptr);
 }
 
-int CRYPTO_set_mem_ex_functions(void *(*m) (size_t, const char *, int),
-                                void *(*r) (void *, size_t, const char *,
-                                            int), void (*f) (void *))
-{
-    if (!allow_customize)
-        return 0;
-    if ((m == 0) || (r == 0) || (f == 0))
-        return 0;
-    malloc_func = 0;
-    malloc_ex_func = m;
-    realloc_func = 0;
-    realloc_ex_func = r;
-    free_func = f;
-    malloc_locked_func = 0;
-    malloc_locked_ex_func = m;
-    free_locked_func = f;
-    return 1;
+void *OPENSSL_malloc(size_t size) {
+  void *ptr = malloc(size + OPENSSL_MALLOC_PREFIX);
+  if (ptr == NULL) {
+    return NULL;
+  }
+
+  *(size_t *)ptr = size;
+
+  __asan_poison_memory_region(ptr, OPENSSL_MALLOC_PREFIX);
+  return ((uint8_t *)ptr) + OPENSSL_MALLOC_PREFIX;
 }
 
-int CRYPTO_set_locked_mem_functions(void *(*m) (size_t), void (*f) (void *))
-{
-    if (!allow_customize)
-        return 0;
-    if ((m == NULL) || (f == NULL))
-        return 0;
-    malloc_locked_func = m;
-    malloc_locked_ex_func = default_malloc_locked_ex;
-    free_locked_func = f;
-    return 1;
+void OPENSSL_free(void *orig_ptr) {
+  if (orig_ptr == NULL) {
+    return;
+  }
+
+  void *ptr = ((uint8_t *)orig_ptr) - OPENSSL_MALLOC_PREFIX;
+  __asan_unpoison_memory_region(ptr, OPENSSL_MALLOC_PREFIX);
+
+  size_t size = *(size_t *)ptr;
+  OPENSSL_cleanse(ptr, size + OPENSSL_MALLOC_PREFIX);
+  sdallocx(ptr, size + OPENSSL_MALLOC_PREFIX, 0 /* flags */);
 }
 
-int CRYPTO_set_locked_mem_ex_functions(void *(*m) (size_t, const char *, int),
-                                       void (*f) (void *))
-{
-    if (!allow_customize)
-        return 0;
-    if ((m == NULL) || (f == NULL))
-        return 0;
-    malloc_locked_func = 0;
-    malloc_locked_ex_func = m;
-    free_func = f;
-    return 1;
+void *OPENSSL_realloc(void *orig_ptr, size_t new_size) {
+  if (orig_ptr == NULL) {
+    return OPENSSL_malloc(new_size);
+  }
+
+  void *ptr = ((uint8_t *)orig_ptr) - OPENSSL_MALLOC_PREFIX;
+  __asan_unpoison_memory_region(ptr, OPENSSL_MALLOC_PREFIX);
+  size_t old_size = *(size_t *)ptr;
+  __asan_poison_memory_region(ptr, OPENSSL_MALLOC_PREFIX);
+
+  void *ret = OPENSSL_malloc(new_size);
+  if (ret == NULL) {
+    return NULL;
+  }
+
+  size_t to_copy = new_size;
+  if (old_size < to_copy) {
+    to_copy = old_size;
+  }
+
+  memcpy(ret, orig_ptr, to_copy);
+  OPENSSL_free(orig_ptr);
+
+  return ret;
 }
 
-int CRYPTO_set_mem_debug_functions(void (*m)
-                                    (void *, int, const char *, int, int),
-                                   void (*r) (void *, void *, int,
-                                              const char *, int, int),
-                                   void (*f) (void *, int), void (*so) (long),
-                                   long (*go) (void))
-{
-    if (!allow_customize_debug)
-        return 0;
-    OPENSSL_init();
-    malloc_debug_func = m;
-    realloc_debug_func = r;
-    free_debug_func = f;
-    set_debug_options_func = so;
-    get_debug_options_func = go;
-    return 1;
+void OPENSSL_cleanse(void *ptr, size_t len) {
+#if defined(OPENSSL_WINDOWS)
+  SecureZeroMemory(ptr, len);
+#else
+  OPENSSL_memset(ptr, 0, len);
+
+#if !defined(OPENSSL_NO_ASM)
+  /* As best as we can tell, this is sufficient to break any optimisations that
+     might try to eliminate "superfluous" memsets. If there's an easy way to
+     detect memset_s, it would be better to use that. */
+  __asm__ __volatile__("" : : "r"(ptr) : "memory");
+#endif
+#endif  // !OPENSSL_NO_ASM
 }
 
-void CRYPTO_get_mem_functions(void *(**m) (size_t),
-                              void *(**r) (void *, size_t),
-                              void (**f) (void *))
-{
-    if (m != NULL)
-        *m = (malloc_ex_func == default_malloc_ex) ? malloc_func : 0;
-    if (r != NULL)
-        *r = (realloc_ex_func == default_realloc_ex) ? realloc_func : 0;
-    if (f != NULL)
-        *f = free_func;
+void OPENSSL_clear_free(void *ptr, size_t unused) {
+  OPENSSL_free(ptr);
 }
 
-void CRYPTO_get_mem_ex_functions(void *(**m) (size_t, const char *, int),
-                                 void *(**r) (void *, size_t, const char *,
-                                              int), void (**f) (void *))
-{
-    if (m != NULL)
-        *m = (malloc_ex_func != default_malloc_ex) ? malloc_ex_func : 0;
-    if (r != NULL)
-        *r = (realloc_ex_func != default_realloc_ex) ? realloc_ex_func : 0;
-    if (f != NULL)
-        *f = free_func;
+int CRYPTO_memcmp(const void *in_a, const void *in_b, size_t len) {
+  const uint8_t *a = in_a;
+  const uint8_t *b = in_b;
+  uint8_t x = 0;
+
+  for (size_t i = 0; i < len; i++) {
+    x |= a[i] ^ b[i];
+  }
+
+  return x;
 }
 
-void CRYPTO_get_locked_mem_functions(void *(**m) (size_t),
-                                     void (**f) (void *))
-{
-    if (m != NULL)
-        *m = (malloc_locked_ex_func == default_malloc_locked_ex) ?
-            malloc_locked_func : 0;
-    if (f != NULL)
-        *f = free_locked_func;
+uint32_t OPENSSL_hash32(const void *ptr, size_t len) {
+  // These are the FNV-1a parameters for 32 bits.
+  static const uint32_t kPrime = 16777619u;
+  static const uint32_t kOffsetBasis = 2166136261u;
+
+  const uint8_t *in = ptr;
+  uint32_t h = kOffsetBasis;
+
+  for (size_t i = 0; i < len; i++) {
+    h ^= in[i];
+    h *= kPrime;
+  }
+
+  return h;
 }
 
-void CRYPTO_get_locked_mem_ex_functions(void
-                                        *(**m) (size_t, const char *, int),
-                                        void (**f) (void *))
-{
-    if (m != NULL)
-        *m = (malloc_locked_ex_func != default_malloc_locked_ex) ?
-            malloc_locked_ex_func : 0;
-    if (f != NULL)
-        *f = free_locked_func;
-}
-
-void CRYPTO_get_mem_debug_functions(void (**m)
-                                     (void *, int, const char *, int, int),
-                                    void (**r) (void *, void *, int,
-                                                const char *, int, int),
-                                    void (**f) (void *, int),
-                                    void (**so) (long), long (**go) (void))
-{
-    if (m != NULL)
-        *m = malloc_debug_func;
-    if (r != NULL)
-        *r = realloc_debug_func;
-    if (f != NULL)
-        *f = free_debug_func;
-    if (so != NULL)
-        *so = set_debug_options_func;
-    if (go != NULL)
-        *go = get_debug_options_func;
-}
-
-void *CRYPTO_malloc_locked(int num, const char *file, int line)
-{
-    void *ret = NULL;
-
-    if (num <= 0)
-        return NULL;
-
-    if (allow_customize)
-        allow_customize = 0;
-    if (malloc_debug_func != NULL) {
-        if (allow_customize_debug)
-            allow_customize_debug = 0;
-        malloc_debug_func(NULL, num, file, line, 0);
+size_t OPENSSL_strnlen(const char *s, size_t len) {
+  for (size_t i = 0; i < len; i++) {
+    if (s[i] == 0) {
+      return i;
     }
-    ret = malloc_locked_ex_func(num, file, line);
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr, "LEVITTE_DEBUG_MEM:         > 0x%p (%d)\n", ret, num);
-#endif
-    if (malloc_debug_func != NULL)
-        malloc_debug_func(ret, num, file, line, 1);
+  }
 
-#ifndef OPENSSL_CPUID_OBJ
-    /*
-     * Create a dependency on the value of 'cleanse_ctr' so our memory
-     * sanitisation function can't be optimised out. NB: We only do this for
-     * >2Kb so the overhead doesn't bother us.
-     */
-    if (ret && (num > 2048)) {
-        extern unsigned char cleanse_ctr;
-        ((unsigned char *)ret)[0] = cleanse_ctr;
+  return len;
+}
+
+char *OPENSSL_strdup(const char *s) {
+  const size_t len = strlen(s) + 1;
+  char *ret = OPENSSL_malloc(len);
+  if (ret == NULL) {
+    return NULL;
+  }
+  OPENSSL_memcpy(ret, s, len);
+  return ret;
+}
+
+int OPENSSL_tolower(int c) {
+  if (c >= 'A' && c <= 'Z') {
+    return c + ('a' - 'A');
+  }
+  return c;
+}
+
+int OPENSSL_strcasecmp(const char *a, const char *b) {
+  for (size_t i = 0;; i++) {
+    const int aa = OPENSSL_tolower(a[i]);
+    const int bb = OPENSSL_tolower(b[i]);
+
+    if (aa < bb) {
+      return -1;
+    } else if (aa > bb) {
+      return 1;
+    } else if (aa == 0) {
+      return 0;
     }
-#endif
-
-    return ret;
+  }
 }
 
-void CRYPTO_free_locked(void *str)
-{
-    if (free_debug_func != NULL)
-        free_debug_func(str, 0);
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr, "LEVITTE_DEBUG_MEM:         < 0x%p\n", str);
-#endif
-    free_locked_func(str);
-    if (free_debug_func != NULL)
-        free_debug_func(NULL, 1);
-}
+int OPENSSL_strncasecmp(const char *a, const char *b, size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    const int aa = OPENSSL_tolower(a[i]);
+    const int bb = OPENSSL_tolower(b[i]);
 
-void *CRYPTO_malloc(int num, const char *file, int line)
-{
-    void *ret = NULL;
-
-    if (num <= 0)
-        return NULL;
-
-    if (allow_customize)
-        allow_customize = 0;
-    if (malloc_debug_func != NULL) {
-        if (allow_customize_debug)
-            allow_customize_debug = 0;
-        malloc_debug_func(NULL, num, file, line, 0);
+    if (aa < bb) {
+      return -1;
+    } else if (aa > bb) {
+      return 1;
+    } else if (aa == 0) {
+      return 0;
     }
-    ret = malloc_ex_func(num, file, line);
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr, "LEVITTE_DEBUG_MEM:         > 0x%p (%d)\n", ret, num);
-#endif
-    if (malloc_debug_func != NULL)
-        malloc_debug_func(ret, num, file, line, 1);
+  }
 
-#ifndef OPENSSL_CPUID_OBJ
-    /*
-     * Create a dependency on the value of 'cleanse_ctr' so our memory
-     * sanitisation function can't be optimised out. NB: We only do this for
-     * >2Kb so the overhead doesn't bother us.
-     */
-    if (ret && (num > 2048)) {
-        extern unsigned char cleanse_ctr;
-        ((unsigned char *)ret)[0] = cleanse_ctr;
-    }
-#endif
-
-    return ret;
+  return 0;
 }
 
-char *CRYPTO_strdup(const char *str, const char *file, int line)
-{
-    char *ret = CRYPTO_malloc(strlen(str) + 1, file, line);
-
-    if (ret == NULL)
-        return NULL;
-
-    strcpy(ret, str);
-    return ret;
+int BIO_snprintf(char *buf, size_t n, const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  int ret = BIO_vsnprintf(buf, n, format, args);
+  va_end(args);
+  return ret;
 }
 
-void *CRYPTO_realloc(void *str, int num, const char *file, int line)
-{
-    void *ret = NULL;
-
-    if (str == NULL)
-        return CRYPTO_malloc(num, file, line);
-
-    if (num <= 0)
-        return NULL;
-
-    if (realloc_debug_func != NULL)
-        realloc_debug_func(str, NULL, num, file, line, 0);
-    ret = realloc_ex_func(str, num, file, line);
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr, "LEVITTE_DEBUG_MEM:         | 0x%p -> 0x%p (%d)\n", str,
-            ret, num);
-#endif
-    if (realloc_debug_func != NULL)
-        realloc_debug_func(str, ret, num, file, line, 1);
-
-    return ret;
-}
-
-void *CRYPTO_realloc_clean(void *str, int old_len, int num, const char *file,
-                           int line)
-{
-    void *ret = NULL;
-
-    if (str == NULL)
-        return CRYPTO_malloc(num, file, line);
-
-    if (num <= 0)
-        return NULL;
-
-    /*
-     * We don't support shrinking the buffer. Note the memcpy that copies
-     * |old_len| bytes to the new buffer, below.
-     */
-    if (num < old_len)
-        return NULL;
-
-    if (realloc_debug_func != NULL)
-        realloc_debug_func(str, NULL, num, file, line, 0);
-    ret = malloc_ex_func(num, file, line);
-    if (ret) {
-        memcpy(ret, str, old_len);
-        OPENSSL_cleanse(str, old_len);
-        free_func(str);
-    }
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr,
-            "LEVITTE_DEBUG_MEM:         | 0x%p -> 0x%p (%d)\n",
-            str, ret, num);
-#endif
-    if (realloc_debug_func != NULL)
-        realloc_debug_func(str, ret, num, file, line, 1);
-
-    return ret;
-}
-
-void CRYPTO_free(void *str)
-{
-    if (free_debug_func != NULL)
-        free_debug_func(str, 0);
-#ifdef LEVITTE_DEBUG_MEM
-    fprintf(stderr, "LEVITTE_DEBUG_MEM:         < 0x%p\n", str);
-#endif
-    free_func(str);
-    if (free_debug_func != NULL)
-        free_debug_func(NULL, 1);
-}
-
-void *CRYPTO_remalloc(void *a, int num, const char *file, int line)
-{
-    if (a != NULL)
-        OPENSSL_free(a);
-    a = (char *)OPENSSL_malloc(num);
-    return (a);
-}
-
-void CRYPTO_set_mem_debug_options(long bits)
-{
-    if (set_debug_options_func != NULL)
-        set_debug_options_func(bits);
-}
-
-long CRYPTO_get_mem_debug_options(void)
-{
-    if (get_debug_options_func != NULL)
-        return get_debug_options_func();
-    return 0;
+int BIO_vsnprintf(char *buf, size_t n, const char *format, va_list args) {
+  return vsnprintf(buf, n, format, args);
 }

@@ -1,5 +1,4 @@
-/* crypto/des/des.h */
-/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
  * This package is an SSL implementation written
@@ -53,205 +52,126 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#ifndef HEADER_NEW_DES_H
-# define HEADER_NEW_DES_H
+#ifndef OPENSSL_HEADER_DES_H
+#define OPENSSL_HEADER_DES_H
 
-# include <openssl/e_os2.h>     /* OPENSSL_EXTERN, OPENSSL_NO_DES, DES_LONG
-                                 * (via openssl/opensslconf.h */
+#include <openssl/base.h>
 
-# ifdef OPENSSL_NO_DES
-#  error DES is disabled.
-# endif
-
-# ifdef OPENSSL_BUILD_SHLIBCRYPTO
-#  undef OPENSSL_EXTERN
-#  define OPENSSL_EXTERN OPENSSL_EXPORT
-# endif
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-typedef unsigned char DES_cblock[8];
-typedef /* const */ unsigned char const_DES_cblock[8];
-/*
- * With "const", gcc 2.8.1 on Solaris thinks that DES_cblock * and
- * const_DES_cblock * are incompatible pointer types.
- */
+
+// DES.
+
+
+typedef struct DES_cblock_st {
+  uint8_t bytes[8];
+} DES_cblock;
 
 typedef struct DES_ks {
-    union {
-        DES_cblock cblock;
-        /*
-         * make sure things are correct size on machines with 8 byte longs
-         */
-        DES_LONG deslong[2];
-    } ks[16];
+  uint32_t subkeys[16][2];
 } DES_key_schedule;
 
-# ifndef OPENSSL_DISABLE_OLD_DES_SUPPORT
-#  ifndef OPENSSL_ENABLE_OLD_DES_SUPPORT
-#   define OPENSSL_ENABLE_OLD_DES_SUPPORT
-#  endif
-# endif
 
-# ifdef OPENSSL_ENABLE_OLD_DES_SUPPORT
-#  include <openssl/des_old.h>
-# endif
+#define DES_KEY_SZ (sizeof(DES_cblock))
+#define DES_SCHEDULE_SZ (sizeof(DES_key_schedule))
 
-# define DES_KEY_SZ      (sizeof(DES_cblock))
-# define DES_SCHEDULE_SZ (sizeof(DES_key_schedule))
+#define DES_ENCRYPT 1
+#define DES_DECRYPT 0
 
-# define DES_ENCRYPT     1
-# define DES_DECRYPT     0
+#define DES_CBC_MODE 0
+#define DES_PCBC_MODE 1
 
-# define DES_CBC_MODE    0
-# define DES_PCBC_MODE   1
+// DES_set_key performs a key schedule and initialises |schedule| with |key|.
+OPENSSL_EXPORT void DES_set_key(const DES_cblock *key,
+                                DES_key_schedule *schedule);
 
-# define DES_ecb2_encrypt(i,o,k1,k2,e) \
-        DES_ecb3_encrypt((i),(o),(k1),(k2),(k1),(e))
+// DES_set_odd_parity sets the parity bits (the least-significant bits in each
+// byte) of |key| given the other bits in each byte.
+OPENSSL_EXPORT void DES_set_odd_parity(DES_cblock *key);
 
-# define DES_ede2_cbc_encrypt(i,o,l,k1,k2,iv,e) \
-        DES_ede3_cbc_encrypt((i),(o),(l),(k1),(k2),(k1),(iv),(e))
+// DES_ecb_encrypt encrypts (or decrypts, if |is_encrypt| is |DES_DECRYPT|) a
+// single DES block (8 bytes) from in to out, using the key configured in
+// |schedule|.
+OPENSSL_EXPORT void DES_ecb_encrypt(const DES_cblock *in, DES_cblock *out,
+                                    const DES_key_schedule *schedule,
+                                    int is_encrypt);
 
-# define DES_ede2_cfb64_encrypt(i,o,l,k1,k2,iv,n,e) \
-        DES_ede3_cfb64_encrypt((i),(o),(l),(k1),(k2),(k1),(iv),(n),(e))
+// DES_ncbc_encrypt encrypts (or decrypts, if |enc| is |DES_DECRYPT|) |len|
+// bytes from |in| to |out| with DES in CBC mode.
+OPENSSL_EXPORT void DES_ncbc_encrypt(const uint8_t *in, uint8_t *out,
+                                     size_t len,
+                                     const DES_key_schedule *schedule,
+                                     DES_cblock *ivec, int enc);
 
-# define DES_ede2_ofb64_encrypt(i,o,l,k1,k2,iv,n) \
-        DES_ede3_ofb64_encrypt((i),(o),(l),(k1),(k2),(k1),(iv),(n))
+// DES_ecb3_encrypt encrypts (or decrypts, if |enc| is |DES_DECRYPT|) a single
+// block (8 bytes) of data from |input| to |output| using 3DES.
+OPENSSL_EXPORT void DES_ecb3_encrypt(const DES_cblock *input,
+                                     DES_cblock *output,
+                                     const DES_key_schedule *ks1,
+                                     const DES_key_schedule *ks2,
+                                     const DES_key_schedule *ks3,
+                                     int enc);
 
-OPENSSL_DECLARE_GLOBAL(int, DES_check_key); /* defaults to false */
-# define DES_check_key OPENSSL_GLOBAL_REF(DES_check_key)
-OPENSSL_DECLARE_GLOBAL(int, DES_rw_mode); /* defaults to DES_PCBC_MODE */
-# define DES_rw_mode OPENSSL_GLOBAL_REF(DES_rw_mode)
+// DES_ede3_cbc_encrypt encrypts (or decrypts, if |enc| is |DES_DECRYPT|) |len|
+// bytes from |in| to |out| with 3DES in CBC mode. 3DES uses three keys, thus
+// the function takes three different |DES_key_schedule|s.
+OPENSSL_EXPORT void DES_ede3_cbc_encrypt(const uint8_t *in, uint8_t *out,
+                                         size_t len,
+                                         const DES_key_schedule *ks1,
+                                         const DES_key_schedule *ks2,
+                                         const DES_key_schedule *ks3,
+                                         DES_cblock *ivec, int enc);
 
-const char *DES_options(void);
-void DES_ecb3_encrypt(const_DES_cblock *input, DES_cblock *output,
-                      DES_key_schedule *ks1, DES_key_schedule *ks2,
-                      DES_key_schedule *ks3, int enc);
-DES_LONG DES_cbc_cksum(const unsigned char *input, DES_cblock *output,
-                       long length, DES_key_schedule *schedule,
-                       const_DES_cblock *ivec);
-/* DES_cbc_encrypt does not update the IV!  Use DES_ncbc_encrypt instead. */
-void DES_cbc_encrypt(const unsigned char *input, unsigned char *output,
-                     long length, DES_key_schedule *schedule,
-                     DES_cblock *ivec, int enc);
-void DES_ncbc_encrypt(const unsigned char *input, unsigned char *output,
-                      long length, DES_key_schedule *schedule,
-                      DES_cblock *ivec, int enc);
-void DES_xcbc_encrypt(const unsigned char *input, unsigned char *output,
-                      long length, DES_key_schedule *schedule,
-                      DES_cblock *ivec, const_DES_cblock *inw,
-                      const_DES_cblock *outw, int enc);
-void DES_cfb_encrypt(const unsigned char *in, unsigned char *out, int numbits,
-                     long length, DES_key_schedule *schedule,
-                     DES_cblock *ivec, int enc);
-void DES_ecb_encrypt(const_DES_cblock *input, DES_cblock *output,
-                     DES_key_schedule *ks, int enc);
+// DES_ede2_cbc_encrypt encrypts (or decrypts, if |enc| is |DES_DECRYPT|) |len|
+// bytes from |in| to |out| with 3DES in CBC mode. With this keying option, the
+// first and third 3DES keys are identical. Thus, this function takes only two
+// different |DES_key_schedule|s.
+OPENSSL_EXPORT void DES_ede2_cbc_encrypt(const uint8_t *in, uint8_t *out,
+                                         size_t len,
+                                         const DES_key_schedule *ks1,
+                                         const DES_key_schedule *ks2,
+                                         DES_cblock *ivec, int enc);
 
-/*
- * This is the DES encryption function that gets called by just about every
- * other DES routine in the library.  You should not use this function except
- * to implement 'modes' of DES.  I say this because the functions that call
- * this routine do the conversion from 'char *' to long, and this needs to be
- * done to make sure 'non-aligned' memory access do not occur.  The
- * characters are loaded 'little endian'. Data is a pointer to 2 unsigned
- * long's and ks is the DES_key_schedule to use.  enc, is non zero specifies
- * encryption, zero if decryption.
- */
-void DES_encrypt1(DES_LONG *data, DES_key_schedule *ks, int enc);
 
-/*
- * This functions is the same as DES_encrypt1() except that the DES initial
- * permutation (IP) and final permutation (FP) have been left out.  As for
- * DES_encrypt1(), you should not use this function. It is used by the
- * routines in the library that implement triple DES. IP() DES_encrypt2()
- * DES_encrypt2() DES_encrypt2() FP() is the same as DES_encrypt1()
- * DES_encrypt1() DES_encrypt1() except faster :-).
- */
-void DES_encrypt2(DES_LONG *data, DES_key_schedule *ks, int enc);
+// Deprecated functions.
 
-void DES_encrypt3(DES_LONG *data, DES_key_schedule *ks1,
-                  DES_key_schedule *ks2, DES_key_schedule *ks3);
-void DES_decrypt3(DES_LONG *data, DES_key_schedule *ks1,
-                  DES_key_schedule *ks2, DES_key_schedule *ks3);
-void DES_ede3_cbc_encrypt(const unsigned char *input, unsigned char *output,
-                          long length,
-                          DES_key_schedule *ks1, DES_key_schedule *ks2,
-                          DES_key_schedule *ks3, DES_cblock *ivec, int enc);
-void DES_ede3_cbcm_encrypt(const unsigned char *in, unsigned char *out,
-                           long length,
-                           DES_key_schedule *ks1, DES_key_schedule *ks2,
-                           DES_key_schedule *ks3,
-                           DES_cblock *ivec1, DES_cblock *ivec2, int enc);
-void DES_ede3_cfb64_encrypt(const unsigned char *in, unsigned char *out,
-                            long length, DES_key_schedule *ks1,
-                            DES_key_schedule *ks2, DES_key_schedule *ks3,
-                            DES_cblock *ivec, int *num, int enc);
-void DES_ede3_cfb_encrypt(const unsigned char *in, unsigned char *out,
-                          int numbits, long length, DES_key_schedule *ks1,
-                          DES_key_schedule *ks2, DES_key_schedule *ks3,
-                          DES_cblock *ivec, int enc);
-void DES_ede3_ofb64_encrypt(const unsigned char *in, unsigned char *out,
-                            long length, DES_key_schedule *ks1,
-                            DES_key_schedule *ks2, DES_key_schedule *ks3,
-                            DES_cblock *ivec, int *num);
-# if 0
-void DES_xwhite_in2out(const_DES_cblock *DES_key, const_DES_cblock *in_white,
-                       DES_cblock *out_white);
-# endif
+// DES_set_key_unchecked calls |DES_set_key|.
+OPENSSL_EXPORT void DES_set_key_unchecked(const DES_cblock *key,
+                                          DES_key_schedule *schedule);
 
-int DES_enc_read(int fd, void *buf, int len, DES_key_schedule *sched,
-                 DES_cblock *iv);
-int DES_enc_write(int fd, const void *buf, int len, DES_key_schedule *sched,
-                  DES_cblock *iv);
-char *DES_fcrypt(const char *buf, const char *salt, char *ret);
-char *DES_crypt(const char *buf, const char *salt);
-void DES_ofb_encrypt(const unsigned char *in, unsigned char *out, int numbits,
-                     long length, DES_key_schedule *schedule,
-                     DES_cblock *ivec);
-void DES_pcbc_encrypt(const unsigned char *input, unsigned char *output,
-                      long length, DES_key_schedule *schedule,
-                      DES_cblock *ivec, int enc);
-DES_LONG DES_quad_cksum(const unsigned char *input, DES_cblock output[],
-                        long length, int out_count, DES_cblock *seed);
-int DES_random_key(DES_cblock *ret);
-void DES_set_odd_parity(DES_cblock *key);
-int DES_check_key_parity(const_DES_cblock *key);
-int DES_is_weak_key(const_DES_cblock *key);
-/*
- * DES_set_key (= set_key = DES_key_sched = key_sched) calls
- * DES_set_key_checked if global variable DES_check_key is set,
- * DES_set_key_unchecked otherwise.
- */
-int DES_set_key(const_DES_cblock *key, DES_key_schedule *schedule);
-int DES_key_sched(const_DES_cblock *key, DES_key_schedule *schedule);
-int DES_set_key_checked(const_DES_cblock *key, DES_key_schedule *schedule);
-void DES_set_key_unchecked(const_DES_cblock *key, DES_key_schedule *schedule);
-# ifdef OPENSSL_FIPS
-void private_DES_set_key_unchecked(const_DES_cblock *key,
-                                   DES_key_schedule *schedule);
-# endif
-void DES_string_to_key(const char *str, DES_cblock *key);
-void DES_string_to_2keys(const char *str, DES_cblock *key1, DES_cblock *key2);
-void DES_cfb64_encrypt(const unsigned char *in, unsigned char *out,
-                       long length, DES_key_schedule *schedule,
-                       DES_cblock *ivec, int *num, int enc);
-void DES_ofb64_encrypt(const unsigned char *in, unsigned char *out,
-                       long length, DES_key_schedule *schedule,
-                       DES_cblock *ivec, int *num);
+OPENSSL_EXPORT void DES_ede3_cfb64_encrypt(const uint8_t *in, uint8_t *out,
+                                           long length, DES_key_schedule *ks1,
+                                           DES_key_schedule *ks2,
+                                           DES_key_schedule *ks3,
+                                           DES_cblock *ivec, int *num, int enc);
 
-int DES_read_password(DES_cblock *key, const char *prompt, int verify);
-int DES_read_2passwords(DES_cblock *key1, DES_cblock *key2,
-                        const char *prompt, int verify);
+OPENSSL_EXPORT void DES_ede3_cfb_encrypt(const uint8_t *in, uint8_t *out,
+                                         int numbits, long length,
+                                         DES_key_schedule *ks1,
+                                         DES_key_schedule *ks2,
+                                         DES_key_schedule *ks3,
+                                         DES_cblock *ivec, int enc);
 
-# define DES_fixup_key_parity DES_set_odd_parity
 
-#ifdef  __cplusplus
-}
+// Private functions.
+//
+// These functions are only exported for use in |decrepit|.
+
+OPENSSL_EXPORT void DES_decrypt3(uint32_t *data, const DES_key_schedule *ks1,
+                                 const DES_key_schedule *ks2,
+                                 const DES_key_schedule *ks3);
+
+OPENSSL_EXPORT void DES_encrypt3(uint32_t *data, const DES_key_schedule *ks1,
+                                 const DES_key_schedule *ks2,
+                                 const DES_key_schedule *ks3);
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_DES_H

@@ -53,15 +53,15 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
+#include <openssl/buf.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
-static ENUMERATED_NAMES crl_reasons[] = {
+static const ENUMERATED_NAMES crl_reasons[] = {
     {CRL_REASON_UNSPECIFIED, "Unspecified", "unspecified"},
     {CRL_REASON_KEY_COMPROMISE, "Key Compromise", "keyCompromise"},
     {CRL_REASON_CA_COMPROMISE, "CA Compromise", "CACompromise"},
@@ -84,12 +84,12 @@ const X509V3_EXT_METHOD v3_crl_reason = {
     (X509V3_EXT_I2S)i2s_ASN1_ENUMERATED_TABLE,
     0,
     0, 0, 0, 0,
-    crl_reasons
+    (void *)crl_reasons
 };
 
 char *i2s_ASN1_ENUMERATED_TABLE(X509V3_EXT_METHOD *method, ASN1_ENUMERATED *e)
 {
-    ENUMERATED_NAMES *enam;
+    const ENUMERATED_NAMES *enam;
     long strval;
     strval = ASN1_ENUMERATED_get(e);
     for (enam = method->usr_data; enam->lname; enam++) {

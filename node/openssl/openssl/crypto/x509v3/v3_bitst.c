@@ -53,16 +53,17 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+#include <string.h>
+
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
-static BIT_STRING_BITNAME ns_cert_type_table[] = {
+static const BIT_STRING_BITNAME ns_cert_type_table[] = {
     {0, "SSL Client", "client"},
     {1, "SSL Server", "server"},
     {2, "S/MIME", "email"},
@@ -74,7 +75,7 @@ static BIT_STRING_BITNAME ns_cert_type_table[] = {
     {-1, NULL, NULL}
 };
 
-static BIT_STRING_BITNAME key_usage_type_table[] = {
+static const BIT_STRING_BITNAME key_usage_type_table[] = {
     {0, "Digital Signature", "digitalSignature"},
     {1, "Non Repudiation", "nonRepudiation"},
     {2, "Key Encipherment", "keyEncipherment"},
@@ -96,7 +97,7 @@ STACK_OF(CONF_VALUE) *i2v_ASN1_BIT_STRING(X509V3_EXT_METHOD *method,
                                           ASN1_BIT_STRING *bits,
                                           STACK_OF(CONF_VALUE) *ret)
 {
-    BIT_STRING_BITNAME *bnam;
+    const BIT_STRING_BITNAME *bnam;
     for (bnam = method->usr_data; bnam->lname; bnam++) {
         if (ASN1_BIT_STRING_get_bit(bits, bnam->bitnum))
             X509V3_add_value(bnam->lname, NULL, &ret);
@@ -110,10 +111,10 @@ ASN1_BIT_STRING *v2i_ASN1_BIT_STRING(X509V3_EXT_METHOD *method,
 {
     CONF_VALUE *val;
     ASN1_BIT_STRING *bs;
-    int i;
-    BIT_STRING_BITNAME *bnam;
+    size_t i;
+    const BIT_STRING_BITNAME *bnam;
     if (!(bs = M_ASN1_BIT_STRING_new())) {
-        X509V3err(X509V3_F_V2I_ASN1_BIT_STRING, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         return NULL;
     }
     for (i = 0; i < sk_CONF_VALUE_num(nval); i++) {
@@ -122,8 +123,7 @@ ASN1_BIT_STRING *v2i_ASN1_BIT_STRING(X509V3_EXT_METHOD *method,
             if (!strcmp(bnam->sname, val->name) ||
                 !strcmp(bnam->lname, val->name)) {
                 if (!ASN1_BIT_STRING_set_bit(bs, bnam->bitnum, 1)) {
-                    X509V3err(X509V3_F_V2I_ASN1_BIT_STRING,
-                              ERR_R_MALLOC_FAILURE);
+                    OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
                     M_ASN1_BIT_STRING_free(bs);
                     return NULL;
                 }
@@ -131,8 +131,7 @@ ASN1_BIT_STRING *v2i_ASN1_BIT_STRING(X509V3_EXT_METHOD *method,
             }
         }
         if (!bnam->lname) {
-            X509V3err(X509V3_F_V2I_ASN1_BIT_STRING,
-                      X509V3_R_UNKNOWN_BIT_STRING_ARGUMENT);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_UNKNOWN_BIT_STRING_ARGUMENT);
             X509V3_conf_err(val);
             M_ASN1_BIT_STRING_free(bs);
             return NULL;

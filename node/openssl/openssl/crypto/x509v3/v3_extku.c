@@ -53,14 +53,14 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
 #include <openssl/asn1t.h>
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
 static void *v2i_EXTENDED_KEY_USAGE(const X509V3_EXT_METHOD *method,
@@ -104,12 +104,12 @@ static STACK_OF(CONF_VALUE) *i2v_EXTENDED_KEY_USAGE(const X509V3_EXT_METHOD
                                                     *ext_list)
 {
     EXTENDED_KEY_USAGE *eku = a;
-    int i;
+    size_t i;
     ASN1_OBJECT *obj;
     char obj_tmp[80];
     for (i = 0; i < sk_ASN1_OBJECT_num(eku); i++) {
         obj = sk_ASN1_OBJECT_value(eku, i);
-        openssl_i2t_ASN1_OBJECT(obj_tmp, 80, obj);
+        i2t_ASN1_OBJECT(obj_tmp, 80, obj);
         X509V3_add_value(NULL, obj_tmp, &ext_list);
     }
     return ext_list;
@@ -123,10 +123,10 @@ static void *v2i_EXTENDED_KEY_USAGE(const X509V3_EXT_METHOD *method,
     char *extval;
     ASN1_OBJECT *objtmp;
     CONF_VALUE *val;
-    int i;
+    size_t i;
 
     if (!(extku = sk_ASN1_OBJECT_new_null())) {
-        X509V3err(X509V3_F_V2I_EXTENDED_KEY_USAGE, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         return NULL;
     }
 
@@ -138,8 +138,7 @@ static void *v2i_EXTENDED_KEY_USAGE(const X509V3_EXT_METHOD *method,
             extval = val->name;
         if (!(objtmp = OBJ_txt2obj(extval, 0))) {
             sk_ASN1_OBJECT_pop_free(extku, ASN1_OBJECT_free);
-            X509V3err(X509V3_F_V2I_EXTENDED_KEY_USAGE,
-                      X509V3_R_INVALID_OBJECT_IDENTIFIER);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_OBJECT_IDENTIFIER);
             X509V3_conf_err(val);
             return NULL;
         }

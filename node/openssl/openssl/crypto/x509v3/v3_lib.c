@@ -59,57 +59,65 @@
 /* X509 v3 extension utilities */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
 #include "ext_dat.h"
-
 static STACK_OF(X509V3_EXT_METHOD) *ext_list = NULL;
 
-static int ext_cmp(const X509V3_EXT_METHOD *const *a,
-                   const X509V3_EXT_METHOD *const *b);
 static void ext_list_free(X509V3_EXT_METHOD *ext);
+
+static int ext_stack_cmp(const X509V3_EXT_METHOD **a,
+                         const X509V3_EXT_METHOD **b)
+{
+    return ((*a)->ext_nid - (*b)->ext_nid);
+}
 
 int X509V3_EXT_add(X509V3_EXT_METHOD *ext)
 {
-    if (!ext_list && !(ext_list = sk_X509V3_EXT_METHOD_new(ext_cmp))) {
-        X509V3err(X509V3_F_X509V3_EXT_ADD, ERR_R_MALLOC_FAILURE);
+    if (!ext_list && !(ext_list = sk_X509V3_EXT_METHOD_new(ext_stack_cmp))) {
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
+        ext_list_free(ext);
         return 0;
     }
     if (!sk_X509V3_EXT_METHOD_push(ext_list, ext)) {
-        X509V3err(X509V3_F_X509V3_EXT_ADD, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
+        ext_list_free(ext);
         return 0;
     }
     return 1;
 }
 
-static int ext_cmp(const X509V3_EXT_METHOD *const *a,
-                   const X509V3_EXT_METHOD *const *b)
+static int __cdecl ext_cmp(const void *void_a, const void *void_b)
 {
-    return ((*a)->ext_nid - (*b)->ext_nid);
+    const X509V3_EXT_METHOD **a = (const X509V3_EXT_METHOD **)void_a;
+    const X509V3_EXT_METHOD **b = (const X509V3_EXT_METHOD **)void_b;
+    return ext_stack_cmp(a, b);
 }
-
-DECLARE_OBJ_BSEARCH_CMP_FN(const X509V3_EXT_METHOD *,
-                           const X509V3_EXT_METHOD *, ext);
-IMPLEMENT_OBJ_BSEARCH_CMP_FN(const X509V3_EXT_METHOD *,
-                             const X509V3_EXT_METHOD *, ext);
 
 const X509V3_EXT_METHOD *X509V3_EXT_get_nid(int nid)
 {
     X509V3_EXT_METHOD tmp;
     const X509V3_EXT_METHOD *t = &tmp, *const *ret;
-    int idx;
+    size_t idx;
+
     if (nid < 0)
         return NULL;
     tmp.ext_nid = nid;
-    ret = OBJ_bsearch_ext(&t, standard_exts, STANDARD_EXTENSION_COUNT);
+    ret =
+        bsearch(&t, standard_exts, STANDARD_EXTENSION_COUNT,
+                sizeof(X509V3_EXT_METHOD *), ext_cmp);
     if (ret)
         return *ret;
     if (!ext_list)
         return NULL;
-    idx = sk_X509V3_EXT_METHOD_find(ext_list, &tmp);
-    if (idx == -1)
+
+    sk_X509V3_EXT_METHOD_sort(ext_list);
+    if (!sk_X509V3_EXT_METHOD_find(ext_list, &idx, &tmp))
         return NULL;
     return sk_X509V3_EXT_METHOD_value(ext_list, idx);
 }
@@ -126,8 +134,7 @@ int X509V3_EXT_free(int nid, void *ext_data)
 {
     const X509V3_EXT_METHOD *ext_method = X509V3_EXT_get_nid(nid);
     if (ext_method == NULL) {
-        X509V3err(X509V3_F_X509V3_EXT_FREE,
-                  X509V3_R_CANNOT_FIND_FREE_FUNCTION);
+        OPENSSL_PUT_ERROR(X509V3, X509V3_R_CANNOT_FIND_FREE_FUNCTION);
         return 0;
     }
 
@@ -136,8 +143,7 @@ int X509V3_EXT_free(int nid, void *ext_data)
     else if (ext_method->ext_free != NULL)
         ext_method->ext_free(ext_data);
     else {
-        X509V3err(X509V3_F_X509V3_EXT_FREE,
-                  X509V3_R_CANNOT_FIND_FREE_FUNCTION);
+        OPENSSL_PUT_ERROR(X509V3, X509V3_R_CANNOT_FIND_FREE_FUNCTION);
         return 0;
     }
 
@@ -158,14 +164,13 @@ int X509V3_EXT_add_alias(int nid_to, int nid_from)
     X509V3_EXT_METHOD *tmpext;
 
     if (!(ext = X509V3_EXT_get_nid(nid_from))) {
-        X509V3err(X509V3_F_X509V3_EXT_ADD_ALIAS,
-                  X509V3_R_EXTENSION_NOT_FOUND);
+        OPENSSL_PUT_ERROR(X509V3, X509V3_R_EXTENSION_NOT_FOUND);
         return 0;
     }
     if (!
         (tmpext =
          (X509V3_EXT_METHOD *)OPENSSL_malloc(sizeof(X509V3_EXT_METHOD)))) {
-        X509V3err(X509V3_F_X509V3_EXT_ADD_ALIAS, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         return 0;
     }
     *tmpext = *ext;
@@ -212,26 +217,24 @@ void *X509V3_EXT_d2i(X509_EXTENSION *ext)
     return method->d2i(NULL, &p, ext->value->length);
 }
 
-/*-
- * Get critical flag and decoded version of extension from a NID.
- * The "idx" variable returns the last found extension and can
- * be used to retrieve multiple extensions of the same NID.
- * However multiple extensions with the same NID is usually
- * due to a badly encoded certificate so if idx is NULL we
- * choke if multiple extensions exist.
- * The "crit" variable is set to the critical value.
- * The return value is the decoded extension or NULL on
- * error. The actual error can have several different causes,
- * the value of *crit reflects the cause:
- * >= 0, extension found but not decoded (reflects critical value).
- * -1 extension not found.
- * -2 extension occurs more than once.
+/*
+ * Get critical flag and decoded version of extension from a NID. The "idx"
+ * variable returns the last found extension and can be used to retrieve
+ * multiple extensions of the same NID. However multiple extensions with the
+ * same NID is usually due to a badly encoded certificate so if idx is NULL
+ * we choke if multiple extensions exist. The "crit" variable is set to the
+ * critical value. The return value is the decoded extension or NULL on
+ * error. The actual error can have several different causes, the value of
+ * *crit reflects the cause: >= 0, extension found but not decoded (reflects
+ * critical value). -1 extension not found. -2 extension occurs more than
+ * once.
  */
 
 void *X509V3_get_d2i(STACK_OF(X509_EXTENSION) *x, int nid, int *crit,
                      int *idx)
 {
-    int lastpos, i;
+    int lastpos;
+    size_t i;
     X509_EXTENSION *ex, *found_ex = NULL;
     if (!x) {
         if (idx)
@@ -286,9 +289,9 @@ void *X509V3_get_d2i(STACK_OF(X509_EXTENSION) *x, int nid, int *crit,
 int X509V3_add1_i2d(STACK_OF(X509_EXTENSION) **x, int nid, void *value,
                     int crit, unsigned long flags)
 {
-    int extidx = -1;
-    int errcode;
-    X509_EXTENSION *ext, *extmp;
+    int errcode, extidx = -1;
+    X509_EXTENSION *ext = NULL, *extmp;
+    STACK_OF(X509_EXTENSION) *ret = NULL;
     unsigned long ext_op = flags & X509V3_ADD_OP_MASK;
 
     /*
@@ -333,8 +336,7 @@ int X509V3_add1_i2d(STACK_OF(X509_EXTENSION) **x, int nid, void *value,
     ext = X509V3_EXT_i2d(nid, crit, value);
 
     if (!ext) {
-        X509V3err(X509V3_F_X509V3_ADD1_I2D,
-                  X509V3_R_ERROR_CREATING_EXTENSION);
+        OPENSSL_PUT_ERROR(X509V3, X509V3_R_ERROR_CREATING_EXTENSION);
         return 0;
     }
 
@@ -347,17 +349,23 @@ int X509V3_add1_i2d(STACK_OF(X509_EXTENSION) **x, int nid, void *value,
         return 1;
     }
 
-    if (!*x && !(*x = sk_X509_EXTENSION_new_null()))
-        return -1;
-    if (!sk_X509_EXTENSION_push(*x, ext))
-        return -1;
+    if ((ret = *x) == NULL
+         && (ret = sk_X509_EXTENSION_new_null()) == NULL)
+        goto m_fail;
+    if (!sk_X509_EXTENSION_push(ret, ext))
+        goto m_fail;
 
+    *x = ret;
     return 1;
+
+ m_fail:
+    if (ret != *x)
+        sk_X509_EXTENSION_free(ret);
+    X509_EXTENSION_free(ext);
+    return -1;
 
  err:
     if (!(flags & X509V3_ADD_SILENT))
-        X509V3err(X509V3_F_X509V3_ADD1_I2D, errcode);
+        OPENSSL_PUT_ERROR(X509V3, errcode);
     return 0;
 }
-
-IMPLEMENT_STACK_OF(X509V3_EXT_METHOD)

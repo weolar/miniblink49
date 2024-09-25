@@ -1,4 +1,3 @@
-/* pcy_tree.c */
 /*
  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
  * 2004.
@@ -57,11 +56,17 @@
  *
  */
 
-#include "cryptlib.h"
+#include <string.h>
+
+#include <openssl/mem.h>
+#include <openssl/obj.h>
+#include <openssl/stack.h>
+#include <openssl/thread.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
 #include "pcy_int.h"
+#include "../internal.h"
 
 /*
  * Enable this to print out the complete policy tree at various point during
@@ -237,7 +242,7 @@ static int tree_init(X509_POLICY_TREE **ptree, STACK_OF(X509) *certs,
         return 0;
     }
 
-    memset(tree->levels, 0, n * sizeof(X509_POLICY_LEVEL));
+    OPENSSL_memset(tree->levels, 0, n * sizeof(X509_POLICY_LEVEL));
 
     tree->nlevel = n;
 
@@ -254,7 +259,7 @@ static int tree_init(X509_POLICY_TREE **ptree, STACK_OF(X509) *certs,
         level++;
         x = sk_X509_value(certs, i);
         cache = policy_cache_set(x);
-        CRYPTO_add(&x->references, 1, CRYPTO_LOCK_X509);
+        X509_up_ref(x);
         level->cert = x;
 
         if (!cache->anyPolicy)
@@ -304,11 +309,12 @@ static int tree_init(X509_POLICY_TREE **ptree, STACK_OF(X509) *certs,
 }
 
 static int tree_link_matching_nodes(X509_POLICY_LEVEL *curr,
-                                    const X509_POLICY_DATA *data)
+                                    X509_POLICY_DATA *data)
 {
     X509_POLICY_LEVEL *last = curr - 1;
     X509_POLICY_NODE *node;
-    int i, matched = 0;
+    int matched = 0;
+    size_t i;
     /* Iterate through all in nodes linking matches */
     for (i = 0; i < sk_X509_POLICY_NODE_num(last->nodes); i++) {
         node = sk_X509_POLICY_NODE_value(last->nodes, i);
@@ -333,7 +339,7 @@ static int tree_link_matching_nodes(X509_POLICY_LEVEL *curr,
 static int tree_link_nodes(X509_POLICY_LEVEL *curr,
                            const X509_POLICY_CACHE *cache)
 {
-    int i;
+    size_t i;
     X509_POLICY_DATA *data;
 
     for (i = 0; i < sk_X509_POLICY_DATA_num(cache->data); i++) {
@@ -395,7 +401,7 @@ static int tree_link_unmatched(X509_POLICY_LEVEL *curr,
                                X509_POLICY_NODE *node, X509_POLICY_TREE *tree)
 {
     const X509_POLICY_LEVEL *last = curr - 1;
-    int i;
+    size_t i;
 
     if ((last->flags & X509_V_FLAG_INHIBIT_MAP)
         || !(node->data->flags & POLICY_DATA_FLAG_MAPPED)) {
@@ -408,7 +414,7 @@ static int tree_link_unmatched(X509_POLICY_LEVEL *curr,
     } else {
         /* If mapping: matched if one child per expected policy set */
         STACK_OF(ASN1_OBJECT) *expset = node->data->expected_policy_set;
-        if (node->nchild == sk_ASN1_OBJECT_num(expset))
+        if ((size_t)node->nchild == sk_ASN1_OBJECT_num(expset))
             return 1;
         /* Locate unmatched nodes */
         for (i = 0; i < sk_ASN1_OBJECT_num(expset); i++) {
@@ -429,7 +435,7 @@ static int tree_link_any(X509_POLICY_LEVEL *curr,
                          const X509_POLICY_CACHE *cache,
                          X509_POLICY_TREE *tree)
 {
-    int i;
+    size_t i;
     /*
      * X509_POLICY_DATA *data;
      */
@@ -528,8 +534,6 @@ static int tree_prune(X509_POLICY_TREE *tree, X509_POLICY_LEVEL *curr)
         }
     }
 
-    return 1;
-
 }
 
 static int tree_add_auth_node(STACK_OF(X509_POLICY_NODE) **pnodes,
@@ -539,9 +543,11 @@ static int tree_add_auth_node(STACK_OF(X509_POLICY_NODE) **pnodes,
         *pnodes = policy_node_cmp_new();
         if (!*pnodes)
             return 0;
-    } else if (sk_X509_POLICY_NODE_find(*pnodes, pcy) != -1)
+    } else {
+      sk_X509_POLICY_NODE_sort(*pnodes);
+      if (sk_X509_POLICY_NODE_find(*pnodes, NULL, pcy))
         return 1;
-
+    }
     if (!sk_X509_POLICY_NODE_push(*pnodes, pcy))
         return 0;
 
@@ -564,7 +570,8 @@ static int tree_calculate_authority_set(X509_POLICY_TREE *tree,
     X509_POLICY_LEVEL *curr;
     X509_POLICY_NODE *node, *anyptr;
     STACK_OF(X509_POLICY_NODE) **addnodes;
-    int i, j;
+    int i;
+    size_t j;
     curr = tree->levels + tree->nlevel - 1;
 
     /* If last level contains anyPolicy set is anyPolicy */
@@ -605,7 +612,7 @@ static int tree_calculate_user_set(X509_POLICY_TREE *tree,
                                    STACK_OF(ASN1_OBJECT) *policy_oids,
                                    STACK_OF(X509_POLICY_NODE) *auth_nodes)
 {
-    int i;
+    size_t i;
     X509_POLICY_NODE *node;
     ASN1_OBJECT *oid;
 
@@ -732,6 +739,7 @@ int X509_policy_check(X509_POLICY_TREE **ptree, int *pexplicit_policy,
                       STACK_OF(ASN1_OBJECT) *policy_oids, unsigned int flags)
 {
     int ret;
+    int calc_ret;
     X509_POLICY_TREE *tree = NULL;
     STACK_OF(X509_POLICY_NODE) *nodes, *auth_nodes = NULL;
     *ptree = NULL;
@@ -800,16 +808,19 @@ int X509_policy_check(X509_POLICY_TREE **ptree, int *pexplicit_policy,
 
     /* Tree is not empty: continue */
 
-    ret = tree_calculate_authority_set(tree, &auth_nodes);
+    calc_ret = tree_calculate_authority_set(tree, &auth_nodes);
+
+    if (!calc_ret)
+        goto error;
+
+    ret = tree_calculate_user_set(tree, policy_oids, auth_nodes);
+
+    if (calc_ret == 2)
+        sk_X509_POLICY_NODE_free(auth_nodes);
 
     if (!ret)
         goto error;
 
-    if (!tree_calculate_user_set(tree, policy_oids, auth_nodes))
-        goto error;
-
-    if (ret == 2)
-        sk_X509_POLICY_NODE_free(auth_nodes);
 
     if (tree)
         *ptree = tree;

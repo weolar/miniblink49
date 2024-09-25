@@ -53,12 +53,9 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/crypto.h>
+#include <openssl/err.h>
 #include <openssl/x509.h>
 
 #ifndef OPENSSL_NO_STDIO
@@ -82,7 +79,7 @@ int X509_STORE_set_default_paths(X509_STORE *ctx)
     return (1);
 }
 
-int openssl_X509_STORE_load_locations(X509_STORE *ctx, const char *file,
+int X509_STORE_load_locations(X509_STORE *ctx, const char *file,
                               const char *path)
 {
     X509_LOOKUP *lookup;

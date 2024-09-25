@@ -1,7 +1,5 @@
-/* dh_asn1.c */
-/*
- * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
- * 2000.
+/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL
+ * project 2000.
  */
 /* ====================================================================
  * Copyright (c) 2000-2005 The OpenSSL Project.  All rights reserved.
@@ -53,137 +51,110 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/bn.h>
 #include <openssl/dh.h>
-#include <openssl/objects.h>
-#include <openssl/asn1t.h>
 
-/* Override the default free and new methods */
-static int dh_cb(int operation, ASN1_VALUE **pval, const ASN1_ITEM *it,
-                 void *exarg)
-{
-    if (operation == ASN1_OP_NEW_PRE) {
-        *pval = (ASN1_VALUE *)DH_new();
-        if (*pval)
-            return 2;
-        return 0;
-    } else if (operation == ASN1_OP_FREE_PRE) {
-        DH_free((DH *)*pval);
-        *pval = NULL;
-        return 2;
-    }
-    return 1;
+#include <assert.h>
+#include <limits.h>
+
+#include <openssl/bn.h>
+#include <openssl/bytestring.h>
+#include <openssl/err.h>
+
+#include "../bytestring/internal.h"
+
+
+static int parse_integer(CBS *cbs, BIGNUM **out) {
+  assert(*out == NULL);
+  *out = BN_new();
+  if (*out == NULL) {
+    return 0;
+  }
+  return BN_parse_asn1_unsigned(cbs, *out);
 }
 
-ASN1_SEQUENCE_cb(DHparams, dh_cb) = {
-        ASN1_SIMPLE(DH, p, BIGNUM),
-        ASN1_SIMPLE(DH, g, BIGNUM),
-        ASN1_OPT(DH, length, ZLONG),
-} ASN1_SEQUENCE_END_cb(DH, DHparams)
-
-IMPLEMENT_ASN1_ENCODE_FUNCTIONS_const_fname(DH, DHparams, DHparams)
-
-/*
- * Internal only structures for handling X9.42 DH: this gets translated to or
- * from a DH structure straight away.
- */
-
-typedef struct {
-    ASN1_BIT_STRING *seed;
-    BIGNUM *counter;
-} int_dhvparams;
-
-typedef struct {
-    BIGNUM *p;
-    BIGNUM *q;
-    BIGNUM *g;
-    BIGNUM *j;
-    int_dhvparams *vparams;
-} int_dhx942_dh;
-
-ASN1_SEQUENCE(DHvparams) = {
-        ASN1_SIMPLE(int_dhvparams, seed, ASN1_BIT_STRING),
-        ASN1_SIMPLE(int_dhvparams, counter, BIGNUM)
-} ASN1_SEQUENCE_END_name(int_dhvparams, DHvparams)
-
-ASN1_SEQUENCE(DHxparams) = {
-        ASN1_SIMPLE(int_dhx942_dh, p, BIGNUM),
-        ASN1_SIMPLE(int_dhx942_dh, g, BIGNUM),
-        ASN1_SIMPLE(int_dhx942_dh, q, BIGNUM),
-        ASN1_OPT(int_dhx942_dh, j, BIGNUM),
-        ASN1_OPT(int_dhx942_dh, vparams, DHvparams),
-} ASN1_SEQUENCE_END_name(int_dhx942_dh, DHxparams)
-
-int_dhx942_dh *d2i_int_dhx(int_dhx942_dh **a,
-                           const unsigned char **pp, long length);
-int i2d_int_dhx(const int_dhx942_dh *a, unsigned char **pp);
-
-IMPLEMENT_ASN1_ENCODE_FUNCTIONS_const_fname(int_dhx942_dh, DHxparams, int_dhx)
-
-/* Application leve function: read in X9.42 DH parameters into DH structure */
-
-DH *d2i_DHxparams(DH **a, const unsigned char **pp, long length)
-{
-    int_dhx942_dh *dhx = NULL;
-    DH *dh = NULL;
-    dh = DH_new();
-    if (!dh)
-        return NULL;
-    dhx = d2i_int_dhx(NULL, pp, length);
-    if (!dhx) {
-        DH_free(dh);
-        return NULL;
-    }
-
-    if (a) {
-        if (*a)
-            DH_free(*a);
-        *a = dh;
-    }
-
-    dh->p = dhx->p;
-    dh->q = dhx->q;
-    dh->g = dhx->g;
-    dh->j = dhx->j;
-
-    if (dhx->vparams) {
-        dh->seed = dhx->vparams->seed->data;
-        dh->seedlen = dhx->vparams->seed->length;
-        dh->counter = dhx->vparams->counter;
-        dhx->vparams->seed->data = NULL;
-        ASN1_BIT_STRING_free(dhx->vparams->seed);
-        OPENSSL_free(dhx->vparams);
-        dhx->vparams = NULL;
-    }
-
-    OPENSSL_free(dhx);
-    return dh;
+static int marshal_integer(CBB *cbb, BIGNUM *bn) {
+  if (bn == NULL) {
+    // A DH object may be missing some components.
+    OPENSSL_PUT_ERROR(DH, ERR_R_PASSED_NULL_PARAMETER);
+    return 0;
+  }
+  return BN_marshal_asn1(cbb, bn);
 }
 
-int i2d_DHxparams(const DH *dh, unsigned char **pp)
-{
-    int_dhx942_dh dhx;
-    int_dhvparams dhv;
-    ASN1_BIT_STRING bs;
-    dhx.p = dh->p;
-    dhx.g = dh->g;
-    dhx.q = dh->q;
-    dhx.j = dh->j;
-    if (dh->counter && dh->seed && dh->seedlen > 0) {
-        bs.flags = ASN1_STRING_FLAG_BITS_LEFT;
-        bs.data = dh->seed;
-        bs.length = dh->seedlen;
-        dhv.seed = &bs;
-        dhv.counter = dh->counter;
-        dhx.vparams = &dhv;
-    } else
-        dhx.vparams = NULL;
+DH *DH_parse_parameters(CBS *cbs) {
+  DH *ret = DH_new();
+  if (ret == NULL) {
+    return NULL;
+  }
 
-    return i2d_int_dhx(&dhx, pp);
+  CBS child;
+  if (!CBS_get_asn1(cbs, &child, CBS_ASN1_SEQUENCE) ||
+      !parse_integer(&child, &ret->p) ||
+      !parse_integer(&child, &ret->g)) {
+    goto err;
+  }
+
+  uint64_t priv_length;
+  if (CBS_len(&child) != 0) {
+    if (!CBS_get_asn1_uint64(&child, &priv_length) ||
+        priv_length > UINT_MAX) {
+      goto err;
+    }
+    ret->priv_length = (unsigned)priv_length;
+  }
+
+  if (CBS_len(&child) != 0) {
+    goto err;
+  }
+
+  return ret;
+
+err:
+  OPENSSL_PUT_ERROR(DH, DH_R_DECODE_ERROR);
+  DH_free(ret);
+  return NULL;
+}
+
+int DH_marshal_parameters(CBB *cbb, const DH *dh) {
+  CBB child;
+  if (!CBB_add_asn1(cbb, &child, CBS_ASN1_SEQUENCE) ||
+      !marshal_integer(&child, dh->p) ||
+      !marshal_integer(&child, dh->g) ||
+      (dh->priv_length != 0 &&
+       !CBB_add_asn1_uint64(&child, dh->priv_length)) ||
+      !CBB_flush(cbb)) {
+    OPENSSL_PUT_ERROR(DH, DH_R_ENCODE_ERROR);
+    return 0;
+  }
+  return 1;
+}
+
+DH *d2i_DHparams(DH **out, const uint8_t **inp, long len) {
+  if (len < 0) {
+    return NULL;
+  }
+  CBS cbs;
+  CBS_init(&cbs, *inp, (size_t)len);
+  DH *ret = DH_parse_parameters(&cbs);
+  if (ret == NULL) {
+    return NULL;
+  }
+  if (out != NULL) {
+    DH_free(*out);
+    *out = ret;
+  }
+  *inp = CBS_data(&cbs);
+  return ret;
+}
+
+int i2d_DHparams(const DH *in, uint8_t **outp) {
+  CBB cbb;
+  if (!CBB_init(&cbb, 0) ||
+      !DH_marshal_parameters(&cbb, in)) {
+    CBB_cleanup(&cbb);
+    return -1;
+  }
+  return CBB_finish_i2d(&cbb, outp);
 }

@@ -53,14 +53,14 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
 static int i2r_PKEY_USAGE_PERIOD(X509V3_EXT_METHOD *method,
@@ -103,12 +103,8 @@ static int i2r_PKEY_USAGE_PERIOD(X509V3_EXT_METHOD *method,
     return 1;
 }
 
-/*-
-static PKEY_USAGE_PERIOD *v2i_PKEY_USAGE_PERIOD(method, ctx, values)
-X509V3_EXT_METHOD *method;
-X509V3_CTX *ctx;
-STACK_OF(CONF_VALUE) *values;
-{
-return NULL;
-}
-*/
+/*
+ * static PKEY_USAGE_PERIOD *v2i_PKEY_USAGE_PERIOD(method, ctx, values)
+ * X509V3_EXT_METHOD *method; X509V3_CTX *ctx; STACK_OF(CONF_VALUE) *values;
+ * { return NULL; }
+ */

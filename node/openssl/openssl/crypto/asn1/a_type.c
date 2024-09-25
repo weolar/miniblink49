@@ -1,4 +1,3 @@
-/* crypto/asn1/a_type.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,13 +52,14 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
+#include <openssl/asn1.h>
+
 #include <openssl/asn1t.h>
-#include <openssl/objects.h>
+#include <openssl/err.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 
 int ASN1_TYPE_get(ASN1_TYPE *a)
 {
@@ -103,10 +103,6 @@ int ASN1_TYPE_set1(ASN1_TYPE *a, int type, const void *value)
     return 1;
 }
 
-IMPLEMENT_STACK_OF(ASN1_TYPE)
-
-IMPLEMENT_ASN1_SET_OF(ASN1_TYPE)
-
 /* Returns 0 if they are equal, != 0 otherwise. */
 int ASN1_TYPE_cmp(const ASN1_TYPE *a, const ASN1_TYPE *b)
 {
@@ -119,11 +115,11 @@ int ASN1_TYPE_cmp(const ASN1_TYPE *a, const ASN1_TYPE *b)
     case V_ASN1_OBJECT:
         result = OBJ_cmp(a->value.object, b->value.object);
         break;
-    case V_ASN1_BOOLEAN:
-        result = a->value.boolean - b->value.boolean;
-        break;
     case V_ASN1_NULL:
         result = 0;             /* They do not have content. */
+        break;
+    case V_ASN1_BOOLEAN:
+        result = a->value.boolean - b->value.boolean;
         break;
     case V_ASN1_INTEGER:
     case V_ASN1_ENUMERATED:

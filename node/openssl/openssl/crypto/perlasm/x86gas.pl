@@ -1,4 +1,11 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2007-2016 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the OpenSSL license (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 package x86gas;
 
@@ -17,7 +24,7 @@ sub opsize()
 { my $reg=shift;
     if    ($reg =~ m/^%e/o)		{ "l"; }
     elsif ($reg =~ m/^%[a-d][hl]$/o)	{ "b"; }
-    elsif ($reg =~ m/^%[xm]/o)		{ undef; }
+    elsif ($reg =~ m/^%[yxm]/o)		{ undef; }
     else				{ "w"; }
 }
 
@@ -97,7 +104,7 @@ sub ::BC	{ @_;		}
 sub ::DWC	{ @_;		}
 
 sub ::file
-{   push(@out,".file\t\"$_[0].s\"\n.text\n");	}
+{   push(@out,".text\n");	}
 
 sub ::function_begin_B
 { my $func=shift;
@@ -108,6 +115,11 @@ sub ::function_begin_B
     $func=$nmdecor.$func;
 
     push(@out,".globl\t$func\n")	if ($global);
+    if ($::macosx) {
+      push(@out,".private_extern\t$func\n");
+    } else {
+      push(@out,".hidden\t$func\n");
+    }
     if ($::coff)
     {	push(@out,".def\t$func;\t.scl\t".(3-$global).";\t.type\t32;\t.endef\n"); }
     elsif (($::aout and !$::pic) or $::macosx)
@@ -158,7 +170,7 @@ sub ::file_end
 	    {	push(@out,"$non_lazy_ptr{$i}:\n.indirect_symbol\t$i\n.long\t0\n");   }
 	}
     }
-    if (grep {/\b${nmdecor}OPENSSL_ia32cap_P\b/i} @out) {
+    if (0 && grep {/\b${nmdecor}OPENSSL_ia32cap_P\b/i} @out) {
 	my $tmp=".comm\t${nmdecor}OPENSSL_ia32cap_P,16";
 	if ($::macosx)	{ push (@out,"$tmp,2\n"); }
 	elsif ($::elf)	{ push (@out,"$tmp,4\n"); }
@@ -252,6 +264,14 @@ ___
 
 sub ::dataseg
 {   push(@out,".data\n");   }
+
+sub ::preprocessor_ifndef
+{ my($define)=@_;
+    push(@out,"#ifndef ${define}\n");
+}
+
+sub ::preprocessor_endif
+{ push(@out,"#endif\n");    }
 
 *::hidden = sub { push(@out,".hidden\t$nmdecor$_[0]\n"); } if ($::elf);
 

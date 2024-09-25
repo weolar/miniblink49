@@ -1,4 +1,3 @@
-/* crypto/sha/sha.h */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,162 +52,217 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#ifndef HEADER_SHA_H
-# define HEADER_SHA_H
+#ifndef OPENSSL_HEADER_SHA_H
+#define OPENSSL_HEADER_SHA_H
 
-# include <openssl/e_os2.h>
-# include <stddef.h>
+#include <openssl/base.h>
 
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-# if defined(OPENSSL_NO_SHA) || (defined(OPENSSL_NO_SHA0) && defined(OPENSSL_NO_SHA1))
-#  error SHA is disabled.
-# endif
 
-# if defined(OPENSSL_FIPS)
-#  define FIPS_SHA_SIZE_T size_t
-# endif
+// The SHA family of hash functions (SHA-1 and SHA-2).
 
-/*-
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * ! SHA_LONG has to be at least 32 bits wide. If it's wider, then !
- * ! SHA_LONG_LOG2 has to be defined along.                        !
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- */
 
-# if defined(__LP32__)
-#  define SHA_LONG unsigned long
-# elif defined(OPENSSL_SYS_CRAY) || defined(__ILP64__)
-#  define SHA_LONG unsigned long
-#  define SHA_LONG_LOG2 3
-# else
-#  define SHA_LONG unsigned int
-# endif
+// SHA_CBLOCK is the block size of SHA-1.
+#define SHA_CBLOCK 64
 
-# define SHA_LBLOCK      16
-# define SHA_CBLOCK      (SHA_LBLOCK*4)/* SHA treats input data as a
-                                        * contiguous array of 32 bit wide
-                                        * big-endian values. */
-# define SHA_LAST_BLOCK  (SHA_CBLOCK-8)
-# define SHA_DIGEST_LENGTH 20
+// SHA_DIGEST_LENGTH is the length of a SHA-1 digest.
+#define SHA_DIGEST_LENGTH 20
 
-typedef struct SHAstate_st {
-    SHA_LONG h0, h1, h2, h3, h4;
-    SHA_LONG Nl, Nh;
-    SHA_LONG data[SHA_LBLOCK];
-    unsigned int num;
-} SHA_CTX;
+// SHA1_Init initialises |sha| and returns one.
+OPENSSL_EXPORT int SHA1_Init(SHA_CTX *sha);
 
-# ifndef OPENSSL_NO_SHA0
-#  ifdef OPENSSL_FIPS
-int private_SHA_Init(SHA_CTX *c);
-#  endif
-int SHA_Init(SHA_CTX *c);
-int SHA_Update(SHA_CTX *c, const void *data, size_t len);
-int SHA_Final(unsigned char *md, SHA_CTX *c);
-unsigned char *SHA(const unsigned char *d, size_t n, unsigned char *md);
-void SHA_Transform(SHA_CTX *c, const unsigned char *data);
-# endif
-# ifndef OPENSSL_NO_SHA1
-#  ifdef OPENSSL_FIPS
-int private_SHA1_Init(SHA_CTX *c);
-#  endif
-int SHA1_Init(SHA_CTX *c);
-int SHA1_Update(SHA_CTX *c, const void *data, size_t len);
-int SHA1_Final(unsigned char *md, SHA_CTX *c);
-unsigned char *SHA1(const unsigned char *d, size_t n, unsigned char *md);
-void SHA1_Transform(SHA_CTX *c, const unsigned char *data);
-# endif
+// SHA1_Update adds |len| bytes from |data| to |sha| and returns one.
+OPENSSL_EXPORT int SHA1_Update(SHA_CTX *sha, const void *data, size_t len);
 
-# define SHA256_CBLOCK   (SHA_LBLOCK*4)/* SHA-256 treats input data as a
-                                        * contiguous array of 32 bit wide
-                                        * big-endian values. */
-# define SHA224_DIGEST_LENGTH    28
-# define SHA256_DIGEST_LENGTH    32
+// SHA1_Final adds the final padding to |sha| and writes the resulting digest to
+// |out|, which must have at least |SHA_DIGEST_LENGTH| bytes of space. It
+// returns one.
+OPENSSL_EXPORT int SHA1_Final(uint8_t out[SHA_DIGEST_LENGTH], SHA_CTX *sha);
 
-typedef struct SHA256state_st {
-    SHA_LONG h[8];
-    SHA_LONG Nl, Nh;
-    SHA_LONG data[SHA_LBLOCK];
-    unsigned int num, md_len;
-} SHA256_CTX;
+// SHA1 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |SHA_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *SHA1(const uint8_t *data, size_t len,
+                             uint8_t out[SHA_DIGEST_LENGTH]);
 
-# ifndef OPENSSL_NO_SHA256
-#  ifdef OPENSSL_FIPS
-int private_SHA224_Init(SHA256_CTX *c);
-int private_SHA256_Init(SHA256_CTX *c);
-#  endif
-int SHA224_Init(SHA256_CTX *c);
-int SHA224_Update(SHA256_CTX *c, const void *data, size_t len);
-int SHA224_Final(unsigned char *md, SHA256_CTX *c);
-unsigned char *SHA224(const unsigned char *d, size_t n, unsigned char *md);
-int SHA256_Init(SHA256_CTX *c);
-int SHA256_Update(SHA256_CTX *c, const void *data, size_t len);
-int SHA256_Final(unsigned char *md, SHA256_CTX *c);
-unsigned char *SHA256(const unsigned char *d, size_t n, unsigned char *md);
-void SHA256_Transform(SHA256_CTX *c, const unsigned char *data);
-# endif
+// SHA1_Transform is a low-level function that performs a single, SHA-1 block
+// transformation using the state from |sha| and |SHA_CBLOCK| bytes from
+// |block|.
+OPENSSL_EXPORT void SHA1_Transform(SHA_CTX *sha,
+                                   const uint8_t block[SHA_CBLOCK]);
 
-# define SHA384_DIGEST_LENGTH    48
-# define SHA512_DIGEST_LENGTH    64
+struct sha_state_st {
+#if defined(OPENSSL_WINDOWS)
+  uint32_t h[5];
+#else
+  // wpa_supplicant accesses |h0|..|h4| so we must support those names
+  // for compatibility with it until it can be updated.
+  union {
+    uint32_t h[5];
+    struct {
+      uint32_t h0;
+      uint32_t h1;
+      uint32_t h2;
+      uint32_t h3;
+      uint32_t h4;
+    };
+  };
+#endif
+  uint32_t Nl, Nh;
+  uint8_t data[SHA_CBLOCK];
+  unsigned num;
+};
 
-# ifndef OPENSSL_NO_SHA512
-/*
- * Unlike 32-bit digest algorithms, SHA-512 *relies* on SHA_LONG64
- * being exactly 64-bit wide. See Implementation Notes in sha512.c
- * for further details.
- */
-/*
- * SHA-512 treats input data as a
- * contiguous array of 64 bit
- * wide big-endian values.
- */
-#  define SHA512_CBLOCK   (SHA_LBLOCK*8)
-#  if (defined(_WIN32) || defined(_WIN64)) && !defined(__MINGW32__)
-#   define SHA_LONG64 unsigned __int64
-#   define U64(C)     C##UI64
-#  elif defined(__arch64__)
-#   define SHA_LONG64 unsigned long
-#   define U64(C)     C##UL
-#  else
-#   define SHA_LONG64 unsigned long long
-#   define U64(C)     C##ULL
-#  endif
 
-typedef struct SHA512state_st {
-    SHA_LONG64 h[8];
-    SHA_LONG64 Nl, Nh;
-    union {
-        SHA_LONG64 d[SHA_LBLOCK];
-        unsigned char p[SHA512_CBLOCK];
-    } u;
-    unsigned int num, md_len;
-} SHA512_CTX;
-# endif
+// SHA-224.
 
-# ifndef OPENSSL_NO_SHA512
-#  ifdef OPENSSL_FIPS
-int private_SHA384_Init(SHA512_CTX *c);
-int private_SHA512_Init(SHA512_CTX *c);
-#  endif
-int SHA384_Init(SHA512_CTX *c);
-int SHA384_Update(SHA512_CTX *c, const void *data, size_t len);
-int SHA384_Final(unsigned char *md, SHA512_CTX *c);
-unsigned char *SHA384(const unsigned char *d, size_t n, unsigned char *md);
-int SHA512_Init(SHA512_CTX *c);
-int SHA512_Update(SHA512_CTX *c, const void *data, size_t len);
-int SHA512_Final(unsigned char *md, SHA512_CTX *c);
-unsigned char *SHA512(const unsigned char *d, size_t n, unsigned char *md);
-void SHA512_Transform(SHA512_CTX *c, const unsigned char *data);
-# endif
+// SHA224_CBLOCK is the block size of SHA-224.
+#define SHA224_CBLOCK 64
 
-#ifdef  __cplusplus
-}
+// SHA224_DIGEST_LENGTH is the length of a SHA-224 digest.
+#define SHA224_DIGEST_LENGTH 28
+
+// SHA224_Init initialises |sha| and returns 1.
+OPENSSL_EXPORT int SHA224_Init(SHA256_CTX *sha);
+
+// SHA224_Update adds |len| bytes from |data| to |sha| and returns 1.
+OPENSSL_EXPORT int SHA224_Update(SHA256_CTX *sha, const void *data, size_t len);
+
+// SHA224_Final adds the final padding to |sha| and writes the resulting digest
+// to |out|, which must have at least |SHA224_DIGEST_LENGTH| bytes of space. It
+// returns one on success and zero on programmer error.
+OPENSSL_EXPORT int SHA224_Final(uint8_t out[SHA224_DIGEST_LENGTH],
+                                SHA256_CTX *sha);
+
+// SHA224 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |SHA224_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *SHA224(const uint8_t *data, size_t len,
+                               uint8_t out[SHA224_DIGEST_LENGTH]);
+
+
+// SHA-256.
+
+// SHA256_CBLOCK is the block size of SHA-256.
+#define SHA256_CBLOCK 64
+
+// SHA256_DIGEST_LENGTH is the length of a SHA-256 digest.
+#define SHA256_DIGEST_LENGTH 32
+
+// SHA256_Init initialises |sha| and returns 1.
+OPENSSL_EXPORT int SHA256_Init(SHA256_CTX *sha);
+
+// SHA256_Update adds |len| bytes from |data| to |sha| and returns 1.
+OPENSSL_EXPORT int SHA256_Update(SHA256_CTX *sha, const void *data, size_t len);
+
+// SHA256_Final adds the final padding to |sha| and writes the resulting digest
+// to |out|, which must have at least |SHA256_DIGEST_LENGTH| bytes of space. It
+// returns one on success and zero on programmer error.
+OPENSSL_EXPORT int SHA256_Final(uint8_t out[SHA256_DIGEST_LENGTH],
+                                SHA256_CTX *sha);
+
+// SHA256 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |SHA256_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *SHA256(const uint8_t *data, size_t len,
+                               uint8_t out[SHA256_DIGEST_LENGTH]);
+
+// SHA256_Transform is a low-level function that performs a single, SHA-256
+// block transformation using the state from |sha| and |SHA256_CBLOCK| bytes
+// from |block|.
+OPENSSL_EXPORT void SHA256_Transform(SHA256_CTX *sha,
+                                     const uint8_t block[SHA256_CBLOCK]);
+
+// SHA256_TransformBlocks is a low-level function that takes |num_blocks| *
+// |SHA256_CBLOCK| bytes of data and performs SHA-256 transforms on it to update
+// |state|. You should not use this function unless you are implementing a
+// derivative of SHA-256.
+OPENSSL_EXPORT void SHA256_TransformBlocks(uint32_t state[8],
+                                           const uint8_t *data,
+                                           size_t num_blocks);
+
+struct sha256_state_st {
+  uint32_t h[8];
+  uint32_t Nl, Nh;
+  uint8_t data[SHA256_CBLOCK];
+  unsigned num, md_len;
+};
+
+
+// SHA-384.
+
+// SHA384_CBLOCK is the block size of SHA-384.
+#define SHA384_CBLOCK 128
+
+// SHA384_DIGEST_LENGTH is the length of a SHA-384 digest.
+#define SHA384_DIGEST_LENGTH 48
+
+// SHA384_Init initialises |sha| and returns 1.
+OPENSSL_EXPORT int SHA384_Init(SHA512_CTX *sha);
+
+// SHA384_Update adds |len| bytes from |data| to |sha| and returns 1.
+OPENSSL_EXPORT int SHA384_Update(SHA512_CTX *sha, const void *data, size_t len);
+
+// SHA384_Final adds the final padding to |sha| and writes the resulting digest
+// to |out|, which must have at least |SHA384_DIGEST_LENGTH| bytes of space. It
+// returns one on success and zero on programmer error.
+OPENSSL_EXPORT int SHA384_Final(uint8_t out[SHA384_DIGEST_LENGTH],
+                                SHA512_CTX *sha);
+
+// SHA384 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |SHA384_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *SHA384(const uint8_t *data, size_t len,
+                               uint8_t out[SHA384_DIGEST_LENGTH]);
+
+
+// SHA-512.
+
+// SHA512_CBLOCK is the block size of SHA-512.
+#define SHA512_CBLOCK 128
+
+// SHA512_DIGEST_LENGTH is the length of a SHA-512 digest.
+#define SHA512_DIGEST_LENGTH 64
+
+// SHA512_Init initialises |sha| and returns 1.
+OPENSSL_EXPORT int SHA512_Init(SHA512_CTX *sha);
+
+// SHA512_Update adds |len| bytes from |data| to |sha| and returns 1.
+OPENSSL_EXPORT int SHA512_Update(SHA512_CTX *sha, const void *data, size_t len);
+
+// SHA512_Final adds the final padding to |sha| and writes the resulting digest
+// to |out|, which must have at least |SHA512_DIGEST_LENGTH| bytes of space. It
+// returns one on success and zero on programmer error.
+OPENSSL_EXPORT int SHA512_Final(uint8_t out[SHA512_DIGEST_LENGTH],
+                                SHA512_CTX *sha);
+
+// SHA512 writes the digest of |len| bytes from |data| to |out| and returns
+// |out|. There must be at least |SHA512_DIGEST_LENGTH| bytes of space in
+// |out|.
+OPENSSL_EXPORT uint8_t *SHA512(const uint8_t *data, size_t len,
+                               uint8_t out[SHA512_DIGEST_LENGTH]);
+
+// SHA512_Transform is a low-level function that performs a single, SHA-512
+// block transformation using the state from |sha| and |SHA512_CBLOCK| bytes
+// from |block|.
+OPENSSL_EXPORT void SHA512_Transform(SHA512_CTX *sha,
+                                     const uint8_t block[SHA512_CBLOCK]);
+
+struct sha512_state_st {
+  uint64_t h[8];
+  uint64_t Nl, Nh;
+  uint8_t p[128];
+  unsigned num, md_len;
+};
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_SHA_H

@@ -53,14 +53,14 @@
  *
  * This product includes cryptographic software written by Eric Young
  * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+ * Hudson (tjh@cryptsoft.com). */
 
 #include <stdio.h>
-#include "cryptlib.h"
+
 #include <openssl/asn1t.h>
 #include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/obj.h>
 #include <openssl/x509v3.h>
 
 static void *v2i_POLICY_MAPPINGS(const X509V3_EXT_METHOD *method,
@@ -98,13 +98,13 @@ static STACK_OF(CONF_VALUE) *i2v_POLICY_MAPPINGS(const X509V3_EXT_METHOD
 {
     POLICY_MAPPINGS *pmaps = a;
     POLICY_MAPPING *pmap;
-    int i;
+    size_t i;
     char obj_tmp1[80];
     char obj_tmp2[80];
     for (i = 0; i < sk_POLICY_MAPPING_num(pmaps); i++) {
         pmap = sk_POLICY_MAPPING_value(pmaps, i);
-        openssl_i2t_ASN1_OBJECT(obj_tmp1, 80, pmap->issuerDomainPolicy);
-        openssl_i2t_ASN1_OBJECT(obj_tmp2, 80, pmap->subjectDomainPolicy);
+        i2t_ASN1_OBJECT(obj_tmp1, 80, pmap->issuerDomainPolicy);
+        i2t_ASN1_OBJECT(obj_tmp2, 80, pmap->subjectDomainPolicy);
         X509V3_add_value(obj_tmp1, obj_tmp2, &ext_list);
     }
     return ext_list;
@@ -117,10 +117,10 @@ static void *v2i_POLICY_MAPPINGS(const X509V3_EXT_METHOD *method,
     POLICY_MAPPING *pmap;
     ASN1_OBJECT *obj1, *obj2;
     CONF_VALUE *val;
-    int i;
+    size_t i;
 
     if (!(pmaps = sk_POLICY_MAPPING_new_null())) {
-        X509V3err(X509V3_F_V2I_POLICY_MAPPINGS, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
         return NULL;
     }
 
@@ -128,8 +128,7 @@ static void *v2i_POLICY_MAPPINGS(const X509V3_EXT_METHOD *method,
         val = sk_CONF_VALUE_value(nval, i);
         if (!val->value || !val->name) {
             sk_POLICY_MAPPING_pop_free(pmaps, POLICY_MAPPING_free);
-            X509V3err(X509V3_F_V2I_POLICY_MAPPINGS,
-                      X509V3_R_INVALID_OBJECT_IDENTIFIER);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_OBJECT_IDENTIFIER);
             X509V3_conf_err(val);
             return NULL;
         }
@@ -137,15 +136,14 @@ static void *v2i_POLICY_MAPPINGS(const X509V3_EXT_METHOD *method,
         obj2 = OBJ_txt2obj(val->value, 0);
         if (!obj1 || !obj2) {
             sk_POLICY_MAPPING_pop_free(pmaps, POLICY_MAPPING_free);
-            X509V3err(X509V3_F_V2I_POLICY_MAPPINGS,
-                      X509V3_R_INVALID_OBJECT_IDENTIFIER);
+            OPENSSL_PUT_ERROR(X509V3, X509V3_R_INVALID_OBJECT_IDENTIFIER);
             X509V3_conf_err(val);
             return NULL;
         }
         pmap = POLICY_MAPPING_new();
         if (!pmap) {
             sk_POLICY_MAPPING_pop_free(pmaps, POLICY_MAPPING_free);
-            X509V3err(X509V3_F_V2I_POLICY_MAPPINGS, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(X509V3, ERR_R_MALLOC_FAILURE);
             return NULL;
         }
         pmap->issuerDomainPolicy = obj1;

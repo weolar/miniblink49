@@ -1,13 +1,12 @@
-/* crypto/aes/aes.h */
 /* ====================================================================
- * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.
+ * Copyright (c) 2002-2006 The OpenSSL Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -45,105 +44,127 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- */
+ * ==================================================================== */
 
-#ifndef HEADER_AES_H
-# define HEADER_AES_H
+#ifndef OPENSSL_HEADER_AES_H
+#define OPENSSL_HEADER_AES_H
 
-# include <openssl/opensslconf.h>
+#include <openssl/base.h>
 
-# ifdef OPENSSL_NO_AES
-#  error AES is disabled.
-# endif
-
-# include <stddef.h>
-
-# define AES_ENCRYPT     1
-# define AES_DECRYPT     0
-
-/*
- * Because array size can't be a const in C, the following two are macros.
- * Both sizes are in bytes.
- */
-# define AES_MAXNR 14
-# define AES_BLOCK_SIZE 16
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-/* This should be a hidden type, but EVP requires that the size be known */
+
+// Raw AES functions.
+
+
+#define AES_ENCRYPT 1
+#define AES_DECRYPT 0
+
+// AES_MAXNR is the maximum number of AES rounds.
+#define AES_MAXNR 14
+
+#define AES_BLOCK_SIZE 16
+
+// aes_key_st should be an opaque type, but EVP requires that the size be
+// known.
 struct aes_key_st {
-# ifdef AES_LONG
-    unsigned long rd_key[4 * (AES_MAXNR + 1)];
-# else
-    unsigned int rd_key[4 * (AES_MAXNR + 1)];
-# endif
-    int rounds;
+  uint32_t rd_key[4 * (AES_MAXNR + 1)];
+  unsigned rounds;
 };
 typedef struct aes_key_st AES_KEY;
 
-const char *AES_options(void);
+// AES_set_encrypt_key configures |aeskey| to encrypt with the |bits|-bit key,
+// |key|. |key| must point to |bits|/8 bytes. It returns zero on success and a
+// negative number if |bits| is an invalid AES key size.
+//
+// WARNING: this function breaks the usual return value convention.
+OPENSSL_EXPORT int AES_set_encrypt_key(const uint8_t *key, unsigned bits,
+                                       AES_KEY *aeskey);
 
-int AES_set_encrypt_key(const unsigned char *userKey, const int bits,
-                        AES_KEY *key);
-int AES_set_decrypt_key(const unsigned char *userKey, const int bits,
-                        AES_KEY *key);
+// AES_set_decrypt_key configures |aeskey| to decrypt with the |bits|-bit key,
+// |key|. |key| must point to |bits|/8 bytes. It returns zero on success and a
+// negative number if |bits| is an invalid AES key size.
+//
+// WARNING: this function breaks the usual return value convention.
+OPENSSL_EXPORT int AES_set_decrypt_key(const uint8_t *key, unsigned bits,
+                                       AES_KEY *aeskey);
 
-int private_AES_set_encrypt_key(const unsigned char *userKey, const int bits,
-                                AES_KEY *key);
-int private_AES_set_decrypt_key(const unsigned char *userKey, const int bits,
-                                AES_KEY *key);
+// AES_encrypt encrypts a single block from |in| to |out| with |key|. The |in|
+// and |out| pointers may overlap.
+OPENSSL_EXPORT void AES_encrypt(const uint8_t *in, uint8_t *out,
+                                const AES_KEY *key);
 
-void AES_encrypt(const unsigned char *in, unsigned char *out,
-                 const AES_KEY *key);
-void AES_decrypt(const unsigned char *in, unsigned char *out,
-                 const AES_KEY *key);
-
-void AES_ecb_encrypt(const unsigned char *in, unsigned char *out,
-                     const AES_KEY *key, const int enc);
-void AES_cbc_encrypt(const unsigned char *in, unsigned char *out,
-                     size_t length, const AES_KEY *key,
-                     unsigned char *ivec, const int enc);
-void AES_cfb128_encrypt(const unsigned char *in, unsigned char *out,
-                        size_t length, const AES_KEY *key,
-                        unsigned char *ivec, int *num, const int enc);
-void AES_cfb1_encrypt(const unsigned char *in, unsigned char *out,
-                      size_t length, const AES_KEY *key,
-                      unsigned char *ivec, int *num, const int enc);
-void AES_cfb8_encrypt(const unsigned char *in, unsigned char *out,
-                      size_t length, const AES_KEY *key,
-                      unsigned char *ivec, int *num, const int enc);
-void AES_ofb128_encrypt(const unsigned char *in, unsigned char *out,
-                        size_t length, const AES_KEY *key,
-                        unsigned char *ivec, int *num);
-void AES_ctr128_encrypt(const unsigned char *in, unsigned char *out,
-                        size_t length, const AES_KEY *key,
-                        unsigned char ivec[AES_BLOCK_SIZE],
-                        unsigned char ecount_buf[AES_BLOCK_SIZE],
-                        unsigned int *num);
-/* NB: the IV is _two_ blocks long */
-void AES_ige_encrypt(const unsigned char *in, unsigned char *out,
-                     size_t length, const AES_KEY *key,
-                     unsigned char *ivec, const int enc);
-/* NB: the IV is _four_ blocks long */
-void AES_bi_ige_encrypt(const unsigned char *in, unsigned char *out,
-                        size_t length, const AES_KEY *key,
-                        const AES_KEY *key2, const unsigned char *ivec,
-                        const int enc);
-
-int AES_wrap_key(AES_KEY *key, const unsigned char *iv,
-                 unsigned char *out,
-                 const unsigned char *in, unsigned int inlen);
-int AES_unwrap_key(AES_KEY *key, const unsigned char *iv,
-                   unsigned char *out,
-                   const unsigned char *in, unsigned int inlen);
+// AES_decrypt decrypts a single block from |in| to |out| with |key|. The |in|
+// and |out| pointers may overlap.
+OPENSSL_EXPORT void AES_decrypt(const uint8_t *in, uint8_t *out,
+                                const AES_KEY *key);
 
 
-#ifdef  __cplusplus
-}
+// Block cipher modes.
+
+// AES_ctr128_encrypt encrypts (or decrypts, it's the same in CTR mode) |len|
+// bytes from |in| to |out|. The |num| parameter must be set to zero on the
+// first call and |ivec| will be incremented.
+OPENSSL_EXPORT void AES_ctr128_encrypt(const uint8_t *in, uint8_t *out,
+                                       size_t len, const AES_KEY *key,
+                                       uint8_t ivec[AES_BLOCK_SIZE],
+                                       uint8_t ecount_buf[AES_BLOCK_SIZE],
+                                       unsigned int *num);
+
+// AES_ecb_encrypt encrypts (or decrypts, if |enc| == |AES_DECRYPT|) a single,
+// 16 byte block from |in| to |out|.
+OPENSSL_EXPORT void AES_ecb_encrypt(const uint8_t *in, uint8_t *out,
+                                    const AES_KEY *key, const int enc);
+
+// AES_cbc_encrypt encrypts (or decrypts, if |enc| == |AES_DECRYPT|) |len|
+// bytes from |in| to |out|. The length must be a multiple of the block size.
+OPENSSL_EXPORT void AES_cbc_encrypt(const uint8_t *in, uint8_t *out, size_t len,
+                                    const AES_KEY *key, uint8_t *ivec,
+                                    const int enc);
+
+// AES_ofb128_encrypt encrypts (or decrypts, it's the same in OFB mode) |len|
+// bytes from |in| to |out|. The |num| parameter must be set to zero on the
+// first call.
+OPENSSL_EXPORT void AES_ofb128_encrypt(const uint8_t *in, uint8_t *out,
+                                       size_t len, const AES_KEY *key,
+                                       uint8_t *ivec, int *num);
+
+// AES_cfb128_encrypt encrypts (or decrypts, if |enc| == |AES_DECRYPT|) |len|
+// bytes from |in| to |out|. The |num| parameter must be set to zero on the
+// first call.
+OPENSSL_EXPORT void AES_cfb128_encrypt(const uint8_t *in, uint8_t *out,
+                                       size_t len, const AES_KEY *key,
+                                       uint8_t *ivec, int *num, int enc);
+
+
+// AES key wrap.
+//
+// These functions implement AES Key Wrap mode, as defined in RFC 3394. They
+// should never be used except to interoperate with existing systems that use
+// this mode.
+
+// AES_wrap_key performs AES key wrap on |in| which must be a multiple of 8
+// bytes. |iv| must point to an 8 byte value or be NULL to use the default IV.
+// |key| must have been configured for encryption. On success, it writes
+// |in_len| + 8 bytes to |out| and returns |in_len| + 8. Otherwise, it returns
+// -1.
+OPENSSL_EXPORT int AES_wrap_key(const AES_KEY *key, const uint8_t *iv,
+                                uint8_t *out, const uint8_t *in, size_t in_len);
+
+// AES_unwrap_key performs AES key unwrap on |in| which must be a multiple of 8
+// bytes. |iv| must point to an 8 byte value or be NULL to use the default IV.
+// |key| must have been configured for decryption. On success, it writes
+// |in_len| - 8 bytes to |out| and returns |in_len| - 8. Otherwise, it returns
+// -1.
+OPENSSL_EXPORT int AES_unwrap_key(const AES_KEY *key, const uint8_t *iv,
+                                  uint8_t *out, const uint8_t *in,
+                                  size_t in_len);
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-#endif                          /* !HEADER_AES_H */
+#endif  // OPENSSL_HEADER_AES_H

@@ -1,7 +1,14 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the OpenSSL license (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # require 'x86asm.pl';
-# &asm_init(<flavor>,"des-586.pl"[,$i386only]);
+# &asm_init(<flavor>[,$i386only]);
 # &function_begin("foo");
 # ...
 # &function_end("foo");
@@ -24,6 +31,26 @@ sub ::AUTOLOAD
     elsif ($opcode =~ /^pop/)  { $stack-=4; }
 
     &generic($opcode,@_) or die "undefined subroutine \&$AUTOLOAD";
+}
+
+# record_function_hit(int) writes a byte with value one to the given offset of
+# |BORINGSSL_function_hit|, but only if NDEBUG is not defined. This is used in
+# impl_dispatch_test.cc to test whether the expected assembly functions are
+# triggered by high-level API calls.
+sub ::record_function_hit
+{ my($index)=@_;
+    &preprocessor_ifndef("NDEBUG");
+    &push("ebx");
+    &push("edx");
+    &call(&label("pic"));
+    &set_label("pic");
+    &blindpop("ebx");
+    &lea("ebx",&DWP("BORINGSSL_function_hit+$index"."-".&label("pic"),"ebx"));
+    &mov("edx", 1);
+    &movb(&BP(0, "ebx"), "dl");
+    &pop("edx");
+    &pop("ebx");
+    &preprocessor_endif();
 }
 
 sub ::emit
@@ -165,6 +192,11 @@ sub ::vprotd
     {	&::generic("vprotd",@_);	}
 }
 
+sub ::endbranch
+{
+    &::data_byte(0xf3,0x0f,0x1e,0xfb);
+}
+
 # label management
 $lbdecor="L";		# local label decoration, set by package
 $label="000";
@@ -243,13 +275,34 @@ sub ::asciz
 
 sub ::asm_finish
 {   &file_end();
+    my $comment = "#";
+    $comment = ";" if ($win32 || $netware);
+    print <<___;
+$comment This file is generated from a similarly-named Perl script in the BoringSSL
+$comment source tree. Do not edit by hand.
+
+___
+    if ($win32 || $netware) {
+        print <<___ unless $masm;
+%ifdef BORINGSSL_PREFIX
+%include "boringssl_prefix_symbols_nasm.inc"
+%endif
+___
+    } else {
+        print <<___;
+#if defined(__i386__)
+#if defined(BORINGSSL_PREFIX)
+#include <boringssl_prefix_symbols_asm.h>
+#endif
+___
+    }
     print @out;
+    print "#endif\n" unless ($win32 || $netware);
 }
 
 sub ::asm_init
-{ my ($type,$fn,$cpu)=@_;
+{ my ($type,$cpu)=@_;
 
-    $filename=$fn;
     $i386=$cpu;
 
     $elf=$cpp=$coff=$aout=$macosx=$win32=$netware=$mwerks=$android=0;
@@ -268,7 +321,7 @@ sub ::asm_init
     #elsif (($type eq "nw-mwasm"))
     #{	$netware=1; $mwerks=1;	require "x86nasm.pl";	}
     elsif (($type eq "win32"))
-    {	$win32=1;		require "x86masm.pl";	}
+    {	$win32=1; $masm=1;	require "x86masm.pl";	}
     elsif (($type eq "macosx"))
     {	$aout=1; $macosx=1;	require "x86gas.pl";	}
     elsif (($type eq "android"))
@@ -289,8 +342,7 @@ EOF
     $pic=0;
     for (@ARGV) { $pic=1 if (/\-[fK]PIC/i); }
 
-    $filename =~ s/\.pl$//;
-    &file($filename);
+    &file();
 }
 
 sub ::hidden {}

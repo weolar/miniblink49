@@ -1,4 +1,3 @@
-/* crypto/cast/cast.h */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,55 +52,45 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#ifndef HEADER_CAST_H
-# define HEADER_CAST_H
+#ifndef OPENSSL_HEADER_CAST_H
+#define OPENSSL_HEADER_CAST_H
+
+#include <openssl/base.h>
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-# include <openssl/opensslconf.h>
 
-# ifdef OPENSSL_NO_CAST
-#  error CAST is disabled.
-# endif
+#define CAST_ENCRYPT 1
+#define CAST_DECRYPT 0
 
-# define CAST_ENCRYPT    1
-# define CAST_DECRYPT    0
-
-# define CAST_LONG unsigned int
-
-# define CAST_BLOCK      8
-# define CAST_KEY_LENGTH 16
+#define CAST_BLOCK 8
+#define CAST_KEY_LENGTH 16
 
 typedef struct cast_key_st {
-    CAST_LONG data[32];
-    int short_key;              /* Use reduced rounds for short key */
+  uint32_t data[32];
+  int short_key;  // Use reduced rounds for short key
 } CAST_KEY;
 
-# ifdef OPENSSL_FIPS
-void private_CAST_set_key(CAST_KEY *key, int len, const unsigned char *data);
-# endif
-void CAST_set_key(CAST_KEY *key, int len, const unsigned char *data);
-void CAST_ecb_encrypt(const unsigned char *in, unsigned char *out,
-                      const CAST_KEY *key, int enc);
-void CAST_encrypt(CAST_LONG *data, const CAST_KEY *key);
-void CAST_decrypt(CAST_LONG *data, const CAST_KEY *key);
-void CAST_cbc_encrypt(const unsigned char *in, unsigned char *out,
-                      long length, const CAST_KEY *ks, unsigned char *iv,
-                      int enc);
-void CAST_cfb64_encrypt(const unsigned char *in, unsigned char *out,
-                        long length, const CAST_KEY *schedule,
-                        unsigned char *ivec, int *num, int enc);
-void CAST_ofb64_encrypt(const unsigned char *in, unsigned char *out,
-                        long length, const CAST_KEY *schedule,
-                        unsigned char *ivec, int *num);
+OPENSSL_EXPORT void CAST_set_key(CAST_KEY *key, size_t len,
+                                 const uint8_t *data);
+OPENSSL_EXPORT void CAST_ecb_encrypt(const uint8_t *in, uint8_t *out,
+                                     const CAST_KEY *key, int enc);
+OPENSSL_EXPORT void CAST_encrypt(uint32_t *data, const CAST_KEY *key);
+OPENSSL_EXPORT void CAST_decrypt(uint32_t *data, const CAST_KEY *key);
+OPENSSL_EXPORT void CAST_cbc_encrypt(const uint8_t *in, uint8_t *out,
+                                     size_t length, const CAST_KEY *ks,
+                                     uint8_t *iv, int enc);
+
+OPENSSL_EXPORT void CAST_cfb64_encrypt(const uint8_t *in, uint8_t *out,
+                                       size_t length, const CAST_KEY *schedule,
+                                       uint8_t *ivec, int *num, int enc);
 
 #ifdef  __cplusplus
 }
 #endif
 
-#endif
+#endif  // OPENSSL_HEADER_CAST_H

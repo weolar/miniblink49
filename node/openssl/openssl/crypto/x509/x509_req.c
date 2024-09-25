@@ -53,19 +53,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
-#include <openssl/bn.h>
-#include <openssl/evp.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
-#include <openssl/x509.h>
-#include <openssl/objects.h>
-#include <openssl/buffer.h>
+#include <openssl/bn.h>
+#include <openssl/buf.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/mem.h>
+#include <openssl/obj.h>
 #include <openssl/pem.h>
+#include <openssl/x509.h>
 
 X509_REQ *X509_to_X509_REQ(X509 *x, EVP_PKEY *pkey, const EVP_MD *md)
 {
@@ -76,7 +75,7 @@ X509_REQ *X509_to_X509_REQ(X509 *x, EVP_PKEY *pkey, const EVP_MD *md)
 
     ret = X509_REQ_new();
     if (ret == NULL) {
-        X509err(X509_F_X509_TO_X509_REQ, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(X509, ERR_R_MALLOC_FAILURE);
         goto err;
     }
 
@@ -127,28 +126,22 @@ int X509_REQ_check_private_key(X509_REQ *x, EVP_PKEY *k)
         ok = 1;
         break;
     case 0:
-        X509err(X509_F_X509_REQ_CHECK_PRIVATE_KEY,
-                X509_R_KEY_VALUES_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_KEY_VALUES_MISMATCH);
         break;
     case -1:
-        X509err(X509_F_X509_REQ_CHECK_PRIVATE_KEY, X509_R_KEY_TYPE_MISMATCH);
+        OPENSSL_PUT_ERROR(X509, X509_R_KEY_TYPE_MISMATCH);
         break;
     case -2:
-#ifndef OPENSSL_NO_EC
         if (k->type == EVP_PKEY_EC) {
-            X509err(X509_F_X509_REQ_CHECK_PRIVATE_KEY, ERR_R_EC_LIB);
+            OPENSSL_PUT_ERROR(X509, ERR_R_EC_LIB);
             break;
         }
-#endif
-#ifndef OPENSSL_NO_DH
         if (k->type == EVP_PKEY_DH) {
             /* No idea */
-            X509err(X509_F_X509_REQ_CHECK_PRIVATE_KEY,
-                    X509_R_CANT_CHECK_DH_KEY);
+            OPENSSL_PUT_ERROR(X509, X509_R_CANT_CHECK_DH_KEY);
             break;
         }
-#endif
-        X509err(X509_F_X509_REQ_CHECK_PRIVATE_KEY, X509_R_UNKNOWN_KEY_TYPE);
+        OPENSSL_PUT_ERROR(X509, X509_R_UNKNOWN_KEY_TYPE);
     }
 
     EVP_PKEY_free(xk);
@@ -161,9 +154,9 @@ int X509_REQ_check_private_key(X509_REQ *x, EVP_PKEY *k)
  * used and there may be more: so the list is configurable.
  */
 
-static int ext_nid_list[] = { NID_ext_req, NID_ms_ext_req, NID_undef };
+static const int ext_nid_list[] = { NID_ext_req, NID_ms_ext_req, NID_undef };
 
-static int *ext_nids = ext_nid_list;
+static const int *ext_nids = ext_nid_list;
 
 int X509_REQ_extension_nid(int req_nid)
 {
@@ -177,12 +170,12 @@ int X509_REQ_extension_nid(int req_nid)
     }
 }
 
-int *X509_REQ_get_extension_nids(void)
+const int *X509_REQ_get_extension_nids(void)
 {
     return ext_nids;
 }
 
-void X509_REQ_set_extension_nids(int *nids)
+void X509_REQ_set_extension_nids(const int *nids)
 {
     ext_nids = nids;
 }
@@ -191,7 +184,8 @@ STACK_OF(X509_EXTENSION) *X509_REQ_get_extensions(X509_REQ *req)
 {
     X509_ATTRIBUTE *attr;
     ASN1_TYPE *ext = NULL;
-    int idx, *pnid;
+    int idx;
+    const int *pnid;
     const unsigned char *p;
 
     if ((req == NULL) || (req->req_info == NULL) || !ext_nids)
@@ -242,7 +236,7 @@ int X509_REQ_add_extensions_nid(X509_REQ *req, STACK_OF(X509_EXTENSION) *exts,
         goto err;
     at = NULL;
     attr->single = 0;
-    attr->object = OBJ_nid2obj(nid);
+    attr->object = (ASN1_OBJECT *)OBJ_nid2obj(nid);
     if (!req->req_info->attributes) {
         if (!(req->req_info->attributes = sk_X509_ATTRIBUTE_new_null()))
             goto err;
@@ -325,4 +319,24 @@ int X509_REQ_add1_attr_by_txt(X509_REQ *req,
                                 type, bytes, len))
         return 1;
     return 0;
+}
+
+void X509_REQ_get0_signature(const X509_REQ *req, const ASN1_BIT_STRING **psig,
+                             const X509_ALGOR **palg)
+{
+    if (psig != NULL)
+        *psig = req->signature;
+    if (palg != NULL)
+        *palg = req->sig_alg;
+}
+
+int X509_REQ_get_signature_nid(const X509_REQ *req)
+{
+    return OBJ_obj2nid(req->sig_alg->algorithm);
+}
+
+int i2d_re_X509_REQ_tbs(X509_REQ *req, unsigned char **pp)
+{
+    req->req_info->enc.modified = 1;
+    return i2d_X509_REQ_INFO(req->req_info, pp);
 }

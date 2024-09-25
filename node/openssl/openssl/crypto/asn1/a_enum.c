@@ -1,4 +1,3 @@
-/* crypto/asn1/a_enum.c */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -53,13 +52,18 @@
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+ * [including the GNU Public Licence.] */
 
-#include <stdio.h>
-#include "cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/bn.h>
+
+#include <limits.h>
+#include <string.h>
+
+#include <openssl/err.h>
+#include <openssl/mem.h>
+
+#include "../internal.h"
+
 
 /*
  * Code for ENUMERATED type: identical to INTEGER apart from a different tag.
@@ -79,10 +83,10 @@ int ASN1_ENUMERATED_set(ASN1_ENUMERATED *a, long v)
             OPENSSL_free(a->data);
         if ((a->data =
              (unsigned char *)OPENSSL_malloc(sizeof(long) + 1)) != NULL)
-            memset((char *)a->data, 0, sizeof(long) + 1);
+            OPENSSL_memset((char *)a->data, 0, sizeof(long) + 1);
     }
     if (a->data == NULL) {
-        ASN1err(ASN1_F_ASN1_ENUMERATED_SET, ERR_R_MALLOC_FAILURE);
+        OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
         return (0);
     }
     d = v;
@@ -107,7 +111,6 @@ int ASN1_ENUMERATED_set(ASN1_ENUMERATED *a, long v)
 long ASN1_ENUMERATED_get(ASN1_ENUMERATED *a)
 {
     int neg = 0, i;
-    long r = 0;
 
     if (a == NULL)
         return (0L);
@@ -117,20 +120,31 @@ long ASN1_ENUMERATED_get(ASN1_ENUMERATED *a)
     else if (i != V_ASN1_ENUMERATED)
         return -1;
 
-    if (a->length > (int)sizeof(long)) {
-        /* hmm... a bit ugly */
-        return (0xffffffffL);
-    }
-    if (a->data == NULL)
-        return 0;
+    OPENSSL_STATIC_ASSERT(sizeof(uint64_t) >= sizeof(long),
+                          "long larger than uint64_t");
 
-    for (i = 0; i < a->length; i++) {
-        r <<= 8;
-        r |= (unsigned char)a->data[i];
+    if (a->length > (int)sizeof(uint64_t)) {
+        /* hmm... a bit ugly */
+        return -1;
     }
+
+    uint64_t r64 = 0;
+    if (a->data != NULL) {
+      for (i = 0; i < a->length; i++) {
+          r64 <<= 8;
+          r64 |= (unsigned char)a->data[i];
+      }
+
+      if (r64 > LONG_MAX) {
+          return -1;
+      }
+    }
+
+    long r = (long) r64;
     if (neg)
         r = -r;
-    return (r);
+
+    return r;
 }
 
 ASN1_ENUMERATED *BN_to_ASN1_ENUMERATED(BIGNUM *bn, ASN1_ENUMERATED *ai)
@@ -143,7 +157,7 @@ ASN1_ENUMERATED *BN_to_ASN1_ENUMERATED(BIGNUM *bn, ASN1_ENUMERATED *ai)
     else
         ret = ai;
     if (ret == NULL) {
-        ASN1err(ASN1_F_BN_TO_ASN1_ENUMERATED, ERR_R_NESTED_ASN1_ERROR);
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_NESTED_ASN1_ERROR);
         goto err;
     }
     if (BN_is_negative(bn))
@@ -155,7 +169,7 @@ ASN1_ENUMERATED *BN_to_ASN1_ENUMERATED(BIGNUM *bn, ASN1_ENUMERATED *ai)
     if (ret->length < len + 4) {
         unsigned char *new_data = OPENSSL_realloc(ret->data, len + 4);
         if (!new_data) {
-            ASN1err(ASN1_F_BN_TO_ASN1_ENUMERATED, ERR_R_MALLOC_FAILURE);
+            OPENSSL_PUT_ERROR(ASN1, ERR_R_MALLOC_FAILURE);
             goto err;
         }
         ret->data = new_data;
@@ -174,7 +188,7 @@ BIGNUM *ASN1_ENUMERATED_to_BN(ASN1_ENUMERATED *ai, BIGNUM *bn)
     BIGNUM *ret;
 
     if ((ret = BN_bin2bn(ai->data, ai->length, bn)) == NULL)
-        ASN1err(ASN1_F_ASN1_ENUMERATED_TO_BN, ASN1_R_BN_LIB);
+        OPENSSL_PUT_ERROR(ASN1, ASN1_R_BN_LIB);
     else if (ai->type == V_ASN1_NEG_ENUMERATED)
         BN_set_negative(ret, 1);
     return (ret);
