@@ -18,62 +18,56 @@
 #include "ares_setup.h"
 
 #ifdef HAVE_LIMITS_H
-#  include <limits.h>
+#include <limits.h>
 #endif
 
 #include "ares.h"
 #include "ares_private.h"
 
 #ifndef HAVE_WRITEV
-ssize_t ares_writev(ares_socket_t s, const struct iovec *iov, int iovcnt)
+ssize_t ares_writev(ares_socket_t s, const struct iovec* iov, int iovcnt)
 {
-  char *buffer, *bp;
-  int i;
-  size_t bytes = 0;
-  ssize_t result;
+    char *buffer, *bp;
+    int i;
+    size_t bytes = 0;
+    ssize_t result;
 
-  /* Validate iovcnt */
-  if (iovcnt <= 0)
-  {
-    SET_ERRNO(EINVAL);
-    return (-1);
-  }
-
-  /* Validate and find the sum of the iov_len values in the iov array */
-  for (i = 0; i < iovcnt; i++)
-  {
-    if (iov[i].iov_len > INT_MAX - bytes)
-    {
-      SET_ERRNO(EINVAL);
-      return (-1);
+    /* Validate iovcnt */
+    if (iovcnt <= 0) {
+        SET_ERRNO(EINVAL);
+        return (-1);
     }
-    bytes += iov[i].iov_len;
-  }
 
-  if (bytes == 0)
-    return (0);
+    /* Validate and find the sum of the iov_len values in the iov array */
+    for (i = 0; i < iovcnt; i++) {
+        if (iov[i].iov_len > INT_MAX - bytes) {
+            SET_ERRNO(EINVAL);
+            return (-1);
+        }
+        bytes += iov[i].iov_len;
+    }
 
-  /* Allocate a temporary buffer to hold the data */
-  buffer = ares_malloc(bytes);
-  if (!buffer)
-  {
-    SET_ERRNO(ENOMEM);
-    return (-1);
-  }
+    if (bytes == 0)
+        return (0);
 
-  /* Copy the data into buffer */
-  for (bp = buffer, i = 0; i < iovcnt; ++i)
-  {
-    memcpy (bp, iov[i].iov_base, iov[i].iov_len);
-    bp += iov[i].iov_len;
-  }
+    /* Allocate a temporary buffer to hold the data */
+    buffer = ares_malloc(bytes);
+    if (!buffer) {
+        SET_ERRNO(ENOMEM);
+        return (-1);
+    }
 
-  /* Send buffer contents */
-  result = swrite(s, buffer, bytes);
+    /* Copy the data into buffer */
+    for (bp = buffer, i = 0; i < iovcnt; ++i) {
+        memcpy(bp, iov[i].iov_base, iov[i].iov_len);
+        bp += iov[i].iov_len;
+    }
 
-  ares_free(buffer);
+    /* Send buffer contents */
+    result = swrite(s, buffer, bytes);
 
-  return (result);
+    ares_free(buffer);
+
+    return (result);
 }
 #endif
-

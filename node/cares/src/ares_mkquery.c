@@ -17,8 +17,8 @@
 #include "ares_setup.h"
 #include "ares.h"
 
-int ares_mkquery(const char *name, int dnsclass, int type, unsigned short id,
-                 int rd, unsigned char **buf, int *buflen)
+int ares_mkquery(const char* name, int dnsclass, int type, unsigned short id,
+    int rd, unsigned char** buf, int* buflen)
 {
-  return ares_create_query(name, dnsclass, type, id, rd, buf, buflen, 0);
+    return ares_create_query(name, dnsclass, type, id, rd, buf, buflen, 0);
 }

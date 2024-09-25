@@ -20,7 +20,7 @@
 #define CARES_SYMBOL_HIDING 1
 
 /* Definition to make a library symbol externally visible. */
-#define CARES_SYMBOL_SCOPE_EXTERN __attribute__ ((visibility ("default")))
+#define CARES_SYMBOL_SCOPE_EXTERN __attribute__((visibility("default")))
 
 /* if a /etc/inet dir is being used */
 /* #undef ETC_INET */
@@ -29,7 +29,7 @@
 #define GETNAMEINFO_QUAL_ARG1 const
 
 /* Define to the type of arg 1 for getnameinfo. */
-#define GETNAMEINFO_TYPE_ARG1 struct sockaddr *
+#define GETNAMEINFO_TYPE_ARG1 struct sockaddr*
 
 /* Define to the type of arg 2 for getnameinfo. */
 #define GETNAMEINFO_TYPE_ARG2 socklen_t
@@ -412,7 +412,7 @@
 #define RECV_TYPE_ARG1 int
 
 /* Define to the type of arg 2 for recv. */
-#define RECV_TYPE_ARG2 void *
+#define RECV_TYPE_ARG2 void*
 
 /* Define to the type of arg 3 for recv. */
 #define RECV_TYPE_ARG3 size_t
@@ -433,7 +433,7 @@
 #define SEND_TYPE_ARG1 int
 
 /* Define to the type of arg 2 for send. */
-#define SEND_TYPE_ARG2 void *
+#define SEND_TYPE_ARG2 void*
 
 /* Define to the type of arg 3 for send. */
 #define SEND_TYPE_ARG3 size_t
@@ -480,18 +480,18 @@
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
 #if defined AC_APPLE_UNIVERSAL_BUILD
-# if defined __BIG_ENDIAN__
-#  define WORDS_BIGENDIAN 1
-# endif
+#if defined __BIG_ENDIAN__
+#define WORDS_BIGENDIAN 1
+#endif
 #else
-# ifndef WORDS_BIGENDIAN
+#ifndef WORDS_BIGENDIAN
 /* #  undef WORDS_BIGENDIAN */
-# endif
+#endif
 #endif
 
 /* Define to 1 if OS is AIX. */
 #ifndef _ALL_SOURCE
-#  define _ALL_SOURCE 1
+#define _ALL_SOURCE 1
 #endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */

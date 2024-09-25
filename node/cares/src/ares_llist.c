@@ -24,40 +24,44 @@
  */
 
 /* Initialize a new head node */
-void ares__init_list_head(struct list_node* head) {
-  head->prev = head;
-  head->next = head;
-  head->data = NULL;
+void ares__init_list_head(struct list_node* head)
+{
+    head->prev = head;
+    head->next = head;
+    head->data = NULL;
 }
 
 /* Initialize a list node */
-void ares__init_list_node(struct list_node* node, void* d) {
-  node->prev = NULL;
-  node->next = NULL;
-  node->data = d;
+void ares__init_list_node(struct list_node* node, void* d)
+{
+    node->prev = NULL;
+    node->next = NULL;
+    node->data = d;
 }
 
 /* Returns true iff the given list is empty */
-int ares__is_list_empty(struct list_node* head) {
-  return ((head->next == head) && (head->prev == head));
+int ares__is_list_empty(struct list_node* head)
+{
+    return ((head->next == head) && (head->prev == head));
 }
 
 /* Inserts new_node before old_node */
 void ares__insert_in_list(struct list_node* new_node,
-                          struct list_node* old_node) {
-  new_node->next = old_node;
-  new_node->prev = old_node->prev;
-  old_node->prev->next = new_node;
-  old_node->prev = new_node;
+    struct list_node* old_node)
+{
+    new_node->next = old_node;
+    new_node->prev = old_node->prev;
+    old_node->prev->next = new_node;
+    old_node->prev = new_node;
 }
 
 /* Removes the node from the list it's in, if any */
-void ares__remove_from_list(struct list_node* node) {
-  if (node->next != NULL) {
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-    node->prev = NULL;
-    node->next = NULL;
-  }
+void ares__remove_from_list(struct list_node* node)
+{
+    if (node->next != NULL) {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        node->prev = NULL;
+        node->next = NULL;
+    }
 }
-

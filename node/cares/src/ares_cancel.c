@@ -25,39 +25,35 @@
  */
 void ares_cancel(ares_channel channel)
 {
-  struct query *query;
-  struct list_node list_head_copy;
-  struct list_node* list_head;
-  struct list_node* list_node;
-  int i;
+    struct query* query;
+    struct list_node list_head_copy;
+    struct list_node* list_head;
+    struct list_node* list_node;
+    int i;
 
-  if (!ares__is_list_empty(&(channel->all_queries)))
-  {
-    /* Swap list heads, so that only those queries which were present on entry
+    if (!ares__is_list_empty(&(channel->all_queries))) {
+        /* Swap list heads, so that only those queries which were present on entry
      * into this function are cancelled. New queries added by callbacks of
      * queries being cancelled will not be cancelled themselves.
      */
-    list_head = &(channel->all_queries);
-    list_head_copy.prev = list_head->prev;
-    list_head_copy.next = list_head->next;
-    list_head_copy.prev->next = &list_head_copy;
-    list_head_copy.next->prev = &list_head_copy;
-    list_head->prev = list_head;
-    list_head->next = list_head;
-    for (list_node = list_head_copy.next; list_node != &list_head_copy; )
-    {
-      query = list_node->data;
-      list_node = list_node->next;  /* since we're deleting the query */
-      query->callback(query->arg, ARES_ECANCELLED, 0, NULL, 0);
-      ares__free_query(query);
+        list_head = &(channel->all_queries);
+        list_head_copy.prev = list_head->prev;
+        list_head_copy.next = list_head->next;
+        list_head_copy.prev->next = &list_head_copy;
+        list_head_copy.next->prev = &list_head_copy;
+        list_head->prev = list_head;
+        list_head->next = list_head;
+        for (list_node = list_head_copy.next; list_node != &list_head_copy;) {
+            query = list_node->data;
+            list_node = list_node->next; /* since we're deleting the query */
+            query->callback(query->arg, ARES_ECANCELLED, 0, NULL, 0);
+            ares__free_query(query);
+        }
     }
-  }
-  if (!(channel->flags & ARES_FLAG_STAYOPEN) && ares__is_list_empty(&(channel->all_queries)))
-  {
-    if (channel->servers)
-    {
-      for (i = 0; i < channel->nservers; i++)
-        ares__close_sockets(channel, &channel->servers[i]);
+    if (!(channel->flags & ARES_FLAG_STAYOPEN) && ares__is_list_empty(&(channel->all_queries))) {
+        if (channel->servers) {
+            for (i = 0; i < channel->nservers; i++)
+                ares__close_sockets(channel, &channel->servers[i]);
+        }
     }
-  }
 }

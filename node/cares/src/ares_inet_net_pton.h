@@ -17,9 +17,9 @@
  */
 
 #ifdef HAVE_INET_NET_PTON
-#define ares_inet_net_pton(w,x,y,z) inet_net_pton(w,x,y,z)
+#define ares_inet_net_pton(w, x, y, z) inet_net_pton(w, x, y, z)
 #else
-int ares_inet_net_pton(int af, const char *src, void *dst, size_t size);
+int ares_inet_net_pton(int af, const char* src, void* dst, size_t size);
 #endif
 
 #endif /* HEADER_CARES_INET_NET_PTON_H */

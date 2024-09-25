@@ -1,7 +1,6 @@
 #ifndef HEADER_CARES_STRDUP_H
 #define HEADER_CARES_STRDUP_H
 
-
 /* Copyright 1998 by the Massachusetts Institute of Technology.
  *
  * Permission to use, copy, modify, and distribute this
@@ -19,6 +18,6 @@
 
 #include "ares_setup.h"
 
-extern char *ares_strdup(const char *s1);
+extern char* ares_strdup(const char* s1);
 
 #endif /* HEADER_CARES_STRDUP_H */

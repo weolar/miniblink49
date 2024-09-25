@@ -28,46 +28,42 @@
  * appropriate.  The initial value of *buf should be NULL.  After the
  * calling routine is done reading lines, it should free *buf.
  */
-int ares__read_line(FILE *fp, char **buf, size_t *bufsize)
+int ares__read_line(FILE* fp, char** buf, size_t* bufsize)
 {
-  char *newbuf;
-  size_t offset = 0;
-  size_t len;
+    char* newbuf;
+    size_t offset = 0;
+    size_t len;
 
-  if (*buf == NULL)
-    {
-      *buf = ares_malloc(128);
-      if (!*buf)
-        return ARES_ENOMEM;
-      *bufsize = 128;
+    if (*buf == NULL) {
+        *buf = ares_malloc(128);
+        if (!*buf)
+            return ARES_ENOMEM;
+        *bufsize = 128;
     }
 
-  for (;;)
-    {
-      int bytestoread = aresx_uztosi(*bufsize - offset);
+    for (;;) {
+        int bytestoread = aresx_uztosi(*bufsize - offset);
 
-      if (!fgets(*buf + offset, bytestoread, fp))
-        return (offset != 0) ? 0 : (ferror(fp)) ? ARES_EFILE : ARES_EOF;
-      len = offset + strlen(*buf + offset);
-      if ((*buf)[len - 1] == '\n')
-        {
-          (*buf)[len - 1] = 0;
-          break;
+        if (!fgets(*buf + offset, bytestoread, fp))
+            return (offset != 0) ? 0 : (ferror(fp)) ? ARES_EFILE : ARES_EOF;
+        len = offset + strlen(*buf + offset);
+        if ((*buf)[len - 1] == '\n') {
+            (*buf)[len - 1] = 0;
+            break;
         }
-      offset = len;
-      if(len < *bufsize - 1)
-        continue;
+        offset = len;
+        if (len < *bufsize - 1)
+            continue;
 
-      /* Allocate more space. */
-      newbuf = ares_realloc(*buf, *bufsize * 2);
-      if (!newbuf)
-        {
-          ares_free(*buf);
-          *buf = NULL;
-          return ARES_ENOMEM;
+        /* Allocate more space. */
+        newbuf = ares_realloc(*buf, *bufsize * 2);
+        if (!newbuf) {
+            ares_free(*buf);
+            *buf = NULL;
+            return ARES_ENOMEM;
         }
-      *buf = newbuf;
-      *bufsize *= 2;
+        *buf = newbuf;
+        *bufsize *= 2;
     }
-  return ARES_SUCCESS;
+    return ARES_SUCCESS;
 }

@@ -20,77 +20,77 @@
 
 struct timeval ares__tvnow(void)
 {
-  /*
+    /*
   ** GetTickCount() is available on _all_ Windows versions from W95 up
   ** to nowadays. Returns milliseconds elapsed since last system boot,
   ** increases monotonically and wraps once 49.7 days have elapsed.
   */
-  struct timeval now;
-  DWORD milliseconds = GetTickCount();
-  now.tv_sec = milliseconds / 1000;
-  now.tv_usec = (milliseconds % 1000) * 1000;
-  return now;
+    struct timeval now;
+    DWORD milliseconds = GetTickCount();
+    now.tv_sec = milliseconds / 1000;
+    now.tv_usec = (milliseconds % 1000) * 1000;
+    return now;
 }
 
 #elif defined(HAVE_CLOCK_GETTIME_MONOTONIC)
 
 struct timeval ares__tvnow(void)
 {
-  /*
+    /*
   ** clock_gettime() is granted to be increased monotonically when the
   ** monotonic clock is queried. Time starting point is unspecified, it
   ** could be the system start-up time, the Epoch, or something else,
   ** in any case the time starting point does not change once that the
   ** system has started up.
   */
-  struct timeval now;
-  struct timespec tsnow;
-  if(0 == clock_gettime(CLOCK_MONOTONIC, &tsnow)) {
-    now.tv_sec = tsnow.tv_sec;
-    now.tv_usec = tsnow.tv_nsec / 1000;
-  }
-  /*
+    struct timeval now;
+    struct timespec tsnow;
+    if (0 == clock_gettime(CLOCK_MONOTONIC, &tsnow)) {
+        now.tv_sec = tsnow.tv_sec;
+        now.tv_usec = tsnow.tv_nsec / 1000;
+    }
+    /*
   ** Even when the configure process has truly detected monotonic clock
   ** availability, it might happen that it is not actually available at
   ** run-time. When this occurs simply fallback to other time source.
   */
 #ifdef HAVE_GETTIMEOFDAY
-  else
-    (void)gettimeofday(&now, NULL);  /* LCOV_EXCL_LINE */
+    else
+        (void)gettimeofday(&now, NULL); /* LCOV_EXCL_LINE */
 #else
-  else {
-    now.tv_sec = (long)time(NULL);
-    now.tv_usec = 0;
-  }
+    else {
+        now.tv_sec = (long)time(NULL);
+        now.tv_usec = 0;
+    }
 #endif
-  return now;
+    return now;
 }
 
 #elif defined(HAVE_GETTIMEOFDAY)
 
 struct timeval ares__tvnow(void)
 {
-  /*
+    /*
   ** gettimeofday() is not granted to be increased monotonically, due to
   ** clock drifting and external source time synchronization it can jump
   ** forward or backward in time.
   */
-  struct timeval now;
-  (void)gettimeofday(&now, NULL);
-  return now;
+    struct timeval now;
+    (void)gettimeofday(&now, NULL);
+    return now;
 }
 
 #else
 
 struct timeval ares__tvnow(void)
 {
-  /*
+    /*
   ** time() returns the value of time in seconds since the Epoch.
   */
-  struct timeval now;
-  now.tv_sec = (long)time(NULL);
-  now.tv_usec = 0;
-  return now;
+    struct timeval now;
+    now.tv_sec = (long)time(NULL);
+    now.tv_usec = 0;
+    return now;
 }
 
 #endif
@@ -108,4 +108,3 @@ long ares__tvdiff(struct timeval newer, struct timeval older)
     (newer.tv_usec-older.tv_usec)/1000;
 }
 #endif
-

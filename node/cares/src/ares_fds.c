@@ -20,40 +20,37 @@
 #include "ares_nowarn.h"
 #include "ares_private.h"
 
-int ares_fds(ares_channel channel, fd_set *read_fds, fd_set *write_fds)
+int ares_fds(ares_channel channel, fd_set* read_fds, fd_set* write_fds)
 {
-  struct server_state *server;
-  ares_socket_t nfds;
-  int i;
+    struct server_state* server;
+    ares_socket_t nfds;
+    int i;
 
-  /* Are there any active queries? */
-  int active_queries = !ares__is_list_empty(&(channel->all_queries));
+    /* Are there any active queries? */
+    int active_queries = !ares__is_list_empty(&(channel->all_queries));
 
-  nfds = 0;
-  for (i = 0; i < channel->nservers; i++)
-    {
-      server = &channel->servers[i];
-      /* We only need to register interest in UDP sockets if we have
+    nfds = 0;
+    for (i = 0; i < channel->nservers; i++) {
+        server = &channel->servers[i];
+        /* We only need to register interest in UDP sockets if we have
        * outstanding queries.
        */
-      if (active_queries && server->udp_socket != ARES_SOCKET_BAD)
-        {
-          FD_SET(server->udp_socket, read_fds);
-          if (server->udp_socket >= nfds)
-            nfds = server->udp_socket + 1;
+        if (active_queries && server->udp_socket != ARES_SOCKET_BAD) {
+            FD_SET(server->udp_socket, read_fds);
+            if (server->udp_socket >= nfds)
+                nfds = server->udp_socket + 1;
         }
-      /* We always register for TCP events, because we want to know
+        /* We always register for TCP events, because we want to know
        * when the other side closes the connection, so we don't waste
        * time trying to use a broken connection.
        */
-      if (server->tcp_socket != ARES_SOCKET_BAD)
-       {
-         FD_SET(server->tcp_socket, read_fds);
-         if (server->qhead)
-           FD_SET(server->tcp_socket, write_fds);
-         if (server->tcp_socket >= nfds)
-           nfds = server->tcp_socket + 1;
-	}
+        if (server->tcp_socket != ARES_SOCKET_BAD) {
+            FD_SET(server->tcp_socket, read_fds);
+            if (server->qhead)
+                FD_SET(server->tcp_socket, write_fds);
+            if (server->tcp_socket >= nfds)
+                nfds = server->tcp_socket + 1;
+        }
     }
-  return (int)nfds;
+    return (int)nfds;
 }

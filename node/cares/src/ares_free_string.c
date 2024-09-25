@@ -19,7 +19,7 @@
 #include "ares.h"
 #include "ares_private.h"
 
-void ares_free_string(void *str)
+void ares_free_string(void* str)
 {
-  ares_free(str);
+    ares_free(str);
 }

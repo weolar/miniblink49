@@ -1,7 +1,6 @@
 #ifndef __CARES_RULES_H
 #define __CARES_RULES_H
 
-
 /* Copyright (C) 2009 by Daniel Stenberg et al
  *
  * Permission to use, copy, modify, and distribute this software and its
@@ -69,13 +68,13 @@
  */
 
 #ifndef CARES_TYPEOF_ARES_SOCKLEN_T
-#  error "CARES_TYPEOF_ARES_SOCKLEN_T definition is missing!"
-   Error Compilation_aborted_CARES_TYPEOF_ARES_SOCKLEN_T_is_missing
+#error "CARES_TYPEOF_ARES_SOCKLEN_T definition is missing!"
+Error Compilation_aborted_CARES_TYPEOF_ARES_SOCKLEN_T_is_missing
 #endif
 
 #ifndef CARES_SIZEOF_ARES_SOCKLEN_T
-#  error "CARES_SIZEOF_ARES_SOCKLEN_T definition is missing!"
-   Error Compilation_aborted_CARES_SIZEOF_ARES_SOCKLEN_T_is_missing
+#error "CARES_SIZEOF_ARES_SOCKLEN_T definition is missing!"
+    Error Compilation_aborted_CARES_SIZEOF_ARES_SOCKLEN_T_is_missing
 #endif
 
 /*
@@ -86,15 +85,15 @@
 
 #define CareschkszGE(t1, t2) sizeof(t1) >= sizeof(t2) ? 1 : -1
 
-/*
+    /*
  * Verify that the size previously defined and expected for
  * ares_socklen_t is actually the the same as the one reported
  * by sizeof() at compile time.
  */
 
-typedef char
-  __cares_rule_02__
-    [CareschkszEQ(ares_socklen_t, CARES_SIZEOF_ARES_SOCKLEN_T)];
+    typedef char
+        __cares_rule_02__
+            [CareschkszEQ(ares_socklen_t, CARES_SIZEOF_ARES_SOCKLEN_T)];
 
 /*
  * Verify at compile time that the size of ares_socklen_t as reported
@@ -103,8 +102,8 @@ typedef char
  */
 
 typedef char
-  __cares_rule_03__
-    [CareschkszGE(ares_socklen_t, int)];
+    __cares_rule_03__
+        [CareschkszGE(ares_socklen_t, int)];
 
 /* ================================================================ */
 /*          EXTERNALLY AND INTERNALLY VISIBLE DEFINITIONS           */

@@ -18,39 +18,39 @@
 #include <assert.h>
 #include "ares.h"
 
-const char *ares_strerror(int code)
+const char* ares_strerror(int code)
 {
-  /* Return a string literal from a table. */
-  const char *errtext[] = {
-    "Successful completion",
-    "DNS server returned answer with no data",
-    "DNS server claims query was misformatted",
-    "DNS server returned general failure",
-    "Domain name not found",
-    "DNS server does not implement requested operation",
-    "DNS server refused query",
-    "Misformatted DNS query",
-    "Misformatted domain name",
-    "Unsupported address family",
-    "Misformatted DNS reply",
-    "Could not contact DNS servers",
-    "Timeout while contacting DNS servers",
-    "End of file",
-    "Error reading file",
-    "Out of memory",
-    "Channel is being destroyed",
-    "Misformatted string",
-    "Illegal flags specified",
-    "Given hostname is not numeric",
-    "Illegal hints flags specified",
-    "c-ares library initialization not yet performed",
-    "Error loading iphlpapi.dll",
-    "Could not find GetNetworkParams function",
-    "DNS query cancelled"
-  };
+    /* Return a string literal from a table. */
+    const char* errtext[] = {
+        "Successful completion",
+        "DNS server returned answer with no data",
+        "DNS server claims query was misformatted",
+        "DNS server returned general failure",
+        "Domain name not found",
+        "DNS server does not implement requested operation",
+        "DNS server refused query",
+        "Misformatted DNS query",
+        "Misformatted domain name",
+        "Unsupported address family",
+        "Misformatted DNS reply",
+        "Could not contact DNS servers",
+        "Timeout while contacting DNS servers",
+        "End of file",
+        "Error reading file",
+        "Out of memory",
+        "Channel is being destroyed",
+        "Misformatted string",
+        "Illegal flags specified",
+        "Given hostname is not numeric",
+        "Illegal hints flags specified",
+        "c-ares library initialization not yet performed",
+        "Error loading iphlpapi.dll",
+        "Could not find GetNetworkParams function",
+        "DNS query cancelled"
+    };
 
-  if(code >= 0 && code < (int)(sizeof(errtext) / sizeof(*errtext)))
-    return errtext[code];
-  else
-    return "unknown";
+    if (code >= 0 && code < (int)(sizeof(errtext) / sizeof(*errtext)))
+        return errtext[code];
+    else
+        return "unknown";
 }

@@ -22,87 +22,82 @@
 #include "ares.h"
 #include "ares_private.h"
 
-void ares_destroy_options(struct ares_options *options)
+void ares_destroy_options(struct ares_options* options)
 {
-  int i;
+    int i;
 
-  if(options->servers)
-    ares_free(options->servers);
-  for (i = 0; i < options->ndomains; i++)
-    ares_free(options->domains[i]);
-  if(options->domains)
-    ares_free(options->domains);
-  if(options->sortlist)
-    ares_free(options->sortlist);
-  if(options->lookups)
-    ares_free(options->lookups);
+    if (options->servers)
+        ares_free(options->servers);
+    for (i = 0; i < options->ndomains; i++)
+        ares_free(options->domains[i]);
+    if (options->domains)
+        ares_free(options->domains);
+    if (options->sortlist)
+        ares_free(options->sortlist);
+    if (options->lookups)
+        ares_free(options->lookups);
 }
 
 void ares_destroy(ares_channel channel)
 {
-  int i;
-  struct query *query;
-  struct list_node* list_head;
-  struct list_node* list_node;
-  
-  if (!channel)
-    return;
+    int i;
+    struct query* query;
+    struct list_node* list_head;
+    struct list_node* list_node;
 
-  list_head = &(channel->all_queries);
-  for (list_node = list_head->next; list_node != list_head; )
-    {
-      query = list_node->data;
-      list_node = list_node->next;  /* since we're deleting the query */
-      query->callback(query->arg, ARES_EDESTRUCTION, 0, NULL, 0);
-      ares__free_query(query);
+    if (!channel)
+        return;
+
+    list_head = &(channel->all_queries);
+    for (list_node = list_head->next; list_node != list_head;) {
+        query = list_node->data;
+        list_node = list_node->next; /* since we're deleting the query */
+        query->callback(query->arg, ARES_EDESTRUCTION, 0, NULL, 0);
+        ares__free_query(query);
     }
 #ifndef NDEBUG
-  /* Freeing the query should remove it from all the lists in which it sits,
+    /* Freeing the query should remove it from all the lists in which it sits,
    * so all query lists should be empty now.
    */
-  assert(ares__is_list_empty(&(channel->all_queries)));
-  for (i = 0; i < ARES_QID_TABLE_SIZE; i++)
-    {
-      assert(ares__is_list_empty(&(channel->queries_by_qid[i])));
+    assert(ares__is_list_empty(&(channel->all_queries)));
+    for (i = 0; i < ARES_QID_TABLE_SIZE; i++) {
+        assert(ares__is_list_empty(&(channel->queries_by_qid[i])));
     }
-  for (i = 0; i < ARES_TIMEOUT_TABLE_SIZE; i++)
-    {
-      assert(ares__is_list_empty(&(channel->queries_by_timeout[i])));
+    for (i = 0; i < ARES_TIMEOUT_TABLE_SIZE; i++) {
+        assert(ares__is_list_empty(&(channel->queries_by_timeout[i])));
     }
 #endif
 
-  ares__destroy_servers_state(channel);
+    ares__destroy_servers_state(channel);
 
-  if (channel->domains) {
-    for (i = 0; i < channel->ndomains; i++)
-      ares_free(channel->domains[i]);
-    ares_free(channel->domains);
-  }
+    if (channel->domains) {
+        for (i = 0; i < channel->ndomains; i++)
+            ares_free(channel->domains[i]);
+        ares_free(channel->domains);
+    }
 
-  if(channel->sortlist)
-    ares_free(channel->sortlist);
+    if (channel->sortlist)
+        ares_free(channel->sortlist);
 
-  if (channel->lookups)
-    ares_free(channel->lookups);
+    if (channel->lookups)
+        ares_free(channel->lookups);
 
-  ares_free(channel);
+    ares_free(channel);
 }
 
 void ares__destroy_servers_state(ares_channel channel)
 {
-  struct server_state *server;
-  int i;
+    struct server_state* server;
+    int i;
 
-  if (channel->servers)
-    {
-      for (i = 0; i < channel->nservers; i++)
-        {
-          server = &channel->servers[i];
-          ares__close_sockets(channel, server);
-          assert(ares__is_list_empty(&server->queries_to_server));
+    if (channel->servers) {
+        for (i = 0; i < channel->nservers; i++) {
+            server = &channel->servers[i];
+            ares__close_sockets(channel, server);
+            assert(ares__is_list_empty(&server->queries_to_server));
         }
-      ares_free(channel->servers);
-      channel->servers = NULL;
+        ares_free(channel->servers);
+        channel->servers = NULL;
     }
-  channel->nservers = -1;
+    channel->nservers = -1;
 }

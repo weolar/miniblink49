@@ -51,8 +51,7 @@
 #define HAVE_TIME_H 1
 
 /* Define if you have the <unistd.h> header file. */
-#if defined(__MINGW32__) || defined(__WATCOMC__) || defined(__LCC__) || \
-    defined(__POCC__)
+#if defined(__MINGW32__) || defined(__WATCOMC__) || defined(__LCC__) || defined(__POCC__)
 #define HAVE_UNISTD_H 1
 #endif
 
@@ -126,7 +125,7 @@
 #define RECV_TYPE_ARG1 SOCKET
 
 /* Define to the type of arg 2 for recv. */
-#define RECV_TYPE_ARG2 char *
+#define RECV_TYPE_ARG2 char*
 
 /* Define to the type of arg 3 for recv. */
 #define RECV_TYPE_ARG3 int
@@ -171,7 +170,7 @@
 #define SEND_QUAL_ARG2 const
 
 /* Define to the type of arg 2 for send. */
-#define SEND_TYPE_ARG2 char *
+#define SEND_TYPE_ARG2 char*
 
 /* Define to the type of arg 3 for send. */
 #define SEND_TYPE_ARG3 int
@@ -184,21 +183,21 @@
 
 /* Specifics for the Watt-32 tcp/ip stack. */
 #ifdef WATT32
-  #define SOCKET              int
-  #define NS_INADDRSZ         4
-  #define HAVE_ARPA_NAMESER_H 1
-  #define HAVE_ARPA_INET_H    1
-  #define HAVE_NETDB_H        1
-  #define HAVE_NETINET_IN_H   1
-  #define HAVE_SYS_SOCKET_H   1
-  #define HAVE_NETINET_TCP_H  1
-  #define HAVE_AF_INET6       1
-  #define HAVE_PF_INET6       1
-  #define HAVE_STRUCT_IN6_ADDR     1
-  #define HAVE_STRUCT_SOCKADDR_IN6 1
-  #undef HAVE_WINSOCK_H
-  #undef HAVE_WINSOCK2_H
-  #undef HAVE_WS2TCPIP_H
+#define SOCKET int
+#define NS_INADDRSZ 4
+#define HAVE_ARPA_NAMESER_H 1
+#define HAVE_ARPA_INET_H 1
+#define HAVE_NETDB_H 1
+#define HAVE_NETINET_IN_H 1
+#define HAVE_SYS_SOCKET_H 1
+#define HAVE_NETINET_TCP_H 1
+#define HAVE_AF_INET6 1
+#define HAVE_PF_INET6 1
+#define HAVE_STRUCT_IN6_ADDR 1
+#define HAVE_STRUCT_SOCKADDR_IN6 1
+#undef HAVE_WINSOCK_H
+#undef HAVE_WINSOCK2_H
+#undef HAVE_WS2TCPIP_H
 #endif
 
 /* ---------------------------------------------------------------- */
@@ -213,16 +212,14 @@
 
 /* Define if ssize_t is not an available 'typedefed' type. */
 #ifndef _SSIZE_T_DEFINED
-#  if (defined(__WATCOMC__) && (__WATCOMC__ >= 1240)) || \
-      defined(__POCC__) || \
-      defined(__MINGW32__)
-#  elif defined(_WIN64)
-#    define _SSIZE_T_DEFINED
-#    define ssize_t __int64
-#  else
-#    define _SSIZE_T_DEFINED
-#    define ssize_t int
-#  endif
+#if (defined(__WATCOMC__) && (__WATCOMC__ >= 1240)) || defined(__POCC__) || defined(__MINGW32__)
+#elif defined(_WIN64)
+#define _SSIZE_T_DEFINED
+#define ssize_t __int64
+#else
+#define _SSIZE_T_DEFINED
+#define ssize_t int
+#endif
 #endif
 
 /* ---------------------------------------------------------------- */
@@ -237,9 +234,9 @@
 
 /* Define to the size of `size_t', as computed by sizeof. */
 #if defined(_WIN64)
-#  define SIZEOF_SIZE_T 8
+#define SIZEOF_SIZE_T 8
 #else
-#  define SIZEOF_SIZE_T 4
+#define SIZEOF_SIZE_T 4
 #endif
 
 /* ---------------------------------------------------------------- */
@@ -263,8 +260,8 @@
 
 /* Define to avoid VS2005 complaining about portable C functions. */
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
-#  define _CRT_SECURE_NO_DEPRECATE 1
-#  define _CRT_NONSTDC_NO_DEPRECATE 1
+#define _CRT_SECURE_NO_DEPRECATE 1
+#define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
 /* Officially, Microsoft's Windows SDK versions 6.X do not support Windows
@@ -274,7 +271,7 @@
    with VS2008 using Windows SDK versions 6.X and Windows 2000 as a build
    target are functional. */
 #if defined(_MSC_VER) && (_MSC_VER >= 1500)
-#  define VS2008_MIN_TARGET 0x0500
+#define VS2008_MIN_TARGET 0x0500
 #endif
 
 /* When no build target is specified VS2008 default build target is Windows
@@ -282,58 +279,58 @@
    for VS2008 we will target the minimum Officially supported build target,
    which happens to be Windows XP. */
 #if defined(_MSC_VER) && (_MSC_VER >= 1500)
-#  define VS2008_DEF_TARGET  0x0501
+#define VS2008_DEF_TARGET 0x0501
 #endif
 
 /* VS2008 default target settings and minimum build target check. */
 #if defined(_MSC_VER) && (_MSC_VER >= 1500)
-#  ifndef _WIN32_WINNT
-#    define _WIN32_WINNT VS2008_DEF_TARGET
-#  endif
-#  ifndef WINVER
-#    define WINVER VS2008_DEF_TARGET
-#  endif
-#  if (_WIN32_WINNT < VS2008_MIN_TARGET) || (WINVER < VS2008_MIN_TARGET)
-#    error VS2008 does not support Windows build targets prior to Windows 2000
-#  endif
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT VS2008_DEF_TARGET
+#endif
+#ifndef WINVER
+#define WINVER VS2008_DEF_TARGET
+#endif
+#if (_WIN32_WINNT < VS2008_MIN_TARGET) || (WINVER < VS2008_MIN_TARGET)
+#error VS2008 does not support Windows build targets prior to Windows 2000
+#endif
 #endif
 
 /* When no build target is specified Pelles C 5.00 and later default build
    target is Windows Vista. We override default target to be Windows 2000. */
 #if defined(__POCC__) && (__POCC__ >= 500)
-#  ifndef _WIN32_WINNT
-#    define _WIN32_WINNT 0x0500
-#  endif
-#  ifndef WINVER
-#    define WINVER 0x0500
-#  endif
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0500
+#endif
+#ifndef WINVER
+#define WINVER 0x0500
+#endif
 #endif
 
 /* Availability of freeaddrinfo, getaddrinfo and getnameinfo functions is
    quite convoluted, compiler dependent and even build target dependent. */
 #if defined(HAVE_WS2TCPIP_H)
-#  if defined(__POCC__)
-#    define HAVE_FREEADDRINFO 1
-#    define HAVE_GETADDRINFO  1
-#    define HAVE_GETNAMEINFO  1
-#  elif defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0501)
-#    define HAVE_FREEADDRINFO 1
-#    define HAVE_GETADDRINFO  1
-#    define HAVE_GETNAMEINFO  1
-#  elif defined(_MSC_VER) && (_MSC_VER >= 1200)
-#    define HAVE_FREEADDRINFO 1
-#    define HAVE_GETADDRINFO  1
-#    define HAVE_GETNAMEINFO  1
-#  endif
+#if defined(__POCC__)
+#define HAVE_FREEADDRINFO 1
+#define HAVE_GETADDRINFO 1
+#define HAVE_GETNAMEINFO 1
+#elif defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0501)
+#define HAVE_FREEADDRINFO 1
+#define HAVE_GETADDRINFO 1
+#define HAVE_GETNAMEINFO 1
+#elif defined(_MSC_VER) && (_MSC_VER >= 1200)
+#define HAVE_FREEADDRINFO 1
+#define HAVE_GETADDRINFO 1
+#define HAVE_GETNAMEINFO 1
+#endif
 #endif
 
 #if defined(__POCC__)
-#  ifndef _MSC_VER
-#    error Microsoft extensions /Ze compiler option is required
-#  endif
-#  ifndef __POCC__OLDNAMES
-#    error Compatibility names /Go compiler option is required
-#  endif
+#ifndef _MSC_VER
+#error Microsoft extensions /Ze compiler option is required
+#endif
+#ifndef __POCC__OLDNAMES
+#error Compatibility names /Go compiler option is required
+#endif
 #endif
 
 /* ---------------------------------------------------------------- */
@@ -376,10 +373,10 @@
  */
 
 #if defined(_WIN32_WCE) && !defined(HAVE_ERRNO_H)
-#  define ENOENT    ERROR_FILE_NOT_FOUND
-#  define ESRCH     ERROR_PATH_NOT_FOUND
-#  define ENOMEM    ERROR_NOT_ENOUGH_MEMORY
-#  define ENOSPC    ERROR_INVALID_PARAMETER
+#define ENOENT ERROR_FILE_NOT_FOUND
+#define ESRCH ERROR_PATH_NOT_FOUND
+#define ENOMEM ERROR_NOT_ENOUGH_MEMORY
+#define ENOSPC ERROR_INVALID_PARAMETER
 #endif
 
 #endif /* HEADER_CARES_CONFIG_WIN32_H */

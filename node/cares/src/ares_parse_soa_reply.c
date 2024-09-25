@@ -18,21 +18,21 @@
 #include "ares_setup.h"
 
 #ifdef HAVE_NETINET_IN_H
-#  include <netinet/in.h>
+#include <netinet/in.h>
 #endif
 #ifdef HAVE_NETDB_H
-#  include <netdb.h>
+#include <netdb.h>
 #endif
 #ifdef HAVE_ARPA_INET_H
-#  include <arpa/inet.h>
+#include <arpa/inet.h>
 #endif
 #ifdef HAVE_ARPA_NAMESER_H
-#  include <arpa/nameser.h>
+#include <arpa/nameser.h>
 #else
-#  include "nameser.h"
+#include "nameser.h"
 #endif
 #ifdef HAVE_ARPA_NAMESER_COMPAT_H
-#  include <arpa/nameser_compat.h>
+#include <arpa/nameser_compat.h>
 #endif
 
 #include "ares.h"
@@ -40,94 +40,91 @@
 #include "ares_data.h"
 #include "ares_private.h"
 
-int
-ares_parse_soa_reply(const unsigned char *abuf, int alen,
-		     struct ares_soa_reply **soa_out)
+int ares_parse_soa_reply(const unsigned char* abuf, int alen,
+    struct ares_soa_reply** soa_out)
 {
-  const unsigned char *aptr;
-  long len;
-  char *qname = NULL, *rr_name = NULL;
-  struct ares_soa_reply *soa = NULL;
-  int qdcount, ancount;
-  int status;
+    const unsigned char* aptr;
+    long len;
+    char *qname = NULL, *rr_name = NULL;
+    struct ares_soa_reply* soa = NULL;
+    int qdcount, ancount;
+    int status;
 
-  if (alen < HFIXEDSZ)
-    return ARES_EBADRESP;
+    if (alen < HFIXEDSZ)
+        return ARES_EBADRESP;
 
-  /* parse message header */
-  qdcount = DNS_HEADER_QDCOUNT(abuf);
-  ancount = DNS_HEADER_ANCOUNT(abuf);
-  if (qdcount != 1 || ancount != 1)
-    return ARES_EBADRESP;
-  aptr = abuf + HFIXEDSZ;
+    /* parse message header */
+    qdcount = DNS_HEADER_QDCOUNT(abuf);
+    ancount = DNS_HEADER_ANCOUNT(abuf);
+    if (qdcount != 1 || ancount != 1)
+        return ARES_EBADRESP;
+    aptr = abuf + HFIXEDSZ;
 
-  /* query name */
-  status = ares__expand_name_for_response(aptr, abuf, alen, &qname, &len);
-  if (status != ARES_SUCCESS)
-    goto failed_stat;
-  aptr += len;
+    /* query name */
+    status = ares__expand_name_for_response(aptr, abuf, alen, &qname, &len);
+    if (status != ARES_SUCCESS)
+        goto failed_stat;
+    aptr += len;
 
-  /* skip qtype & qclass */
-  if (aptr + QFIXEDSZ > abuf + alen)
-    goto failed;
-  aptr += QFIXEDSZ;
+    /* skip qtype & qclass */
+    if (aptr + QFIXEDSZ > abuf + alen)
+        goto failed;
+    aptr += QFIXEDSZ;
 
-  /* rr_name */
-  status = ares__expand_name_for_response(aptr, abuf, alen, &rr_name, &len);
-  if (status != ARES_SUCCESS)
-    goto failed_stat;
-  aptr += len;
+    /* rr_name */
+    status = ares__expand_name_for_response(aptr, abuf, alen, &rr_name, &len);
+    if (status != ARES_SUCCESS)
+        goto failed_stat;
+    aptr += len;
 
-  /* skip rr_type, rr_class, rr_ttl, rr_rdlen */
-  if (aptr + RRFIXEDSZ > abuf + alen)
-    goto failed;
-  aptr += RRFIXEDSZ;
+    /* skip rr_type, rr_class, rr_ttl, rr_rdlen */
+    if (aptr + RRFIXEDSZ > abuf + alen)
+        goto failed;
+    aptr += RRFIXEDSZ;
 
-  /* allocate result struct */
-  soa = ares_malloc_data(ARES_DATATYPE_SOA_REPLY);
-  if (!soa)
-    {
-      status = ARES_ENOMEM;
-      goto failed_stat;
+    /* allocate result struct */
+    soa = ares_malloc_data(ARES_DATATYPE_SOA_REPLY);
+    if (!soa) {
+        status = ARES_ENOMEM;
+        goto failed_stat;
     }
 
-  /* nsname */
-  status = ares__expand_name_for_response(aptr, abuf, alen, &soa->nsname, &len);
-  if (status != ARES_SUCCESS)
-    goto failed_stat;
-  aptr += len;
+    /* nsname */
+    status = ares__expand_name_for_response(aptr, abuf, alen, &soa->nsname, &len);
+    if (status != ARES_SUCCESS)
+        goto failed_stat;
+    aptr += len;
 
-  /* hostmaster */
-  status = ares__expand_name_for_response(aptr, abuf, alen, &soa->hostmaster, &len);
-  if (status != ARES_SUCCESS)
-    goto failed_stat;
-  aptr += len;
+    /* hostmaster */
+    status = ares__expand_name_for_response(aptr, abuf, alen, &soa->hostmaster, &len);
+    if (status != ARES_SUCCESS)
+        goto failed_stat;
+    aptr += len;
 
-  /* integer fields */
-  if (aptr + 5 * 4 > abuf + alen)
-    goto failed;
-  soa->serial = DNS__32BIT(aptr + 0 * 4);
-  soa->refresh = DNS__32BIT(aptr + 1 * 4);
-  soa->retry = DNS__32BIT(aptr + 2 * 4);
-  soa->expire = DNS__32BIT(aptr + 3 * 4);
-  soa->minttl = DNS__32BIT(aptr + 4 * 4);
+    /* integer fields */
+    if (aptr + 5 * 4 > abuf + alen)
+        goto failed;
+    soa->serial = DNS__32BIT(aptr + 0 * 4);
+    soa->refresh = DNS__32BIT(aptr + 1 * 4);
+    soa->retry = DNS__32BIT(aptr + 2 * 4);
+    soa->expire = DNS__32BIT(aptr + 3 * 4);
+    soa->minttl = DNS__32BIT(aptr + 4 * 4);
 
-  ares_free(qname);
-  ares_free(rr_name);
+    ares_free(qname);
+    ares_free(rr_name);
 
-  *soa_out = soa;
+    *soa_out = soa;
 
-  return ARES_SUCCESS;
+    return ARES_SUCCESS;
 
 failed:
-  status = ARES_EBADRESP;
+    status = ARES_EBADRESP;
 
 failed_stat:
-  ares_free_data(soa);
-  if (qname)
-    ares_free(qname);
-  if (rr_name)
-    ares_free(rr_name);
-  return status;
+    ares_free_data(soa);
+    if (qname)
+        ares_free(qname);
+    if (rr_name)
+        ares_free(rr_name);
+    return status;
 }
-
