@@ -108,6 +108,11 @@
 #define ARCH_CPU_MIPSEL 1
 #define ARCH_CPU_32_BITS 1
 #define ARCH_CPU_LITTLE_ENDIAN 1
+#elif defined(__riscv) && (__riscv_xlen == 64)
+#define ARCH_CPU_RISCV_FAMILY 1
+#define ARCH_CPU_RISCV64 1
+#define ARCH_CPU_64_BITS 1
+#define ARCH_CPU_LITTLE_ENDIAN 1
 #else
 #error Please add support for your architecture in cef_build.h
 #endif
